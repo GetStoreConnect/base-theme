@@ -1,0 +1,52 @@
+{%- assign lvl = level | plus: 1 %}
+
+{%- if menu_item.menu_items.size > 0 or menu_item.child_categories.size > 0 and menu_item.child_category_levels > 0 %}
+  <li class="SC-Menu_item tier{{ level }}{% if level != 3 %} parent{% endif %}{% if menu_item.style_classes %} {{ menu_item.style_classes }}{% endif %}" id="SC-MenuItem-{{ parent_id }}-{{ menu_item.identifier }}">
+    {%- if menu_item.image %}
+      <a class="SC-Menu_image" href="{{ menu_item.link_target }}">
+        <img loading="lazy" src="{{ menu_item.image.small_url }}" alt="{{ menu_item.image.alt_text }}"/>
+      </a>
+    {%- endif %}
+
+    <a class="SC-Menu_link"{% if level == 1 %} data-menu-init="{{ menu_item.identifier }}"{% endif %} href="{{ menu_item.link_target }}">
+      {{ menu_item.link_label }}
+    </a>
+
+    {%- if menu_item.child_category_levels > 0 %}
+      <ul class="SC-Menu tier{{ lvl }}{% if menu_item.style_classes %} {{ menu_item.style_classes }}{% endif %}"{% if level == 1 %} data-menu="{{ menu_item.identifier }}"{% endif %} id="SC-Menu-{{ parent_id }}-{{ menu_item.identifier }}">
+        {%- assign parent_id = menu_item.identifier %}
+        {%- if menu_item.style_classes contains 'dropdown' or menu_item.style_classes contains 'mega' %}
+          <button data-menu-x class="SC-Menu_button sc-mb" type="button">
+            Back
+          </button>
+        {%- endif %}
+        {%- for child in menu_item.child_categories %}
+          {%- render "menu/child_item",
+                    parent_id: parent_id,
+                    child_item: child,
+                    level: lvl,
+                    child_category_levels: menu_item.child_category_levels %}
+        {%- endfor %}
+        {%- for menu_item in menu_item.menu_items %}
+          {%- render "menu/menu_item",
+                      parent_id: parent_id,
+                      menu_item: menu_item,
+                      level: lvl,
+                      child_category_levels: menu_item.child_category_levels %}
+        {%- endfor %}
+      </ul>
+    {%- endif %}
+  </li>
+
+{%- else %}
+  <li class="SC-Menu_item tier{{ level }}{% if menu_item.style_classes %} {{ menu_item.style_classes }}{% endif %}" id="SC-MenuItem-{{ parent_id }}-{{ menu_item.identifier }}">
+    {%- if menu_item.image %}
+      <a class="SC-Menu_image" href="{{ menu_item.link_target }}">
+        <img loading="lazy" src="{{ menu_item.image.small_url }}" alt="{{ menu_item.image.alt_text }}"/>
+      </a>
+    {%- endif %}
+    <a class="SC-Menu_link" href="{{ menu_item.link_target }}">
+      {{ menu_item.link_label }}
+    </a>
+  </li>
+{%- endif %}

@@ -1,0 +1,25 @@
+{%- comment %} Source is either a Cart or an Order {% endcomment %}
+{% capture source_type %}{{ source | downcase }}{% endcapture %}
+{%- if source != blank and source.bookable? and source_type == "cart" %}
+   <span
+    id="SC-CartTimer"
+    class="SC-CartTimer"
+    data-sc-cart-timer data-sc-expiry="{{ source.bookable_line_items_valid_until }}">
+    {%- if source.bookable_items.size > 1 %}
+      <div
+        class="SC-CartTimer_label"
+        data-sc-label data-sc-expired="{{ "bookings.timer.plural.did_expire" | t }}">
+        {{ "bookings.timer.plural.will_expire" | t }}
+      </div>
+    {%- else %}
+      <div
+        class="SC-CartTimer_label"
+        data-sc-label data-sc-expired="{{ "bookings.timer.singular.did_expire" | t }}">
+        {{ "bookings.timer.singular.will_expire" | t }}
+      </div>
+    {%- endif %}
+    <div class="SC-CartTimer_time">
+      <span data-sc-mins>--</span>:<span data-sc-secs>--</span>
+    </div>
+  </span>
+{%- endif %}

@@ -1,0 +1,96 @@
+{%- default order: blank -%}
+
+{%- if order != blank %}
+  {%- comment -%} Conversion Tracking {%- endcomment -%}
+  {%- comment -%} Facebook {%- endcomment -%}
+  <script>
+    if(typeof(fbq) === typeof(Function)) {
+      fbq('track', 'Purchase', {
+        "value": "{{ order.total }}",
+        "currency": "{{ order.currency_code }}",
+        "content_type": "product",
+        "contents": [
+          {%- for item in order.items %}
+          {%- if item.reserved_product? or item.product == blank %}{% continue %}{% endif %}
+          {
+            "id": "{{ item.product.product_code }}",
+            "quantity": "{{ item.quantity }}"
+          },
+          {%- endfor %}
+        ]
+      });
+    };
+  </script>
+
+  {%- comment -%} Google {%- endcomment -%}
+  <script>
+    if(typeof(gtag) === typeof(Function)) {
+      gtag('event', 'purchase', {
+        "transaction_id": "{{ order.reference }}",
+        "affiliation": "{{ order.store.name }}",
+        "value": {{ order.total }},
+        "currency": "{{ order.currency_code }}",
+        "tax": {{ order.total_tax }},
+        "shipping": {{ order.total_shipping }},
+        "items": [{% for item in order.items %}
+          {%- if item.reserved_product? or item.product == blank %}{% continue %}{% endif %}
+            {
+              "item_id": "{{ item.product.product_code }}",
+              "item_name": "{{ item.product.name }}",
+              "quantity": {{ item.quantity }},
+              {%- if item.pricing.fixed_term_subscription? %}
+                "price": {{ item.pricing.subscription_total_price }},
+              {%- else %}
+                "price": {{ item.pricing.price | divided_by: item.quantity }},
+              {%- endif %}
+              {%- unless item.product.brand == blank %}
+              "item_brand": "{{ item.product.brand.name }}",
+              {%- endunless %}
+              {%- if item.product.categories.size > 0 %}
+              "item_category": "{{ item.product.categories.first.name }}",
+              {%- endif %}
+              {%- if item.product.variant? %}
+              "item_variant": "{{ item.product.variant_choices | pluck: "name" | join: ", " }}",
+              {%- endif %}
+            },
+        {%- endfor %}
+        ]
+      });
+    };
+  </script>
+
+  {%- comment -%} Reviews {%- endcomment -%}
+  {%- comment -%} Google {%- endcomment -%}
+  {%- assign merchant_id = store_variables['google_reviews.merchant_id'] %}
+  {%- if merchant_id != blank %}
+    {%- assign delivery_days = store_variables['google_reviews.delivery_days'] %}
+    {%- assign opt_in_style = store_variables['google_reviews.opt_in_style'] %}
+    <script>
+      window.renderOptIn = function() {
+        window.gapi.load('surveyoptin', function() {
+          window.gapi.surveyoptin.render(
+            {
+              "merchant_id": "{{ merchant_id }}",
+              "order_id": "{{ order.reference }}",
+              "email": "{{ order.checkout_email }}",
+              "delivery_country": "{{ order.shipping_country }}",
+              {%- unless delivery_days == blank %}
+              "estimated_delivery_date": "{{ order.store.timezone | today | date_add: days: delivery_days | date: "%Y-%m-%d", timezone: order.store.timezone }}",
+              {%- endunless %}
+              {%- unless opt_in_style == blank %}
+              "opt_in_style": "{{ opt_in_style }}",
+              {%- endunless %}
+              "products": [{% for item in order.items %}
+                {%- if item.reserved_product? or item.product == blank or item.product.upc == blank %}{% continue %}{% endif %}
+                {
+                  "gtin": "{{ item.product.upc }}"
+                },
+              {%- endfor %}
+              ]
+            });
+        });
+      }
+    </script>
+    <script src="https://apis.google.com/js/platform.js?onload=renderOptIn" async defer></script>
+  {%- endif %}
+{%- endif %}

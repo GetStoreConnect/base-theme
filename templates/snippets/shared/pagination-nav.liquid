@@ -1,0 +1,59 @@
+{%- if paginate.pages > 1 %}
+  <nav class="pagination" role="navigation">
+    {%- for part in paginate.parts %}
+      {%- if part.gap? %}
+        <span class="gap">&hellip;</span>
+      {%- elsif part.current? %}
+        <span class="page current">
+          {{ part.page }}
+        </span>
+      {%- else %}
+        <a href="{{ part.url }}" class="page">
+          {{ part.page }}
+        </a>
+      {%- endif %}
+    {%- endfor %}
+  </nav>
+
+  <nav class="pagination sc-me" role="navigation">
+    {%- if paginate.previous %}
+      <span class="first">
+        <a href="{{ paginate.first.url }}" rel="first">
+          &laquo;&nbsp;{{ 'pagination.first' | t }}
+        </a>
+      </span>
+      <span class="prev">
+        <a href="{{ paginate.previous.url }}" rel="prev">
+          &lsaquo;&nbsp;{{ 'pagination.previous' | t }}
+        </a>
+      </span>
+    {%- else %}
+      <span class="first disabled">
+        &laquo;&nbsp;{{ 'pagination.first' | t }}
+      </span>
+      <span class="prev disabled">
+        &lsaquo;&nbsp;{{ 'pagination.previous' | t }}
+      </span>
+    {%- endif %}
+
+    {%- if paginate.next %}
+      <span class="next">
+        <a href="{{ paginate.next.url }}" rel="next">
+          {{ 'pagination.next' | t }}&nbsp;&rsaquo;
+        </a>
+      </span>
+      <span class="last">
+        <a href="{{ paginate.last.url }}" rel="last">
+          {{ 'pagination.last' | t }}&nbsp;&raquo;
+        </a>
+      </span>
+    {%- else %}
+      <span class="next disabled">
+        {{ 'pagination.next' | t }}&nbsp;&rsaquo;
+      </span>
+      <span class="last disabled">
+        {{ 'pagination.last' | t }}&nbsp;&raquo;
+      </span>
+    {%- endif %}
+  </nav>
+{%- endif %}

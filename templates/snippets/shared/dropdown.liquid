@@ -1,0 +1,32 @@
+{%- default label: blank -%}
+{%- default all_label: blank -%}
+{%- default selection: blank -%}
+{%- default options: blank -%}
+{%- default id: blank -%}
+{%- default name: blank -%}
+{%- default style_class: blank -%}
+
+<div data-selector="{{ name }}"{% unless id == blank %} data-id="{{ id }}" {% endunless %}class="{% unless style_class == blank %}{{ style_class }} {% endunless %}sc-pos-relative sc-expand">
+  <button data-dropdown-trigger class="sc-input-height sc-bg-white sc-shadow sc-border-light sc-border-radius sc-top-100 sc-flex-row sc-expand sc-align-items-center sc-ps-medium" type="button">
+    <span data-dropdown-selection data-default="{{ label }}" class="sc-grow">
+      {%- if selection == blank %}
+        {{ label }}
+      {%- else %}
+        {{ selection }}
+      {%- endif %}
+    </span>
+    {%- render "icons/chevron", width: 11 %}
+  </button>
+  <menu data-dropdown-target aria-expanded="false" class="sc-hide sc-max-50vh sc-overflow-y-scroll sc-sides-0 sc-bg-white sc-depth-foreground sc-border-radius sc-shadow-3 sc-pos-absolute sc-flex-col sc-expand sc-p-none">
+    <label class="sc-cursor-pointer sc-hover-bg-lightest sc-p-medium sc-m-none sc-pos-relative sc-flex-row sc-gap-small sc-align-items-center sc-expand" type="button">
+      <input data-dropdown-option{% if selection == blank %} checked{% endif %} class="sc-hide" value="" id="all" type="radio" name="{{ name }}"/>
+      {{ all_label }}
+    </label>
+    {%- for option in options %}
+      <label class="sc-cursor-pointer sc-hover-bg-lightest sc-p-medium sc-m-none sc-pos-relative sc-flex-row sc-gap-small sc-align-items-center sc-expand" type="button">
+        <input data-dropdown-option{% if option == selection %} checked{% endif %} class="sc-hide" value="{{ option }}" id="{{ option }}" type="radio" name="{{ name }}"/>
+        {{ option }}
+      </label>
+    {%- endfor %}
+  </menu>
+</div>

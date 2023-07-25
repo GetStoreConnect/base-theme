@@ -1,0 +1,11 @@
+{%- if current_store.scripts.size > 0 %}
+  {%- for script in current_store.scripts %}
+    {%- if script.url != blank %}
+      <script src="{{ script.url }}"></script>
+    {%- else %}
+      <script>
+        {{ script.content }}
+      </script>
+    {%- endif %}
+  {%- endfor %}
+{%- endif %}

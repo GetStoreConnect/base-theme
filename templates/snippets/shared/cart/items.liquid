@@ -1,0 +1,19 @@
+{%- default source: current_cart -%}
+{%- default compact: false -%}
+{%- default extended: false -%}
+{%- default width: blank -%}
+{%- default hide_image: false -%}
+
+<div class="sc-flex-col sc-gap-small sc-mb-base" id="SC-CartItems" data-line-items>
+  <div>
+    {%- render 'shared/cart/timer', source: source %}
+  </div>
+  {%- for item in source.items %}
+    {%- if item.in_bundle? and item.bundle_lead? == false %}
+      {%- continue %}
+    {%- endif %}
+    {%- unless item.reserved_product? %}
+      {%- render "shared/line_items/item", line_item: item, compact: compact, extended: extended, width: width, hide_image: hide_image %}
+    {%- endunless %}
+  {%- endfor %}
+</div>

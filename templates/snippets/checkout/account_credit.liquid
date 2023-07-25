@@ -1,0 +1,54 @@
+{%- if current_customer and current_customer.can_use_account_credit? %}
+  {%- assign usable_credits = current_account.account_credits | where: "usable?", true %}
+  {%- if usable_credits.size > 0 %}
+    <section class="SC-Card SC-Card-floating sc-mb-large" data-spec-checkout-account-credits>
+      <h4 class="sc-mb-small">{{ "checkout.account_credits.heading" | t }}</h4>
+
+      {%- form "apply-account-credit" %}
+        <div class="SC-Field sc-mb-small">
+          {%- assign field = form.fields["id"] %}
+          {%- if usable_credits.size > 1 %}
+            <select name="{{ field.name }}" id="{{ field.id }}" class="SC-Field_select">
+              <option value="">{{ "checkout.account_credits.select_prompt" | t }}</option>
+              {%- for account_credit in usable_credits %}
+                <option value="{{ account_credit.id }}"{% if field.value == account_credit.id %} selected{% endif %}>{{ account_credit.name }} - {{ account_credit.current_balance | money }}</option>
+              {%- endfor %}
+            </select>
+          {%- else %}
+            <p class="sc-font-small sc-mb-medium">
+              {{ usable_credits.first.name }} - {{ usable_credits.first.current_balance | money }}
+            </p>
+            <input type="hidden" name="{{ field.name }}" value="{{ usable_credits.first.id }}">
+          {%- endif %}
+        </div>
+        <div class="sc-flex-row sc-mb-small">
+          <div class="SC-Field sc-m-none sc-expand">
+            {%- assign field = form.fields["amount"] %}
+            <div class="SC-Field sc-grow sc-m-none{% if field.errors != blank %} has-error{% endif %}{% if field.required? %} required{% endif %}">
+              <input type="number" step="0.01" name="{{ field.name }}" id="{{ field.id }}" value="{{ field.value }}" placeholder="{{ "checkout.account_credits.enter_amount" | t }}" class="SC-Field_input sc-expand">
+              <span class="SC-Field_error">{{ field.errors | try: "messages" }}</span>
+            </div>
+          </div>
+          <input type="submit" name="commit" value="{{ "checkout.account_credits.apply" | t }}" class="SC-Button SC-Button-subtle sc-ml-small" data-disable-with="{{ "checkout.account_credits.apply" | t }}">
+        </div>
+      {% endform %}
+      {%- if current_cart.applied_credits.size > 0 %}
+        {%- for account_credit in current_cart.applied_credits %}
+          <div class="sc-flex-row sc-mt-small sc-expand sc-justify-space-between" data-applied-account-credit>
+            <div>
+              {{ account_credit.name }}
+            </div>
+            <div>
+              {{ account_credit.maximum | money }}
+            </div>
+            <div>
+              {% form "remove-account-credit", account_credit: account_credit %}
+                <button class="SC-Link">{{ "checkout.account_credits.remove" | t }}</button>
+              {% endform %}
+            </div>
+          </div>
+        {%- endfor %}
+      {%- endif %}
+    </section>
+  {%- endif %}
+{%- endif %}

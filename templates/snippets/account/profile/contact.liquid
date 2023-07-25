@@ -1,0 +1,26 @@
+<div class="sc-flex-row sc-align-items-center">
+  <span class="sc-grow">
+    <h3>{{ "accounts.profile.sections.contact.heading" | t }}</h3>
+  </span>
+  <span>
+    <a href="{{ current_store.account_path }}/{{ "accounts.contact.path" | t }}" class="SC-Button">{{ "accounts.profile.sections.contact.edit" | t }}</a>
+  </span>
+</div>
+<table>
+  <tr>
+    {% if store_variables["enable_company_name"] %}
+      <th>{{ "accounts.profile.sections.contact.company_name" | t }}</th>
+    {% endif %}
+    <th>{{ "accounts.profile.sections.contact.name" | t }}</th>
+    <th>{{ "accounts.profile.sections.contact.email" | t }}</th>
+    <th>{{ "accounts.profile.sections.contact.phone" | t }}</th>
+  </tr>
+  <tr>
+    {% if store_variables["enable_company_name"] %}
+      <td data-th="{{ "accounts.profile.sections.contact.company_name" | t }}">{{ current_account.name }}</a></td>
+    {% endif %}
+    <td data-th="{{ "accounts.profile.sections.contact.name" | t }}">{{ current_customer.name }}</a></td>
+    <td data-th="{{ "accounts.profile.sections.contact.email" | t }}">{{ current_customer.email }}</td>
+    <td data-th="{{ "accounts.profile.sections.contact.phone" | t }}">{{ current_customer.phone }}</td>
+  </tr>
+</table>

@@ -1,0 +1,7 @@
+{%- default attendee: blank -%}
+
+<div><strong>{{ attendee.first_name }} {{ attendee.last_name }}</strong></div>
+<div class="sc-mt-tiny">
+  {%- capture contact_details %}{{ attendee.email }},{{ attendee.phone }}{% endcapture %}
+  {{ contact_details | strip | split: "," | compact | join: " &#8226; " }}
+</div>

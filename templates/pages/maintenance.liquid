@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    {%- if content_block %}
+    <title>{{ content_block.title }}</title>
+    {%- else %}
+    <title>"This store is offline for maintenance (503)"</title>
+    {%- endif %}
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    {%- unless content_block and content_block.template == "html" %}
+    <style>
+      .default-maintenance-page {
+        background-color: #EFEFEF;
+        color: #2E2F30;
+        text-align: center;
+        font-family: arial, sans-serif;
+        margin: 0;
+      }
+
+      .default-maintenance-page div.dialog {
+        width: 95%;
+        max-width: 33em;
+        margin: 4em auto 0;
+      }
+
+      .default-maintenance-page div.dialog > div {
+        border: 1px solid #CCC;
+        border-right-color: #999;
+        border-left-color: #999;
+        border-bottom-color: #BBB;
+        border-top: #00a9ff solid 4px;
+        border-top-left-radius: 9px;
+        border-top-right-radius: 9px;
+        background-color: white;
+        padding: 7px 12% 0;
+        box-shadow: 0 3px 8px rgba(50, 50, 50, 0.17);
+      }
+
+      .default-maintenance-page h1 {
+        font-size: 100%;
+        color: #2c77b8;
+        line-height: 1.5em;
+      }
+
+      .default-maintenance-page div.dialog > p {
+        margin: 0 0 1em;
+        padding: 1em;
+        background-color: #F7F7F7;
+        border: 1px solid #CCC;
+        border-right-color: #999;
+        border-left-color: #999;
+        border-bottom-color: #999;
+        border-bottom-left-radius: 4px;
+        border-bottom-right-radius: 4px;
+        border-top-color: #2c77b8;
+        color: #666;
+        box-shadow: 0 3px 8px rgba(50, 50, 50, 0.17);
+      }
+    </style>
+    {%- endunless %}
+  </head>
+
+  {%- if content_block and content_block.template == "html" %}
+  <body>
+    {{ content_block.render }}
+  </body>
+  {%- else %}
+  <body class="default-maintenance-page">
+    <div class="dialog">
+      {%- if content_block %}
+        <div>
+          <h1>{{ content_block.title }}</h1>
+          <p>{{ content_block.subtitle }}</p>
+        </div>
+        {{ content_block.content }}
+      {%- else %}
+        <div>
+          <h1>This store is currently offline for maintenance.</h1>
+        </div>
+        <p>We have temporarily taken the store offline to complete some upgrades, please try again later.</p>
+      {%- endif %}
+    </div>
+  </body>
+  {%- endif %}
+</html>

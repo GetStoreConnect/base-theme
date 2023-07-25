@@ -1,0 +1,27 @@
+{%- if current_store.geolocation != blank and current_store.geolocation.enabled? %}
+  {%- if current_store.geolocation.sibling_stores.size > 1 and current_store.geolocation.suggested_store != blank and current_store.geolocation.suggested_store.id != current_store.id %}
+    <div class="sc-m-none sc-p-none" data-toggle-visibility-target="geolocation-notice">
+      <div class="SC-Notice" data-alert>
+        {%- form "geolocation-dismiss" %}
+          <div class="sc-flex-row sc-justify-space-between">
+            <span>{{ "geolocation.bar.choose_region" | t }}</span>
+            <input type="submit" value="{{ "geolocation.bar.dismiss" | t }}" class="SC-Link u-text-decoration-none" data-toggle-visibility="geolocation-notice">
+          </div>
+        {%- endform %}
+        {%- form "geolocation-select" %}
+          <div class="sc-flex-row">
+            <div class="SC-Select SC-Select-subtle">
+              <select name="store_id" id="store_id">
+                {%- for store in current_store.geolocation.sibling_stores %}
+                  <option value="{{ store.id }}"{% if store.id == current_store.geolocation.suggested_store.id %} selected{% endif %}>{{ store.zone.name }}</option>
+                {%- endfor %}
+              </select>
+              {%- render "shared/icons/chevron", style_class: "SC-Select_icon" %}
+            </div>
+            <input type="submit" value="{{ "geolocation.bar.select" | t }}" class="SC-Button">
+          </div>
+        {%- endform %}
+      </div>
+    </div>
+  {%- endif %}
+{%- endif %}

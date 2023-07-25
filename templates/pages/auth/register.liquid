@@ -1,0 +1,10 @@
+<div class="sc-container sc-container-capsule sc-container-spacious">
+  <div class="sc-expand">
+    <h1>{{ "accounts.register.heading" | t }}</h1>
+
+    {% assign block = current_store.id | append: "-register-introduction" %}
+    {{ all_content_blocks[block] | try: "render" }}
+
+    {% render "account/register/form" %}
+  </div>
+</div>

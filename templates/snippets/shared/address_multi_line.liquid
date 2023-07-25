@@ -1,0 +1,45 @@
+{%- default lines: blank -%}
+{%- default street1: blank -%}
+{%- default street2: blank -%}
+{%- default city: blank -%}
+{%- default state: blank -%}
+{%- default country: blank -%}
+{%- default postal_code: blank -%}
+{%- default style: blank -%}
+
+<address itemprop="address" itemscope itemtype="https://schema.org/PostalAddress"{% if style != blank %} class="{{ style }}"{% endif %}>
+  {%- unless street1 == blank and street2 == blank %}
+    <div itemprop="streetAddress">
+      {% unless street1 == blank %}{{ street1 }}{% endunless %}
+      {% unless street2 == blank %}{{ street2 }}{% endunless %}
+    </div>
+  {%- endunless %}
+  {%- for line in lines %}
+    <div itemprop="streetAddress{{ forloop.index }}">{{ line }}</div>
+  {%- endfor %}
+  {%- unless city == blank and state == blank %}
+    <div class="sc-mt-micro">
+      {%- unless city == blank %}
+        <span itemprop="addressLocality">{{ city }},</span>
+      {%- endunless %}
+      {%- unless state == blank %}
+        {%- if country == blank or all_countries[country] == blank %}
+          <span itemprop="addressRegion">{{ state }},</span>
+        {%- else %}
+          <span itemprop="addressRegion">{{ all_countries[country].states[state].name }},</span>
+        {%- endif %}
+      {%- endunless %}
+      {%- unless postal_code == blank %}
+        <span itemprop="postalCode">{{ postal_code }}</span>
+      {%- endunless %}
+    </div>
+  {%- endunless %}
+  {%- unless country == blank %}
+    {%- if all_countries[country] == blank %}
+      <span itemprop="addressCountry">{{ country }}</span>
+    {%- else %}
+      <span itemprop="addressCountry">{{ all_countries[country].name }}</span>
+    {%- endif %}
+  {%- endunless %}
+
+</address>

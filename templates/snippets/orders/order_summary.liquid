@@ -1,0 +1,14 @@
+<aside id="SC-OrderSummary" class="SC-Panel sc-mb-spacious" data-checkout-summary>
+  <header class="SC-Panel_header">
+    <h3 class="SC-Panel_header_heading">
+      {{ "accounts.orders.show.order_summary.header" | t }}
+      {% if source.test_order? %} - TESTING ONLY{% endif %}
+    </h3>
+  </header>
+  <div>
+    {%- if source != empty and source.items.size > 0 %}
+      {%- render "shared/cart/items", source: source, width: "60px" %}
+    {%- endif %}
+  </div>
+  {%- render "shared/order_total", source: source %}
+</aside>

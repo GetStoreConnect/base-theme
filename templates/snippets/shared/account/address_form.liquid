@@ -1,0 +1,60 @@
+{%- default form: blank %}
+
+{%- assign field_name = type | append: "_address_lines" %}
+{%- assign field = form.fields[field_name] %}
+{%- for line in field.value %}
+  {%- assign label = "accounts.shared.address_form.address_lines.count" | t, count: forloop.index %}
+  <div class="SC-Field SC-Field-expand{% if field.errors != blank and forloop.index == 1 %} has-error{% endif %}{% if field.required? %} required{% endif %}">
+    <label for="{{ field.id }}_{{ forloop.index }}" class="SC-Field_label">{{ label }}</label>
+    <input type="text" name="{{ field.name }}[]" id="{{ field.id }}_{{ forloop.index }}" value="{{ line }}" placeholder="{{ label }}" autocomplete="{{ type }} address-line{{ forloop.index }}" class="SC-Field_input">
+    <span class="SC-Field_error">{{ field.errors | try: "messages" }}</span>
+  </div>
+{%- endfor %}
+
+{%- assign field_name = type | append: "_city" %}
+{%- assign field = form.fields[field_name] %}
+<div class="SC-Field{% if field.errors != blank %} has-error{% endif %}{% if field.required? %} required{% endif %}">
+  <label for="{{ field.id }}" class="SC-Field_label">{{ "accounts.shared.address_form.city" | t }}</label>
+  <input type="text" name="{{ field.name }}" id="{{ field.id }}" value="{{ field.value }}" placeholder="{{ "accounts.shared.address_form.city" | t }}" autocomplete="{{ type }} address-level2" class="SC-Field_input">
+  <span class="SC-Field_error">{{ field.errors | try: "messages" }}</span>
+</div>
+
+{%- assign field_name = type | append: "_country" %}
+{%- assign field = form.fields[field_name] %}
+{%- assign country_id = field.id %}
+<div class="SC-Field{% if field.errors != blank %} has-error{% endif %}{% if field.required? %} required{% endif %}">
+  <label for="{{ field.id }}" class="SC-Field_label">{{ "accounts.shared.address_form.country" | t }}</label>
+  <select name="{{ field.name }}" id="{{ field.id }}" autocomplete="{{ type }} country" class="SC-Field_select">
+    <option value="">{{ "accounts.shared.address_form.country" | t }}</option>
+    {%- for country in all_countries %}
+      <option value="{{ country.alpha2 }}"{% if field.value == country.alpha2 %} selected{% endif %}>{{ country.name }}</option>
+    {%- endfor %}
+  </select>
+  <span class="SC-Field_error">{{ field.errors | try: "messages" }}</span>
+</div>
+
+{%- assign field_name = type | append: "_state" %}
+{%- assign field = form.fields[field_name] %}
+{%- assign state_id = field.id %}
+<div class="SC-Field{% if field.errors != blank %} has-error{% endif %}{% if field.required? %} required{% endif %}">
+  <label for="{{ field.id }}" class="SC-Field_label">{{ "accounts.shared.address_form.state" | t }}</label>
+  <select name="{{ field.name }}" id="{{ field.id }}" autocomplete="{{ type }} address-level1" class="SC-Field_select" placeholder="{{ "accounts.shared.address_form.state" | t }}" data-selected="{{ field.value }}">
+    <option value="">{{ "accounts.shared.address_form.state" | t }}</option>
+  </select>
+  <span class="SC-Field_error">{{ field.errors | try: "messages" }}</span>
+</div>
+
+{%- assign field_name = type | append: "_postal_code" %}
+{%- assign field = form.fields[field_name] %}
+<div class="SC-Field{% if field.errors != blank %} has-error{% endif %}{% if field.required? %} required{% endif %}">
+  <label for="{{ field.id }}" class="SC-Field_label">{{ "accounts.shared.address_form.zip_code" | t }}</label>
+  <input type="text" name="{{ field.name }}" id="{{ field.id }}" value="{{ field.value }}" placeholder="{{ "accounts.shared.address_form.zip_code" | t }}" autocomplete="{{ type }} postal-code" class="SC-Field_input">
+  <span class="SC-Field_error">{{ field.errors | try: "messages" }}</span>
+</div>
+
+<script>
+  StoreConnect.address({
+    country_id: "{{ country_id }}",
+    state_id: "{{ state_id }}"
+  });
+</script>

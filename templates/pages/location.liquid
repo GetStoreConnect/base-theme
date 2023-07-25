@@ -1,0 +1,109 @@
+{%- default location_group: blank -%}
+
+{%- assign nav_path = location_group.path %}
+{%- assign nav_label = "location.navigation.all_locations" | t: name: location_group.name %}
+{%- unless current_request.params.s == blank %}
+  {%- assign nav_path = nav_path | append: "?" | append: current_request.params.s  %}
+  {%- assign nav_label = "location.navigation.back_to_locations" | t: name: location_group.name %}
+{%- endunless %}
+{%- assign google_maps_api_key = store_variables['google_maps_api_key'] %}
+
+<article data-location-search class="sc-pos-relative sc-border-bottom sc-md:flex-row">
+  <section
+    itemscope itemtype="https://schema.org/LocalBusiness"
+    class="sc-md:40vw sc-lg:30vw sc-no-shrink sc-pos-relative sc-flex-col sc-shadow-2">
+    <div class="sc-shadow-2 sc-p-base">
+      <a href="{{ nav_path }}" class="sc-color-primary sc-flex-row sc-gap-tiny sc-align-items-center">
+        {%- render "icons/chevron", width: 12, style_class: "sc-rotate-90" %}
+        <span>{{ nav_label }}</span>
+      </a>
+    </div>
+    <section class="sc-flex-row sc-align-items-center sc-gap sc-border-bottom sc-pe-large sc-ps-base">
+      <span class="sc-grow">
+        <h1 class="sc-font-xlarge sc-mb-small" itemprop="name">
+          {{ location.name }}
+        </h1>
+        <div class="sc-shade-dark">
+          {%- render "shared/address_multi_line",
+            street1: location.street,
+            city: location.city,
+            state: location.state,
+            country: location.country,
+            postal_code: location.postal_code %}
+        </div>
+      </span>
+      {%- unless location.logo == blank %}
+        <span class="sc-pr-small">
+          <img src="{{ location.logo.pico_url }}" alt="{{ location.name }}" width="64">
+        </span>
+      {%- endunless %}
+    </section>
+    <menu class="sc-border-bottom sc-flex-row sc-gap-small sc-text-center sc-p-small sc-font-small">
+      <a
+        class="sc-hover-bg-primary-subtle sc-border-radius sc-one-half sc-p-small sc-font-bold sc-color-primary"
+        href="tel:{{ location.phone }}"
+        itemprop="telephone">
+        {{ "location.menu.phone" | t }}
+      </a>
+      <a
+        class="sc-hover-bg-primary-subtle sc-border-radius sc-one-half sc-p-small sc-font-bold sc-color-primary"
+        href="{{ location.website }}"
+        target="_blank"
+        itemprop="url">
+        {{ "location.menu.website" | t }}
+      </a>
+      <a
+        class="sc-hover-bg-primary-subtle sc-border-radius sc-one-half sc-p-small sc-font-bold sc-color-primary"
+        href="mailto:{{ location.email }}"
+        itemprop="email">
+        {{ "location.menu.email" | t }}
+      </a>
+    </menu>
+    <section class="sc-flex-col sc-gap sc-border-bottom sc-pe-large sc-ps-base">
+      {%- unless location.phone == blank %}
+        <div class="sc-flex-row sc-align-items-center sc-gap-small">
+          {{ location.phone }}
+        </div>
+      {%- endunless %}
+      {%- unless location.email == blank %}
+        <a class="sc-flex-row sc-align-items-center sc-gap-small" href="mailto:{{ location.email }}">
+          {{ location.email }}
+        </div>
+      {%- endunless %}
+      {%- unless location.website == blank %}
+        <a class="sc-flex-row sc-align-items-center sc-gap-small" href="{{ location.website }}" target="_blank">
+          {{ location.website }}
+        </a>
+      {%- endunless %}
+    </section>
+    <section class="sc-rich-text sc-pe-large sc-ps-base">
+      {{ location.info_content }}
+    </section>
+  </section>
+  {%- unless google_maps_api_key == blank %}
+    {%- render "shared/loader", active: true, contextual: true %}
+    <div
+      data-location-search-map
+      data-title="{{ location.name }}"
+      data-lat="{{ location.latitude }}"
+      data-lng="{{ location.longitude }}"
+      class="sc-bg-shade-lightest sc-color-primary"
+      style="width: 100%; height: 100%;"></div>
+  {%- else %}
+    <iframe
+      data-location-search-map
+      class="sc-bg-shade-lightest"
+      style="width: 100%; height: calc(100vh);"
+      frameborder="0"
+      scrolling="no"
+      marginheight="0"
+      marginwidth="0"
+      src="https://maps.google.com/maps?q={{ location.latitude }},{{ location.longitude }}&zoom=6&output=embed">
+    </iframe>
+  {%- endunless %}
+</article>
+
+<script src="{{ 'location-search.js' | asset_url }}"></script>
+{%- unless google_maps_api_key == blank %}
+  <script async src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&libraries=places&callback=StoreConnect.LocationSearch.initWithMap&v=weekly"></script>
+{%- endunless %}

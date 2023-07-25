@@ -1,0 +1,13 @@
+<div class="sc-flex-row sc-align-items-center">
+  <span class="sc-grow">
+    <h3>{{ "accounts.profile.sections.product_approvals.heading" | t }}</h3>
+  </span>
+  <span>
+    <a href="{{ current_store.product_approvals_path }}" class="SC-Button">{{ "accounts.profile.sections.product_approvals.view_all" | t }}</a>
+  </span>
+</div>
+{%- if current_account.product_approvals.size > 0 %}
+  {{ "accounts.profile.sections.product_approvals.count" | t, count: current_account.product_approvals.size }}<br>
+{%- else %}
+  <div class="sc-shade-neutral">{{ "accounts.profile.sections.product_approvals.no_product_approvals" | t }}</div>
+{%- endif %}

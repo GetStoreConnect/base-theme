@@ -1,0 +1,43 @@
+{%- default location_group: blank -%}
+{%- default product: blank -%}
+
+{%- if theme_variables["locations.search.allow_product_filtering"] == true and current_request.params.ref != blank %}
+  <input type="hidden" name="ref" value="{{ current_request.params.ref }}">
+  <div data-location-product-filter class="sc-bg-white sc-mb-small sc-depth-foreground">
+    <div class="sc-shadow-2 sc-border sc-border-radius sc-flex-row sc-gap-small sc-p-small sc-align-items-center">
+      {%- if product != blank %}
+        {%- if product.image != blank %}
+          <a class="sc-font-zero" href="{{ product.path }}">
+            <img src="{{ product.image.small_url }}" width="40">
+          </a>
+        {%- endif %}
+        <div class="sc-grow">
+          <div>
+            <div class="sc-font-small sc-mb-micro">
+              <a href="{{ product.path }}">{{ product.name }}</a>
+            </div>
+            <div class="sc-font-tiny sc-shade-dark">
+              {{ product.product_code }}
+            </div>
+          </div>
+        </div>
+      {%- else %}
+        {{ "locations.search.product.not_found" | t }}
+      {%- endif %}
+      <button class="SC-Icon SC-Icon-close" type="button" data-location-product-filter-close>
+        {%- render "icons/close" %}
+      </button>
+    </div>
+  </div>
+  <script>
+  const closeProductFilterButton = document.querySelector("[data-location-product-filter-close]")
+
+  if (closeProductFilterButton) {
+    closeProductFilterButton.addEventListener("click", () => {
+      let params = new URLSearchParams(window.location.search)
+      params.delete("ref");
+      window.location.search = params;
+    });
+  }
+  </script>
+{%- endif %}

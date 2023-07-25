@@ -1,0 +1,47 @@
+<div
+  class="SC-ContentBlock SC-ImageBesideText{% if content_block.alignment != blank %} sc-align-{{ content_block.alignment }}{% endif %}"
+  id="{% if content_block.identifier != blank %}SC-ContentBlock-{{ content_block.identifier }}{% endif %}"
+  data-cb="{{ content_block.identifier }}"
+  data-alignment="{{ content_block.alignment }}"
+  data-alignment-target="{{ content_block.identifier }}">
+
+  {%- if content_block.image != blank %}
+    <img
+      class="SC-ImageBesideText_image"
+      src="{{ content_block.image.medium_url }}"
+      alt="{{ content_block.image.alt_text | escape }}"
+      loading="lazy">
+  {%- else %}
+    <svg class="SC-ImageBesideText_image" width="400" viewBox="0 0 600 600">
+      <rect width="100%" height="100%"></rect>
+      <circle cx="50%" cy="50%" r="20%" fill="rgba(0,0,0,0.05)"/>
+    </svg>
+  {%- endif %}
+
+  <div class="SC-ImageBesideText_content">
+
+    {%- unless content_block.title == blank %}
+      <h2 class="SC-ImageBesideText_headline">
+        {{ content_block.title | escape }}
+      </h2>
+    {%- endunless %}
+
+    {%- unless content_block.subtitle == blank %}
+      <p class="SC-ImageBesideText_subheadline">
+        {{ content_block.subtitle }}
+      </p>
+    {%- endunless %}
+
+    {%- unless content_block.content == blank %}
+      <div class="sc-rich-text">
+        {{ content_block.content }}
+      </div>
+    {%- endunless %}
+
+    {%- unless content_block.link_label == blank and content_block.link_target == blank %}
+      <a href="{{ content_block.link_target }}" class="SC-ImageBesideText_cta">
+        {{ content_block.link_label | escape }}
+      </a>
+    {%- endunless %}
+  </div>
+</div>

@@ -1,0 +1,28 @@
+{%- default form: blank %}
+{%- default context: "edit" %}
+
+{%- if current_store.campaigns.size > 0 %}
+  {%- assign field = form.fields["campaign_ids"] %}
+
+  <section class="sc-mb-spacious">
+    <input type="hidden" name="{{ field.name }}[]">
+    {%- for campaign in current_store.campaigns %}
+      <div class="SC-Checkbox sc-mt-spacious" id="SC-CampaignSelection">
+        {% assign id = field.id | append: campaign.id %}
+        {%- assign preselected = false %}
+
+        {%- if context == "new" and field.value == blank and field.original_value == blank %}
+          {%- assign preselected = campaign.preselect_opt_in? %}
+        {%- endif -%}
+
+        <input type="checkbox" name="{{ field.name }}[]" id="{{ id }}" value="{{ campaign.id }}" multiple="multiple" class="SC-Checkbox_input"{% if field.value contains campaign.id or preselected %} checked="checked"{% endif %}>
+        <label for="{{ id }}" class="SC-Checkbox_label">{{ campaign.opt_in_text }}</label>
+      </div>
+      {%- if campaign.information_content != blank %}
+        <div class="sc-font-small sc-shade-neutral sc-mb-spacious">
+          {{ campaign.information_content }}
+        </div>
+      {%- endif %}
+    {%- endfor %}
+  </section>
+{%- endif %}

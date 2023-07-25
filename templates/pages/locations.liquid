@@ -1,0 +1,26 @@
+{%- default location_group: blank -%}
+{%- default filter_product: blank -%}
+
+{%- assign google_maps_api_key = store_variables['google_maps_api_key'] %}
+
+<article id="location-search-{{ location_group.identifier }}">
+  {%- unless google_maps_api_key == blank %}
+    {%- render "locations/forms/near",
+      location_group: location_group,
+      filter_product: filter_product,
+      found_locations: found_locations,
+      google_maps_api_key: google_maps_api_key %}
+  {%- else %}
+    {%- render "locations/forms/exact",
+      location_group: location_group,
+      filter_product: filter_product,
+      found_locations: found_locations %}
+  {%- endunless %}
+</article>
+
+<script src="{{ 'location-search.js' | asset_url }}"></script>
+{%- if google_maps_api_key == blank %}
+  <script>window.StoreConnect.LocationSearch.init()</script>
+{%- else %}
+  <script async src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&libraries=places&callback=StoreConnect.LocationSearch.initWithMap&v=weekly"></script>
+{%- endif %}

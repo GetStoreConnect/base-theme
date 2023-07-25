@@ -1,0 +1,7 @@
+{%- default identifier: blank %}
+
+{%- if identifier != blank %}
+  {% render "orders/show", order: current_customer.orders[identifier] %}
+{%- else %}
+  {% render "orders/index" %}
+{%- endif %}

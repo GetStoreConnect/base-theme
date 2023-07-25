@@ -1,0 +1,12 @@
+{%- default provider: blank %}
+{%- default order: blank %}
+{%- assign code = provider.code | downcase %}
+
+{%- case code | downcase %}
+  {%- when "stripe" %}
+    {% render "payment_providers/forms/stripe", provider: provider, order: order %}
+  {%- when "eway" %}
+    {% render "payment_providers/forms/eway", provider: provider, order: order %}
+  {%- when "authorizenet" %}
+    {% render "payment_providers/forms/authorize_net", provider: provider, order: order %}
+{%- endcase %}

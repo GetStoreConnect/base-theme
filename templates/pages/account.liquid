@@ -1,0 +1,35 @@
+{%- layout "account" %}
+
+{%- assign section = current_request.params.section %}
+{%- assign identifier = current_request.params.identifier %}
+
+{%- case section %}
+{%- when "orders" %}
+  {% render "account/orders", identifier: identifier %}
+{%- when "subscriptions" %}
+  {% render "account/subscriptions", identifier: identifier %}
+{%- when "account_credits" %}
+  {%- if current_customer.can_use_account_credit? %}
+    {% render "account/account_credits", identifier: identifier %}
+  {%- else %}
+    {% render "account/not_authorised" %}
+  {%- endif %}
+{%- when "account_points" %}
+  {%- if current_customer.can_use_account_points? %}
+    {% render "account/account_points", identifier: identifier %}
+  {%- else %}
+    {% render "account/not_authorised" %}
+  {%- endif %}
+{%- when "product_approvals" %}
+  {% render "account/product_approvals", identifier: identifier %}
+{%- when "credentials" %}
+  {% render "account/credentials" %}
+{%- when "contact" %}
+  {% render "account/contact" %}
+{%- when "shipping" %}
+  {% render "account/shipping" %}
+{%- when "billing" %}
+  {% render "account/billing" %}
+{%- else %}
+  {% render "account/profile" %}
+{%- endcase %}

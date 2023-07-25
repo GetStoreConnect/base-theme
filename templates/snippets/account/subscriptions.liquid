@@ -1,0 +1,7 @@
+{%- default identifier: blank %}
+
+{%- if identifier != blank %}
+  {% render "account/subscriptions/show", subscription: current_customer.subscriptions[identifier] %}
+{%- else %}
+  {% render "account/subscriptions/index" %}
+{%- endif %}

@@ -1,0 +1,1244 @@
+Key,Value
+accounts.account_credit.index.created_at,Date
+accounts.account_credit.index.current_balance,Current Balance
+accounts.account_credit.index.display_name,Credit for
+accounts.account_credit.index.expires_at,Expiry Date
+accounts.account_credit.index.heading,Account Credits
+accounts.account_credit.index.no_account_credits,No Account Credits
+accounts.account_credit.index.no_expiry,Does not expire
+accounts.account_credit.index.opening_balance,Original Balance
+accounts.account_credit.index.view,View
+accounts.account_credit.show.account_credit_details,Details
+accounts.account_credit.show.current_balance,Current Balance
+accounts.account_credit.show.expires_at,Expiry Date
+accounts.account_credit.show.heading,Account Credit
+accounts.account_credit.show.no_expiry,Does not expire
+accounts.account_credit.show.opening_balance,Original Balance
+accounts.account_credit.show.transaction.amount,Amount
+accounts.account_credit.show.transaction.contact,Who
+accounts.account_credit.show.transaction.created_at,Date
+accounts.account_credit.show.transaction.no_order,no order
+accounts.account_credit.show.transaction.order,Order
+accounts.account_credit.show.transaction.system,System
+accounts.account_credit.show.transaction.type,Type
+accounts.account_credit.show.transaction_heading,Transactions
+accounts.account_credit.show.type.credit,credit
+accounts.account_credit.show.type.debit,debit
+accounts.account_points.current_balance,Current Balance
+accounts.account_points.heading,Account Points
+accounts.account_points.no_transactions,No Transactions
+accounts.account_points.pending_balance,Pending Balance
+accounts.account_points.transactions.heading,Transactions
+accounts.account_points.transactions.headings.amount,Amount
+accounts.account_points.transactions.headings.contact,Who
+accounts.account_points.transactions.headings.created_at,Date
+accounts.account_points.transactions.headings.expires_at,Expiry Date
+accounts.account_points.transactions.headings.product,Item
+accounts.account_points.transactions.headings.type,Type
+accounts.account_points.transactions.no_expiry,Does not expire
+accounts.account_points.transactions.pending,pending
+accounts.account_points.transactions.type.enum.credit,credit
+accounts.account_points.transactions.type.enum.debit,debit
+accounts.billing.heading,Billing Address
+accounts.billing.path,billing
+accounts.billing.update,Update your billing address
+accounts.contact.company_name,Company
+accounts.contact.email,Email
+accounts.contact.firstname,First name
+accounts.contact.heading,Contact Details
+accounts.contact.lastname,Last name
+accounts.contact.path,contact
+accounts.contact.phone,Phone
+accounts.contact.update,Update your contact details
+accounts.credentials.confirm_new_password,Confirm new password
+accounts.credentials.heading,Login Details
+accounts.credentials.new_password,New password
+accounts.credentials.path,credentials
+accounts.credentials.update,Update your login details
+accounts.credentials.username,Username
+accounts.menu.account_credits,Account credits
+accounts.menu.account_points,Account points
+accounts.menu.billing,Billing Address
+accounts.menu.contact,Contact details
+accounts.menu.credentials,Login details
+accounts.menu.log_out,Log out
+accounts.menu.orders,Orders
+accounts.menu.product_approvals,Product approvals
+accounts.menu.profile,Account
+accounts.menu.shipping,Shipping Address
+accounts.menu.subscriptions,Subscriptions
+accounts.not_authorized.heading,Not Authorized
+accounts.not_authorized.message,You are not authorized to access this page.
+accounts.orders.bookings.attendees.add_attendee,Add attendee
+accounts.orders.bookings.attendees.attendee_question,Who is attending?
+accounts.orders.bookings.attendees.cancel,Cancel
+accounts.orders.bookings.attendees.edit,Edit
+accounts.orders.bookings.attendees.for_another,Another person is attending
+accounts.orders.bookings.attendees.for_me,I am attending
+accounts.orders.bookings.attendees.heading,Attendees
+accounts.orders.bookings.attendees.placeholders.email,Email
+accounts.orders.bookings.attendees.placeholders.first_name,First name
+accounts.orders.bookings.attendees.placeholders.last_name,Last name
+accounts.orders.bookings.attendees.placeholders.phone,Phone
+accounts.orders.bookings.attendees.save,Save
+accounts.orders.bookings.attendees_required_notice,Your booking has been received. Please also make sure to submit the attendee details below.
+accounts.orders.bookings.heading,Bookings
+accounts.orders.index.currency_and_points_connector,and
+accounts.orders.index.date,Date
+accounts.orders.index.heading,Orders
+accounts.orders.index.items,Items
+accounts.orders.index.no_orders,No orders
+accounts.orders.index.reference,Reference
+accounts.orders.index.reorder,Reorder
+accounts.orders.index.status,Status
+accounts.orders.index.total,Total
+accounts.orders.index.view,View
+accounts.orders.navigation.back_to_show,Back to Order
+accounts.orders.payments.shared.currency_and_points_connector,and
+accounts.orders.payments.shared.status.enum.failed,Failed
+accounts.orders.payments.shared.status.enum.pending,Pending
+accounts.orders.payments.shared.status.enum.success,Success
+accounts.orders.shared.status.enum.activated,Complete
+accounts.orders.shared.status.enum.draft,Draft
+accounts.orders.show.collection_point.click_and_collect,Click & Collect
+accounts.orders.show.collection_point.collection_date,Collection date
+accounts.orders.show.collection_point.immediate_lead_time,You can pick this up immediately
+accounts.orders.show.collection_point.lead_time,Please allow %{time} before pick up
+accounts.orders.show.customer_notes,Customer Notes
+accounts.orders.show.earned_points,Points Earned
+accounts.orders.show.guests.link_oauth_account_message,Create an account to allow you to login and check the status of your order at any time.
+accounts.orders.show.guests.register.password,Password
+accounts.orders.show.guests.register.submit,Save Password
+accounts.orders.show.guests.register.via,Or sign up via one of these:
+accounts.orders.show.guests.save_password_message,Set a password to allow you to login and check the status of your order at any time.
+accounts.orders.show.guests.your_order_status,Your Order Status
+accounts.orders.show.heading,Reference: %{order_number}
+accounts.orders.show.members.login_message,Log into your account to track this order in the future.
+accounts.orders.show.not_found,Could not find that order
+accounts.orders.show.order_status,Status: %{order_status}
+accounts.orders.show.order_summary.header,Order Summary
+accounts.orders.show.payment_method,Payment method
+accounts.orders.show.reorder,Reorder
+accounts.orders.show.shipping_details,Shipping details
+accounts.product_approvals.index.approved_from,Valid From
+accounts.product_approvals.index.approved_until,Valid Until
+accounts.product_approvals.index.heading,Product Approvals
+accounts.product_approvals.index.no_product_approvals,No Product Approvals
+accounts.product_approvals.index.product,Product
+accounts.product_approvals.index.remaining_quantity,Remaining
+accounts.product_approvals.index.status,Status
+accounts.product_approvals.index.view_details_link,View
+accounts.product_approvals.shared.quantity.count.infinity,Unlimited
+accounts.product_approvals.shared.quantity.count.other,%{count}
+accounts.product_approvals.shared.status.enum.approved,Approved
+accounts.product_approvals.shared.status.enum.completed,Completed
+accounts.product_approvals.shared.status.enum.expired,Expired
+accounts.product_approvals.shared.status.enum.none,No approval
+accounts.product_approvals.shared.status.enum.pending,Pending
+accounts.product_approvals.show.approved_from,Valid From
+accounts.product_approvals.show.approved_quantity,Approved
+accounts.product_approvals.show.approved_until,Valid Until
+accounts.product_approvals.show.details,Details
+accounts.product_approvals.show.heading,Product Approval
+accounts.product_approvals.show.no_orders,No Orders
+accounts.product_approvals.show.orders.date,Date
+accounts.product_approvals.show.orders.order,Order
+accounts.product_approvals.show.orders.quantity,Quantity
+accounts.product_approvals.show.orders.status,Status
+accounts.product_approvals.show.orders_heading,Orders
+accounts.product_approvals.show.pending_quantity,Pending Orders
+accounts.product_approvals.show.product,Product
+accounts.product_approvals.show.purchased_quantity,Already Purchased
+accounts.product_approvals.show.remaining_quantity,Remaining
+accounts.product_approvals.show.status,Status
+accounts.profile.heading,Account Summary
+accounts.profile.sections.account_credits.count.one,1 account credit
+accounts.profile.sections.account_credits.count.other,%{count} account credits
+accounts.profile.sections.account_credits.heading,Account Credits
+accounts.profile.sections.account_credits.no_account_credits,No Account Credits
+accounts.profile.sections.account_credits.total_balance,Total balance
+accounts.profile.sections.account_credits.view_all,View all
+accounts.profile.sections.account_points.current_balance,Current balance
+accounts.profile.sections.account_points.heading,Account Points
+accounts.profile.sections.account_points.no_account_points,No Account Points
+accounts.profile.sections.account_points.pending_balance,Pending balance
+accounts.profile.sections.account_points.view_all,View all
+accounts.profile.sections.billing.edit,Edit
+accounts.profile.sections.billing.heading,Billing Address
+accounts.profile.sections.contact.company_name,Company
+accounts.profile.sections.contact.edit,Edit
+accounts.profile.sections.contact.email,Email
+accounts.profile.sections.contact.heading,Contact Details
+accounts.profile.sections.contact.name,Name
+accounts.profile.sections.contact.phone,Phone
+accounts.profile.sections.credentials.edit,Edit
+accounts.profile.sections.credentials.heading,Login Details
+accounts.profile.sections.credentials.username,Username
+accounts.profile.sections.orders.count.one,1 order
+accounts.profile.sections.orders.count.other,%{count} orders
+accounts.profile.sections.orders.heading,Orders
+accounts.profile.sections.orders.most_recent,Most recent order
+accounts.profile.sections.orders.no_orders,No Orders
+accounts.profile.sections.orders.view_all,View all
+accounts.profile.sections.product_approvals.count.one,1 product approval
+accounts.profile.sections.product_approvals.count.other,%{count} product approvals
+accounts.profile.sections.product_approvals.heading,Product Approvals
+accounts.profile.sections.product_approvals.no_product_approvals,No Product Approvals
+accounts.profile.sections.product_approvals.view_all,View all
+accounts.profile.sections.shipping.edit,Edit
+accounts.profile.sections.shipping.heading,Shipping Address
+accounts.profile.sections.subscriptions.count.one,1 order
+accounts.profile.sections.subscriptions.count.other,%{count} active subscriptions
+accounts.profile.sections.subscriptions.heading,Subscriptions
+accounts.profile.sections.subscriptions.next_due,Next Due
+accounts.profile.sections.subscriptions.no_subscriptions,No Subscriptions
+accounts.profile.sections.subscriptions.view_all,View all
+accounts.register.form.headings.address,Address
+accounts.register.form.headings.contact,Contact details
+accounts.register.form.headings.credentials,Login details
+accounts.register.form.labels.email,Email
+accounts.register.form.labels.firstname,First name
+accounts.register.form.labels.lastname,Last name
+accounts.register.form.labels.password,Password
+accounts.register.form.labels.phone,Phone
+accounts.register.form.submit,Register
+accounts.register.heading,Register for an account
+accounts.register.local_heading,Or create an account
+accounts.shared.address_form.address_lines.count.#1,Street address
+accounts.shared.address_form.address_lines.count.#2,Suite
+accounts.shared.address_form.address_lines.count.#3,Apartment
+accounts.shared.address_form.address_lines.count.#4,Building Number
+accounts.shared.address_form.address_lines.count.other,line %{count}
+accounts.shared.address_form.autocomplete_placeholder,Find Address
+accounts.shared.address_form.city,City
+accounts.shared.address_form.country,Country
+accounts.shared.address_form.state,State
+accounts.shared.address_form.zip_code,Zip code
+accounts.shipping.heading,Shipping Address
+accounts.shipping.path,shipping
+accounts.shipping.update,Update your shipping address
+accounts.subscriptions.index.heading,Subscriptions
+accounts.subscriptions.index.next_due,Next Due
+accounts.subscriptions.index.no_subscriptions,No Subscriptions
+accounts.subscriptions.index.order,Order
+accounts.subscriptions.index.price,Price
+accounts.subscriptions.index.product,Product
+accounts.subscriptions.index.renewal_date,Renewal Date
+accounts.subscriptions.index.status,Status
+accounts.subscriptions.index.view,View
+accounts.subscriptions.show.amount,Amount
+accounts.subscriptions.show.cancel,Cancel Subscription
+accounts.subscriptions.show.cancel_abort,No
+accounts.subscriptions.show.cancel_confirm,Yes
+accounts.subscriptions.show.cancel_text,"This cannot be undone, are you sure?"
+accounts.subscriptions.show.no_payments,No payments
+accounts.subscriptions.show.order,Order
+accounts.subscriptions.show.paid_at,Paid At
+accounts.subscriptions.show.past_payments,Past Payments
+accounts.subscriptions.show.payment_details,Payment Details
+accounts.subscriptions.show.payment_source_expires_at,Expires: %{expires_at}
+accounts.subscriptions.show.payment_source_identifier,Identifier: %{identifier}
+accounts.subscriptions.show.status,Status: %{subscription_status}
+accounts.subscriptions.show.submit_update_button_label,Update
+accounts.subscriptions.show.update_payment_details,Update Payment Details
+accounts.subscriptions.status.enum.active,Active
+accounts.subscriptions.status.enum.cancelled,Cancelled
+accounts.subscriptions.status.enum.delinquent,Delinquent
+accounts.subscriptions.status.enum.expired,Expired
+accounts.subscriptions.status.enum.suspended,Suspended
+articles.category.no_articles,There are no articles in this category
+articles.index.heading,Latest Articles
+articles.index.no_articles,There are no articles
+articles.sidebar.heading,Categories
+auth.confirmations.new.button,Resend
+auth.confirmations.new.heading,Resend confirmation instructions
+auth.confirmations.new.username_placeholder,Email or username
+auth.confirmations.pending.check_your_email,Please check your email
+auth.confirmations.pending.heading,Thank you
+auth.confirmations.pending.verify_your_email,Please verify your email address to continue your registration process.
+auth.invitations.accept.form.confirm_password,Confirm password
+auth.invitations.accept.form.password,Password
+auth.invitations.accept.form.submit,Accept invitation and set password
+auth.invitations.accept.heading,Accept Invitation
+auth.invitations.pending.check_your_email,Please check your email
+auth.invitations.pending.heading,Thank you
+auth.invitations.pending.verify_your_email,Please verify your email address to continue your registration process.
+auth.login.form.password,Password
+auth.login.form.submit,Log in
+auth.login.form.username,Username
+auth.login.form.via,Or via one of these:
+auth.login.heading,Sign in to your account
+auth.login.sso.enum.azure,via Azure
+auth.login.sso.enum.experience_cloud,via our Portal
+auth.login.sso.enum.google,via Google
+auth.login.sso.reset_password,Reset
+auth.login.sso.sign_in,Sign in
+auth.login.sso.sign_in_or_register,Sign in or up
+auth.passwords.forgot.form.email,Email
+auth.passwords.forgot.form.submit,Send me reset password instructions
+auth.passwords.forgot.heading,Reset password
+auth.passwords.forgot.via,Or via one of these:
+auth.passwords.reset.form.password,New password
+auth.passwords.reset.form.password_confirmation,Confirm new password
+auth.passwords.reset.form.submit,Change my password
+auth.passwords.reset.heading,Change your password
+auth.shared.links.didnt_receive_confirmation_instructions,Didn't receive confirmation instructions?
+auth.shared.links.forgot_you_password,Forgot your password?
+auth.shared.links.log_in,Go to Log in
+bookings.booking_details.location_info_more,(more info)
+bookings.timer.plural.did_expire,Bookings expired
+bookings.timer.plural.will_expire,Bookings expire in
+bookings.timer.singular.did_expire,Booking expired
+bookings.timer.singular.will_expire,Booking expires in
+bundles.bundle.includes,Bundle includes:
+bundles.form.add_bundle_to_cart,Add bundle to cart
+bundles.form.bundle_includes,Your bundle includes
+bundles.form.loading_error,"Sorry, an error occurred loading the data"
+bundles.form.optional_addons,Optional add-ons
+bundles.product.choose_from_variants,Choose from %{count} variants
+bundles.product.quantity_x,%{quantity} x
+bundles.single_choice.add_to_bundle,Add to bundle
+bundles.single_choice.bundled_product.choose_from_options,Choose from %{count} options
+bundles.single_choice.filters.brand,Brand
+bundles.single_choice.filters.feature_type,%{name} type
+bundles.single_choice.filters.title,Filters
+cart.buttons.checkout,Checkout
+cart.buttons.request_quote,Request Quote
+cart.empty_msg,Your cart is empty
+cart.header,Shopping Cart
+cart.links.clear_cart,Empty Cart
+cart.links.continue_shopping,Continue shopping
+checkout.accept_terms.accept_terms_and_conditions,Accept Terms & Conditions
+checkout.accept_terms.header,Accept Terms
+checkout.accept_terms.next,Next
+checkout.account_credits.apply,Apply
+checkout.account_credits.enter_amount,Enter total amount to apply
+checkout.account_credits.heading,Account Credits
+checkout.account_credits.remove,Remove
+checkout.account_credits.select_prompt,Select an account credit...
+checkout.assisted_by.were_you_assisted_with_this_order,Were you assisted with this order?
+checkout.customer_information.billing_address.billing_address_same_as_shipping_address,Same as Shipping Address
+checkout.customer_information.billing_address.heading,Billing Address
+checkout.customer_information.buttons.finish_quote,Submit Quote Request
+checkout.customer_information.buttons.next,Continue
+checkout.customer_information.form.company_name,Company name (if applicable)
+checkout.customer_information.form.company_name_hint,You can edit your comapny name in your account settings
+checkout.customer_information.form.email_address,Email address
+checkout.customer_information.form.email_address_confirmation,Confirm email address
+checkout.customer_information.form.email_address_explanation,(for your order confirmation)
+checkout.customer_information.form.first_name,First name
+checkout.customer_information.form.full_name,Full name
+checkout.customer_information.form.full_name_hint,You can edit your name in your account settings
+checkout.customer_information.form.last_name,Last name
+checkout.customer_information.form.phone_number,Phone number
+checkout.customer_information.form.phone_number_explanation,(in case of delivery questions)
+checkout.customer_information.header,Shipping address
+checkout.customer_information.new_recipient.email_address,Recipient's email
+checkout.customer_information.new_recipient.email_address_explanation,(for our records)
+checkout.customer_information.new_recipient.full_name,Recipient's full name
+checkout.customer_information.new_recipient.order_confirmation_notice,Note: Your order confirmation will be sent to the email address associated with your account (%{account_email}) not the recipient email provided.
+checkout.customer_information.new_recipient.phone_number,Recipient's Phone number
+checkout.customer_information.new_recipient.phone_number_explanation,(in case of delivery questions)
+checkout.customer_information.new_recipient.ship_to_different_person,Ship to a different person
+checkout.customer_information.new_recipient.ship_to_me,Ship to me
+checkout.customer_notes.add_notes_about_your_order,Add notes about your order
+checkout.customer_notes.enter_notes,Enter Notes
+checkout.delivery.header,Delivery
+checkout.gateways.form.card_name,Name on card
+checkout.gateways.form.card_number,Card number
+checkout.gateways.form.card_number_placeholder,0000 0000 0000 0000
+checkout.gateways.form.errors.invalid,Card is not valid
+checkout.gateways.form.expiry,Card Expiry
+checkout.gateways.form.expiry_month,Expiry month
+checkout.gateways.form.expiry_month_placeholder,MM
+checkout.gateways.form.expiry_placeholder,MM/YYYY
+checkout.gateways.form.expiry_placeholder_short,MM/YY
+checkout.gateways.form.expiry_year,Expiry year
+checkout.gateways.form.expiry_year_placeholder,YYYY
+checkout.gateways.form.notices.processing,Processing
+checkout.gateways.form.pay_now,Pay Now
+checkout.gateways.form.verification,CVC
+checkout.gateways.form.verification_placeholder,123
+checkout.gateways.free_form.no_payment_required,No payment required
+checkout.gateways.free_form.purchase,Purchase
+checkout.gateways.pay_by_account_form.account_on_credit_hold,"Account is on credit hold, please contact us for information."
+checkout.gateways.pay_by_account_form.enter_purchase_order_number,Enter Purchase Order Number
+checkout.gateways.pay_by_account_form.pay_now,Pay Now
+checkout.gateways.pay_later_form.pay_now,Complete Purchase
+checkout.gateways.pay_with_zip,Pay with zip
+checkout.gateways.points_form.pay_now,Purchase
+checkout.gateways.store_credit_form.paying_with_account_credit,Paying with account credit
+checkout.gateways.store_credit_form.paying_with_voucher,Paying by voucher
+checkout.gateways.store_credit_form.purchase,Purchase
+checkout.gateways.stripe_ach_form.accept,Accept
+checkout.gateways.stripe_ach_form.accept_terms,"By clicking accept, you authorize %{name} to debit the bank account specified above for any amount owed for charges arising from your use of %{name} services and/or purchase of products from %{name}, pursuant to %{name} website and terms, until this authorization is revoked. You may amend or cancel this authorization at any time by providing notice to %{name} with 30 (thirty) days notice."
+checkout.gateways.stripe_ach_form.account_holder_type,Account Holder Type
+checkout.gateways.stripe_ach_form.account_name,Account Name
+checkout.gateways.stripe_ach_form.account_number,Account Number
+checkout.gateways.stripe_ach_form.email,Email
+checkout.gateways.stripe_ach_form.pay_now,Authorize Now
+checkout.gateways.stripe_ach_form.routing_number,Routing Number
+checkout.payment.error,"Sorry, an error occurred while trying to process the payment. Please try again later."
+checkout.payment.header,Payment
+checkout.please_fix_the_following_errors,Please fix the following errors
+checkout.points.insufficient_balance,You do not have enough points to complete this order
+checkout.points.requires_login,You must be logged in to pay with points
+checkout.promo_codes.apply,Apply
+checkout.promo_codes.enter_promo_code,Enter promo code
+checkout.promo_codes.heading,Promo Codes
+checkout.shipping.click_and_collect.available_from,Available %{from}
+checkout.shipping.click_and_collect.lead_time,Please allow %{lead_time} before collection
+checkout.shipping.click_and_collect.lead_time_immediate,Available for collection now
+checkout.shipping.click_and_collect.out_of_stock,Out of Stock
+checkout.shipping.form.next,Next
+checkout.shipping.form.remove_from_cart,(Remove from cart)
+checkout.shipping.form.the_following_items_cannot_be_delivered,The following items cannot be delivered:
+checkout.shipping.shipping_notes.header,Shipping Instructions
+checkout.shipping.shipping_notes.placeholder,Enter Shipping Instructions
+checkout.shipping.shipping_notes.reveal_label,Add Shipping Instructions
+checkout.shipping.shipping_providers.australia_post.could_not_retrieve_shipping_rates,Could not retrieve shipping rates from Australia Post: %{error_message}.
+checkout.shipping.shipping_providers.star_track.could_not_retrieve_shipping_rates,Could not retrieve shipping rates from StarTrack: %{error_message}.
+checkout.shipping.unavailable.click_and_collect_prompt,Click & Collect is not available for all items in your cart. Try removing some items.
+checkout.shipping.unavailable.click_and_collect_prompt_or_ship,Click & Collect is not available for all items in your cart. Choose a shipping option or try removing some items.
+checkout.shipping.unavailable.shipping_option_prompt,There are no shipping options available that cater for all items in your cart. Try removing some items.
+checkout.shipping.unavailable.shipping_option_prompt_or_click_and_collect,There are no shipping options available that cater for all items in your cart. Try Click & Collect or remove some items.
+checkout.shipping.unavailable.we_can_deliver_via,We can deliver via:
+checkout.vouchers.apply,Apply
+checkout.vouchers.enter_code,Enter voucher code
+checkout.vouchers.heading,Vouchers
+checkout.vouchers.remove,Remove
+geolocation.bar.choose_region,Choose your country or region
+geolocation.bar.dismiss,X
+geolocation.bar.select,Confirm
+header.dropdowns.account.account_credits,Account credits
+header.dropdowns.account.account_points,Account points
+header.dropdowns.account.heading,Account
+header.dropdowns.account.login,Log in
+header.dropdowns.account.logout,Log out
+header.dropdowns.account.orders,Orders
+header.dropdowns.account.product_approvals,Product Approvals
+header.dropdowns.account.profile,Account
+header.dropdowns.account.subscriptions,Subscriptions
+header.dropdowns.cart.close,Close
+header.dropdowns.cart.heading,Cart
+header.menu.account,Account
+header.menu.close,Close
+header.search.placeholder,"Search for products, categories or content"
+header.submenu.back_to_main,Back to main menu
+line_items.links.edit_bundle,Edit bundle
+line_items.links.remove_item,Remove
+line_items.quantity,Qty %{quantity}
+location.menu.email,Email
+location.menu.phone,Call
+location.menu.website,Website
+location.navigation.all_locations,All %{name}
+location.navigation.back_to_locations,Back to %{name}
+locations.search.forms.common.fields.category.label,Category
+locations.search.forms.common.fields.category.prompt,Category
+locations.search.forms.exact.buttons.submit,Find %{name}
+locations.search.forms.exact.fields.country.all_label,All Countries
+locations.search.forms.exact.fields.country.label,Country
+locations.search.forms.exact.fields.postcode.placeholder,Post code
+locations.search.forms.exact.fields.state.all_label,All States
+locations.search.forms.exact.fields.state.label,State
+locations.search.forms.near.fields.address.errors.invalid_address,(Invalid address)
+locations.search.forms.near.fields.address.label,Near
+locations.search.forms.near.fields.address.placeholder,"City, State, Postcode, Country"
+locations.search.forms.near.fields.address.use_current_location,Use current location
+locations.search.forms.near.fields.distance.label,Within
+locations.search.forms.near.fields.distance.placeholder,Distance
+locations.search.product.not_found,Unknown product
+locations.search.results.abbr.imperial,miles
+locations.search.results.abbr.metric,km
+locations.search.results.count.one,1 match
+locations.search.results.count.other,%{count} matches
+locations.search.results.count.zero,No matches
+locations.search.results.default,Waiting to perform search
+locations.search.results.formatters.distance_away,%{distance} away
+locations.search.results.formatters.distance_with_unit,%{number} %{unit}
+locations.search.results.formatters.within_distance_of_origin,within %{number} %{unit} of %{origin}
+locations.search.results.menu.directions,Directions
+locations.search.results.menu.view,Show details
+locations.search.results.menu.website,Website
+locations.search.results.postcode,in post code %{postcode}
+order_summary.account_credit,Account Credit
+order_summary.cart.total_payable,Payment due now
+order_summary.currency_and_points_connector,and
+order_summary.includes_fixed_subscriptions,Total includes %{amount} of fixed-term subscriptions
+order_summary.includes_tax,Includes %{tax_label}
+order_summary.order.pay_balance,Pay Balance of %{amount}
+order_summary.order.total_payable,Balance owing
+order_summary.order.total_subscriptions_remaining,Total remaining subscriptions
+order_summary.paid,Paid
+order_summary.tax_label,Tax
+order_summary.total,Total amount
+order_summary.voucher,Voucher
+pagination.first,First
+pagination.last,Last
+pagination.next,Next
+pagination.previous,Previous
+pricing.currency_or_points,%{currency} or %{points}
+pricing.currency_or_points_connector,or
+pricing.deposit,Deposit
+pricing.earn_points,earn up to %{points}
+pricing.free,FREE
+pricing.hide_price_text,POA
+pricing.original_price,Was
+pricing.points.earn.earn_label,earn
+pricing.points.earn.earn_points,Earn %{points}
+pricing.points.earn.every_timespan,every %{timespan}
+pricing.points.earn.variable_points_label,from
+pricing.points.purchase.variable,From
+pricing.subscription_timespan,Every %{timespan}
+pricing.subscription_total,%{total_amount} over %{full_timespan}
+pricing.total_due,Total due
+pricing.variable,From %{price}
+privacy.accept_all,Accept All
+privacy.manage_settings,Manage Cookies
+privacy.modal.clear,Clear Saved Settings
+privacy.modal.disable_all_label,Disable all
+privacy.modal.disabled_label,Disabled
+privacy.modal.enable_all_label,Enable all
+privacy.modal.enabled_label,Enabled
+privacy.modal.save,Save Settings
+privacy.modal.save_accept_all,Enable All & Save
+privacy.modal.save_reject_all,Disable All & Save
+privacy.reject_all,Reject All
+products.add_to_cart.quantity_label,Qty
+products.approvals.restricted,This item is restricted and requires pre-approval
+products.approvals.status.approved.count.infinity,You can purchase an unlimited amount of this item
+products.approvals.status.approved.count.one,You are approved to purchase only 1 of this item
+products.approvals.status.approved.count.other,You are approved to purchase a maximum of %{count}
+products.approvals.status.approved.count.zero,You have no more approvals for this item
+products.approvals.status.completed,You have no more approvals for this item
+products.approvals.status.expired,Your previous approval has expired
+products.approvals.status.none,You do not have approval to purchase this item
+products.approvals.status.pending_html,Your approval starts on %{date}
+products.availability.address_label,Address
+products.availability.available,Available
+products.availability.closest_with_availability,Closest dates with availability:
+products.availability.no_availabilities,No availabilities in the selected date range
+products.availability.sold_out,Sold out
+products.booking.all_locations,All locations
+products.booking.dates,Dates
+products.booking.location,Location
+products.compare.add_to_compare,Add to compare
+products.compare.banner.compare_products,Compare products
+products.compare.banner.unselect_all,Unselect all
+products.compare.banner.you_must_select_at_least_two_products_to_compare,You must select at least 2 products to compare
+products.in_your_cart.header,In your cart
+products.index.all_products,All products
+products.inventory.available,In stock at
+products.inventory.want_to_click_and_collect,Pickup available
+products.pickup.available,Pickup available
+products.pickup.only,Pickup only
+products.pricing.deposit,Deposit %{amount}
+products.pricing.free,FREE
+products.pricing.free_in_bundle,Free in bundle
+products.pricing.from,From %{price}
+products.pricing.not_purchasable,Not purchasable
+products.pricing.original_price,Was %{amount}
+products.pricing.subscription_price,%{amount}
+products.pricing.subscription_term,Every %{timespan}
+products.pricing.subscription_total_price,%{total_amount} over %{full_timespan_months}
+products.pricing.timespan_day.count.one,day
+products.pricing.timespan_day.count.other,%{count} days
+products.pricing.timespan_month.count.one,month
+products.pricing.timespan_month.count.other,%{count} months
+products.pricing.timespan_week.count.#2,fortnight
+products.pricing.timespan_week.count.one,week
+products.pricing.timespan_week.count.other,%{count} weeks
+products.pricing.timespan_year.count.one,year
+products.pricing.timespan_year.count.other,%{count} years
+products.pricing.total_due,Total due %{amount}
+products.related_products.title,Related Products
+products.show.discontinued,(Discontinued)
+products.show.excluding_tax,Price excludes tax
+products.show.loading_bundles,Loading...
+products.variant_options.no_stock,No stock available
+products.variant_options.reset_choices,Reset Choices
+products.variant_options.select,Select %{variant_type}
+salesforce_payments.errors.already_paid,The order is fully paid but you have requested to take further payment of %{amount}
+salesforce_payments.errors.continue_anyway,Continue anyway
+salesforce_payments.errors.fix_data_in_sf,"Please select another payment provider, or fix the data in Salesforce."
+salesforce_payments.errors.last_sync,"The Order was last updated %{timestamp} ago. If your recently updated the order, it might not have synced yet."
+salesforce_payments.errors.unable_to_proceed,Unable to Proceed with Payment
+sc.account_credit.apply.errors.expired,That Account Credit has expired
+sc.account_credit.apply.errors.fail,The account credit could not be applied to your order. Please contact support for assistance.
+sc.account_credit.apply.errors.insufficient_balance,The maximum amount you can apply with the selected account credit is %{amount}
+sc.account_credit.apply.errors.negative_amount,The account credit amount applied can't be less than zero
+sc.account_credit.apply.errors.not_found,Please select an account credit
+sc.account_credit.apply.errors.not_permitted,You are not allowed to use account credit for this account
+sc.account_credit.apply.notices.excludes_subscriptions,Account Credit has been applied. Please note: You can't use account credit to pay for subscriptions.
+sc.account_credit.apply.notices.removed,The account credit has been removed from this order
+sc.account_credit.apply.notices.success,Account Credit has been applied.
+sc.account_credit.descriptor,Account Credit
+sc.account_credit.remove.errors.fail,The account credit could not be removed from your cart. Please contact support for assistance.
+sc.account_credit.remove.notices.success,Account Credit removed
+sc.account_points.descriptor,Account Points
+sc.accounts.confirmations.notices.already_signed_in,You are already signed in
+sc.accounts.invitations.notices.already_signed_in,You are already signed in
+sc.accounts.orders.bookings.attendees.create.errors.fail,There was an error creating the attendee
+sc.accounts.orders.bookings.attendees.create.notices.success,Attendee was added
+sc.accounts.orders.bookings.attendees.update.errors.fail,There was an error updating the attendee's details
+sc.accounts.orders.bookings.attendees.update.notices.success,Attendee details were updated
+sc.accounts.orders.bookings.attendees.validation.email_format,Email address is invalid
+sc.accounts.orders.bookings.attendees.validation.email_or_phone_required,Either an email or phone number must be provided
+sc.accounts.profile.update.errors.fail,There was an unexpected error updating your details. Please contact support for assistance.
+sc.accounts.profile.update.errors.invalid,There was an error updating your details
+sc.accounts.profile.update.notices.success,Your details were successfully updated
+sc.accounts.register.errors.fail,"There was a problem processing your registration, please contact support."
+sc.accounts.register.errors.invalid,There was a problem creating your account
+sc.accounts.register.notices.already_signed_in,You are already signed in
+sc.accounts.register.notices.login_exists,You already have an account. Please sign in
+sc.accounts.subscriptions.cancel.errors.not_allowed,That subscription cannot be cancelled
+sc.accounts.subscriptions.cancel.notices.success,Subscription has been cancelled
+sc.accounts.subscriptions.update_payment_details.errors.fail,Updating payment details failed
+sc.accounts.subscriptions.update_payment_details.notices.success,Payment details updated
+sc.article.errors.not_found,That article was not found.
+sc.article.errors.requires_membership,You do not have the required membership level to access this article. Requires: %{membership_required}.
+sc.article_category.errors.not_found,That article category was not found.
+sc.auth.confirmations.confirmed,Your email address has been successfully confirmed.
+sc.auth.confirmations.send_instructions,You will receive an email with instructions for how to confirm your email address in a few minutes.
+sc.auth.confirmations.send_paranoid_instructions,"If your email address exists in our database, you will receive an email with instructions for how to confirm your email address in a few minutes."
+sc.auth.failure.already_authenticated,You are already signed in.
+sc.auth.failure.inactive,Your account is not activated yet.
+sc.auth.failure.invalid,Invalid %{authentication_keys} or password.
+sc.auth.failure.invited,"You have a pending invitation, accept it to finish creating your account."
+sc.auth.failure.last_attempt,You have one more attempt before your account is locked.
+sc.auth.failure.locked,Your account is locked.
+sc.auth.failure.not_found_in_database,Invalid %{authentication_keys} or password.
+sc.auth.failure.timeout,Your session expired. Please sign in again to continue.
+sc.auth.failure.unauthenticated,You need to sign in or sign up before continuing.
+sc.auth.failure.unconfirmed,You have to confirm your email address before continuing.
+sc.auth.invitations.invitation_removed,Your invitation was removed.
+sc.auth.invitations.invitation_token_invalid,The invitation token provided is not valid!
+sc.auth.invitations.no_invitations_remaining,No invitations remaining
+sc.auth.invitations.notices.success,Welcome! Your account is all set up.
+sc.auth.invitations.send_instructions,An invitation email has been sent to %{email}.
+sc.auth.invitations.updated,Your password was set successfully. You are now signed in.
+sc.auth.invitations.updated_not_active,Your password was set successfully.
+sc.auth.passwords.fail,"There was a problem processing your registration, please contact support."
+sc.auth.passwords.invalid_token,The password reset URL you used is invalid - it might have expired. Please restart the Reset Password process.
+sc.auth.passwords.no_token,"You can't access this page without coming from a password reset email. If you do come from a password reset email, please make sure you used the full URL provided."
+sc.auth.passwords.send_instructions,You will receive an email with instructions on how to reset your password in a few minutes.
+sc.auth.passwords.send_paranoid_instructions,"If your email address exists in our database, you will receive a password recovery link at your email address in a few minutes."
+sc.auth.passwords.updated,Your password has been changed successfully. You are now signed in.
+sc.auth.passwords.updated_not_active,Your password has been changed successfully.
+sc.auth.registrations.destroyed,Bye! Your account has been successfully cancelled. We hope to see you again soon.
+sc.auth.registrations.signed_up,Welcome! You have signed up successfully.
+sc.auth.registrations.signed_up_but_inactive,"You have signed up successfully. However, we could not sign you in because your account is not yet activated."
+sc.auth.registrations.signed_up_but_locked,"You have signed up successfully. However, we could not sign you in because your account is locked."
+sc.auth.registrations.signed_up_but_unconfirmed,A message with a confirmation link has been sent to your email address. Please follow the link to activate your account.
+sc.auth.registrations.update_needs_confirmation,"You updated your account successfully, but we need to verify your new email address. Please check your email and follow the confirmation link to confirm your new email address."
+sc.auth.registrations.updated,Your account has been updated successfully.
+sc.auth.registrations.updated_but_not_signed_in,"Your account has been updated successfully, but since your password was changed, you need to sign in again."
+sc.auth.sessions.already_signed_out,""
+sc.auth.sessions.signed_in,""
+sc.auth.sessions.signed_out,Signed out successfully.
+sc.auth.sso.azure.fail,Could not authenticate you from Azure because: %{reason}
+sc.auth.sso.azure.success,Successfully authenticated from your Azure account.
+sc.auth.sso.azure.support,"There was a problem processing your registration, please contact support."
+sc.auth.sso.customer_saml.fail,Could not authenticate you from because: %{reason}
+sc.auth.sso.customer_saml.success,Successfully authenticated from your account.
+sc.auth.sso.customer_saml.support,"There was a problem processing your registration, please contact support."
+sc.auth.sso.google.fail,Could not authenticate you from Google because: %{reason}
+sc.auth.sso.google.success,Successfully authenticated from your Google account.
+sc.auth.sso.google.support,"There was a problem processing your registration, please contact support."
+sc.bundles.add.errors.could_not_add_product,Could not add %{name} to cart: %{message}
+sc.bundles.add.notices.success,Bundle added to your cart!
+sc.cart.add.errors.out_of_stock,%{name} is out of stock
+sc.cart.add.errors.product_is_restricted,Prior approval is required before you can purchase %{name}
+sc.cart.create.errors.fail,Could not create cart
+sc.cart.update.errors.booking_hold_expired,The reservation period has expired for some items in your cart: %{names}.
+sc.cart.update.errors.booking_started,Some items in your cart have passed the starting time and can no longer be booked: %{names}.
+sc.cart.update.errors.insufficient_product_stock,The following items do not have enough stock and have been removed from your cart: %{names}.
+sc.cart.update.errors.insufficient_slots_available,Some items in your cart had a higher quantity selected than is now available. The quantity has been reduced for these items: %{names}.
+sc.cart.update.errors.limited_product_stock,Due to stock levels the quantity has been updated for the following items: %{names}.
+sc.cart.update.errors.no_slots_available,Some items in your cart are no longer available: %{names}.
+sc.cart.update.errors.restricted_products,Quantity has been reduced on the following restricted items: %{names}.
+sc.cart.update.notices.success,Cart Updated
+sc.checkout.accounts.create.errors.fail,There was a problem saving your password. Please contact support.
+sc.checkout.accounts.create.errors.invalid,There was a problem saving your password
+sc.checkout.accounts.create.notices.login_exists,You already have an account. Please sign in
+sc.checkout.accounts.create.notices.you_are_now_signed_in,"Thank you, you are now signed in"
+sc.checkout.accounts.create.notices.you_can_now_sign_in,"Thank you, you can now sign in"
+sc.checkout.captcha.errors.fail,"We have detected unusual activity, please try again or contact us for support."
+sc.checkout.click_and_collect.descriptor,Click and Collect
+sc.checkout.customer_information.errors.does_not_match,does not match
+sc.checkout.customer_information.errors.invalid_details,Invalid details: %{details}
+sc.checkout.finalize.errors.invalid,Some items in your cart are no longer valid. No payment has been taken.
+sc.checkout.invalid_cart,Checkout cannot continue because your cart is invalid.
+sc.checkout.not_available,Checkout is not available at this time.
+sc.checkout.orders.show.notices.thank_you,Thank you for your order.
+sc.checkout.payment.create.errors.address_invalid,Payment failed. Please check the postcode and address are correct for that card.
+sc.checkout.payment.create.errors.card_declined,Payment failed. That card was declined.
+sc.checkout.payment.create.errors.card_expired,"Payment failed. That card has expired, or the expiration date is incorrect."
+sc.checkout.payment.create.errors.card_invalid,"Payment failed. That card is not valid, please check all fields are correct."
+sc.checkout.payment.create.errors.card_not_supported,Payment failed. That card type is not supported.
+sc.checkout.payment.create.errors.general,"Sorry, an error occurred while trying to process the payment. Please try again later."
+sc.checkout.payment.create.errors.license_error,Live payments disabled for Sandbox StoreConnect licenses
+sc.checkout.payment.create.errors.no_cart_found,"We could not find your cart, perhaps it expired. No payment has been taken."
+sc.checkout.payment.create.errors.points.insufficient_balance,You do not have enough points to complete this order.
+sc.checkout.payment.create.errors.points.not_permitted,You are not allowed to use the account points for this account
+sc.checkout.payment.finalize_order.notices.order_processing_text,Order is still processing
+sc.checkout.payment.pay_by_account,On Account
+sc.checkout.payment.shared.errors.during_checkout,"Something went wrong, please try again later!"
+sc.checkout.payment.shared.errors.invalid_provider,Unsupported Payment Method
+sc.checkout.payment.shared.errors.updating_subscription,We were unable to update your payment details!
+sc.checkout.payment.shared.errors.verifying_payment,We were unable to verify your payment!
+sc.checkout.shipping.errors.could_not_be_calculated,Shipping could not be calculated at this time.
+sc.checkout.shipping.errors.no_longer_available,"The selected shipping service is no longer available for the selected shipping provider, please select another"
+sc.checkout.shipping.errors.shipping_method_not_selected,Please select a shipping method.
+sc.checkout.shipping.errors.some_items_not_shippable,Some of the items can not be shipped via the selected shipping method.
+sc.checkout.shipping.errors.tax_provider_offline,Tax provider offline. Please try again in a few minutes.
+sc.checkout.shipping.errors.unknown_shipping_provider,"Unrecognized shipping provider ""%{provider}"". Please try again."
+sc.checkout.terms_and_conditions.errors.must_accept,Please accept the terms to continue
+sc.errors.buy_button.add.fail,We were unable to add some or all of those items to your cart
+sc.errors.not_authenticated,You must be signed in to access this page.
+sc.errors.not_authorized,You are not authorized to access this page.
+sc.errors.not_found,Not found
+sc.errors.requires_membership,You do not have the required membership level to access this item. Requires: %{membership_required}.
+sc.errors.saml_login.authentication_failed,Authentication Failed. Please ensure you have the required permissions to login as this user.
+sc.errors.saml_login.user_not_found,Could not find any users matching: %{identifier}
+sc.errors.unexpected,"Sorry, an unexpected error occurred. Please try again."
+sc.locale.countries.AD,Andorra
+sc.locale.countries.AE,United Arab Emirates (the)
+sc.locale.countries.AF,Afghanistan
+sc.locale.countries.AG,Antigua and Barbuda
+sc.locale.countries.AI,Anguilla
+sc.locale.countries.AL,Albania
+sc.locale.countries.AM,Armenia
+sc.locale.countries.AO,Angola
+sc.locale.countries.AQ,Antarctica
+sc.locale.countries.AR,Argentina
+sc.locale.countries.AS,American Samoa
+sc.locale.countries.AT,Austria
+sc.locale.countries.AU,Australia
+sc.locale.countries.AW,Aruba
+sc.locale.countries.AX,Åland Islands
+sc.locale.countries.AZ,Azerbaijan
+sc.locale.countries.BA,Bosnia and Herzegovina
+sc.locale.countries.BB,Barbados
+sc.locale.countries.BD,Bangladesh
+sc.locale.countries.BE,Belgium
+sc.locale.countries.BF,Burkina Faso
+sc.locale.countries.BG,Bulgaria
+sc.locale.countries.BH,Bahrain
+sc.locale.countries.BI,Burundi
+sc.locale.countries.BJ,Benin
+sc.locale.countries.BL,Saint Barthélemy
+sc.locale.countries.BM,Bermuda
+sc.locale.countries.BN,Brunei Darussalam
+sc.locale.countries.BO,Bolivia (Plurinational State of)
+sc.locale.countries.BQ,"Bonaire, Sint Eustatius and Saba"
+sc.locale.countries.BR,Brazil
+sc.locale.countries.BS,Bahamas (the)
+sc.locale.countries.BT,Bhutan
+sc.locale.countries.BV,Bouvet Island
+sc.locale.countries.BW,Botswana
+sc.locale.countries.BY,Belarus
+sc.locale.countries.BZ,Belize
+sc.locale.countries.CA,Canada
+sc.locale.countries.CC,Cocos (Keeling) Islands (the)
+sc.locale.countries.CD,Congo (the Democratic Republic of the)
+sc.locale.countries.CF,Central African Republic (the)
+sc.locale.countries.CG,Congo (the)
+sc.locale.countries.CH,Switzerland
+sc.locale.countries.CI,Côte d'Ivoire
+sc.locale.countries.CK,Cook Islands (the)
+sc.locale.countries.CL,Chile
+sc.locale.countries.CM,Cameroon
+sc.locale.countries.CN,China
+sc.locale.countries.CO,Colombia
+sc.locale.countries.CR,Costa Rica
+sc.locale.countries.CU,Cuba
+sc.locale.countries.CV,Cabo Verde
+sc.locale.countries.CW,Curaçao
+sc.locale.countries.CX,Christmas Island
+sc.locale.countries.CY,Cyprus
+sc.locale.countries.CZ,Czechia
+sc.locale.countries.DE,Germany
+sc.locale.countries.DJ,Djibouti
+sc.locale.countries.DK,Denmark
+sc.locale.countries.DM,Dominica
+sc.locale.countries.DO,Dominican Republic (the)
+sc.locale.countries.DZ,Algeria
+sc.locale.countries.EC,Ecuador
+sc.locale.countries.EE,Estonia
+sc.locale.countries.EG,Egypt
+sc.locale.countries.EH,Western Sahara*
+sc.locale.countries.ER,Eritrea
+sc.locale.countries.ES,Spain
+sc.locale.countries.ET,Ethiopia
+sc.locale.countries.FI,Finland
+sc.locale.countries.FJ,Fiji
+sc.locale.countries.FK,Falkland Islands (the) [Malvinas]
+sc.locale.countries.FM,Micronesia (Federated States of)
+sc.locale.countries.FO,Faroe Islands (the)
+sc.locale.countries.FR,France
+sc.locale.countries.GA,Gabon
+sc.locale.countries.GB,United Kingdom of Great Britain and Northern Ireland (the)
+sc.locale.countries.GD,Grenada
+sc.locale.countries.GE,Georgia
+sc.locale.countries.GF,French Guiana
+sc.locale.countries.GG,Guernsey
+sc.locale.countries.GH,Ghana
+sc.locale.countries.GI,Gibraltar
+sc.locale.countries.GL,Greenland
+sc.locale.countries.GM,Gambia (the)
+sc.locale.countries.GN,Guinea
+sc.locale.countries.GP,Guadeloupe
+sc.locale.countries.GQ,Equatorial Guinea
+sc.locale.countries.GR,Greece
+sc.locale.countries.GS,South Georgia and the South Sandwich Islands
+sc.locale.countries.GT,Guatemala
+sc.locale.countries.GU,Guam
+sc.locale.countries.GW,Guinea-Bissau
+sc.locale.countries.GY,Guyana
+sc.locale.countries.HK,Hong Kong
+sc.locale.countries.HM,Heard Island and McDonald Islands
+sc.locale.countries.HN,Honduras
+sc.locale.countries.HR,Croatia
+sc.locale.countries.HT,Haiti
+sc.locale.countries.HU,Hungary
+sc.locale.countries.ID,Indonesia
+sc.locale.countries.IE,Ireland
+sc.locale.countries.IL,Israel
+sc.locale.countries.IM,Isle of Man
+sc.locale.countries.IN,India
+sc.locale.countries.IO,British Indian Ocean Territory (the)
+sc.locale.countries.IQ,Iraq
+sc.locale.countries.IR,Iran (Islamic Republic of)
+sc.locale.countries.IS,Iceland
+sc.locale.countries.IT,Italy
+sc.locale.countries.JE,Jersey
+sc.locale.countries.JM,Jamaica
+sc.locale.countries.JO,Jordan
+sc.locale.countries.JP,Japan
+sc.locale.countries.KE,Kenya
+sc.locale.countries.KG,Kyrgyzstan
+sc.locale.countries.KH,Cambodia
+sc.locale.countries.KI,Kiribati
+sc.locale.countries.KM,Comoros (the)
+sc.locale.countries.KN,Saint Kitts and Nevis
+sc.locale.countries.KP,Korea (the Democratic People's Republic of)
+sc.locale.countries.KR,Korea (the Republic of)
+sc.locale.countries.KW,Kuwait
+sc.locale.countries.KY,Cayman Islands (the)
+sc.locale.countries.KZ,Kazakhstan
+sc.locale.countries.LA,Lao People's Democratic Republic (the)
+sc.locale.countries.LB,Lebanon
+sc.locale.countries.LC,Saint Lucia
+sc.locale.countries.LI,Liechtenstein
+sc.locale.countries.LK,Sri Lanka
+sc.locale.countries.LR,Liberia
+sc.locale.countries.LS,Lesotho
+sc.locale.countries.LT,Lithuania
+sc.locale.countries.LU,Luxembourg
+sc.locale.countries.LV,Latvia
+sc.locale.countries.LY,Libya
+sc.locale.countries.MA,Morocco
+sc.locale.countries.MC,Monaco
+sc.locale.countries.MD,Moldova (the Republic of)
+sc.locale.countries.ME,Montenegro
+sc.locale.countries.MF,Saint Martin (French part)
+sc.locale.countries.MG,Madagascar
+sc.locale.countries.MH,Marshall Islands (the)
+sc.locale.countries.MK,North Macedonia
+sc.locale.countries.ML,Mali
+sc.locale.countries.MM,Myanmar
+sc.locale.countries.MN,Mongolia
+sc.locale.countries.MO,Macao
+sc.locale.countries.MP,Northern Mariana Islands (the)
+sc.locale.countries.MQ,Martinique
+sc.locale.countries.MR,Mauritania
+sc.locale.countries.MS,Montserrat
+sc.locale.countries.MT,Malta
+sc.locale.countries.MU,Mauritius
+sc.locale.countries.MV,Maldives
+sc.locale.countries.MW,Malawi
+sc.locale.countries.MX,Mexico
+sc.locale.countries.MY,Malaysia
+sc.locale.countries.MZ,Mozambique
+sc.locale.countries.NA,Namibia
+sc.locale.countries.NC,New Caledonia
+sc.locale.countries.NE,Niger (the)
+sc.locale.countries.NF,Norfolk Island
+sc.locale.countries.NG,Nigeria
+sc.locale.countries.NI,Nicaragua
+sc.locale.countries.NL,Netherlands (the)
+sc.locale.countries.NO,Norway
+sc.locale.countries.NP,Nepal
+sc.locale.countries.NR,Nauru
+sc.locale.countries.NU,Niue
+sc.locale.countries.NZ,New Zealand
+sc.locale.countries.OM,Oman
+sc.locale.countries.PA,Panama
+sc.locale.countries.PE,Peru
+sc.locale.countries.PF,French Polynesia
+sc.locale.countries.PG,Papua New Guinea
+sc.locale.countries.PH,Philippines (the)
+sc.locale.countries.PK,Pakistan
+sc.locale.countries.PL,Poland
+sc.locale.countries.PM,Saint Pierre and Miquelon
+sc.locale.countries.PN,Pitcairn
+sc.locale.countries.PR,Puerto Rico
+sc.locale.countries.PS,"Palestine, State of"
+sc.locale.countries.PT,Portugal
+sc.locale.countries.PW,Palau
+sc.locale.countries.PY,Paraguay
+sc.locale.countries.QA,Qatar
+sc.locale.countries.RE,Réunion
+sc.locale.countries.RO,Romania
+sc.locale.countries.RS,Serbia
+sc.locale.countries.RU,Russian Federation (the)
+sc.locale.countries.RW,Rwanda
+sc.locale.countries.SA,Saudi Arabia
+sc.locale.countries.SB,Solomon Islands
+sc.locale.countries.SC,Seychelles
+sc.locale.countries.SD,Sudan (the)
+sc.locale.countries.SE,Sweden
+sc.locale.countries.SG,Singapore
+sc.locale.countries.SH,"Saint Helena, Ascension and Tristan da Cunha"
+sc.locale.countries.SI,Slovenia
+sc.locale.countries.SJ,Svalbard and Jan Mayen
+sc.locale.countries.SK,Slovakia
+sc.locale.countries.SL,Sierra Leone
+sc.locale.countries.SM,San Marino
+sc.locale.countries.SN,Senegal
+sc.locale.countries.SO,Somalia
+sc.locale.countries.SR,Suriname
+sc.locale.countries.SS,South Sudan
+sc.locale.countries.ST,Sao Tome and Principe
+sc.locale.countries.SV,El Salvador
+sc.locale.countries.SX,Sint Maarten (Dutch part)
+sc.locale.countries.SY,Syrian Arab Republic (the)
+sc.locale.countries.SZ,Eswatini
+sc.locale.countries.TC,Turks and Caicos Islands (the)
+sc.locale.countries.TD,Chad
+sc.locale.countries.TF,French Southern Territories (the)
+sc.locale.countries.TG,Togo
+sc.locale.countries.TH,Thailand
+sc.locale.countries.TJ,Tajikistan
+sc.locale.countries.TK,Tokelau
+sc.locale.countries.TL,Timor-Leste
+sc.locale.countries.TM,Turkmenistan
+sc.locale.countries.TN,Tunisia
+sc.locale.countries.TO,Tonga
+sc.locale.countries.TR,Turkey
+sc.locale.countries.TT,Trinidad and Tobago
+sc.locale.countries.TV,Tuvalu
+sc.locale.countries.TW,Taiwan (Province of China)
+sc.locale.countries.TZ,"Tanzania, the United Republic of"
+sc.locale.countries.UA,Ukraine
+sc.locale.countries.UG,Uganda
+sc.locale.countries.UM,United States Minor Outlying Islands (the)
+sc.locale.countries.US,United States of America (the)
+sc.locale.countries.UY,Uruguay
+sc.locale.countries.UZ,Uzbekistan
+sc.locale.countries.VA,Holy See (the)
+sc.locale.countries.VC,Saint Vincent and the Grenadines
+sc.locale.countries.VE,Venezuela (Bolivarian Republic of)
+sc.locale.countries.VG,Virgin Islands (British)
+sc.locale.countries.VI,Virgin Islands (U.S.)
+sc.locale.countries.VN,Viet Nam
+sc.locale.countries.VU,Vanuatu
+sc.locale.countries.WF,Wallis and Futuna
+sc.locale.countries.WS,Samoa
+sc.locale.countries.YE,Yemen
+sc.locale.countries.YT,Mayotte
+sc.locale.countries.ZA,South Africa
+sc.locale.countries.ZM,Zambia
+sc.locale.countries.ZW,Zimbabwe
+sc.locale.database.fields.account.billing_address_lines,Billing Address Lines
+sc.locale.database.fields.account.billingcity,Billing City
+sc.locale.database.fields.account.billingcountry,Billing Country
+sc.locale.database.fields.account.billingpostalcode,Billing Postal Code
+sc.locale.database.fields.account.billingstate,Billing State
+sc.locale.database.fields.account.billingstreet,Billing Street
+sc.locale.database.fields.account.shipping_address_lines,Shipping Address Lines
+sc.locale.database.fields.account.shippingcity,Shipping City
+sc.locale.database.fields.account.shippingcountry,Shipping Country
+sc.locale.database.fields.account.shippingpostalcode,Shipping Postal Code
+sc.locale.database.fields.account.shippingstate,Shipping State
+sc.locale.database.fields.account.shippingstreet,Shipping Street
+sc.locale.database.fields.contact.email,Email
+sc.locale.database.fields.contact.firstname,First name
+sc.locale.database.fields.contact.lastname,Last name
+sc.locale.database.fields.contact.phone,Phone
+sc.locale.database.fields.contact.username,Username
+sc.locale.database.fields.login.password,Password
+sc.locale.database.fields.login.password_confirmation,Password confirmation
+sc.locale.database.objects.account,Account
+sc.locale.database.objects.contact,Contact
+sc.locale.database.objects.login,Login
+sc.locale.date.abbr_day_names.0,Sun
+sc.locale.date.abbr_day_names.1,Mon
+sc.locale.date.abbr_day_names.2,Tue
+sc.locale.date.abbr_day_names.3,Wed
+sc.locale.date.abbr_day_names.4,Thu
+sc.locale.date.abbr_day_names.5,Fri
+sc.locale.date.abbr_day_names.6,Sat
+sc.locale.date.abbr_month_names.0,
+sc.locale.date.abbr_month_names.1,Jan
+sc.locale.date.abbr_month_names.2,Feb
+sc.locale.date.abbr_month_names.3,Mar
+sc.locale.date.abbr_month_names.4,Apr
+sc.locale.date.abbr_month_names.5,May
+sc.locale.date.abbr_month_names.6,Jun
+sc.locale.date.abbr_month_names.7,Jul
+sc.locale.date.abbr_month_names.8,Aug
+sc.locale.date.abbr_month_names.9,Sep
+sc.locale.date.abbr_month_names.10,Oct
+sc.locale.date.abbr_month_names.11,Nov
+sc.locale.date.abbr_month_names.12,Dec
+sc.locale.date.day_names.0,Sunday
+sc.locale.date.day_names.1,Monday
+sc.locale.date.day_names.2,Tuesday
+sc.locale.date.day_names.3,Wednesday
+sc.locale.date.day_names.4,Thursday
+sc.locale.date.day_names.5,Friday
+sc.locale.date.day_names.6,Saturday
+sc.locale.date.formats.default,%Y-%m-%d
+sc.locale.date.formats.long,"%B %d, %Y"
+sc.locale.date.formats.short,%b %d
+sc.locale.date.month_names.0,
+sc.locale.date.month_names.1,January
+sc.locale.date.month_names.2,February
+sc.locale.date.month_names.3,March
+sc.locale.date.month_names.4,April
+sc.locale.date.month_names.5,May
+sc.locale.date.month_names.6,June
+sc.locale.date.month_names.7,July
+sc.locale.date.month_names.8,August
+sc.locale.date.month_names.9,September
+sc.locale.date.month_names.10,October
+sc.locale.date.month_names.11,November
+sc.locale.date.month_names.12,December
+sc.locale.date.order.0,year
+sc.locale.date.order.1,month
+sc.locale.date.order.2,day
+sc.locale.datetime.distance_in_words.about_x_hours.one,about 1 hour
+sc.locale.datetime.distance_in_words.about_x_hours.other,about %{count} hours
+sc.locale.datetime.distance_in_words.about_x_months.one,about 1 month
+sc.locale.datetime.distance_in_words.about_x_months.other,about %{count} months
+sc.locale.datetime.distance_in_words.about_x_years.one,about 1 year
+sc.locale.datetime.distance_in_words.about_x_years.other,about %{count} years
+sc.locale.datetime.distance_in_words.almost_x_years.one,almost 1 year
+sc.locale.datetime.distance_in_words.almost_x_years.other,almost %{count} years
+sc.locale.datetime.distance_in_words.half_a_minute,half a minute
+sc.locale.datetime.distance_in_words.less_than_x_minutes.one,less than a minute
+sc.locale.datetime.distance_in_words.less_than_x_minutes.other,less than %{count} minutes
+sc.locale.datetime.distance_in_words.less_than_x_seconds.one,less than 1 second
+sc.locale.datetime.distance_in_words.less_than_x_seconds.other,less than %{count} seconds
+sc.locale.datetime.distance_in_words.over_x_years.one,over 1 year
+sc.locale.datetime.distance_in_words.over_x_years.other,over %{count} years
+sc.locale.datetime.distance_in_words.x_days.one,1 day
+sc.locale.datetime.distance_in_words.x_days.other,%{count} days
+sc.locale.datetime.distance_in_words.x_hours.one,1 hour
+sc.locale.datetime.distance_in_words.x_hours.other,%{count} hours
+sc.locale.datetime.distance_in_words.x_minutes.one,1 minute
+sc.locale.datetime.distance_in_words.x_minutes.other,%{count} minutes
+sc.locale.datetime.distance_in_words.x_months.one,1 month
+sc.locale.datetime.distance_in_words.x_months.other,%{count} months
+sc.locale.datetime.distance_in_words.x_seconds.one,1 second
+sc.locale.datetime.distance_in_words.x_seconds.other,%{count} seconds
+sc.locale.datetime.distance_in_words.x_weeks.one,1 week
+sc.locale.datetime.distance_in_words.x_weeks.other,%{count} weeks
+sc.locale.datetime.distance_in_words.x_years.one,1 year
+sc.locale.datetime.distance_in_words.x_years.other,%{count} years
+sc.locale.datetime.prompts.day,Day
+sc.locale.datetime.prompts.hour,Hour
+sc.locale.datetime.prompts.minute,Minute
+sc.locale.datetime.prompts.month,Month
+sc.locale.datetime.prompts.second,Second
+sc.locale.datetime.prompts.year,Year
+sc.locale.errors.format,%{attribute} %{message}
+sc.locale.errors.messages.accepted,must be accepted
+sc.locale.errors.messages.already_confirmed,"was already confirmed, please try signing in"
+sc.locale.errors.messages.blank,can't be blank
+sc.locale.errors.messages.confirmation,doesn't match %{attribute}
+sc.locale.errors.messages.confirmation_period_expired,"needs to be confirmed within %{period}, please request a new one"
+sc.locale.errors.messages.empty,can't be empty
+sc.locale.errors.messages.equal_to,must be equal to %{count}
+sc.locale.errors.messages.even,must be even
+sc.locale.errors.messages.exclusion,is reserved
+sc.locale.errors.messages.expired,"has expired, please request a new one"
+sc.locale.errors.messages.greater_than,must be greater than %{count}
+sc.locale.errors.messages.greater_than_or_equal_to,must be greater than or equal to %{count}
+sc.locale.errors.messages.immutable,can't be changed
+sc.locale.errors.messages.inclusion,is not included in the list
+sc.locale.errors.messages.invalid,is invalid
+sc.locale.errors.messages.less_than,must be less than %{count}
+sc.locale.errors.messages.less_than_or_equal_to,must be less than or equal to %{count}
+sc.locale.errors.messages.model_invalid,Validation failed: %{errors}
+sc.locale.errors.messages.not_a_number,is not a number
+sc.locale.errors.messages.not_an_integer,must be an integer
+sc.locale.errors.messages.not_found,not found
+sc.locale.errors.messages.not_locked,was not locked
+sc.locale.errors.messages.not_saved.one,1 error prohibited this %{resource} from being saved:
+sc.locale.errors.messages.not_saved.other,%{count} errors prohibited this %{resource} from being saved:
+sc.locale.errors.messages.odd,must be odd
+sc.locale.errors.messages.other_than,must be other than %{count}
+sc.locale.errors.messages.present,must be blank
+sc.locale.errors.messages.record_invalid,Validation failed: %{errors}
+sc.locale.errors.messages.required,must exist
+sc.locale.errors.messages.restrict_dependent_destroy.has_many,Cannot delete record because dependent %{record} exist
+sc.locale.errors.messages.restrict_dependent_destroy.has_one,Cannot delete record because a dependent %{record} exists
+sc.locale.errors.messages.taken,has already been taken
+sc.locale.errors.messages.too_long.one,is too long (maximum is 1 character)
+sc.locale.errors.messages.too_long.other,is too long (maximum is %{count} characters)
+sc.locale.errors.messages.too_short.one,is too short (minimum is 1 character)
+sc.locale.errors.messages.too_short.other,is too short (minimum is %{count} characters)
+sc.locale.errors.messages.unique,must be unique
+sc.locale.errors.messages.wrong_length.one,is the wrong length (should be 1 character)
+sc.locale.errors.messages.wrong_length.other,is the wrong length (should be %{count} characters)
+sc.locale.number.currency.format.delimiter,","
+sc.locale.number.currency.format.format,%u%n
+sc.locale.number.currency.format.precision,2
+sc.locale.number.currency.format.separator,.
+sc.locale.number.currency.format.significant,false
+sc.locale.number.currency.format.strip_insignificant_zeros,false
+sc.locale.number.currency.format.unit,$
+sc.locale.number.format.delimiter,","
+sc.locale.number.format.precision,3
+sc.locale.number.format.separator,.
+sc.locale.number.format.significant,false
+sc.locale.number.format.strip_insignificant_zeros,false
+sc.locale.number.human.decimal_units.format,%n %u
+sc.locale.number.human.decimal_units.units.billion,Billion
+sc.locale.number.human.decimal_units.units.million,Million
+sc.locale.number.human.decimal_units.units.quadrillion,Quadrillion
+sc.locale.number.human.decimal_units.units.thousand,Thousand
+sc.locale.number.human.decimal_units.units.trillion,Trillion
+sc.locale.number.human.decimal_units.units.unit,""
+sc.locale.number.human.format.delimiter,""
+sc.locale.number.human.format.precision,3
+sc.locale.number.human.format.significant,true
+sc.locale.number.human.format.strip_insignificant_zeros,true
+sc.locale.number.human.storage_units.format,%n %u
+sc.locale.number.human.storage_units.units.byte.one,Byte
+sc.locale.number.human.storage_units.units.byte.other,Bytes
+sc.locale.number.human.storage_units.units.eb,EB
+sc.locale.number.human.storage_units.units.gb,GB
+sc.locale.number.human.storage_units.units.kb,KB
+sc.locale.number.human.storage_units.units.mb,MB
+sc.locale.number.human.storage_units.units.pb,PB
+sc.locale.number.human.storage_units.units.tb,TB
+sc.locale.number.percentage.format.delimiter,""
+sc.locale.number.percentage.format.format,%n%
+sc.locale.number.points.format.delimiter,","
+sc.locale.number.points.format.format,%n pts
+sc.locale.number.precision.format.delimiter,""
+sc.locale.support.array.last_word_connector,", and "
+sc.locale.support.array.two_words_connector, and 
+sc.locale.support.array.words_connector,", "
+sc.locale.time.am,am
+sc.locale.time.formats.default,"%a, %d %b %Y %H:%M:%S %z"
+sc.locale.time.formats.long,"%B %d, %Y %H:%M"
+sc.locale.time.formats.short,%d %b %H:%M
+sc.locale.time.pm,pm
+sc.locale.views.pagination.first,First
+sc.locale.views.pagination.last,Last
+sc.locale.views.pagination.next,Next
+sc.locale.views.pagination.previous,Previous
+sc.location.errors.not_found,That page was not found.
+sc.location_group.errors.not_found,That page was not found.
+sc.orders.reorder.errors.not_found,Could not find order to reorder. Please wait a moment and try again.
+sc.orders.reorder.notices.could_not_add_some,Could not add some order items from order %{reference} to your cart: %{items}.
+sc.orders.reorder.notices.success,Order items from order %{reference} have been added to your cart.
+sc.page.errors.not_found,That page was not found.
+sc.page.errors.requires_membership,You do not have the required membership level to access this page. Requires: %{membership_required}.
+sc.product_category.errors.not_found,That page was not found.
+sc.products.add_to_cart.errors.select_option,Please select an option...
+sc.products.add_to_cart.errors.unable_to_complete,"We were unable to complete your purchase, please contact support."
+sc.products.add_to_cart.notices.added_to_cart,%{name} added to your cart
+sc.products.add_to_cart.notices.updated_line_price,The amount has been updated for: %{name}
+sc.products.default_text.add_bundle_to_cart,Add bundle to cart
+sc.products.default_text.add_to_cart,Add to cart
+sc.products.default_text.buy_it_now,Buy it Now
+sc.products.default_text.hide_price,POA
+sc.products.default_text.out_of_stock,Out of stock
+sc.products.default_text.unavailable,Unavailable
+sc.products.errors.not_found,That product was not found.
+sc.products.notices.please_select,Please choose the option you would like and add it to your cart
+sc.products.notices.please_select_availability,Please choose a date for the booking and add it to your cart
+sc.promo_codes.apply.errors.invalid,The requested promotion is unavailable
+sc.promo_codes.apply.errors.no_eligible_products,The requested promotion is not valid for the items in this cart
+sc.promo_codes.apply.errors.no_longer_valid,Promo code was removed as it is no longer valid
+sc.promo_codes.apply.errors.unexpected,The promotion could not be added to your cart
+sc.promo_codes.apply.notices.success,Promo code applied!
+sc.quotations.errors.not_enabled,Quotations are not enabled for this Store
+sc.salesforce_payments.errors.incomplete_billing_address,The Order is missing a Billing Address.
+sc.shared.breadcrumbs.home,Home
+sc.themes.preview_bar.label,Previewing Theme:
+sc.themes.preview_bar.options.built_in_theme,Built-in theme
+sc.themes.preview_bar.options.close_preview,Close Preview
+sc.themes.preview_bar.options.label,Options...
+sc.themes.preview_bar.options.normal_theme,Normal theme
+sc.themes.preview_bar.options.recent_label,Recent Themes:
+sc.vouchers.apply.errors.expired,Voucher has expired
+sc.vouchers.apply.errors.fail,The voucher could not be applied to your order. Please contact support for assistance.
+sc.vouchers.apply.errors.no_balance,Voucher has no balance
+sc.vouchers.apply.errors.not_found,Voucher not found
+sc.vouchers.apply.notices.excludes_subscriptions,Voucher has been applied. Please note: You can't use vouchers to pay for subscriptions.
+sc.vouchers.apply.notices.success,Voucher has been applied.
+sc.vouchers.descriptor,Voucher
+sc.vouchers.remove.errors.fail,The voucher could not be removed from your cart. Please contact support for assistance.
+sc.vouchers.remove.notices.success,Voucher removed
+search.content_articles.index.search_results,Search Results
+search.content_articles.index.there_are_no_content_article_results,There are no content article results
+search.content_pages.index.search_results,Search Results
+search.content_pages.index.there_are_no_content_page_results,There are no content page results
+search.products.index.no_results,No results
+search.products.index.search_results,Search Results
+search.products.index.search_using_a_keyword_or_filters,Search using a keyword or filters
+search.shared.filters.apply_filters,Apply filters
+search.shared.filters.in_stock,In Stock
+search.shared.filters.on_sale,On sale
+search.shared.filters.price,Price
+search.shared.filters.price_and_availability,Price & Availability
+search.shared.sort.sort_name_a_to_z,Sort: Name A-Z
+search.shared.sort.sort_name_z_to_a,Sort: Name Z-A
+search.shared.sort.sort_price_high_to_low,Sort: Price High-Low
+search.shared.sort.sort_price_low_to_high,Sort: Price Low-High
+shared.filters_button.filter,Filter
+shared.forms.form_has_errors,Please review the errors below.
+shared.product_buttons.check_availability,Check Availability
+shared.product_buttons.configure_bundle,Configure Bundle
+shared.product_buttons.select_option,Select Option
+shared.products.product_comparison,Product Comparison
+shared.products.there_are_no_products,There are no products
+shared.quantity_picker.label,Qty 
+shared.quantity_picker.update_label,Update
+shared.screen.close,Close
+shared.sort.sort,Sort
+shared.sort.sort_name_a_to_z,Name A-Z
+shared.sort.sort_name_z_to_a,Name Z-A
+shared.sort.sort_position,Featured
+shared.sort.sort_price_high_to_low,Highest price
+shared.sort.sort_price_low_to_high,Lowest price
+shared.variable_pricing_picker.other_amount,Other Amount
+shared.variable_pricing_picker.price_label_html,Price <span data-price-picker-value>%{price}</span>
+subscriptions.term_units.day,day
+subscriptions.term_units.days,%{number} days
+subscriptions.term_units.fortnight,fortnight
+subscriptions.term_units.month,month
+subscriptions.term_units.months,%{number} months
+subscriptions.term_units.week,week
+subscriptions.term_units.weeks,%{number} weeks
+subscriptions.term_units.year,year
+subscriptions.term_units.years,%{number} years
+vouchers.show.balance,Balance
+vouchers.show.expires,Expires
+vouchers.show.form.code,Enter voucher code
+vouchers.show.form.heading,Check another code
+vouchers.show.form.submit,Check
+vouchers.show.heading,Check Voucher Balance
+vouchers.show.no_expiry,Does not expire
+vouchers.show.not_found,Voucher not found
+vouchers.show.orders.date,Date
+vouchers.show.orders.heading,Orders
+vouchers.show.orders.reference,Reference
+vouchers.show.orders.total,Total

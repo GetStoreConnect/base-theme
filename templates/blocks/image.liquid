@@ -1,0 +1,35 @@
+<div class="CB-Component" data-cb="{{ content_block.identifier }}">
+  <div class="Image"
+       data-alignment="{{ content_block.alignment }}"
+       data-alignment-target="{{ content_block.identifier }}">
+
+    {%- unless content_block.link_target == blank %}
+      <a class="ImageLink" href="{{ content_block.link_target }}" title="{{ content_block.link_label | escape }}">
+        {%- unless content_block.image == blank %}
+          <img loading="lazy"
+               src="{{ content_block.image.massive_url }}"
+               alt="{{ content_block.title | default: content_block.image.alt_text | escape }}"
+          />
+        {%- else %}
+          <svg class="Placeholder" width="800" viewBox="0 0 1 1">
+            <rect width="100%" height="100%"></rect>
+            <circle cx="50%" cy="50%" r="20%" fill="rgba(0,0,0,0.05)"/>
+          </svg>
+        {%- endunless %}
+      </a>
+
+    {%- else %}
+      {%- unless content_block.image == blank %}
+        <img loading="lazy"
+              src="{{ content_block.image.massive_url }}"
+              alt="{{ content_block.title | default: content_block.image.alt_text | escape }}"
+        />
+      {%- else %}
+        <svg class="Placeholder" width="800" viewBox="0 0 1 1">
+          <rect width="100%" height="100%"></rect>
+          <circle cx="50%" cy="50%" r="20%" fill="rgba(0,0,0,0.05)"/>
+        </svg>
+      {%- endunless %}
+    {%- endunless %}
+  </div>
+</div>

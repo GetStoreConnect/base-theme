@@ -1,0 +1,32 @@
+{%- comment %} Tier 2 {% endcomment %}
+<ul class="SC-Menu tier2 mega" data-nav="{{ category.path }}">
+  <button class="SC-Menu_button" data-nav-close="root" type="button">
+    {{ "header.submenu.back_to_main" | t }}
+  </button>
+  {%- for category_tier2 in category.navigation_children %}
+    {%- if category_tier2.navigation_children.size > 0 %}
+      <li class="SC-Menu_item parent">
+        <a href="{{ category_tier2.path }}" class="SC-Menu_link parent">
+          {{ category_tier2.name }}
+        </a>
+
+        {%- comment %} Tier 3 {% endcomment %}
+        <ul class="SC-Menu tier3" data-nav="{{ category_tier2.path }}">
+          {%- for category_tier3 in category_tier2.navigation_children %}
+            <li class="SC-Menu_item tier3">
+              <a href="{{ category_tier3.path }}" class="SC-Menu_link">
+                {{ category_tier3.name }}
+              </a>
+            </li>
+          {%- endfor %}
+        </ul>
+      </li>
+    {%- else %}
+      <li class="SC-Menu_item tier2">
+        <a href="{{ category_tier2.path }}" class="SC-Menu_link">
+          {{ category_tier2.name }}
+        </a>
+      </li>
+    {%- endif %}
+  {%- endfor %}
+</ul>

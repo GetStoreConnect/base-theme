@@ -1,0 +1,7 @@
+{%- default identifier: blank %}
+
+{%- if identifier != blank %}
+  {% render "account/account_credits/show", account_credit: current_account.account_credits[identifier] %}
+{%- else %}
+  {% render "account/account_credits/index" %}
+{%- endif %}

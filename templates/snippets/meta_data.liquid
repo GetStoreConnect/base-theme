@@ -1,0 +1,82 @@
+{%- default image: blank -%}
+{%- default title: blank -%}
+{%- default meta_keywords: blank -%}
+{%- default meta_description: blank -%}
+{%- default type: "website" -%}
+
+{%- if current_product != blank %}
+  {%- comment -%} Product {%- endcomment -%}
+  {%- liquid
+    assign canonical_url = current_product.url
+    assign image = current_product.social_image | default: current_product.image
+  -%}
+  <meta property="og:price:amount" content="{{ current_product.pricing.price }}" />
+  <meta property="og:price:currency" content="{{ current_store.currency_code }}" />
+{%- elsif current_product_category != blank %}
+  {%- comment -%} Product Category {%- endcomment -%}
+  {%- liquid
+    if current_search != blank and current_search.type == "product"
+      assign canonical_url = current_search.url
+    else
+      assign canonical_url = current_product_category.url
+    endif
+    assign image = current_product_category.social_image | default: current_product_category.image
+  -%}
+{%- elsif current_article != blank %}
+  {%- comment -%} Article {%- endcomment -%}
+  {%- liquid
+    assign type = "article"
+    assign canonical_url = current_article.url
+    assign image = current_article.social_image | default: current_article.hero_image
+  -%}
+{%- elsif current_article_category != blank %}
+  {%- comment -%} Article Category {%- endcomment -%}
+  {%- liquid
+    assign canonical_url = current_article_category.url
+    assign image = current_article_category.social_image
+  -%}
+{%- elsif current_page != blank and current_page.home_page? == false  %}
+  {%- comment -%} Page {%- endcomment -%}
+  {%- liquid
+    assign type = "page"
+    assign canonical_url = current_page.url
+    assign image = current_page.social_image
+  -%}
+{%- elsif current_location != blank %}
+  {%- comment -%} Location {%- endcomment -%}
+  {%- liquid
+    assign type = "page"
+    assign canonical_url = current_location.url
+  -%}
+{%- elsif current_location_group != blank %}
+  {%- comment -%} Location Group {%- endcomment -%}
+  {%- liquid
+    assign type = "page"
+    if current_search != blank and current_search.type == "location"
+      assign canonical_url = current_search.url
+    else
+      assign canonical_url = current_location_group.url
+    endif
+    assign image = current_location_group.social_image
+  -%}
+{%- else %}
+  {%- comment -%} Home / Other {%- endcomment -%}
+  {%- liquid
+    assign canonical_url = current_request.url
+    assign image = current_store.social_image | default: current_store.logo
+  -%}
+{%- endif -%}
+
+<title>{{ title }}</title>
+<meta name="keywords" content="{{ meta_keywords }}" />
+<meta name="description" content="{{ meta_description }}" />
+<meta property="og:type" content="{{ type }}" />
+<meta property="og:title" content="{{ title }}" />
+<meta property="og:description" content="{{ meta_description }}" />
+<meta property="og:url" content="{{ canonical_url }}" />
+<meta property="og:locale" content="{{ current_store.locale }}" />
+{%- if image != blank %}
+  <meta property="og:image" content="{{ image.huge_url }}" />
+{%- endif %}
+<meta name="sc-path" content="{{ current_store.path }}" />
+<link rel="canonical" href="{{ canonical_url }}" />

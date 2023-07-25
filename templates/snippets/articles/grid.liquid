@@ -1,0 +1,20 @@
+{%- if articles.size > 0 %}
+  {%- paginate articles by 9 %}
+    <div class="SC-CardGrid SC-CardGrid-prominent">
+      {%- for article in articles %}
+        {%- render "articles/card", article: article %}
+      {%- endfor %}
+    </div>
+    {%- render 'shared/pagination-nav', paginate: paginate %}
+  {%- endpaginate %}
+{%- else %}
+  {%- if current_article_category %}
+    <div class="sc-shade-neutral">
+      {{ "articles.category.no_articles" | t }}
+    </div>
+  {%- else %}
+    <div class="Fallback">
+      {{ "articles.index.no_articles" | t }}
+    </div>
+  {%- endif %}
+{%- endif %}

@@ -1,0 +1,27 @@
+{%- default lines: blank -%}
+{%- default street1: blank -%}
+{%- default street2: blank -%}
+{%- default city: blank -%}
+{%- default state: blank -%}
+{%- default country: blank -%}
+{%- default postal_code: blank -%}
+
+{%- if lines != blank %}{{ lines | join: ", " }}{% endif %}
+{%- if street1 != blank %}{{ street1 }}{% endif %}
+{%- if street2 != blank %}{{ street2 }}{% endif %}
+{%- if city != blank %}{{ city | prepend: ", " }}{% endif %}
+{%- unless state == blank %}
+  {%- if country == blank or all_countries[country] == blank %}
+    {{ state | prepend: ", " }}
+  {%- else %}
+    {{ all_countries[country].states[state].name | prepend: ", " }}
+  {%- endif %}
+{%- endunless %}
+{%- unless country == blank %}
+  {%- if all_countries[country] == blank %}
+    {{ country | prepend: ", " }}
+  {%- else %}
+    {{ all_countries[country].name | prepend: ", " }}
+  {%- endif %}
+{%- endunless %}
+{%- if postal_code != blank %}{{ postal_code | prepend: ", " }}{% endif %}

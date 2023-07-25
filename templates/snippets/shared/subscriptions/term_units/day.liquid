@@ -1,0 +1,8 @@
+{%- if number != blank %}
+  {%- assign number = number | plus: 0 %}
+  {%- if number == 1 %}
+    {{ "subscriptions.term_units.day" | t  }}
+  {%- else %}
+    {{ "subscriptions.term_units.days" | t: number: number}}
+  {%- endif %}
+{%- endif %}

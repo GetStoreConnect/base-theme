@@ -1,0 +1,40 @@
+{%- if product.trait_groups.size > 0 %}
+  {%- capture traits %}
+    {%- for trait_group in product.trait_groups %}
+      {%- if trait_group.traits.size > 0 %}
+        <div class="Traits_category">
+          <div class="Traits_title">
+            <h5>{{ trait_group.name }}</h5>
+          </div>
+          {%- for trait in trait_group.traits %}
+            <dl class="Traits_category_trait">
+              <dt class="Traits_category_trait_name">
+                {{ trait.name }}
+              </dt>
+              <dd class="Traits_category_trait_value">
+                {%- case trait.value_type %}
+                  {%- when 'Checkbox' %}
+                  {%- case trait.value %}
+                    {%- when true %}
+                    Yes
+                  {%- else %}
+                    No
+                  {%- endcase %}
+                {%- else %}
+                  {{ trait.value | number, compact: true }}
+                  {{ trait.unit }}
+                {%- endcase %}
+              </dd>
+            </dl>
+          {%- endfor %}
+        </div>
+      {%- endif %}
+    {%- endfor %}
+  {%- endcapture %}
+
+  {%- if traits %}
+  <div class="Traits">
+    {{ traits }}
+  </div>
+  {%- endif %}
+{%- endif %}

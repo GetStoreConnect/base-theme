@@ -1,0 +1,26 @@
+{%- default order: blank %}
+
+{%- if order.collect_booking_attendees? %}
+  <section class="SC-Panel sc-mb-xlarge">
+    <header class="SC-Panel_header SC-Panel_header-border">
+      <h2 class="SC-Panel_header_heading">
+        {{ "accounts.orders.bookings.heading" | t }}
+      </h2>
+    </header>
+    <div class="SC-Notice sc-mb-base">
+      {{ "accounts.orders.bookings.attendees_required_notice" | t }}
+    </div>
+
+    {%- for booking in order.bookings %}
+      <section data-booking-container class="sc-mb" id="{{ booking.id }}">
+        <header class="sc-mb-small">
+          <h4 class="sc-mb-small">{{ booking.order_item.name }}</h4>
+          {% render "shared/line_items/booking_details", bookable_event: booking.bookable_event, extended: true %}
+        </header>
+
+        {% render "orders/bookings/attendees", booking: booking %}
+      </section>
+    {%- endfor %}
+
+  </section>
+{%- endif %}

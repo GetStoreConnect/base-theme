@@ -1,0 +1,119 @@
+{%- default order: blank %}
+
+{%- unless order == blank %}
+  {%- if order.bookable? %}
+    {% render "orders/bookings", order: order %}
+  {%- endif %}
+
+  {%- comment %} Click & Collection confirmation {% endcomment %}
+  {%- if order.collection_point != blank %}
+    {% render "orders/collection_point", order: order %}
+  {%- else %}
+    {%- comment %} Shipping address {% endcomment %}
+    <section id="SC-OrderShippingConfirmation" class="SC-Panel sc-mb-large">
+      <header class="SC-Panel_header SC-Panel_header-border">
+        <h4 class="SC-Panel_header_heading">
+          {{ "accounts.orders.show.shipping_details" | t }}
+        </h4>
+      </header>
+      <div class="sc-mb-tiny">
+        <strong>{{ order.ship_to_contact.name }}</strong>
+      </div>
+      {%- render "shared/address_multi_line",
+              lines: order.shipping_address_lines,
+              city: order.shipping_city,
+              state: order.shipping_state,
+              country: order.shipping_country,
+              postal_code: order.shipping_postal_code,
+              style: "sc-mb-tiny" %}
+
+      {%- render "shared/address_map",
+              lines: order.shipping_address_lines,
+              city: order.shipping_city,
+              state: order.shipping_state,
+              country: order.shipping_country,
+              postal_code: order.shipping_postal_code %}
+    </section>
+  {%- endif %}
+
+  {%- comment %} Shipping Notes {% endcomment %}
+  {%- if order.shipping_notes != blank %}
+    <section class="SC-Panel sc-mb-large" data-order-shipping-notes>
+      <header class="SC-Panel_header SC-Panel_header-border">
+        <h2 class="SC-Panel_header_heading">{{ "checkout.shipping.shipping_notes.header" | t }}</h2>
+      </header>
+      <div>
+        {{ order.shipping_notes }}
+      </div>
+    </section>
+  {%- endif %}
+
+  {%- comment %} Payment method {% endcomment %}
+  {%- if order.payments.size > 0 %}
+    <section id="SC-OrderPaymentConfirmation" class="Panel">
+      <header class="SC-Panel_header SC-Panel_header-border">
+        <h3 class="SC-Panel_header_heading">
+          {{ "accounts.orders.show.payment_method" | t }}
+        </h3>
+      </header>
+      <div data-order-payment-methods>
+        {%- for payment in order.payments %}
+          <div class="sc-mb-small" data-order-payment-method>
+            {%- assign status_message = "accounts.orders.payments.shared.status.enum." | append: payment.status | t %}
+            {%- assign payment_status = "" %}
+            {%- if payment.status != "success" %}
+              {%- assign payment_status = " - " | append: status_message %}
+            {%- endif %}
+
+            {%- if payment.account_credit_path != blank %}
+              <a href="{{ payment.account_credit_path }}" class="SC-Link">{{ payment.description | append: payment_status }}</a>
+            {%- else %}
+              {{ payment.description | append: payment_status }}
+            {%- endif %}
+            {%- if order.payments.size > 0 %}:
+              {%- comment %} Currency Amount {% endcomment %}
+              {%- if payment.amount > 0 %}
+                <span data-currency>{{ payment.amount | money }}</span>
+              {%- endif %}
+
+              {%- comment %} And {% endcomment %}
+              {%- if payment.amount > 0 and payment.points_amount > 0 %}
+                {{ "accounts.orders.payments.shared.currency_and_points_connector" | t }}
+              {%- endif %}
+
+              {%- comment %} Points Amount {% endcomment %}
+              {%- if payment.points_amount > 0 %}
+                <span data-points>{{ payment.points_amount | points }}</span>
+              {%- endif %}
+            {%- endif %}
+            {{- payment.instructions_content }}
+          </div>
+        {%- endfor %}
+      </div>
+    </section>
+  {%- endif %}
+
+  {%- comment %} Earned Points {% endcomment %}
+  {%- if order.total_earn_points_amount > 0 %}
+    <section class="SC-Panel sc-mb-large" data-order-earned-points>
+      <header class="SC-Panel_header SC-Panel_header-border">
+        <h2 class="SC-Panel_header_heading">{{ "accounts.orders.show.earned_points" | t }}</h2>
+      </header>
+      <div>
+        {{ order.total_earn_points_amount | points }}
+      </div>
+    </section>
+  {%- endif %}
+
+  {%- comment %} Customer notes {% endcomment %}
+  {%- if order.customer_notes != blank %}
+    <section class="SC-Panel sc-mb-large" data-order-customer-notes>
+      <header class="SC-Panel_header SC-Panel_header-border">
+        <h2 class="SC-Panel_header_heading">{{ "accounts.orders.show.customer_notes" | t }}</h2>
+      </header>
+      <div>
+        {{ order.customer_notes }}
+      </div>
+    </section>
+  {%- endif %}
+{%- endunless %}

@@ -1,0 +1,32 @@
+<section
+  class="SC-ContentBlockContainer"
+  id="{% if content_block.identifier != blank %}SC-ContentBlockContainer-{{ content_block.identifier }}{% endif %}"
+  data-cb="{{ content_block.identifier }}">
+
+  {%- if content_block.title != blank or content_block.subtitle != blank %}
+    <header class="SC-ContentBlockContainer_header">
+      {%- if content_block.title != blank %}
+        <h2>{{ content_block.title }}</h2>
+      {%- endif %}
+      {%- if content_block.subtitle != blank %}
+        <div class="sc-font-medium sc-shade-neutral">
+          {{ content_block.subtitle }}
+        </div>
+      {%- endif %}
+    </header>
+  {%- endif %}
+
+  <div class="SC-ContentBlockContainer_body{% if content_block.layout_style != blank %} sc-{{ content_block.layout_style }}{% endif %}{% if content_block.sub_type != blank %} sc-{{ content_block.sub_type }}{% endif %}">
+    {%- for child in content_block.children %}
+      {{ child.render }}
+    {%- endfor %}
+  </div>
+
+  {%- if content_block.link_label != blank and content_block.link_target != blank %}
+    <footer class="SC-ContentBlockContainer_footer">
+      <a class="SC-Button SC-Button-primary" href="{{ content_block.link_target }}">
+        {{ content_block.link_label | escape }}
+      </a>
+    </footer>
+  {%- endif %}
+</section>

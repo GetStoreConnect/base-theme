@@ -1,0 +1,26 @@
+<div class="sc-flex-row sc-align-items-center">
+  <span class="sc-grow">
+    <h3>{{ "accounts.profile.sections.account_points.heading" | t }}</h3>
+  </span>
+  <span>
+    <a href="{{ current_store.account_points_path }}" class="SC-Button">{{ "accounts.profile.sections.account_points.view_all" | t }}</a>
+  </span>
+</div>
+{%- if current_store.display_points? and current_customer.can_use_account_points? %}
+  <table>
+    <tr>
+      <th>{{ "accounts.profile.sections.account_points.current_balance" | t }}</th>
+      <th>{{ "accounts.profile.sections.account_points.pending_balance" | t }}</th>
+    </tr>
+    <tr>
+      <td data-th="{{ "accounts.profile.sections.account_points.current_balance" | t }}">
+        {{ current_account.account_points.current_balance | points }}
+      </td>
+      <td data-th="{{ "accounts.profile.sections.account_points.pending_balance" | t }}">
+        {{ current_account.account_points.pending_balance | points }}
+      </td>
+    </tr>
+  </table>
+{%- else %}
+  <div class="sc-shade-neutral">{{ "accounts.profile.sections.account_points.no_account_points" | t }}</div>
+{%- endif %}

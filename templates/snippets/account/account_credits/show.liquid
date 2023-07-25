@@ -1,0 +1,90 @@
+{%- default account_credit: blank %}
+
+{%- unless account_credit == blank %}
+  {%- render "shared/page_header", heading: "t.accounts.account_credit.show.heading", sub_heading: account_credit.name %}
+
+  <div class="SC-Grid">
+    <div class="SC-Grid_main">
+      <section class="SC-Panel sc-expand">
+        <header class="SC-Panel_header SC-Panel_header-border">
+          <h3 class="SC-Panel_header_heading">
+            {{ "accounts.account_credit.show.account_credit_details" | t }}
+          </h3>
+        </header>
+        <table class="sc-mb-spacious">
+          <tr>
+            <th>{{ "accounts.account_credit.show.current_balance" | t }}</th>
+            <th>{{ "accounts.account_credit.show.opening_balance" | t }}</th>
+            <th>{{ "accounts.account_credit.show.expires_at" | t }}</th>
+          </tr>
+          <tr>
+            <td data-th="{{ "accounts.account_credit.show.current_balance" | t }}">
+              {{ account_credit.current_balance | money }}<br>
+            </td>
+            <td data-th="{{ "accounts.account_credit.show.opening_balance" | t }}">
+              {{ account_credit.opening_balance | money }}<br>
+            </td>
+            <td data-th="{{ "accounts.account_credit.show.expires_at" | t }}">
+              {%- if account_credit.expires_at %}
+                {% render "shared/date", timestamp: account_credit.expires_at %}
+              {%- else %}
+                {{ "accounts.account_credit.show.no_expiry" | t }}
+              {%- endif %}
+            </td>
+          </tr>
+        </table>
+      </section>
+
+      {%- comment %} Account Credit Transactions {% endcomment %}
+      <section class="SC-Panel sc-expand">
+        <header class="SC-Panel_header SC-Panel_header-border">
+          <h4 class="SC-Panel_header_heading">
+            {{ "accounts.account_credit.show.transaction_heading" | t }}
+          </h4>
+        </header>
+        <table class="sc-mb-spacious">
+          <tr>
+            <th>{{ "accounts.account_credit.show.transaction.amount" | t }}</th>
+            <th>{{ "accounts.account_credit.show.transaction.type" | t }}</th>
+            <th>{{ "accounts.account_credit.show.transaction.created_at" | t }}</th>
+            <th>{{ "accounts.account_credit.show.transaction.order" | t }}</th>
+            <th>{{ "accounts.account_credit.show.transaction.contact" | t }}</th>
+          </tr>
+
+          {% for transaction in account_credit.transactions %}
+            <tr>
+              <td data-th="{{ "accounts.account_credit.show.transaction.amount" | t }}">
+                {{ transaction.amount | money }}
+              </td>
+              <td data-th="{{ "accounts.account_credit.show.transaction.type" | t }}">
+                {% case transaction.type %}
+                {% when "credit" %}
+                  {{ "accounts.account_credit.show.type.credit" | t }}
+                {% when "debit" %}
+                  {{ "accounts.account_credit.show.type.debit" | t }}
+                {% endcase %}
+              </td>
+              <td data-th="{{ "accounts.account_credit.show.transaction.created_at" | t }}">
+                {% render "shared/date", timestamp: transaction.created_at %}
+              </td>
+              <td data-th="{{ "accounts.account_credit.show.transaction.order" | t }}">
+                {%- if transaction.order != blank %}
+                  <a href="{{ transaction.order.path }}">{{ transaction.order.reference }}</a>
+                {%- else %}
+                  {{ "accounts.account_credit.show.transaction.no_order" | t }}
+                {%- endif %}
+              </td>
+              <td data-th="{{ "accounts.account_credit.show.transaction.contact" | t }}">
+                {%- if transaction.contact != blank %}
+                  {{ transaction.contact.name }}
+                {%- else %}
+                  {{ "accounts.account_credit.show.transaction.system" | t }}
+                {%- endif %}
+              </td>
+            </tr>
+          {%- endfor %}
+        </table>
+      </section>
+    </div>
+  </div>
+{%- endunless %}

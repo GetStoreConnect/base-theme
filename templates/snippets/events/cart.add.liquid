@@ -1,0 +1,7 @@
+{%- unless current_request.path == current_store.cart_path %}
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      window.StoreConnect.Cart.tease();
+    });
+  </script>
+{%- endunless %}

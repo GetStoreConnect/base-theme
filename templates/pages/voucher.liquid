@@ -1,0 +1,63 @@
+{%- default voucher: blank %}
+
+<div class="sc-container sc-container-spacious">
+  {%- render "shared/page_header", heading: "t.vouchers.show.heading", sub_heading: current_request.params["code"] %}
+
+  {%- if voucher == blank %}
+    {% if current_request.params.code != blank %}
+      <div class="sc-mt-large sc-mb-large">
+      {{ "vouchers.show.not_found" | t }}
+      </div>
+    {%- endif %}
+  {%- else %}
+    <table class="sc-compact sc-mb-large">
+      <tr>
+        <th>{{ "vouchers.show.balance" | t }}</th>
+        <th>{{ "vouchers.show.expires" | t }}</th>
+      </tr>
+      <tr>
+        <td data-th="{{ "vouchers.show.balance" | t }}">{{ voucher.current_balance | money }}</td>
+        <td data-th="{{ "vouchers.show.expires" | t }}">
+          {%- if voucher.expires_at == blank %}
+            {{ "vouchers.show.no_expiry" | t }}
+          {%- else %}
+            {% render "shared/date", timestamp: voucher.expires_at %}
+          {%- endif %}
+        </td>
+      </tr>
+    </table>
+    {%- if voucher.orders.size > 0 %}
+      <h2>{{ "vouchers.show.orders.heading" | t }}</h2>
+      <table class="sc-compact sc-mb-spacious">
+        <tr>
+          <th>{{ "vouchers.show.orders.reference" | t }}</th>
+          <th>{{ "vouchers.show.orders.date" | t }}</th>
+          <th>{{ "vouchers.show.orders.total" | t }}</th>
+        </tr>
+        {% for order in voucher.orders %}
+          <tr>
+            <td data-th="{{ "vouchers.show.orders.reference" | t }}"><a href="{{ order.path }}">{{ order.reference }}</a></td>
+            <td data-th="{{ "vouchers.show.orders.date" | t }}">{% render "shared/date", timestamp: order.ordered_at %}</td>
+            <td data-th="{{ "vouchers.show.orders.total" | t }}">
+              {% if order.quotable? %}-{% else %}{{ order.total | money }}{% endif %}
+            </td>
+          </tr>
+        {%- endfor %}
+      </table>
+    {%- endif %}
+  {%- endif %}
+
+  {%- if current_request.params["code"] != blank %}
+    <hr>
+    <h3 class="sc-mt-large">{{ "vouchers.show.form.heading" | t }}</h3>
+  {%- endif %}
+  <form>
+    <div class="SC-Field SC-Field-expand">
+      <input type="text" name="code" value="{{ current_request.params["code"] }}" placeholder="{{ "vouchers.show.form.code" | t }}" class="SC-Field_input sc-expand">
+    </div>
+
+    <div class="sc-mb-base">
+      <input type="submit" name="commit" value="{{ "vouchers.show.form.submit" | t }}" class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small" data-disable-with="{{ "vouchers.show.form.submit" | t }}">
+    </div>
+  </form>
+</div>

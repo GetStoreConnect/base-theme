@@ -1,0 +1,33 @@
+<div
+  class="SC-ContentBlock SC-FeaturedArticles"
+  id="{% if content_block.identifier != blank %}SC-ContentBlock-{{ content_block.identifier }}{% endif %}"
+  data-cb="{{ content_block.identifier }}">
+
+  {%- unless content_block.title == blank %}
+    <h2>{{ content_block.title }}</h2>
+  {%- endunless %}
+
+  {%- if content_block.articles.size > 0 %}
+    <div class="SC-CardGrid SC-CardGrid-prominent">
+      {%- for article in content_block.articles %}
+        <div class="SC-CardGrid_item">
+
+          <a class="SC-ArticleCard" href="{{ article.path }}">
+            {%- if article.hero_image %}
+              <div class="SC-ArticleCard_image">
+                <img src="{{ article.hero_image.large_url }}" loading="lazy"/>
+              </div>
+            {%- endif %}
+            <div class="SC-ArticleCard_heading">
+              {{ article.title }}
+            </div>
+            <div class="SC-ArticleCard_date">
+              {{ article.publish_on | date: '%B %-d, %Y' }}
+            </div>
+          </a>
+
+        </div>
+      {%- endfor %}
+    </div>
+  {%- endif %}
+</div>

@@ -1,0 +1,46 @@
+<div
+  class="SC-ContentBlock SC-FeaturedCategories"
+  id="{% if content_block.identifier != blank %}{{ content_block.identifier }}{% endif %}"
+  data-cb="{{ content_block.identifier }}">
+  {%- if content_block.product_categories.size > 0 %}
+    <div class="SC-CardCarousel">
+
+      {%- unless content_block.title == blank and content_block.link_target == blank %}
+        <div class="SC-CardCarousel_header">
+          {%- unless content_block.title == blank %}
+            <h2 class="SC-CardCarousel_heading">
+              {{ content_block.title }}
+            </h2>
+          {%- endunless %}
+          {%- if content_block.link_label != blank and content_block.link_target != blank %}
+            <a href="{{ content_block.link_target }}" class="Link">
+              {{ content_block.link_label }}
+            </a>
+          {%- endif %}
+        </div>
+      {%- endunless %}
+
+      <div class="SC-CardCarousel_track">
+        {%- for product_category in content_block.product_categories %}
+          <div class="SC-CardCarousel_item">
+            <div class="SC-CategoryCard">
+              <a href="{{ product_category.path }}" class="SC-ImageLink sc-mb-small">
+                {%- if product_category.image %}
+                  <img loading="lazy" src="{{ product_category.image.large_url }}"/>
+                {%- else %}
+                  <svg class="SC-Placeholder" width="400" viewBox="0 0 400 500">
+                    <rect width="100%" height="100%"></rect>
+                    <circle cx="50%" cy="50%" r="20%" fill="rgba(0,0,0,0.05)"/>
+                  </svg>
+                {%- endif %}
+              </a>
+              <a class="SC-HeadingLink" href="{{ product_category.path }}">
+                <h4>{{ product_category.name }}</h4>
+              </a>
+            </div>
+          </div>
+        {%- endfor %}
+      </div>
+    </div>
+  {%- endif %}
+</div>

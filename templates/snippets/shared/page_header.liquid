@@ -1,0 +1,23 @@
+{%- default heading: blank -%}
+{%- default sub_heading: blank -%}
+{%- default summary: blank -%}
+{%- default modifier: blank -%}
+{%- default image: blank -%}
+
+ <header class="SC-PageHeader {{ modifier }}" {% if image != blank %}style="background-image: url({{ image.huge_url }})"{% endif %}>
+  {%- if heading != blank %}
+    <h1 class="SC-PageHeader_heading">
+      {{ heading }}
+    </h1>
+  {%- endif %}
+  {%- if sub_heading != blank %}
+    <div class="SC-PageHeader_subheading">
+      {{ sub_heading }}
+    </div>
+  {%- endif %}
+  {%- if summary != blank %}
+    <div class="SC-PageHeader_summary">
+      {{ summary }}
+    </div>
+  {%- endif %}
+</header>

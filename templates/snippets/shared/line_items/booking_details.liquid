@@ -1,0 +1,46 @@
+{%- if bookable_event != blank %}
+  {%- default extended: false -%}
+  {%- assign start_date = bookable_event.start_datetime %}
+  {%- assign end_date = bookable_event.end_datetime %}
+  {%- assign location = bookable_event.location -%}
+
+  <div class="sc-mb-micro">
+    {%- if bookable_event.single_day? %}
+      {{ start_date | date: '%b %e' }},
+      {{ start_date | date: '%l:%M %p' }} -
+      {{ end_date. | date: '%l:%M %p' }}
+    {%- else %}
+      {{ start_date | date: '%b %e %l:%M %p' }} -
+      {{ end_date | date: '%b%e %l:%M %p' }}
+    {%- endif %}
+  </div>
+
+  {%- if location != blank %}
+    <span class="sc-mb-micro">
+      {{ location.name }}
+    </span>
+
+    {%- if extended == true %}
+      <small class="sc-shade-neutral">
+        {%- if location.address1 != blank or location.address2 != blank  %}
+          <span class="sc-ml-tiny">
+            {{ location.address1 }}
+            {{ location.address2 }}
+          </span>
+        {%- endif %}
+        {%- if location.information_content != blank %}
+          <button data-modal-trigger="{{ location.id }}" class="SC-Link SC-Link-subtle" type="button">
+            {{ "bookings.booking_details.location_info_more" | t }}
+          </button>
+        {%- endif %}
+      </small>
+      {%- if location.information_content != blank %}
+        {%- render "shared/modal",
+                id: location.id,
+                heading: location.name,
+                max_width: 650,
+                body: location.information_content %}
+      {%- endif %}
+    {%- endif %}
+  {%- endif %}
+{%- endif %}

@@ -1,0 +1,76 @@
+{%- render "shared/page_header", heading: "t.accounts.account_points.heading" %}
+{%- if current_customer.can_use_account_points? %}
+    <table class="sc-mb-spacious">
+      <tr>
+        <th>{{ "accounts.account_points.current_balance" | t }}</th>
+        <th>{{ "accounts.account_points.pending_balance" | t }}</th>
+        <th>&nbsp;</th>
+      </tr>
+      <tr>
+        <td data-th="{{ "accounts.account_points.current_balance" | t }}">
+          {{ current_account.account_points.current_balance | points }}
+        </td>
+        <td data-th="{{ "accounts.account_points.pending_balance" | t }}">
+          {{ current_account.account_points.pending_balance | points }}
+        </td>
+      </tr>
+    </table>
+
+    {%- comment %} Account Points Transactions {% endcomment %}
+    <section class="SC-Panel sc-expand">
+      <header class="SC-Panel_header SC-Panel_header-border">
+        <h4 class="SC-Panel_header_heading">
+          {{ "accounts.account_points.transactions.heading" | t }}
+        </h4>
+      </header>
+      {%- if current_account.account_points.transactions.size > 0 %}
+        {%- paginate current_account.account_points.transactions by 10 %}
+          <table class="sc-mb-spacious">
+            <tr>
+              <th>{{ "accounts.account_points.transactions.headings.product" | t }}</th>
+              <th>{{ "accounts.account_points.transactions.headings.amount" | t }}</th>
+              <th>{{ "accounts.account_points.transactions.headings.type" | t }}</th>
+              <th>{{ "accounts.account_points.transactions.headings.created_at" | t }}</th>
+              <th>{{ "accounts.account_points.transactions.headings.expires_at" | t }}</th>
+              <th>{{ "accounts.account_points.transactions.headings.contact" | t }}</th>
+            </tr>
+            {% for transaction in current_account.account_points.transactions %}
+              <tr{% if transaction.pending? %} class="sc-shade-light"{% endif %}>
+                <td data-th="{{ "accounts.account_points.transactions.headings.product" | t }}">
+                  {{ transaction.order_item | try: "name" }}
+                </td>
+                <td data-th="{{ "accounts.account_points.transactions.headings.amount" | t }}">
+                  {{ transaction.amount | points }}
+                  {%- comment %} Pending {% endcomment %}
+                  {%- if transaction.pending? %}
+                    <span class="sc-color-primary sc-font-tiny sc-ps-tiny">{{ "accounts.account_points.transactions.pending" | t }}</span>
+                  {%- endif %}
+                </td>
+                <td data-th="{{ "accounts.account_points.transactions.headings.type" | t }}">
+                  {{ "accounts.account_points.transactions.type.enum." | append: transaction.type | t }}
+                </td>
+                <td data-th="{{ "accounts.account_points.transactions.headings.created_at" | t }}">
+                  {% render "shared/date", timestamp: transaction.created_at %}
+                </td>
+                <td data-th="{{ "accounts.account_points.transactions.headings.expires_at" | t }}">
+                  {%- unless transaction.pending? %}
+                    {%- if transaction.expires_at %}
+                      {% render "shared/date", timestamp: transaction.expires_at %}
+                    {%- else %}
+                      {{ "accounts.account_points.transactions.no_expiry" | t }}
+                    {%- endif %}
+                  {%- endunless %}
+                </td>
+                <td data-th="{{ "accounts.account_points.transactions.headings.contact" | t }}">
+                  {{ transaction.contact | try: "name" }}
+                </td>
+              </tr>
+            {%- endfor %}
+          </table>
+          {%- render 'shared/pagination-nav', paginate: paginate %}
+        {%- endpaginate %}
+      {%- else %}
+        <div class="sc-shade-neutral">{{ "accounts.account_points.no_transactions" | t }}</div>
+      {%- endif %}
+    </section>
+{%- endif %}

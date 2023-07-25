@@ -1,0 +1,27 @@
+{%- if current_privacy.in_use? and current_privacy.groups.size > 0 %}
+  {%- unless current_privacy.accepted? %}
+    <div class="SC-PrivacyBanner" data-privacy-settings-banner>
+      <div class="SC-PrivacyBanner_markdown sc-rich-text">
+        {{ current_privacy.banner_content }}
+      </div>
+      <div class="SC-PrivacyBanner_actions">
+        {%- form "privacy-accept-all", data-privacy-settings-banner-accept: true %}
+          <button>{{ "privacy.accept_all" | t }}</button>
+        {%- endform %}
+        {%- form "privacy-reject-all", data-privacy-settings-banner-reject: true %}
+          <button>{{ "privacy.reject_all" | t }}</button>
+        {%- endform %}
+        <button data-privacy-settings-form-open>
+          {{ "privacy.manage_settings" | t }}
+        </button>
+      </div>
+    </div>
+  {%- endunless %}
+  <div class="SC-PrivacySettingsForm" data-privacy-settings-form>
+    <div class="SC-PrivacySettingsForm_inner">
+      {%- render "shared/privacy/settings" %}
+    </div>
+    <div class="SC-PrivacySettingsForm_overlay" data-privacy-settings-form-close>
+    </div>
+  </div>
+{%- endif %}

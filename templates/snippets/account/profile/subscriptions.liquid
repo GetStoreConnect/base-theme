@@ -1,0 +1,30 @@
+<div class="sc-flex-row sc-align-items-center">
+  <span class="sc-grow">
+    <h3>{{ "accounts.profile.sections.subscriptions.heading" | t }}</h3>
+  </span>
+  <span>
+    <a href="{{ current_store.subscriptions_path }}" class="SC-Button">{{ "accounts.profile.sections.subscriptions.view_all" | t }}</a>
+  </span>
+</div>
+{%- if current_customer.subscriptions.size > 0 %}
+  {% assign active_subs = current_customer.subscriptions | where: "status", "active" %}
+  <p>{{ "accounts.profile.sections.subscriptions.count" | t, count: active_subs.size }}</p>
+
+  {% assign subscription = active_subs | sort: "next_due_date" | first %}
+  <h4>{{ "accounts.profile.sections.subscriptions.next_due" | t }}</h4>
+
+  <table>
+    <tr>
+      <th>{{ "accounts.subscriptions.index.product" | t }}</th>
+      <th>{{ "accounts.subscriptions.index.next_due" | t }}</th>
+      <th>{{ "accounts.subscriptions.index.price" | t }}</th>
+    </tr>
+    <tr>
+      <td data-th="{{ "accounts.subscriptions.index.product" | t }}"><a href="{{ subscription.product.path }}">{{ subscription.product.name }}</a></td>
+      <td data-th="{{ "accounts.subscriptions.index.next_due" | t }}">{% render "shared/date", timestamp: subscription.next_due_date, time_style: "none" %}</td>
+      <td data-th="{{ "accounts.subscriptions.index.price" | t }}">{{ subscription.price | money }}</td>
+    </tr>
+  </table>
+{%- else %}
+  <div class="sc-shade-neutral">{{ "accounts.profile.sections.subscriptions.no_subscriptions" | t }}</div>
+{%- endif %}

@@ -1,0 +1,11 @@
+{%- default class: "SC-Button SC-Button-primary SC-Button-expanded" -%}
+
+{%- assign btn_txt = "cart.buttons.checkout" | t %}
+{%- if current_cart.quotable? %}
+  {%- assign btn_txt = "cart.buttons.request_quote" | t %}
+{%- endif %}
+
+<a href="{{ current_store.checkout_path }}"
+   data-sc-checkout-btn class="{{ class }}">
+  {{ btn_txt }}
+</a>

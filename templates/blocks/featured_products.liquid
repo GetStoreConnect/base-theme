@@ -1,0 +1,30 @@
+<div
+  class="SC-ContentBlock SC-FeaturedProducts"
+  id="{% if content_block.identifier != blank %}SC-ContentBlock-{{ content_block.identifier }}{% endif %}"
+  data-cb="{{ content_block.identifier }}">
+
+  {%- if content_block.products.size > 0 %}
+    <div class="SC-CardCarousel">
+      <div class="SC-CardCarousel_header">
+        {%- unless content_block.title == blank %}
+          <h2 class="SC-CardCarousel_heading">
+            {{ content_block.title }}
+          </h2>
+        {%- endunless %}
+        {%- if content_block.link_label != blank and content_block.link_target != blank %}
+          <a href="{{ content_block.link_target }}" class="Link">
+            {{ content_block.link_label }}
+          </a>
+        {%- endif %}
+      </div>
+
+      <div class="SC-CardCarousel_track">
+        {%- for product in content_block.products %}
+          <div class="SC-CardCarousel_item">
+            {%- render "products/card", product: product %}
+          </div>
+        {%- endfor %}
+      </div>
+    </div>
+  {%- endif %}
+</div>

@@ -1,0 +1,61 @@
+{%- if current_store.sso_login? %}
+  {% render "account/login/sso_form" %}
+{%- endif %}
+
+{%- if current_store.local_login? %}
+  {%- if current_store.sso_login? %}
+    <hr>
+    <h2>{{ "accounts.register.local_heading" | t }}</h2>
+  {%- endif %}
+  {%- form "register", id: "registration-form" %}
+    {% render "form_errors", errors: form.errors %}
+
+    <h3>{{ "accounts.register.form.headings.credentials" | t }}</h3>
+    <section class="sc-mb-spacious">
+      {%- assign field = form.fields["email"] %}
+      <div class="SC-Field SC-Field-expand{% if field.errors != blank %} has-error{% endif %}{% if field.required? %} required{% endif %}">
+        <label for="{{ field.id }}" class="SC-Field_label">{{ "accounts.register.form.labels.email" | t }}</label>
+        <input type="email" name="{{ field.name }}" id="{{ field.id }}" value="{{ field.value }}" placeholder="{{ "accounts.register.form.labels.email" | t }}" class="SC-Field_input" autocomplete="email" class="SC-Field_input">
+        <span class="SC-Field_error">{{ field.errors | try: "messages" }}</span>
+      </div>
+
+      {%- assign field = form.fields["password"] %}
+      <div class="SC-Field SC-Field-expand{% if field.errors != blank %} has-error{% endif %}{% if field.required? %} required{% endif %}">
+        <label for="{{ field.id }}" class="SC-Field_label">{{ "accounts.register.form.labels.password" | t }}</label>
+        <input type="password" name="{{ field.name }}" id="{{ field.id }}" placeholder="{{ "accounts.register.form.labels.password" | t }}" autocomplete="password" class="SC-Field_input">
+        <span class="SC-Field_error">{{ field.errors | try: "messages" }}</span>
+      </div>
+    </section>
+
+    <h3>{{ "accounts.register.form.headings.contact" | t }}</h3>
+    <section class="sc-mb-spacious">
+      {%- assign field = form.fields["firstname"] %}
+      <div class="SC-Field SC-Field-expand{% if field.errors != blank %} has-error{% endif %}{% if field.required? %} required{% endif %}">
+        <label for="{{ field.id }}" class="SC-Field_label">{{ "accounts.register.form.labels.firstname" | t }}</label>
+        <input type="text" name="{{ field.name }}" id="{{ field.id }}" value="{{ field.value }}" placeholder="{{ "accounts.register.form.labels.firstname" | t }}" class="SC-Field_input" class="SC-Field_input">
+        <span class="SC-Field_error">{{ field.errors | try: "messages" }}</span>
+      </div>
+      {%- assign field = form.fields["lastname"] %}
+      <div class="SC-Field SC-Field-expand{% if field.errors != blank %} has-error{% endif %}{% if field.required? %} required{% endif %}">
+        <label for="{{ field.id }}" class="SC-Field_label">{{ "accounts.register.form.labels.lastname" | t }}</label>
+        <input type="text" name="{{ field.name }}" id="{{ field.id }}" value="{{ field.value }}" placeholder="{{ "accounts.register.form.labels.lastname" | t }}" class="SC-Field_input" class="SC-Field_input">
+        <span class="SC-Field_error">{{ field.errors | try: "messages" }}</span>
+      </div>
+      {%- assign field = form.fields["phone"] %}
+      <div class="SC-Field{% if field.errors != blank %} has-error{% endif %}{% if field.required? %} required{% endif %}">
+        <label for="{{ field.id }}" class="SC-Field_label">{{ "accounts.register.form.labels.phone" | t }}</label>
+        <input type="phone" name="{{ field.name }}" id="{{ field.id }}" value="{{ field.value }}" placeholder="{{ "accounts.register.form.labels.phone" | t }}" class="SC-Field_input" autocomplete="phone" class="SC-Field_input">
+        <span class="SC-Field_error">{{ field.errors | try: "messages" }}</span>
+      </div>
+    </section>
+
+    <h3>{{ "accounts.register.form.headings.address" | t }}</h3>
+    {% render "shared/account/address_form", form: form, type: "billing" %}
+
+    {% render "account/shared/forms/campaign", form: form, context: "new" %}
+
+    <div class="sc-mb-base">
+      <input type="submit" name="commit" value="{{ "accounts.register.form.submit" | t }}" class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small" data-disable-with="{{ "accounts.register.form.submit" | t }}">
+    </div>
+  {%- endform %}
+{%- endif %}

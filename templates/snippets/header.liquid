@@ -1,0 +1,62 @@
+{%- cache "header", items: [current_store, current_customer, current_cart]  -%}
+  {%- if current_store.header != blank %}
+    {{ current_store.header.render }}
+  {%- else %}
+    {%- capture store_logo %}
+    <a href="{{ current_store.home_path }}" class="SC-Logo">
+      {%- if current_store.logo != blank %}
+        <img src="{{ current_store.logo.url }}" class="SC-Logo_image">
+      {%- else %}
+        <svg class="Placeholder" width="180px" viewBox="0 0 180 40">
+          <rect width="100%" height="100%" rx="20"></rect>
+        </svg>
+      {%- endif %}
+    </a>
+    {%- endcapture %}
+    <header class="SC-Header" id="SC-Header">
+      {%- render "header/geolocation" %}
+      <div class="SC-Header_inner">
+
+        <div class="SC-Header_inner_left">
+          <button data-menu-init="header" class="SC-Icon SC-Icon-button SC-Icon-large sc-hide-medium-and-up" type="button">
+            {%- render "shared/icons/hamburger" %}
+          </button>
+          <div class="sc-hide-up-to-medium">
+            {{ store_logo }}
+          </div>
+        </div>
+
+        <div class="SC-Header_inner_center">
+          <div class="sc-hide-medium-and-up">
+            {{ store_logo }}
+          </div>
+          <div class="sc-grow sc-hide-up-to-medium">
+            {%- render "header/search" %}
+          </div>
+        </div>
+
+        <div class="SC-Header_inner_right">
+          <ul class="SC-Menu tier1 end sc-justify-end" id="SC-HeaderMenuSecondary">
+            {%- render "header/dropdown/account" %}
+            {%- render "header/dropdown/cart" %}
+          </ul>
+        </div>
+      </div>
+
+      <div class="SC-Navbar">
+        <div class="SC-Navbar_inner">
+          <div class="sc-hide-medium-and-up">
+            {%- render "header/search" %}
+          </div>
+          {%- if current_store.header_menu != blank %}
+            {{ current_store.header_menu.render }}
+          {%- else %}
+            <ul class="SC-Menu dropdown tier1" id="SC-HeaderMenuPrimary" data-menu="header">
+              {%- render "header/menu" %}
+            </ul>
+          {%- endif %}
+        </div>
+      </div>
+    </header>
+  {%- endif %}
+{%- endcache %}

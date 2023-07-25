@@ -1,0 +1,30 @@
+<div class="sc-container sc-container-capsule sc-container-spacious">
+  <h1>{{ "auth.passwords.reset.heading" | t }}</h1>
+
+  {% assign block = current_store.id | append: "-password-reset-introduction" %}
+  {{ all_content_blocks[block] | try: "render" }}
+
+  {%- form "reset-password" %}
+    {% render "form_errors", errors: form.errors %}
+
+    {%- assign field = form.fields["password"] %}
+    <div class="SC-Field SC-Field-expand{% if field.errors != blank %} has-error{% endif %}{% if field.required? %} required{% endif %}">
+      <label for="{{ field.id }}" class="SC-Field_label">{{ "auth.passwords.reset.form.password" | t }}</label>
+      <input type="password" name="{{ field.name }}" id="{{ field.id }}" autocomplete="new-password" class="SC-Field_input">
+      <span class="SC-Field_error">{{ field.errors | try: "messages" }}</span>
+    </div>
+
+    {%- assign field = form.fields["password_confirmation"] %}
+    <div class="SC-Field SC-Field-expand{% if field.errors != blank %} has-error{% endif %}{% if field.required? %} required{% endif %}">
+      <label for="{{ field.id }}" class="SC-Field_label">{{ "auth.passwords.reset.form.password_confirmation" | t }}</label>
+      <input type="password" name="{{ field.name }}" id="{{ field.id }}" autocomplete="new-password" class="SC-Field_input">
+      <span class="SC-Field_error">{{ field.errors | try: "messages" }}</span>
+    </div>
+
+    <div class="sc-mb-base">
+      <input type="submit" name="commit" value="{{ "auth.passwords.reset.form.submit" | t }}" class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small" data-disable-with="{{ "auth.passwords.reset.form.submit" | t }}">
+    </div>
+  {%- endform %}
+
+  {%- render "account/login/links", context: "password" %}
+</div>

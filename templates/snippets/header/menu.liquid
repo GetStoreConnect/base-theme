@@ -1,0 +1,32 @@
+<button class="SC-Menu_button sc-mb"
+        data-menu-x
+        type="button">
+  {{ "header.menu.close" |t }}
+</button>
+
+{%- for category in current_store.navigation_categories %}
+  {%- comment %} Stand-alone category {% endcomment %}
+  {%- if category.navigation_children.size == 0 %}
+    <li class="SC-Menu_item tier1">
+      <a href="{{ category.path }}" class="SC-Menu_link">
+        {{ category.name }}
+      </a>
+    </li>
+
+  {%- comment %} Category with subcategories {% endcomment %}
+  {%- else %}
+    <li class="SC-Menu_item tier1 mega parent">
+      <a href="{{ category.path }}" class="SC-Menu_link" data-nav-trigger="{{ category.path }}">
+        {{ category.name }}
+      </a>
+      {%- render "header/submenu", category: category %}
+    </li>
+  {%- endif %}
+{%- endfor %}
+
+<li class="SC-Menu_item tier1">
+  <a href="{{ current_store.account_path }}"
+      class="SC-Menu_link">
+    {{ "header.menu.account" |t }}
+  </a>
+</li>

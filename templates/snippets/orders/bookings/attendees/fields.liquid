@@ -1,0 +1,58 @@
+{%- default form: blank %}
+
+<h3>{{ "accounts.orders.bookings.attendees.attendee_question" | t }}</h3>
+
+{%- assign field = form.fields["is_contact"] %}
+<div class="SC-Radio">
+  <input type="radio" name="{{ field.name }}" id="{{ field.id }}_true" value="true" class="SC-Radio_input" data-booking-is-contact {% unless field.value == "false" %}checked{% endunless %}>
+  <label for="{{ field.id }}_true" class="SC-Radio_label">{{ "accounts.orders.bookings.attendees.for_me" | t }}</label>
+</div>
+<div class="SC-Radio">
+  <input type="radio" name="{{ field.name }}" id="{{ field.id }}_false" value="false" class="SC-Radio_input" data-booking-is-contact {% if field.value == "false" %}checked{% endif %}>
+  <label for="{{ field.id }}_false" class="SC-Radio_label">{{ "accounts.orders.bookings.attendees.for_another" | t }}</label>
+</div>
+
+<fieldset data-booking-attendee-fields class="SC-Fieldset">
+  {%- render "form_errors", errors: form.errors %}
+
+  <input type="hidden" name="id" value="{{ form.fields["id"].value }}">
+
+  {%- comment %} First name {% endcomment %}
+  <div class="SC-Fieldset_row sc-align-items-start">
+    {%- assign field = form.fields["first_name"] %}
+    <div class="SC-Field SC-Field-expand sc-one-half sc-mb-small{% if field.errors != blank %} has-error{% endif %}{% if field.required? %} required{% endif %}">
+      <label for="{{ field.id }}" class="SC-Field_label">{{ "accounts.orders.bookings.attendees.placeholders.first_name" | t }}</label>
+      <input type="text" name="{{ field.name }}" id="{{ field.id }}" value="{{ field.value }}" class="SC-Field_input" data-booking-attendee-input>
+      <span class="SC-Field_error">{{ field.errors | try: "messages" }}</span>
+    </div>
+
+  {%- comment %} Last name {% endcomment %}
+    {%- assign field = form.fields["last_name"] %}
+    <div class="SC-Field SC-Field-expand sc-one-half sc-mb-small{% if field.errors != blank %} has-error{% endif %}{% if field.required? %} required{% endif %}">
+      <label for="{{ field.id }}" class="SC-Field_label">{{ "accounts.orders.bookings.attendees.placeholders.last_name" | t }}</label>
+      <input type="text" name="{{ field.name }}" id="{{ field.id }}" value="{{ field.value }}" class="SC-Field_input" data-booking-attendee-input>
+      <span class="SC-Field_error">{{ field.errors | try: "messages" }}</span>
+    </div>
+  </div>
+
+  {%- comment %} Email {% endcomment %}
+  {%- assign field = form.fields["email"] %}
+  <div class="SC-Field SC-Field-expand sc-mb-small{% if field.errors != blank %} has-error{% endif %}{% if field.required? %} required{% endif %}">
+    <label for="{{ field.id }}" class="SC-Field_label">{{ "accounts.orders.bookings.attendees.placeholders.email" | t }}</label>
+    <input type="text" name="{{ field.name }}" id="{{ field.id }}" value="{{ field.value }}" class="SC-Field_input" data-booking-attendee-input>
+    <span class="SC-Field_error">{{ field.errors | try: "messages" }}</span>
+  </div>
+
+  {%- comment %} Phone {% endcomment %}
+  {%- assign field = form.fields["phone"] %}
+  <div class="SC-Field SC-Field-expand sc-mb-small{% if field.errors != blank %} has-error{% endif %}{% if field.required? %} required{% endif %}">
+    <label for="{{ field.id }}" class="SC-Field_label">{{ "accounts.orders.bookings.attendees.placeholders.phone" | t }}</label>
+    <input type="text" name="{{ field.name }}" id="{{ field.id }}" value="{{ field.value }}" class="SC-Field_input" data-booking-attendee-input>
+    <span class="SC-Field_error">{{ field.errors | try: "messages" }}</span>
+  </div>
+</fieldset>
+
+{%- comment %} Save {% endcomment %}
+<input type="submit" name="commit" value="{{ "accounts.orders.bookings.attendees.save" | t }}" class="SC-Button SC-Button-primary SC-Button-small" data-disable-with="{{ "accounts.orders.bookings.attendees.save" | t }}">
+{%- comment %} Cancel {% endcomment %}
+<button data-booking-attendee-cancel class="SC-Button" type="button">{{ "accounts.orders.bookings.attendees.cancel" | t }}</button>

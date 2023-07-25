@@ -1,0 +1,207 @@
+{%- default source: blank -%}
+{%- default compact: false -%}
+
+{%- comment %} Source is either a Cart or an Order {% endcomment %}
+{%- if source != blank %}
+  {% capture source_type %}{{ source | downcase }}{% endcapture %}
+  <div class="SC-OrderTotal">
+    {%- comment %} Adjustment line items {% endcomment %}
+    {%- for line_item in source.adjustment_items %}
+      <div class="SC-OrderTotal_line">
+        <div class="SC-OrderTotal_line_label">
+          {{ line_item.name }}
+        </div>
+        <div class="SC-OrderTotal_line_total" data-line-item-pricing="{{ line_item.id }}">
+          {%- render "shared/line_items/pricing", pricing: line_item.pricing, compact: compact %}
+        </div>
+      </div>
+    {%- endfor %}
+
+    {%- unless source.quotable? %}
+      {%- comment %} Surcharge line items {% endcomment %}
+      {%- if source_type == "order" %}
+        {%- for surcharge in source.surcharge_items %}
+          <div class="SC-OrderTotal_line">
+            <div class="SC-OrderTotal_line_label">
+              {{ surcharge.name }}
+            </div>
+            <div class="SC-OrderTotal_line_total" data-surcharge-item-pricing="{{ surcharge.identifier }}">
+              {{ surcharge.price | money }}
+            </div>
+          </div>
+        {%- endfor %}
+      {%- endif %}
+
+      {%- comment %} Total {% endcomment %}
+      <div class="SC-OrderTotal_line">
+        <div class="SC-OrderTotal_line_label">
+          {{ "order_summary.total" | t }}
+        </div>
+        <div class="SC-OrderTotal_line_total" data-order-total-amount>
+          {%- comment %} Currency Total {% endcomment %}
+          {%- if source.total > 0 %}
+            <span data-currency>{{ source.total | money }}</span>
+          {%- endif %}
+
+          {%- comment %} And {% endcomment %}
+          {%- if source.total > 0 and source.total_points > 0 %}
+            {{ "order_summary.currency_and_points_connector" | t }}
+          {%- endif %}
+
+          {%- comment %} Points Total {% endcomment %}
+          {%- if source.total_points > 0 %}
+            <span data-points>{{ source.total_points | points }}</span>
+          {%- endif %}
+        </div>
+      </div>
+
+      {%- comment %} Taxes {% endcomment %}
+      {%- unless current_store.tax_inclusive? and current_store.display_currency? %}
+        <div class="SC-OrderTotal_line">
+          <div class="SC-OrderTotal_line_label">
+            {%- capture tax_label %}
+              {%- if source.taxes.size == 1 %}
+                {{- source.taxes.first.name }}
+              {%- else %}
+                {{- "order_summary.tax_label" | t }}
+              {%- endif %}
+            {%- endcapture %}
+            {{ "order_summary.includes_tax" | t, tax_label: tax_label }}
+          </div>
+          <div class="SC-OrderTotal_line_total" data-order-tax-amount="{{ source.total_tax | money }}">
+            {{ source.total_tax | money }}
+          </div>
+        </div>
+      {%- endunless %}
+
+      {%- comment %} Total Paid {% endcomment %}
+      {%- if source.total_paid > 0 %}
+        <div class="SC-OrderTotal_line">
+          <div class="SC-OrderTotal_line_label">{{ "order_summary.paid" | t }}</div>
+          <div class="SC-OrderTotal_line_total" data-order-paid-amount>
+            {{ source.total_paid | times: -1 | money }}
+          </div>
+        </div>
+      {%- endif %}
+
+      {%- if source_type == "cart" %}
+        {%- comment %} Account Credits {% endcomment %}
+        {%- for credit in source.applied_credits %}
+          <div class="SC-OrderTotal_line">
+            <div class="SC-OrderTotal_line_label">{{ "order_summary.account_credit" | t }}: {{ credit.name }}</div>
+            <div class="SC-OrderTotal_line_total" data-order-account-credit-id="{{ credit.id }}">
+              {{ credit.amount | times: -1 | money }}
+            </div>
+          </div>
+        {%- endfor %}
+
+        {%- comment %} Vouchers {% endcomment %}
+        {%- for voucher in source.applied_vouchers %}
+          <div class="SC-OrderTotal_line">
+            <div class="SC-OrderTotal_line_label">{{ "order_summary.voucher" | t }}: {{ voucher.code }}</div>
+            <div class="SC-OrderTotal_line_total" data-order-voucher-id="{{ voucher.id }}">
+              {{ voucher.amount | times: -1 | money }}
+            </div>
+          </div>
+        {%- endfor %}
+      {%- endif %}
+
+      {%- comment %} Possible Surcharges {% endcomment %}
+      {%- for surcharge in source.payment_surcharge_values %}
+        <div class="SC-OrderTotal_line sc-hide" data-surcharge-id="{{ surcharge.identifier }}" data-surcharge-cart-total-payable="{{ surcharge.price | plus: source.total_payable | money }}" data-surcharge-cart-total-tax="{{ surcharge.tax | plus: source.total_tax | money }}">
+          <div class="SC-OrderTotal_line_label">
+            {{ surcharge.name }}
+          </div>
+          <div class="SC-OrderTotal_line_total">
+            {{ surcharge.price | money }}
+          </div>
+        </div>
+      {%- endfor %}
+
+      {%- if source_type == "cart" %}
+        {%- comment %} Due Now {% endcomment %}
+        <div class="SC-OrderTotal_line sc-font-base sc-mt-small sc-shade-darkest">
+          <div class="SC-OrderTotal_line_label">
+            {{ "order_summary.cart.total_payable" | t }}
+          </div>
+          <div class="SC-OrderTotal_line_total" data-order-cart-total-payable="{{ source.total_payable | money }}">
+            {%- comment %} Currency Total {% endcomment %}
+            {%- if source.total_payable > 0 %}
+              <span data-currency>{{ source.total_payable | money }}</span>
+            {%- endif %}
+
+            {%- comment %} And {% endcomment %}
+            {%- if source.total_payable > 0 and source.total_payable_points > 0 %}
+              {{ "order_summary.currency_and_points_connector" | t }}
+            {%- endif %}
+
+            {%- comment %} Points Total {% endcomment %}
+            {%- if source.total_payable_points > 0 %}
+              <span data-points>{{ source.total_payable_points | points }}</span>
+            {%- endif %}
+          </div>
+        </div>
+      {%- endif %}
+
+      {%- comment %} Balance Owing {% endcomment %}
+      {%- if source_type == "order" %}
+        <div class="SC-OrderTotal_line sc-font-base sc-mt-small sc-shade-darkest">
+          <div class="SC-OrderTotal_line_label">
+            {{ "order_summary.order.total_payable" | t }}
+          </div>
+          <div class="SC-OrderTotal_line_total" data-order-cart-total-payable="{{ source.total_payable | money }}">
+            {%- comment %} Currency Total {% endcomment %}
+            {%- if source.total > 0 %}
+              <span data-currency>{{ source.total_payable | money }}</span>
+            {%- endif %}
+
+            {%- comment %} And {% endcomment %}
+            {%- if source.total > 0 and source.total_points > 0 %}
+              {{ "order_summary.currency_and_points_connector" | t }}
+            {%- endif %}
+
+            {%- comment %} Points Total {% endcomment %}
+            {%- if source.total_points > 0 %}
+              <span data-points>{{ source.total_payable_points | points }}</span>
+            {%- endif %}
+          </div>
+        </div>
+      {%- endif %}
+
+      {%- comment %} Amount of Subscriptions remaining {% endcomment %}
+      {%- if source_type == "order" and source.total_remaining_subscriptions > 0 %}
+        <div class="SC-OrderTotal_line">
+          <div class="SC-OrderTotal_line_label">
+            {{ "order_summary.order.total_subscriptions_remaining" | t }}
+          </div>
+          <div class="SC-OrderTotal_line_total" data-order-subscriptions-remaining-amount>
+            {{ source.total_remaining_subscriptions | money }}
+          </div>
+        </div>
+      {%- endif %}
+
+      {%- comment %} Fixed-term subscription warning {% endcomment %}
+      {%- if compact == false and source.total_fixed_term_subscriptions > 0 %}
+        <div class="SC-OrderTotal_line sc-font-base sc-mt-small sc-shade-darkest">
+          <div class="SC-OrderTotal_line_total">
+            <div class="sc-font-tiny sc-shade-neutral" data-order-fixed-term-subscriptions-amount>
+              {%- assign amount = source.total_fixed_term_subscriptions | money %}
+              {{ "order_summary.includes_fixed_subscriptions" | t: amount: amount }}
+            </div>
+          </div>
+        </div>
+      {%- endif %}
+
+      {%- comment %} Pay Balance Button {% endcomment %}
+      {%- if compact == false and source_type == "order" and current_request.path != source.additional_payment_path %}
+        {%- assign amount = source.total_payable | minus: source.total_remaining_subscriptions %}
+        {%- if amount > 0 %}
+          {%- assign amount = amount | money %}
+          <div class="SC-OrderTotal_pay_balance sc-mt-large sc-flex-row sc-justify-center">
+            <a href="{{ source.additional_payment_path }}" class="SC-Button SC-Button-secondary" rel="nofollow">{{ "order_summary.order.pay_balance" | t: amount: amount }}</a>
+          </div>
+        {%- endif %}
+      {%- endif %}
+    {%- endunless %}
+  </div>
+{%- endif %}

@@ -1,0 +1,128 @@
+{%- default subscription: blank %}
+
+{%- unless subscription == blank %}
+  {%- assign status = "accounts.subscriptions.status.enum." | append: subscription.status | t  %}
+  {%- assign subheading = "accounts.subscriptions.show.status" | t, subscription_status: status %}
+  {%- render "shared/page_header", heading: subscription.product.name, sub_heading: subheading %}
+
+  {%- if subscription.cancellable? %}
+    <button
+      class="SC-Link sc-mb-small"
+      onClick="document.querySelector('[data-cancel-subscription]').classList.remove('sc-hide');"
+    >
+      {{ "accounts.subscriptions.show.cancel" | t }}
+    </button>
+
+    <div class="sc-hide" data-cancel-subscription>
+      <div class="sc-mb-small">{{ "accounts.subscriptions.show.cancel_text" | t }}</div>
+      <div class="sc-mb-medium" >
+        <a href="{{ subscription.path }}" data-method="delete" class="SC-Link">{{ "accounts.subscriptions.show.cancel_confirm" | t }}</a>
+        <button
+          class="SC-Link sc-mb-small sc-ml-medium"
+          onClick="document.querySelector('[data-cancel-subscription]').classList.add('sc-hide');"
+        >
+          {{ "accounts.subscriptions.show.cancel_abort" | t }}
+        </button>
+      </div>
+    </div>
+  {%- endif %}
+
+  {%- comment %} Details {% endcomment %}
+  <section class="SC-Panel sc-expand">
+    <header class="SC-Panel_header SC-Panel_header-border">
+      <h3 class="SC-Panel_header_heading">
+        {{ "accounts.product_approvals.show.details" | t }}
+      </h3>
+    </header>
+    <table class="sc-mb-spacious">
+      <tr>
+        <th>{{ "accounts.subscriptions.index.order" | t }}</th>
+        <th>{{ "accounts.subscriptions.index.renewal_date" | t }}</th>
+        <th>{{ "accounts.subscriptions.index.next_due" | t }}</th>
+        <th>{{ "accounts.subscriptions.index.price" | t }}</th>
+      </tr>
+      <tr>
+        <td data-th="{{ "accounts.subscriptions.index.order" | t }}"><a href="{{ subscription.order.path }}">{{ subscription.order.reference }}</a></td>
+        <td data-th="{{ "accounts.subscriptions.index.renewal_date" | t }}">{% render "shared/date", timestamp: subscription.renewal_date, time_style: "none" %}</td>
+        <td data-th="{{ "accounts.subscriptions.index.next_due" | t }}">{% render "shared/date", timestamp: subscription.next_due_date, time_style: "none" %}</td>
+        <td data-th="{{ "accounts.subscriptions.index.price" | t }}">{{ subscription.price | money }}</td>
+      </tr>
+    </table>
+  </section>
+
+  {%- comment %} Past Payments {% endcomment %}
+  <section class="SC-Panel sc-expand">
+    <header class="SC-Panel_header SC-Panel_header-border">
+      <h4 class="SC-Panel_header_heading">
+        {{ "accounts.subscriptions.show.past_payments" | t }}
+      </h4>
+    </header>
+    {%- if subscription.payments.size > 0 %}
+      {%- paginate subscription.payments by 0 %}
+        <table class="sc-mb-spacious">
+          <tr>
+            <th>{{ "accounts.subscriptions.show.order" | t }}</th>
+            <th>{{ "accounts.subscriptions.show.paid_at" | t }}</th>
+            <th>{{ "accounts.subscriptions.show.amount" | t }}</th>
+          </tr>
+          {%- for payment in subscription.payments %}
+            <tr>
+              <td data-th="{{ "accounts.subscriptions.show.order" | t }}"><a href="{{ payment.order.path }}">{{ payment.order.reference }}</a></td>
+              <td data-th="{{ "accounts.subscriptions.show.paid_at" | t }}">{% render "shared/date", timestamp: payment.paid_at %}</td>
+              <td data-th="{{ "accounts.subscriptions.show.amount" | t }}">{{ payment.amount | money }}</td>
+            </tr>
+          {%- endfor %}
+        </table>
+        {%- render 'shared/pagination-nav', paginate: paginate %}
+      {%- endpaginate %}
+    {%- else %}
+      <div class="sc-shade-neutral sc-mt-medium sc-mb-spacious">{{ "accounts.subscriptions.show.no_payments" | t }}</div>
+    {%- endif %}
+  </section>
+
+  <div class="SC-Grid" data-general-error-message="{{ "checkout.payment.error" | t }}"></div>
+
+  {%- comment %} Payment details {% endcomment %}
+  <section class="SC-Panel">
+    <header class="SC-Panel_header SC-Panel_header-border">
+      <h4 class="SC-Panel_header_heading">
+        {{ "accounts.subscriptions.show.payment_details" | t }}
+      </h4>
+    </header>
+    <div class="sc-mb-small">
+      {{ subscription.payment_method }}<br/>
+      {%- if subscription.payment_source_identifier != blank %}
+        {{ "accounts.subscriptions.show.payment_source_identifier" | t, identifier: subscription.payment_source_identifier }}<br>
+      {%- endif %}
+      {%- if subscription.payment_source_expires_at != blank %}
+      {%- capture expires_at %}
+        {% render "shared/date", timestamp: subscription.payment_source_expires_at, time_style: "none" %}
+      {%- endcapture %}
+      {{ "accounts.subscriptions.show.payment_source_expires_at" | t, expires_at: expires_at }}
+      {%- endif %}
+    </div>
+    {%- if subscription.can_update_payment_source? %}
+      <button class="SC-Link sc-mb-small" onClick="document.querySelector('[data-payment-details-forms]').classList.remove('sc-hide');">
+        {{ "accounts.subscriptions.show.update_payment_details" | t }}
+      </button>
+    {%- endif %}
+    {% if subscription.can_update_payment_source? %}
+      <div class="sc-hide" data-payment-details-forms>
+        <section data-tabs="payment" class="sc-mb" style="max-width: 600px">
+          {{ subscription.payment_provider.payment_instructions_content }}
+          {%- assign form_id = "PaymentForm" | prepend: subscription.payment_provider.code | append: subscription.payment_provider.id %}
+          {%- form "update-subscription-payment-details",
+                    subscription: subscription,
+                    id: form_id,
+                    class: "SC-Panel SC-Panel-default",
+                    data-provider: subscription.payment_provider.code,
+                    data-type: "PaymentForm",
+                    data-id: form_id
+          %}
+            {% render "payment_providers/form", provider: subscription.payment_provider, order: subscription.order %}
+          {%- endform %}
+        </section>
+      </div>
+    {%- endif %}
+  </section>
+{%- endunless %}

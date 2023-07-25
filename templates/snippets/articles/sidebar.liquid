@@ -1,0 +1,15 @@
+<nav class="SC-PageNav">
+  <div class="SC-PageNav_content is-hidden" data-toggle-visibility-target="article-sidebar">
+    <div class="SC-PageNav_heading">
+      {{ "articles.sidebar.heading" | t }}
+    </div>
+    {%- paginate all_article_categories by all_article_categories.size %}
+      {%- for category in all_article_categories %}
+        <a href="{{ category.path }}" class="SC-PageNav_link{% if current_article_category != blank and category.id == current_article_category.id %} is-current{% endif %}">{{ category.name }}</a>
+      {%- endfor %}
+    {%- endpaginate %}
+  </div>
+  <div class="SC-PageNav_menu-toggle target-hidden" data-toggle-visibility="article-sidebar">
+    {%- render "icons/chevron", width: 12 %}
+  <div>
+</nav>

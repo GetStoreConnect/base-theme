@@ -1,0 +1,26 @@
+{%- default order: blank %}
+
+{%- unless current_customer != blank or order.ship_to_contact.id != order.contact.id %}
+  <section class="SC-Panel sc-mb">
+    <header class="SC-Panel_header SC-Panel_header-border">
+      <h2 class="SC-Panel_header_heading">
+        {{ "accounts.orders.show.guests.your_order_status" | t }}
+      </h2>
+    </header>
+    {%- if order.contact.has_login? %}
+      <div>
+        <p class="sc-shade-neutral">{{ "accounts.orders.show.members.login_message" | t }}</p>
+        {% render "account/login/form" %}
+      </div>
+    {%- else %}
+      <p class="sc-shade-neutral">
+        {%- if current_store.sso_login? %}
+          {{ "accounts.orders.show.guests.link_oauth_account_message" | t }}
+        {%- else %}
+          {{ "accounts.orders.show.guests.save_password_message" | t }}
+        {%- endif %}
+      </p>
+      {% render "account/checkout/set_password", order: order %}
+    {%- endif %}
+  </section>
+{% endunless %}

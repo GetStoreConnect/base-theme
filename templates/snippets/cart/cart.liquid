@@ -1,0 +1,29 @@
+{%- if current_cart != blank and current_cart.items.size > 0 %}
+  {%- form "cart", data-submit-on-change: true, data-sc-cart: blank, remote: true %}
+
+    {%- comment %} Products {% endcomment %}
+    {%- render "shared/cart/items", source: current_cart, extended: true, width: "80px" %}
+
+    <section class="SC-Grid">
+      <div class="SC-Grid_main">
+        <div class="u-text-align-center-up-to-medium">
+          <a href="{{ current_store.cart_path }}" data-method="delete" class="SC-Link">{{ "cart.links.clear_cart" | t }}</a>
+        </div>
+      </div>
+
+      <aside class="SC-Grid_summary">
+        <div class="sc-mb" data-cart-summary>
+          {%- render "shared/order_total", source: current_cart %}
+        </div>
+
+        {%- render "shared/cart/checkout_button" %}
+      </aside>
+    </section>
+
+  {%- endform %}
+{%- else %}
+  <p>{{ "cart.empty_msg" | t }}</p>
+  <p>
+    <a href="{{ current_store.home_path }}" class="SC-Link">{{ "cart.links.continue_shopping" | t }}</a>
+  </p>
+{%- endif %}

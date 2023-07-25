@@ -1,0 +1,48 @@
+{%- if current_customer != blank %}
+  <nav class="SC-PageNav" id="SC-AccountNav">
+    <div class="SC-PageNav_content is-hidden" data-toggle-visibility-target="account-sidebar">
+      <a href="{{ current_store.account_path }}" class="SC-PageNav_link{% if current_request.params.section == "profile" %} is-current{% endif %}">
+        {{ "accounts.menu.profile" | t }}
+      </a>
+      <a href="{{ current_store.account_path }}/{{ "accounts.contact.path" | t }}" class="SC-PageNav_link{% if current_request.params.section == "contact" %} is-current{% endif %} sc-ml-small">
+        {{ "accounts.menu.contact" | t }}
+      </a>
+      <a href="{{ current_store.account_path }}/{{ "accounts.credentials.path" | t }}" class="SC-PageNav_link{% if current_request.params.section == "credentials" %} is-current{% endif %} sc-ml-small">
+        {{ "accounts.menu.credentials" | t }}
+      </a>
+      <a href="{{ current_store.account_path }}/{{ "accounts.shipping.path" | t }}" class="SC-PageNav_link{% if current_request.params.section == "shipping" %} is-current{% endif %} sc-ml-small">
+        {{ "accounts.menu.shipping" | t }}
+      </a>
+      <a href="{{ current_store.account_path }}/{{ "accounts.billing.path" | t }}" class="SC-PageNav_link{% if current_request.params.section == "billing" %} is-current{% endif %} sc-ml-small">
+        {{ "accounts.menu.billing" | t }}
+      </a>
+      <a href="{{ current_store.orders_path }}" class="SC-PageNav_link{% if current_request.params.section == "orders" %} is-current{% endif %}">
+        {{ "accounts.menu.orders" | t }}
+      </a>
+      <a href="{{ current_store.subscriptions_path }}" class="SC-PageNav_link{% if current_request.params.section == "subscriptions" %} is-current{% endif %}">
+        {{ "accounts.menu.subscriptions" | t }}
+      </a>
+      {%- if current_account.account_credits.size > 0 and current_customer.can_use_account_credit? %}
+        <a href="{{ current_store.account_credits_path }}" class="SC-PageNav_link{% if current_request.params.section == "account_credits" %} is-current{% endif %}">
+          {{ "accounts.menu.account_credits" | t }}
+        </a>
+      {%- endif %}
+      {%- if current_store.display_points? and current_customer.can_use_account_points? %}
+        <a href="{{ current_store.account_points_path }}" class="SC-PageNav_link{% if current_request.params.section == "account_points" %} is-current{% endif %}">
+          {{ "accounts.menu.account_points" | t }}
+        </a>
+      {%- endif %}
+      {%- if current_account.product_approvals.size > 0 %}
+          <a href="{{ current_store.product_approvals_path }}" class="SC-PageNav_link{% if current_request.params.section == "product_approvals" %} is-current{% endif %}">
+            {{ "accounts.menu.product_approvals" | t }}
+          </a>
+      {%- endif %}
+      <a href="{{ current_store.logout_path }}" data-method-delete class="SC-PageNav_link">
+        {{ "accounts.menu.log_out" | t }}
+      </a>
+    </div>
+    <div class="SC-PageNav_menu-toggle target-hidden" data-toggle-visibility="account-sidebar">
+      {%- render "icons/chevron", width: 12 %}
+    <div>
+  </nav>
+{%- endif %}

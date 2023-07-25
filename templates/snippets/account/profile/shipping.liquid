@@ -1,0 +1,16 @@
+<div class="sc-flex-row sc-align-items-center">
+  <span class="sc-grow">
+    <h3>{{ "accounts.profile.sections.shipping.heading" | t }}</h3>
+  </span>
+  <span>
+    <a href="{{ current_store.account_path }}/{{ "accounts.shipping.path" | t }}" class="SC-Button">{{ "accounts.profile.sections.shipping.edit" | t }}</a>
+  </span>
+</div>
+<div>
+{%- render "shared/address_multi_line",
+    lines: current_account.shipping_address_lines,
+    city: current_account.shipping_city,
+    state: current_account.shipping_state,
+    country: current_account.shipping_country,
+    postal_code: current_account.shipping_postal_code %}
+</div>

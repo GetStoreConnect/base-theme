@@ -1,0 +1,25 @@
+{%- default found_locations: "no-search" -%}
+
+<div
+  data-location-search-summary
+  data-location-results-count="{{ found_locations.size }}"
+  data-default="{{ "locations.search.results.default" | t }}"
+  class="sc-text-center sc-shade-neutral sc-font-tiny sc-p-small">
+  {%- if found_locations == "no-search" %}
+    {{ "locations.search.results.default" | t }}
+  {%- else %}
+    {%- case current_request.params.distance_unit %}
+    {%- when "imp" %}
+      {%- assign unit = "locations.search.results.abbr.imperial" | t %}
+    {%- else %}
+      {%- assign unit = "locations.search.results.abbr.metric" | t %}
+    {%- endcase %}
+    {{ "locations.search.results.count" | t: count: found_locations.size }}
+    {%- if current_request.params.search_by == "near" %}
+      {{ "locations.search.results.formatters.within_distance_of_origin" | t: number: current_request.params.distance, unit: unit, origin: current_request.params.address }}
+    {%- endif %}
+    {%- unless current_request.params.postcode == blank  %}
+      {{ "locations.search.results.postcode" | t: postcode: current_request.params.postcode }}
+    {%- endunless %}
+  {%- endif %}
+</div>

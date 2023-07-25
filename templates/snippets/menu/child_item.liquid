@@ -1,0 +1,24 @@
+{%- assign lvl = level | plus: 1 %}
+
+{%- if child_item.navigation_children.size > 0 and child_category_levels > 1 %}
+  <li class="SC-Menu_item tier{{ level }} parent" id="SC-MenuItem-{{ parent_id }}-{{ child_item.id }}">
+    <a class="SC-Menu_link" href="{{ child_item.path }}" data-menu-init="{{ child_item.identifier }}">
+      {{ child_item.name }}
+    </a>
+    <ul class="SC-Menu tier{{ lvl }}" data-menu="{{ child_item.identifier }}" id="SC-Menu-{{ child_item.id }}">
+      {%- for child in child_item.navigation_children %}
+        {%- render "menu/child_item",
+                    parent_id: child_item.id,
+                    child_item: child,
+                    level: lvl %}
+      {%- endfor %}
+    </ul>
+  </li>
+
+{%- else %}
+  <li class="SC-Menu_item tier{{ level }}" id="SC-MenuItem-{{ parent_id }}-{{ child_item.id }}">
+    <a class="SC-Menu_link" href="{{ child_item.path }}">
+      {{ child_item.name }}
+    </a>
+  </li>
+{%- endif %}

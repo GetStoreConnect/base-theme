@@ -1,0 +1,20 @@
+{%- default provider: blank %}
+{%- default order: blank %}
+
+<script src="{{ 'authorize-net-gateway.js' | asset_url }}"></script>
+
+{% render "shared/credit_card_form", provider_id: provider.id, provider_code: provider.code %}
+
+{%- if provider.mode == "production" %}
+  <script type="text/javascript" src="https://js.authorize.net/v1/Accept.js" charset="utf-8"></script>
+{%- else %}
+  <script type="text/javascript" src="https://jstest.authorize.net/v1/Accept.js" charset="utf-8"></script>
+{%- endif %}
+<script type="text/javascript">
+  StoreConnect.Gateways.AuthorizeNet(
+    '{{ provider.public_api_key }}',
+    '{{ provider.options["public_key"] }}',
+    '{{ provider.id }}',
+    '{{ order.billing_postal_code }}'
+  );
+</script>

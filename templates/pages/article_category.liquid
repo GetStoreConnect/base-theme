@@ -1,0 +1,40 @@
+{%- default page_id: "index" -%}
+
+{%- if current_article_category %}
+  {%- assign page_id = current_article_category.identifier %}
+{%- endif %}
+
+<div class="sc-container sc-me" id="SC-article_category-{{ page_id }}">
+  <div class="SC-Grid">
+    {%- if all_article_categories.size > 0 %}
+      <div class="SC-Grid_sidebar">
+        {%- render "articles/sidebar" %}
+      </div>
+    {%- endif %}
+
+    <div class="SC-Grid_main">
+      <section class="SC-ArticleCategory">
+        {%- if current_article_category %}
+          {%- render "shared/page_header", heading: current_article_category.name %}
+
+          {%- if current_article_category.introduction_content %}
+            <div class="SC-ArticleCategory_introduction sc-rich-text">
+              {{ current_article_category.introduction_content }}
+            </div>
+          {%- endif %}
+
+          {%- render "articles/grid", articles: current_article_category.articles %}
+
+          {%- if current_article_category.information_content %}
+            <div class="SC-ArticleCategory_information sc-rich-text">
+              {{ current_article_category.information_content }}
+            </div>
+          {%- endif %}
+        {%- else %}
+          {%- render "shared/page_header", heading: "t.articles.index.heading" %}
+          {%- render "articles/grid", articles: all_articles %}
+        {%- endif %}
+      </section>
+    </div>
+  </div>
+</div>

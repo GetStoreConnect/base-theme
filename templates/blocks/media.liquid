@@ -1,0 +1,15 @@
+<div class="CB-Component" data-cb="{{ content_block.identifier }}">
+  {%- if content_block.document %}
+    <a href="{{ content_block.document.url }}">{{ content_block.document.name }}</a>
+  {%- endif %}
+
+  {%- if content_block.file %}
+    <a href="{{ content_block.file.url }}">{{ content_block.file.name }}</a>
+  {%- endif %}
+
+  {%- if content_block.medium %}
+    <a href="{{ content_block.medium.url }}">{{ content_block.medium.name }}</a>
+  {%- endif %}
+
+  {{ content_block.content }}
+</div>

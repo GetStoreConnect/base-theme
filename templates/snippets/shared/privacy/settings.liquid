@@ -1,0 +1,95 @@
+{%- form "privacy-settings" %}
+  <header class="SC-PrivacySettingsForm_header">
+    {{ current_privacy.settings_content }}
+  </header>
+  {%- if current_privacy.groups.size > 0 %}
+    <section class="SC-PrivacySettingsForm_body" data-privacy-groups>
+      {%- for group in current_privacy.groups %}
+        <div class="Accordion" data-accordion data-privacy-group="{{ group.id }}">
+          <button
+            class="Accordion_header"
+            type="button"
+            data-accordion-trigger>
+            {%- comment %} Icon {% endcomment %}
+            <svg class="Accordion_header_icon"
+                data-accordion-icon
+                viewBox="0 0 100 100">
+              <rect x="0" y="42" width="100%" height="16" rx="8"></rect>
+              <rect x="42" y="0" width="16" height="100%" rx="8"></rect>
+            </svg>
+            {%- comment %} Heading {% endcomment %}
+            <div class="Accordion_header_heading">
+              <strong>{{ group.title }}</strong>
+            </div>
+            {%- if group.required? %}
+              <span class="sc-shade-neutral sc-no-shrink sc-font-small" data-privacy-group-required>
+                {{ "privacy.modal.enabled_label" | t }}
+              </span>
+            {%- else %}
+              <label
+                for="{{ group.id }}"
+                class="sc-shade-neutral sc-no-shrink sc-font-small sc-m-none SC-Button SC-Button-small"
+                data-enable-label="{{ "privacy.modal.enable_all_label" | t }}"
+                data-disable-label="{{ "privacy.modal.disable_all_label" | t }}">
+                {{ "privacy.modal.enable_all_label" | t }}
+              </label>
+              <label class="SC-Switch sc-ml-small" data-privacy-group-optional>
+                <input name="privacy_settings[groups][{{ group.id }}][enabled]" type="hidden" value="0" autocomplete="off">
+                <input id="{{ group.id }}" type="checkbox" value="1" name="privacy_settings[groups][{{ group.id }}][enabled]">
+              </label>
+            {%- endif %}
+          </button>
+
+          <div class="Accordion_body" aria-expanded="false" data-accordion-target>
+            <div class="sc-rich-text sc-mb">
+              {{ group.information_content }}
+            </div>
+            {%- if group.cookies.size > 0 %}
+              <div data-cookies>
+                {%- for cookie in group.cookies %}
+                  <div class="SC-Cookie" data-cookie="{{ cookie.id }}">
+                    <span class="SC-Cookie_details">
+                      <div class="SC-Cookie_name">
+                        {{ cookie.name }}
+                      </div>
+                      <div class="SC-Cookie_markdown">
+                        {{ cookie.information_content }}
+                      </div>
+                    </span>
+                    <div class="SC-Cookie_control">
+                      {%- if group.required? %}
+                        <label data-cookie-required>
+                          {{ "privacy.modal.enabled_label" | t }}
+                        </label>
+                      {%- else %}
+                        <label
+                          data-cookie-label
+                          data-enabled-label="{{ "privacy.modal.enabled_label" | t }}"
+                          data-disabled-label="{{ "privacy.modal.disabled_label" | t }}">
+                          {{ "privacy.modal.disabled_label" | t }}
+                        </label>
+                        <label class="SC-Switch" data-cookie-optional>
+                          <input name="privacy_settings[groups][{{ group.id }}][cookies][{{ cookie.id }}][enabled]" type="hidden" value="0" autocomplete="off">
+                          <input id="{{ cookie.id }}" data-group="0010k00000gqItyuRP" type="checkbox" value="1" name="privacy_settings[groups][{{ group.id }}][cookies][{{ cookie.id }}][enabled]">
+                          <div class="SC-Switch_control"></div>
+                        </label>
+                      {%- endif %}
+                    </div>
+                  </div>
+                {%- endfor %}
+              </div>
+            {%- endif %}
+          </div>
+        </div>
+        {%- endfor %}
+    </section>
+  {%- endif %}
+  <div class="SC-PrivacySettingsForm_footer">
+    <button class="SC-Button SC-Button-secondary SC-Button-small">{{ "privacy.modal.save" | t }}</button>
+    <button formaction="{{ current_privacy.enable_all_path }}" class="SC-Button SC-Button-primary SC-Button-small">{{ "privacy.modal.save_accept_all" | t }}</button>
+    <button formaction="{{ current_privacy.disable_all_path }}" class="SC-Button SC-Button-secondary SC-Button-small">{{ "privacy.modal.save_reject_all" | t }}</button>
+    <div class="sc-text-right">
+      <a href="{{ current_privacy.clear_settings_path }}">{{ "privacy.modal.clear" | t }}</a>
+    </div>
+  </div>
+{%- endform %}

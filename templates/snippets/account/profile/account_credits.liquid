@@ -1,0 +1,24 @@
+<div class="sc-flex-row sc-align-items-center">
+  <span class="sc-grow">
+    <h3>{{ "accounts.profile.sections.account_credits.heading" | t }}</h3>
+  </span>
+  <span>
+    <a href="{{ current_store.account_credits_path }}" class="SC-Button">{{ "accounts.profile.sections.account_credits.view_all" | t }}</a>
+  </span>
+</div>
+{%- if current_account.account_credits.size > 0 and current_customer.can_use_account_credit? %}
+  <p>{{ "accounts.profile.sections.account_credits.count" | t, count: current_account.account_credits.size }}</p>
+
+  <table>
+    <tr>
+      <th>{{ "accounts.profile.sections.account_credits.total_balance" | t }}</th>
+    </tr>
+    <tr>
+      <td data-th="{{ "accounts.profile.sections.account_credits.total_balance" | t }}">
+        {{ current_account.account_credits | pluck: "current_balance" | sum | money }}
+      </td>
+    </tr>
+  </table>
+{%- else %}
+  <div class="sc-shade-neutral">{{ "accounts.profile.sections.account_credits.no_account_credits" | t }}</div>
+{%- endif %}

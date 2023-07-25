@@ -1,0 +1,37 @@
+{%- default button_label: blank -%}
+{%- default button_data_attr: blank -%}
+{%- default button_disabled: false -%}
+{%- default submit: false -%}
+{%- default max_width: blank -%}
+
+<div class="SC-Modal" data-modal="{{ id }}">
+  <section class="SC-Modal_inner"{% if max_width != blank %} style="max-width: {{ max_width }}px"{% endif %}>
+
+    {%- comment %} Header {% endcomment %}
+    <header class="SC-Modal_inner_header">
+      <h2 class="sc-m-none">{{ heading }}</h2>
+    </header>
+
+    {%- comment %} Body {% endcomment %}
+    <div class="SC-Modal_inner_body">
+      {{ body }}
+    </div>
+
+    {%- comment %} Footer {% endcomment %}
+    {%- if button_label != blank %}
+      <footer class="SC-Modal_inner_footer">
+        <button class="SC-Button SC-Button-primary"
+                type="{% if submit == true %}submit{% else %}button{%- endif -%}"
+                data-modal-trigger="{{ id }}"
+                {% if button_disabled == true %}disabled{% endif %}
+                {% if button_data_attr != blank %}button_data_attr{% endif %}>
+          {{ button_label }}
+        </button>
+      </footer>
+    {%- endif %}
+  </section>
+
+  {%- comment %} Overlay background {% endcomment %}
+  <div class="SC-Modal_overlay"
+       data-modal-trigger="{{ id }}"></div>
+</div>

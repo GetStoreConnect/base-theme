@@ -1,0 +1,21 @@
+{%- capture children_content %}
+  {%- for child in content_block.children %}
+    {% capture child_content %}{{ child.render }}{% endcapture %}
+    {% if child_content != blank %}<div>{{ child_content }}</div>{% endif %}
+  {%- endfor %}
+{%- endcapture %}
+
+<section class="CB-Slideshow" data-cb="{{ content_block.identifier }}">
+  {%- if children_content != blank %}
+    <div class="Slider" data-slideshow="{{ content_block.identifier }}">
+      {{ children_content }}
+    </div>
+  {%- else %}
+    <div class="Fallback">
+      <div class="u-text-align-center">
+        <div class="u-s-mb-base"><strong>Slideshow</strong></div>
+        <div>No content blocks have been selected to be present in this slideshow</div>
+      </div>
+    </div>
+  {%- endif %}
+</section>

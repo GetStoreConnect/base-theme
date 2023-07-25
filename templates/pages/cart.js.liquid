@@ -1,0 +1,43 @@
+{%- comment %} Update cart on Cart page {% endcomment %}
+{%- capture cart_page_cart %}
+  {%- render "cart/cart" %}
+{%- endcapture %}
+
+var cartPageCart = document.querySelector("[data-cart-page-cart]");
+if (cartPageCart) {
+  cartPageCart.innerHTML = '';
+  cartPageCart.appendChild(
+    document.createRange().createContextualFragment("{{ cart_page_cart | j }}")
+  );
+}
+
+{%- comment %} Update cart menu {% endcomment %}
+{%- capture cart_menu %}
+  {%- render "header/dropdown/cart" %}
+{%- endcapture %}
+
+var cartMenu = document.querySelector('[data-cart-menu]');
+if (cartMenu) {
+  cartMenu.innerHTML = '';
+  cartMenu.replaceWith(
+    document.createRange().createContextualFragment("{{ cart_menu | j }}")
+  );
+}
+
+{%- comment %} Update flash messages {% endcomment %}
+{%- capture flash %}
+  {%- render "flash" %}
+{%- endcapture %}
+
+var flash = document.querySelector('[data-flash-container]');
+if (flash) {
+  flash.innerHTML = '';
+  flash.appendChild(
+    document.createRange().createContextualFragment("{{ flash | j }}")
+  );
+}
+
+document.dispatchEvent(new CustomEvent('sc.cart-updated', { detail: { count: {{ current_cart.item_count }}} }));
+// We manually init this event so the components
+// event listeners are reinitialised
+window.document.dispatchEvent(new Event("DOMContentLoaded"))

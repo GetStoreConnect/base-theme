@@ -1,0 +1,27 @@
+{% default compact: false %}
+{% default product: blank %}
+
+{% if product != blank and product.restricted? %}
+  {% if compact == false or product.current_approved_quantity <= 0 %}
+    <div>{{ "products.approvals.restricted" | t }}</div>
+  {% endif %}
+  {% unless compact %}
+    <div>
+      {%- case product.approval_status %}
+        {%- when "approved" %}
+          {{ "products.approvals.status.approved.count" | t, count: product.current_approved_quantity }}
+        {%- when "completed" %}
+          {{ "products.approvals.status.completed" | t }}
+        {%- when "expired" %}
+          {{ "products.approvals.status.expired" | t }}
+        {%- when "pending" %}
+          {% capture date %}
+            {% render "shared/date", timestamp: product.pending_approval_date, format: "datetime" %}
+          {% endcapture %}
+          {{ "products.approvals.status.pending_html" | t, date: date }}
+        {%- when "none" %}
+          {{ "products.approvals.status.none" | t }}
+      {%- endcase %}
+    </div>
+  {%- endunless %}
+{% endif %}

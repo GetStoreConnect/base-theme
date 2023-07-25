@@ -1,0 +1,30 @@
+{%- default: reset: false %}
+
+{%- for provider in current_store.authentication_providers %}
+  <div class="sc-mb-base">
+    {%- if reset == true %}
+      {%- unless provider.supports_reset_password? %}
+        {%- continue %}
+      {%- endunless %}
+      {%- assign label = "auth.login.sso.reset_password" | t %}
+      {%- assign provider_identifier_key = "auth.login.sso.enum." | append: provider.provider %}
+      <a class="SC-Button SC-Button-secondary SC-Button-expanded-up-to-small"
+         href="{{ provider.reset_password_url }}"
+         data-provider="{{ provider.identifier }}">
+        {{ label }} {{ provider_identifier_key | t }}
+      </a>
+    {%- else %}
+      {%- assign label = "auth.login.sso.sign_in" | t %}
+      {%- if provider.supports_registration? %}
+        {%- assign label = "auth.login.sso.sign_in_or_register" | t %}
+      {%- endif %}
+      {% form "sso-login", provider: provider %}
+        {%- assign provider_identifier_key = "auth.login.sso.enum." | append: provider.provider %}
+        <button class="SC-Button SC-Button-secondary SC-Button-expanded-up-to-small"
+                data-provider="{{ provider.identifier }}">
+          {{ label }} {{ provider_identifier_key | t }}
+        </button>
+      {% endform %}
+    {%- endif %}
+  </div>
+{%- endfor %}

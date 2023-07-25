@@ -1,0 +1,11 @@
+{%- if number != blank %}
+  {%- assign number = number | plus: 0 %}
+  {%- case number %}
+  {%- when 1 %}
+    {{ "subscriptions.term_units.week" | t  }}
+  {%- when 2 %}
+    {{ "subscriptions.term_units.fortnight" | t  }}
+  {%- else %}
+    {{ "subscriptions.term_units.weeks" | t: number: number}}
+  {%- endcase %}
+{%- endif %}

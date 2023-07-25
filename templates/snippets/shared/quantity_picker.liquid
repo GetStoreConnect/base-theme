@@ -1,0 +1,48 @@
+{%- default limit: 9 -%}
+{%- default min: 0 -%}
+{%- default max: blank -%}
+{%- default default: 1 -%}
+{%- default style_class: blank -%}
+{%- default data: blank -%}
+{%- default update_button: false -%}
+{%- default field_name: "quantity" -%}
+
+{%- liquid
+if max != blank
+  assign count = max
+else
+  assign count = limit
+endif
+%}
+
+<div class="SC-QuantityPicker {{ style_class }}" data-qty-picker>
+  <button
+    class="SC-QuantityPicker_trigger"
+    data-qty-picker-trigger
+    type="button">
+    <span class="SC-QuantityPicker_trigger_label">
+      {{ "shared.quantity_picker.label" | t }}
+      <span data-qty-picker-value>
+        {{ default }}
+      </span>
+    </span>
+    {%- render "shared/icons/chevron" %}
+  </button>
+
+  <input type="number" name="{{ field_name | strip }}"
+    {% if min != blank %} min="{{ min }}"{% endif %}
+    {% if max != blank %} max="{{ max }}"{% endif %}
+    value="{{ default }}"
+    class="SC-QuantityPicker_input"
+    {{ data }}
+    />
+  {%- if update_button == true %}
+    <input
+      type="submit"
+      value="{{ "shared.quantity_picker.update_label" | t }}"
+      class="QuantityPicker_update"
+      style="display: none"
+      data-qty-picker-update/>
+  {%- endif %}
+  <ul></ul>
+</div>

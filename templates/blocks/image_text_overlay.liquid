@@ -1,0 +1,37 @@
+<div
+  class="SC-ContentBlock SC-ImageTextOverlay"
+  id="{% if content_block.identifier != blank %}SC-ContentBlock-{{ content_block.identifier }}{% endif %}"
+  data-cb="{{ content_block.identifier }}">
+  <div class="SC-Banner"{% if content_block.image != blank %} style="background-image: url('{{ content_block.image.massive_url }}')"{% endif %}>
+    <div class="SC-Banner_container{% if content_block.alignment != blank %} sc-{{ content_block.alignment }}{% endif %}">
+      <div class="SC-Banner_content">
+
+        {%- unless content_block.title == blank %}
+          <h2 class="SC-Banner_heading">
+            {{ content_block.title }}
+          </h2>
+        {%- endunless %}
+
+        {%- unless content_block.subtitle == blank %}
+          <div class="SC-Banner_subheading">
+            {{ content_block.subtitle }}
+          </div>
+        {%- endunless %}
+
+        {%- unless content_block.content == blank %}
+          <div class="u-s-mt-small">
+            {{ content_block.content }}
+          </div>
+        {%- endunless %}
+
+        {%- unless content_block.link_label == blank and content_block.link_target == blank %}
+          <a class="SC-Banner_cta" href="{{ content_block.link_target }}">
+            {{ content_block.link_label }}
+          </a>
+        {%- endunless %}
+      </div>
+    </div>
+
+    <div class="SC-Banner_overlay"></div>
+  </div>
+</div>

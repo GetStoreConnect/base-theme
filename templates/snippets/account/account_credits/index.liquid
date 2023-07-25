@@ -1,0 +1,44 @@
+{%- render "shared/page_header", heading: "t.accounts.account_credit.index.heading" %}
+{%- if current_account.account_credits.size > 0 and current_customer.can_use_account_credit? %}
+  {%- paginate current_account.account_credits by 10 %}
+    <table class="sc-mb-spacious">
+      <tr>
+        <th>{{ "accounts.account_credit.index.display_name" | t }}</th>
+        <th>{{ "accounts.account_credit.index.current_balance" | t }}</th>
+        <th>{{ "accounts.account_credit.index.expires_at" | t }}</th>
+        <th>{{ "accounts.account_credit.index.opening_balance" | t }}</th>
+        <th>{{ "accounts.account_credit.index.created_at" | t }}</th>
+        <th>&nbsp;</th>
+      </tr>
+      {% for account_credit in current_account.account_credits %}
+        <tr>
+          <td data-th="{{ "accounts.account_credit.index.display_name" | t }}">
+            {{ account_credit.name }}
+          </td>
+          <td data-th="{{ "accounts.account_credit.index.current_balance" | t }}">
+            {{ account_credit.current_balance | money }}
+          </td>
+          <td data-th="{{ "accounts.account_credit.index.expires_at" | t }}">
+            {% if account_credit.expires_at %}
+              {% render "shared/date", timestamp: account_credit.expires_at %}
+            {% else %}
+              {{ "accounts.account_credit.index.no_expiry" | t }}
+            {% endif %}
+          </td>
+          <td data-th="{{ "accounts.account_credit.index.opening_balance" | t }}">
+            {{ account_credit.opening_balance | money }}
+          </td>
+          <td data-th="{{ "accounts.account_credit.index.created_at" | t }}">
+            {% render "shared/date", timestamp: account_credit.created_at %}
+          </div>
+          <td>
+            <a href="{{ account_credit.path }}">{{ "accounts.account_credit.index.view" | t }}</a>
+          </td>
+        </tr>
+      {%- endfor %}
+    </table>
+    {%- render 'shared/pagination-nav', paginate: paginate %}
+  {%- endpaginate %}
+{%- else %}
+  <div class="sc-shade-neutral">{{ "accounts.account_credit.index.no_account_credits" | t }}</div>
+{%- endif %}

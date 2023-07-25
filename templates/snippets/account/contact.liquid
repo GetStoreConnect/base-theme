@@ -1,0 +1,48 @@
+{%- render "shared/page_header", heading: "t.accounts.contact.heading" %}
+
+<div class="SC-Grid">
+  <div class="SC-Grid_main">
+    {%- form "account" %}
+      {% render "form_errors", errors: form.errors %}
+
+      <section class="sc-mb-spacious">
+        {%- assign field = form.fields["email"] %}
+        <div class="SC-Field SC-Field-expand{% if field.errors != blank %} has-error{% endif %}{% if field.required? %} required{% endif %}">
+          <label for="{{ field.id }}" class="SC-Field_label">{{ "accounts.contact.email" | t }}</label>
+          <input type="email" name="{{ field.name }}" id="{{ field.id }}" value="{{ field.value }}" placeholder="{{ "accounts.contact.email" | t }}" class="SC-Field_input" autocomplete="email" class="SC-Field_input"{% if current_store.sso_login? %} disabled{% endif %}>
+          <span class="SC-Field_error">{{ field.errors | try: "messages" }}</span>
+        </div>
+        {%- assign field = form.fields["firstname"] %}
+        <div class="SC-Field SC-Field-expand{% if field.errors != blank %} has-error{% endif %}{% if field.required? %} required{% endif %}">
+          <label for="{{ field.id }}" class="SC-Field_label">{{ "accounts.contact.firstname" | t }}</label>
+          <input type="text" name="{{ field.name }}" id="{{ field.id }}" value="{{ field.value }}" placeholder="{{ "accounts.contact.firstname" | t }}" class="SC-Field_input" class="SC-Field_input">
+          <span class="SC-Field_error">{{ field.errors | try: "messages" }}</span>
+        </div>
+        {%- assign field = form.fields["lastname"] %}
+        <div class="SC-Field SC-Field-expand{% if field.errors != blank %} has-error{% endif %}{% if field.required? %} required{% endif %}">
+          <label for="{{ field.id }}" class="SC-Field_label">{{ "accounts.contact.lastname" | t }}</label>
+          <input type="text" name="{{ field.name }}" id="{{ field.id }}" value="{{ field.value }}" placeholder="{{ "accounts.contact.lastname" | t }}" class="SC-Field_input" class="SC-Field_input">
+          <span class="SC-Field_error">{{ field.errors | try: "messages" }}</span>
+        </div>
+        {%- assign field = form.fields["phone"] %}
+        <div class="SC-Field{% if field.errors != blank %} has-error{% endif %}{% if field.required? %} required{% endif %}">
+          <label for="{{ field.id }}" class="SC-Field_label">{{ "accounts.contact.phone" | t }}</label>
+          <input type="phone" name="{{ field.name }}" id="{{ field.id }}" value="{{ field.value }}" placeholder="{{ "accounts.contact.phone" | t }}" class="SC-Field_input" autocomplete="phone" class="SC-Field_input">
+          <span class="SC-Field_error">{{ field.errors | try: "messages" }}</span>
+        </div>
+        {% if store_variables["enable_company_name"] %}
+          {%- assign field = form.fields["company_name"] %}
+          <div class="SC-Field{% if field.errors != blank %} has-error{% endif %}{% if field.required? %} required{% endif %}">
+            <label for="{{ field.id }}" class="SC-Field_label">{{ "accounts.contact.company_name" | t }}</label>
+            <input type="text" name="{{ field.name }}" id="{{ field.id }}" value="{{ field.value }}" placeholder="{{ "accounts.contact.company_name" | t }}" class="SC-Field_input" autocomplete="company" class="SC-Field_input">
+            <span class="SC-Field_error">{{ field.errors | try: "messages" }}</span>
+          </div>
+        {% endif %}
+      </section>
+
+      {% render "account/shared/forms/campaign", form: form, context: "edit" %}
+
+      <input type="submit" name="commit" value="{{ "accounts.contact.update" | t }}" class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small" data-disable-with="{{ "accounts.contact.update" | t }}">
+    {%- endform %}
+  </div>
+</div>

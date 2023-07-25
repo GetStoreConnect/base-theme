@@ -1,0 +1,7 @@
+{%- default identifier: blank %}
+
+{%- if identifier != blank %}
+  {% render "account/product_approvals/show", approval: current_account.product_approvals[identifier] %}
+{%- else %}
+  {% render "account/product_approvals/index" %}
+{%- endif %}

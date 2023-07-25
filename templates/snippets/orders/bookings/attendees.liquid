@@ -1,0 +1,65 @@
+{%- default booking: blank %}
+
+{%- assign attendees_count = booking.attendees.size %}
+{%- assign max_attendees = booking.max_attendees %}
+
+{%- if attendees_count > 0 and max_attendees > 0 %}
+  <h5 class="sc-mt-small">
+    {{ "accounts.orders.bookings.attendees.heading" | t }}
+    {%- if booking.already_started? %}
+      ({{ attendees_count }})
+    {%- else %}
+      ({{ attendees_count }} / {{ max_attendees }})
+    {%- endif %}
+  </h5>
+{%- endif %}
+
+{%- if booking.already_started? and attendees_count > 0 %}
+  {%- comment %} Booking attendees for past event {% endcomment %}
+  {%- for attendee in booking.attendees %}
+    <div class="shadow rounded sc-p-medium sc-font-small">
+      {% render "orders/bookings/attendees/card", attendee: attendee %}
+    </div>
+  {%- endfor %}
+{%- else %}
+  {%- comment %} Booking attendees for future event {% endcomment %}
+  <section class="sc-mb-small" data-booking-attendee-panel>
+    {%- comment %} Existing Attendees {% endcomment %}
+    {%- if attendees_count > 0 %}
+      {%- for attendee in booking.attendees %}
+        <div data-booking-attendee class="sc-mb-tiny sc-font-small" style="max-width: 500px; background-color: white;">
+          {%- comment %} Attendee card {% endcomment %}
+          <div data-booking-attendee-card class="shadow rounded sc-p-medium">
+            <div class="sc-flex-row sc-align-items-center">
+              <span class="sc-grow">
+                {% render "orders/bookings/attendees/card", attendee: attendee %}
+              </span>
+              <span>
+                <button data-booking-attendee-edit class="SC-Button SC-Button-small" type="button">{{ "accounts.orders.bookings.attendees.edit" | t }}</button>
+              </span>
+            </div>
+          </div>
+          {%- form "booking-attendee-edit", attendee: attendee %}
+            <div data-booking-attendee-form-edit class="rounded shadow sc-p-base{% if form.errors.size == 0 %} sc-hide{% endif %}">
+              {% render "orders/bookings/attendees/fields", form: form, attendee: attendee %}
+            </div>
+          {%- endform %}
+        </div>
+      {%- endfor %}
+    {%- endif %}
+
+    {%- comment %} New Attendee {% endcomment %}
+    {%- if attendees_count < max_attendees %}
+      {%- form "booking-attendee-add", booking: booking %}
+        <div data-booking-attendee-form-add class="rounded shadow sc-p-base sc-mb-small{% if form.errors.size == 0 %} sc-hide{% endif %}" style="max-width: 500px; background-color: white;">
+          {% render "orders/bookings/attendees/fields", form: form %}
+        </div>
+      {%- endform %}
+
+      {%- comment %} Add attendee button {% endcomment %}
+      <button type="button" class="SC-Button SC-Button-primary SC-Button-small" data-booking-attendee-add>
+        {{ "accounts.orders.bookings.attendees.add_attendee" | t }}
+      </button>
+    {%- endif %}
+  </section>
+{%- endif %}

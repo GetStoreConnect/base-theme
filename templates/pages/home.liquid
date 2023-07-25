@@ -1,0 +1,8 @@
+{% capture body_content %}{{ current_page.body_content }}{% endcapture %}
+{%- if body_content != blank %}
+{{ body_content }}
+{%- else %}
+<div class="Fallback">
+  Add a content page (and configure your desired content blocks) and set it as the store's home page by editing the appropriate store in your Salesforce organization.
+</div>
+{%- endif %}

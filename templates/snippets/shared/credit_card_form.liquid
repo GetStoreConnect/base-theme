@@ -1,0 +1,82 @@
+{%- default provider_id: blank %}
+{%- default provider_code: blank %}
+
+<div id="{{ provider_code }}ScriptBlock{{ provider_id }}"></div>
+
+{%- assign field_prefix = provider_id | append: "_card" -%}
+
+<fieldset class="SC-Fieldset">
+  <div class="SC-Field">
+    {%- assign id = field_prefix | append: "_number" %}
+    {%- assign name = field_prefix | append: "[number]" %}
+    <label for="{{ id }}" class="SC-Field_label">{{ "checkout.gateways.form.card_number" | t }}</label>
+    <input type="text" id="{{ id }}" name="{{ name }}"
+          placeholder="{{ "checkout.gateways.form.card_number_placeholder" | t }}"
+          class="SC-Field_input sc-expand"
+          autocomplete="cc-number"
+          maxlength="16"
+          required="required"
+    >
+  </div>
+
+  <div class="SC-Field">
+    {%- assign id = field_prefix | append: "_name" %}
+    {%- assign name = field_prefix | append: "[name]" %}
+    <label for="{{ id }}" class="SC-Field_label">{{ "checkout.gateways.form.card_name" | t }}</label>
+    <input type="text" id="{{ id }}" name="{{ name }}"
+           class="SC-Field_input sc-expand"
+           autocomplete="cc-name"
+           required="required"
+    >
+  </div>
+
+  <div class="SC-Fieldset_row">
+    <div class="SC-Field SC-Field-small">
+      {%- assign id = field_prefix | append: "_month" %}
+      {%- assign name = field_prefix | append: "[month]" %}
+      <label for="{{ id }}" class="SC-Field_label">{{ "checkout.gateways.form.expiry_month" | t }}</label>
+      <input type="text" id="{{ id }}" name="{{ name }}"
+             placeholder="{{ "checkout.gateways.form.expiry_month_placeholder" | t }}"
+             class="SC-Field_input"
+             autocomplete="cc-exp-month"
+             maxlength="2"
+             size="8"
+             required="required"
+      >
+    </div>
+
+    <div class="SC-Field SC-Field-small">
+      {%- assign id = field_prefix | append: "_year" %}
+      {%- assign name = field_prefix | append: "[year]" %}
+      <label for="{{ id }}" class="SC-Field_label">{{ "checkout.gateways.form.expiry_year" | t }}</label>
+      <input type="text" id="{{ id }}" name="{{ name }}"
+             placeholder="{{ "checkout.gateways.form.expiry_year_placeholder" | t }}"
+             class="SC-Field_input"
+             autocomplete="cc-exp-year"
+             maxlength="4"
+             size="8"
+             required="required"
+      >
+    </div>
+
+    <div class="SC-Field SC-Field-small">
+      {%- assign id = field_prefix | append: "_verification" %}
+      {%- assign name = field_prefix | append: "[verification]" %}
+      <label for="{{ id }}" class="SC-Field_label">{{ "checkout.gateways.form.verification" | t }}</label>
+      <input type="text" id="{{ id }}" name="{{ name }}"
+             placeholder="{{ "checkout.gateways.form.verification" | t }}"
+             class="SC-Field_input"
+             autocomplete="cc-csc"
+             maxlength="4"
+             size="8"
+             required="required"
+      >
+    </div>
+  </div>
+</fieldset>
+
+<div id="{{ provider_code }}PaymentError{{ provider_id }}" class="SC-Field SC-Alert sc-hide"></div>
+
+<button id="{{ provider_code }}PaymentButton{{ provider_id }}" type="submit" class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small" data-payment-info-submit>
+  {{ "accounts.subscriptions.show.submit_update_button_label" | t }}
+</button>

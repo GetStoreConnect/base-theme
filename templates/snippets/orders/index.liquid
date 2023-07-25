@@ -1,0 +1,50 @@
+{%- render "shared/page_header", heading: "t.accounts.orders.index.heading" %}
+{%- if current_customer.orders.size > 0 %}
+  {%- paginate current_customer.orders by 10 %}
+    <table class="sc-mb-spacious">
+      <tr>
+        <th>{{ "accounts.orders.index.reference" | t }}</th>
+        <th>{{ "accounts.orders.index.date" | t }}</th>
+        <th>{{ "accounts.orders.index.status" | t }}</th>
+        <th>{{ "accounts.orders.index.items" | t }}</th>
+        <th>{{ "accounts.orders.index.total" | t }}</th>
+        <th>&nbsp;</th>
+      </tr>
+      {% for order in current_customer.orders %}
+        <tr>
+          <td data-th="{{ "accounts.orders.index.reference" | t }}"><a href="{{ order.path }}">{{ order.reference }}</a></td>
+          <td data-th="{{ "accounts.orders.index.date" | t }}">{% render "shared/date", timestamp: order.ordered_at %}</td>
+          <td data-th="{{ "accounts.orders.index.status" | t }}">{{ "accounts.orders.shared.status.enum." | append: order.status | t }}</td>
+          <td data-th="{{ "accounts.orders.index.items" | t }}">{{ order.item_count }}</td>
+          <td data-th="{{ "accounts.orders.index.total" | t }}">
+            {% if order.quotable? %}
+              -
+            {% else %}
+              {%- comment %} Currency Total {% endcomment %}
+              {%- if order.total > 0 %}
+                <span data-currency>{{ order.total | money }}</span>
+              {%- endif %}
+
+              {%- comment %} And {% endcomment %}
+              {%- if order.total > 0 and order.total_points > 0 %}
+                {{ "accounts.orders.index.currency_and_points_connector" | t }}
+              {%- endif %}
+
+              {%- comment %} Points Total {% endcomment %}
+              {%- if order.total_points > 0 %}
+                <span data-points>{{ order.total_points | points }}</span>
+              {%- endif %}
+            {%- endif %}
+          </td>
+          <td>
+            <a href="{{ order.path }}">{{ "accounts.orders.index.view" | t }}</a>
+            <a class="sc-pl-small" rel="nofollow" data-method="post" href="{{ order.reorder_path }}">{{ "accounts.orders.index.reorder" | t }}</a>
+          </td>
+        </tr>
+      {%- endfor %}
+    </table>
+    {%- render 'shared/pagination-nav', paginate: paginate %}
+  {%- endpaginate %}
+{%- else %}
+  <div class="sc-shade-neutral">{{ "accounts.orders.index.no_orders" | t }}</div>
+{%- endif %}

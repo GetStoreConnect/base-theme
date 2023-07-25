@@ -1,0 +1,16 @@
+<div id="SC-PreFooter" class="sc-container sc-pe">
+  <div class="sc-text-right">
+    {%- if current_store.geolocation.sibling_stores.size > 1 %}
+      <div id="SC-StoreSelector" class="store-selector sc-hide-up-to-large">
+        <div class="SC-Select SC-Select-subtle">
+          <select id="store_path" name="store_path" onchange="window.location.href = (this.value || '/');">
+            {%- for store in current_store.geolocation.sibling_stores %}
+              <option value="{{ store.path | downcase }}"{% if store.id == current_store.id %} selected{% endif %}>{{ store.zone.name }}</option>
+            {%- endfor %}
+          </select>
+          {%- render "icons/chevron", style_class: "SC-Select_icon" %}
+        </div>
+      </div>
+    {%- endif %}
+  </div>
+</div>

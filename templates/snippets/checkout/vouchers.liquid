@@ -1,0 +1,38 @@
+{%- if current_store.has_vouchers? %}
+  <section class="SC-Card SC-Card-floating sc-mb-large" data-checkout-vouchers>
+    <h4 class="sc-mb-small">{{ "checkout.vouchers.heading" | t }}</h4>
+
+    {%- form "apply-voucher" %}
+      {% render "form_errors", errors: form.errors -%}
+
+      <div class="sc-flex-row">
+        {%- assign field = form.fields["code"] %}
+        <div class="SC-Field sc-grow sc-m-none{% if field.errors != blank %} has-error{% endif %}{% if field.required? %} required{% endif %}">
+          <input type="text" name="{{ field.name }}" id="{{ field.id }}" value="{{ field.value }}" placeholder="{{ "checkout.vouchers.enter_code" | t }}" class="SC-Field_input sc-expand">
+          <span class="SC-Field_error">{{ field.errors | try: "messages" }}</span>
+        </div>
+
+        <input type="submit" name="commit" value="{{ "checkout.vouchers.apply" | t }}" class="SC-Button SC-Button-subtle sc-ml-small" data-disable-with="{{ "checkout.vouchers.apply" | t }}">
+      </div>
+
+    {%- endform %}
+
+    {%- if current_cart.applied_vouchers.size > 0 %}
+      {%- for voucher in current_cart.applied_vouchers %}
+        <div class="sc-flex-row sc-mt-small sc-expand sc-justify-space-between" data-applied-vouchers>
+          <div>
+            {{ voucher.code }}
+          </div>
+          <div>
+            {{ voucher.balance | money }}
+          </div>
+          <div>
+            {% form "remove-voucher", voucher: voucher %}
+              <button class="SC-Link">{{ "checkout.vouchers.remove" | t }}</button>
+            {% endform %}
+          </div>
+        </div>
+      {%- endfor %}
+    {%- endif %}
+  </section>
+{%- endif %}

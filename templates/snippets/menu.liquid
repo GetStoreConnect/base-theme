@@ -1,0 +1,35 @@
+{%- if menu.menu_items.size > 0 %}
+  <ul class="SC-Menu tier1{% if menu.style_classes %} {{ menu.style_classes }}{% endif %}" data-menu="{{ menu.identifier }}" id="SC-Menu-{{ menu.identifier }}">
+    {%- if menu.style_classes contains 'dropdown' %}
+      <button class="SC-Menu_button sc-mb" data-menu-x type="button">
+        Close
+      </button>
+    {%- endif %}
+    {%- for menu_item in menu.menu_items %}
+      {%- render "menu/menu_item",
+                  parent_id: menu.identifier,
+                  menu_item: menu_item,
+                  level: 1,
+                  child_category_levels: 1 %}
+    {%- endfor %}
+
+      {%- if current_customer != blank %}
+        <li class="SC-Menu_item tier1 sc-hide-medium-and-up" id="SC-MenuItem-account">
+          <a href="{{ current_store.account_path }}" class="SC-Menu_link">
+            {{ "header.dropdowns.account.heading" | t }}
+          </a>
+        </li>
+        <li class="SC-Menu_item tier1 sc-hide-medium-and-up" id="SC-MenuItem-logout">
+          <a href="{{ current_store.logout_path }}" class="SC-Menu_link">
+            {{ "header.dropdowns.account.logout" | t }}
+          </a>
+        </li>
+      {%- else %}
+        <li class="SC-Menu_item tier1 sc-hide-medium-and-up" id="SC-MenuItem-login">
+          <a href="{{ current_store.login_path }}" class="SC-Menu_link">
+            {{ "header.dropdowns.account.login" | t }}
+          </a>
+        </li>
+      {%- endif %}
+  </ul>
+{%- endif %}

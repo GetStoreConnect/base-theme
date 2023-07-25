@@ -1,0 +1,15 @@
+<div
+  class="SC-ContentBlock SC-FeaturedPages"
+  id="{% if content_block.identifier != blank %}SC-ContentBlock-{{ content_block.identifier }}{% endif %}"
+  data-cb="{{ content_block.identifier }}">
+
+  {%- unless content_block.title == blank %}
+    <h1>{{ content_block.title }}</h1>
+  {%- endunless %}
+
+  <ul>
+    {%- for page in content_block.pages %}
+      <li><a href="{{ page.path }}">{{ page.title }}</a></li>
+    {%- endfor %}
+  </ul>
+</div>

@@ -1,0 +1,51 @@
+<div class="sc-flex-row sc-align-items-center">
+  <span class="sc-grow">
+    <h3>{{ "accounts.profile.sections.orders.heading" | t }}</h3>
+  </span>
+  <span>
+    <a href="{{ current_store.orders_path }}" class="SC-Button">{{ "accounts.profile.sections.orders.view_all" | t }}</a>
+  </span>
+</div>
+{%- if current_account.orders.size > 0 %}
+  <p>{{ "accounts.profile.sections.orders.count" | t, count: current_account.orders.size }}</p>
+
+  {% comment %} Note: Orders are sorted most recent first {% endcomment %}
+  {% assign order = current_account.orders.first %}
+  <h4>{{ "accounts.profile.sections.orders.most_recent" | t }}</h4>
+
+  <table>
+    <tr>
+      <th>{{ "accounts.orders.index.reference" | t }}</th>
+      <th>{{ "accounts.orders.index.date" | t }}</th>
+      <th>{{ "accounts.orders.index.status" | t }}</th>
+      <th>{{ "accounts.orders.index.total" | t }}</th>
+    </tr>
+    <tr>
+      <td data-th="{{ "accounts.orders.index.reference" | t }}"><a href="{{ order.path }}">{{ order.reference }}</a></td>
+      <td data-th="{{ "accounts.orders.index.date" | t }}">{% render "shared/date", timestamp: order.ordered_at %}</td>
+      <td data-th="{{ "accounts.orders.index.status" | t }}">{{ order.status }}</td>
+      <td data-th="{{ "accounts.orders.index.total" | t }}">
+        {% if order.quotable? %}
+          -
+        {% else %}
+          {%- comment %} Currency Total {% endcomment %}
+          {%- if order.total > 0 %}
+            <span data-currency>{{ order.total | money }}</span>
+          {%- endif %}
+
+          {%- comment %} And {% endcomment %}
+          {%- if order.total > 0 and order.total_points > 0 %}
+            {{ "accounts.orders.index.currency_and_points_connector" | t }}
+          {%- endif %}
+
+          {%- comment %} Points Total {% endcomment %}
+          {%- if order.total_points > 0 %}
+            <span data-points>{{ order.total_points | points }}</span>
+          {%- endif %}
+        {%- endif %}
+      </td>
+    </tr>
+  </table>
+{%- else %}
+  <div class="sc-shade-neutral">{{ "accounts.profile.sections.orders.no_orders" | t }}</div>
+{%- endif %}

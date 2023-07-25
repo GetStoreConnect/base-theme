@@ -1,0 +1,17 @@
+<div
+  class="SC-ContentBlock SC-Text"
+  id="{% if content_block.identifier != blank %}SC-ContentBlock-{{ content_block.identifier }}{% endif %}"
+  data-cb="{{ content_block.identifier }}">
+
+  {%- unless content_block.title == blank %}
+    <h1>{{ content_block.title }}</h1>
+  {%- endunless %}
+
+  {%- unless content_block.subtitle == blank %}
+    <p class="sc-font-medium sc-shade-neutral">{{ content_block.subtitle }}</p>
+  {%- endunless %}
+
+  {%- unless content_block.content == blank %}
+    {{ content_block.content }}
+  {%- endunless %}
+</div>

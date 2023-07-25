@@ -1,0 +1,60 @@
+{%- default order: blank %}
+
+{%- unless order == blank %}
+  {%- assign collection_point = order.collection_point %}
+  {%- assign stock_location = collection_point.stock_location %}
+
+  <section class="SC-Panel sc-mb-huge grow">
+    <header class="SC-Panel_header SC-Panel_header-border">
+      <h4 class="SC-Panel_header_heading">
+        {{ "accounts.orders.show.collection_point.click_and_collect" | t }}
+      </h4>
+    </header>
+    {% if order.collection_time != blank %}
+      <p class="sc-mb-base">
+        {{ "accounts.orders.show.collection_point.collection_date" | t }}:
+        {% render "shared/date", timestamp: order.collection_time %}
+      </p>
+    {%- endif %}
+    <article>
+      {%- comment %} Name {% endcomment %}
+      <div class="sc-mb-small sc-font-bold">
+        {{ collection_point.name }}, {{ stock_location.name }}
+      </div>
+      {%- comment %} Address {% endcomment %}
+      {%- render "shared/address_multi_line",
+            street1: stock_location.address1,
+            city: stock_location.city,
+            state: stock_location.state,
+            postal_code: stock_location.zip_code,
+            style: "sc-mb-small" %}
+      {%- comment %} Phone {% endcomment %}
+      <div class="sc-mb-small">
+        {{ collection_point.phone }}
+      </div>
+      {%- comment %} Detailed collection description {% endcomment %}
+      <div class="sc-mb-small">
+        {{ collection_point.description }}
+      </div>
+      {%- comment %} Lead time {% endcomment %}
+      {%- if collection_point.lead_time? %}
+        <div class="sc-shade-neutral sc-mb-small">
+          {%- capture lead_time %}
+            {% render "shared/duration", duration: collection_point.lead_time_duration, unit: collection_point.lead_time_units %}
+          {%- endcapture %}
+          {{ "accounts.orders.show.collection_point.lead_time" | t, time: lead_time }}
+        </div>
+      {%- else %}
+        <div class="sc-shade-neutral sc-mb-small">
+          {{ "accounts.orders.show.collection_point.immediate_lead_time" | t }}
+        </div>
+      {%- endif %}
+      {%- comment %} Map {% endcomment %}
+      {%- render "shared/address_map",
+            street1: stock_location.address1,
+            city: stock_location.city,
+            state: stock_location.state,
+            postal_code: stock_location.zip_code %}
+    </article>
+  </section>
+{%- endunless %}

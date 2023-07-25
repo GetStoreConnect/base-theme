@@ -1,0 +1,57 @@
+<li class="SC-Menu_item dropdown sc-hide-up-to-medium">
+  {%- if current_customer != blank %}
+    <a href="{{ current_store.account_path }}" class="SC-Menu_link" data-nav-trigger="account">
+      {{ "header.dropdowns.account.heading" | t }}
+    </a>
+
+    <ul class="SC-Menu dropdown" data-nav="account">
+      {%- if current_customer.account != blank and current_customer.account.name != blank and current_customer.account.name != current_customer.name %}
+        <li><h3>{{ current_customer.account.name }}</h3></li>
+      {%- endif %}
+      <li class="SC-Menu_item">
+        <a class="SC-Menu_link" href="{{ current_store.account_path }}">
+          {{ "header.dropdowns.account.profile" | t }}
+        </a>
+      </li>
+      <li class="SC-Menu_item">
+        <a class="SC-Menu_link" href="{{ current_store.orders_path }}">
+          {{ "header.dropdowns.account.orders" | t }}
+        </a>
+      <li class="SC-Menu_item">
+        <a class="SC-Menu_link" href="{{ current_store.subscriptions_path }}">
+          {{ "header.dropdowns.account.subscriptions" | t }}
+        </a>
+      </li>
+      {%- if current_account.account_credits.size > 0 and current_customer.can_use_account_credit? %}
+        <li class="SC-Menu_item">
+          <a class="SC-Menu_link" href="{{ current_store.account_credits_path }}">
+            {{ "header.dropdowns.account.account_credits" | t }}
+          </a>
+        </li>
+      {%- endif %}
+      {%- if current_store.display_points? and current_customer.can_use_account_points? %}
+        <li class="SC-Menu_item">
+          <a class="SC-Menu_link" href="{{ current_store.account_points_path }}">
+            {{ "header.dropdowns.account.account_points" | t }}
+          </a>
+        </li>
+      {%- endif %}
+      {%- if current_account.product_approvals.size > 0 %}
+        <li class="SC-Menu_item">
+          <a class="SC-Menu_link" href="{{ current_store.product_approvals_path }}">
+            {{ "header.dropdowns.account.product_approvals" | t }}
+          </a>
+        </li>
+      {%- endif %}
+      <li class="SC-Menu_item">
+        <a href="{{ current_store.logout_path }}" data-method-delete class="SC-Menu_link">
+          {{ "header.dropdowns.account.logout" | t }}
+        </a>
+      </li>
+    </ul>
+  {%- else %}
+    <a href="{{ current_store.login_path }}" class="SC-Menu_link">
+      {{ "header.dropdowns.account.login" | t }}
+    </a>
+  {%- endif %}
+</li>

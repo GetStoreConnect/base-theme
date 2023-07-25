@@ -1,0 +1,10 @@
+{%- for event in current_events %}
+  {%- process_event event %}
+    {%- case type %}
+    {%- when "cart.add" %}
+      {% render "events/cart.add" %}
+    {%- when "purchase" %}
+      {% render "events/purchase", order: order %}
+    {%- endcase %}
+  {%- endprocess_event %}
+{%- endfor %}

@@ -1,0 +1,18 @@
+{%- default errors: blank %}
+{%- default include_fields: false %}
+
+{%- if errors and errors.size > 0 %}
+  <div class="SC-Notice SC-Notice-alert sc-mb-medium" data-form-errors>
+    {{ "shared.forms.form_has_errors" | t }}
+
+    {%- for error in errors %}
+      {%- if error.field == "base" or include_fields %}
+        <ul>
+          {%- for message in error.full_messages %}
+            <li>{{ message }}</li>
+          {%- endfor %}
+        </ul>
+      {%- endif %}
+    {%- endfor %}
+  </div>
+{%- endif %}

@@ -1,0 +1,30 @@
+{%- default order: blank %}
+
+{%- unless order == blank %}
+  {%- assign heading = "accounts.orders.show.heading" | t, order_number: order.reference %}
+  {%- assign status = "accounts.orders.shared.status.enum." | append: order.status | t %}
+  {%- assign subheading = "accounts.orders.show.order_status" | t, order_status: status %}
+  {%- render "shared/page_header", heading: heading, sub_heading: subheading %}
+
+  <div class="sc-grid-half-and-half sc-gap-xlarge-medium-and-up">
+    <div class="sc-grid-item">
+      {% render "orders/order", order: order %}
+
+      {%- unless current_customer %}
+        {% render "orders/guest", order: order %}
+      {%- endunless %}
+      {%- comment %} Reorder Button {% endcomment %}
+
+      {% if current_customer %}
+        <div class="SC-OrderTotal_reorder sc-mt-large sc-flex-row sc-justify-center">
+          <a class="SC-Button SC-Button-secondary" rel="nofollow" data-method="post" href="{{ order.reorder_path }}">{{ "accounts.orders.show.reorder" | t }}</a>
+        </div>
+      {% endif %}
+
+    </div>
+    <div class="sc-grid-item sc-mb-base">
+      {% render "orders/order_summary", source: order %}
+    </div>
+
+  </div>
+{%- endunless %}

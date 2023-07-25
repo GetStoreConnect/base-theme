@@ -1,0 +1,63 @@
+{%- default action: blank -%}
+{%- default body_content: blank -%}
+{%- default controller: blank -%}
+{%- default csp_meta_tag: blank -%}
+{%- default csrf_meta_tags: blank -%}
+{%- default data: blank -%}
+{%- default id: blank -%}
+{%- default sc_javascript: blank -%}
+{%- default sc_stylesheet: blank -%}
+{%- default sc_support: blank -%}
+{%- default theme_javascript: blank -%}
+{%- default theme_stylesheet: blank -%}
+{%- default theme_supplement_javascript: blank -%}
+{%- default theme_supplement_stylesheet: blank -%}
+{%- default title: blank -%}
+{%- default meta_keywords: blank -%}
+{%- default meta_description: blank -%}
+{%- default theme_bar: blank -%}
+
+<!doctype html>
+<html lang="{{ current_store.locale }}">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {{ csrf_meta_tags }}
+    {{ csp_meta_tag }}
+    {%- render "meta_data", title: title, meta_keywords: meta_keywords, meta_description: meta_description %}
+
+    {%- comment -%} Styles {%- endcomment -%}
+    {{ sc_stylesheet }}
+    {{ theme_stylesheet }}
+    {{ theme_supplement_stylesheet }}
+    {% if current_store.global_css != blank %}<style>{{ current_store.global_css }}</style>{% endif %}
+    {%- render "styles" %}
+
+    {%- comment -%} Scripts {%- endcomment -%}
+    {{ sc_javascript }}
+    {{ theme_javascript }}
+    {{ theme_supplement_javascript }}
+    {% if current_store.global_javascript != blank %}<script>{{ current_store.global_javascript }}</script>{% endif %}
+    {%- render "scripts" %}
+    {{ sc_support }}
+
+    {%- render "store/head" %}
+    {%- render "events" %}
+  </head>
+
+  <body id="{{ id }}" data-sc-controller="{{ controller }}" data-sc-action="{{ action }}" {{ data }}>
+    {{ theme_bar }}
+    {%- if controller == "salesforce_payments" %}
+      {%- render "salesforce_payments", content: body_content %}
+    {%- else %}
+      {%- render "header" %}
+      <main id="SC-Main">
+        {%- render "flash" %}
+        {%- render "privacy" %}
+        {{ body_content }}
+      </main>
+      {%- render "store/selector" %}
+      {%- render "footer" %}
+      {%- render "store/body" %}
+    {%- endif %}
+  </body>
+</html>

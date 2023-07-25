@@ -1,0 +1,19 @@
+<nav class="SC-PageNav">
+  <div class="SC-PageNav_content is-hidden" data-toggle-visibility-target="page-sidebar">
+    {%- assign pages = current_page.root_page.children %}
+    {%- for page in pages %}
+      <a href="{{ page.path }}" class="SC-PageNav_link{% if page == current_page %} is-current{% endif %}">
+        {{ page.title }}
+      </a>
+      {%- assign child_pages = page.children %}
+      {%- for child_page in child_pages %}
+        <a href="{{ child_page.path }}" class="SC-PageNav_link{% if child_page == current_page %} is-current{% endif %} sc-ml-small">
+          {{ child_page.title }}
+        </a>
+      {%- endfor %}
+    {%- endfor %}
+  </div>
+  <div class="SC-PageNav_menu-toggle target-hidden" data-toggle-visibility="page-sidebar">
+    {%- render "icons/chevron", width: 12 %}
+  <div>
+</nav>

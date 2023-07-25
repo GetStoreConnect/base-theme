@@ -1,0 +1,9 @@
+{%- default order: blank %}
+
+{%- if order == blank %}
+  {{ "accounts.orders.show.not_found" | t }}
+{%- else %}
+  <div class="sc-container sc-container-spacious">
+    {% render "orders/show", order: order %}
+  </div>
+{%- endif %}

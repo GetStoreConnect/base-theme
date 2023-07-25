@@ -1,0 +1,88 @@
+{%- default match: blank -%}
+{%- default distance_unit: "metric" -%}
+{%- default distance_string: blank -%}
+{%- default google_maps_api_key: blank -%}
+
+{%- unless match == blank %}
+  {%- if match.distance_in_kilometers != blank %}
+    {%- case distance_unit %}
+    {%- when "imp" %}
+      {%- assign distance = match.distance_in_miles | round: 1 %}
+      {%- assign unit = "locations.search.results.abbr.imperial" | t %}
+    {%- else %}
+      {%- assign distance = match.distance_in_kilometers | round: 1 %}
+      {%- assign unit = "locations.search.results.abbr.metric" | t %}
+    {%- endcase %}
+
+    {%- capture distance_string %}
+      {{ "locations.search.results.formatters.distance_with_unit" | t: number: distance, unit: unit }}
+    {%- endcapture %}
+  {%- endif %}
+
+  <div
+    class="sc-bg-white sc-border sc-border-radius sc-shadow sc-pos-relative sc-flex-col"
+    style="min-width: 340px"
+    itemscope itemtype="https://schema.org/LocalBusiness"
+    data-location
+    data-id="{{ match.identifier }}"
+    data-name="{{ match.name }}"
+    data-street="{{ match.street }}"
+    data-city="{{ match.city }}"
+    data-state="{{ match.state }}"
+    data-country="{{ match.country }}"
+    data-postcode="{{ match.postal_code }}"
+    data-lat="{{ match.latitude }}"
+    data-lng="{{ match.longitude }}"
+    data-distance="{{ distance_string }}"
+    data-phone="{{ match.phone }}"
+    data-website="{{ match.website }}">
+
+    <div itemprop="geo" itemscope itemtype="https://schema.org/GeoCoordinates">
+      <meta itemprop="latitude" content="{{ match.latitude }}"/>
+      <meta itemprop="longitude" content="{{ match.longitude }}"/>
+    </div>
+    <button class="sc-flex-row sc-align-items-center sc-text-left sc-grow sc-gap-medium sc-ps-base sc-pe-medium" type="button">
+      {%- unless match.logo == blank %}
+        <img src="{{ match.logo.pico_url }}" alt="{{ match.name }}" width="60">
+      {%- endunless %}
+      <span class="sc-flex-col sc-expand sc-gap-micro sc-font-small">
+        <div itemprop="name" class="sc-truncate">
+          <strong>{{ match.name }}</strong>
+        </div>
+        {%- if distance_string != blank %}
+          <div class="sc-shade-dark">
+            {{ "locations.search.results.formatters.distance_away" | t: distance: distance_string }}
+          </div>
+        {%- endif %}
+        <div class="sc-truncate sc-shade-dark">
+          {%- render "shared/address_multi_line", street1: match.street, city: match.city, state: match.state, country: match.country, postal_code: match.postal_code %}
+        </div>
+        {%- unless match.phone == blank %}
+          <div class="sc-shade-dark sc-hide-up-to-medium" itemprop="telephone">
+            {{ match.phone }}
+          </div>
+        {%- endunless %}
+      </span>
+    </button>
+    <menu class="sc-flex-row sc-gap-small sc-text-center sc-p-tiny sc-font-small sc-border-top">
+      {%- if google_maps_api_key == blank %}
+        {%- unless match.website == blank %}
+          <a class="sc-hover-bg-primary-subtle sc-border-radius sc-one-half sc-p-small sc-font-tiny sc-font-bold sc-color-primary" itemprop="url" href="{{ match.website }}" target="_blank">
+            {{ "locations.search.results.menu.website" | t }}
+          </a>
+        {%- endunless %}
+      {%- else %}
+        <a
+          data-directions
+          class="sc-hover-bg-primary-subtle sc-border-radius sc-one-half sc-p-small sc-font-tiny sc-font-bold sc-color-primary"
+          href="https://www.google.com/maps/dir/?api={{ google_maps_api_key }}"
+          target="_blank">
+          {{ "locations.search.results.menu.directions" | t }}
+        </a>
+      {%- endif %}
+      <a data-details class="sc-hover-bg-primary-subtle sc-border-radius sc-one-half sc-p-small sc-font-tiny sc-font-bold sc-color-primary" href="{{ match.path }}?s={{ current_request.query_string | url_encode }}">
+        {{ "locations.search.results.menu.view" | t }}
+      </a>
+    </menu>
+  </div>
+{%- endunless %}

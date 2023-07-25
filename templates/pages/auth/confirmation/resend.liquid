@@ -1,0 +1,20 @@
+<div class="sc-container sc-container-capsule sc-container-spacious">
+  <h1>{{ "auth.confirmations.new.heading" | t }}</h1>
+
+  {%- form "resend-confirmation" %}
+    {% render "form_errors", errors: form.errors %}
+
+    {%- assign field = form.fields["username"] %}
+    <div class="SC-Field SC-Field-expand sc-mb-base{% if field.errors != blank %} has-error{% endif %}{% if field.required? %} required{% endif %}">
+      <label for="{{ field.id }}" class="SC-Field_label">{{ "auth.confirmations.new.username_placeholder" | t }}</label>
+      <input type="text" name="{{ field.name }}" id="{{ field.id }}" value="{{ field.value }}" placeholder="{{ "auth.confirmations.new.username_placeholder" | t }}" class="SC-Field_input" autofocus autocomplete="username" class="SC-Field_input">
+      <span class="SC-Field_error">{{ field.errors | try: "messages" }}</span>
+    </div>
+
+    <div class="sc-mb-base">
+      <input type="submit" name="commit" value="{{ "auth.confirmations.new.button" | t }}" class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small" data-disable-with="{{ "auth.confirmations.new.button" | t }}">
+    </div>
+  {%- endform %}
+
+  {%- render "account/login/links", context: "confirmation" %}
+</div>

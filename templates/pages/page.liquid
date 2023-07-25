@@ -1,0 +1,14 @@
+<article class="sc-container sc-container-spacious" id="SC-page-{{ current_page.identifier }}">
+  <div class="SC-Grid">
+    {%- assign sidebar_pages = current_page.root_page.children %}
+    {%- if sidebar_pages.size > 0 %}
+      <aside class="SC-Grid_sidebar">
+        {%- render "pages/sidebar" %}
+      </aside>
+    {%- endif %}
+    <section class="SC-Grid_main rich-text">
+      {%- render "shared/page_header", heading: current_page.title, sub_heading: current_page.subtitle %}
+      {{ current_page.body_content }}
+    </section>
+  </div>
+</article>

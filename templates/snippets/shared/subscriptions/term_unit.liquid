@@ -1,0 +1,12 @@
+{%- liquid
+  case unit
+  when "day"
+    render "shared/subscriptions/term_units/day", number: number
+  when "week"
+    render "shared/subscriptions/term_units/week", number: number
+  when "month"
+    render "shared/subscriptions/term_units/month", number: number
+  when "year"
+    render "shared/subscriptions/term_units/year", number: number
+  endcase
+%}

@@ -1,0 +1,13 @@
+<!-- start -->
+{%- if current_store.styles.size > 0 %}
+  {%- for style in current_store.styles %}
+    {%- if style.url != blank %}
+      <link rel="stylesheet"{% if style.media != blank %} media="{{ style.media }}"{% endif %}href="{{ style.url }}" />
+    {%- elsif style.content != blank %}
+      <style{% if style.media != blank %} media="{{ style.media }}"{% endif %}>
+        {{ style.content }}
+      </style>
+    {%- endif %}
+  {%- endfor %}
+{%- endif %}
+<!-- end -->

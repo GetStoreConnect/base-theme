@@ -1,0 +1,15 @@
+{%- render "shared/page_header", heading: "t.accounts.shipping.heading" %}
+
+<div class="SC-Grid">
+  <div class="SC-Grid_main">
+    {%- form "account" %}
+      {% render "form_errors", errors: form.errors %}
+
+      <section class="sc-mb-spacious">
+        {% render "shared/account/address_form", form: form, type: "shipping" %}
+      </section>
+
+      <input type="submit" name="commit" value="{{ "accounts.shipping.update" | t }}" class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small" data-disable-with="{{ "accounts.shipping.update" | t }}">
+    {%- endform %}
+  </div>
+</div>

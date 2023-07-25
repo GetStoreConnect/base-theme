@@ -1,0 +1,49 @@
+{%- unless current_account == blank %}
+  {%- render "shared/page_header", heading: "t.accounts.profile.heading", sub_heading: current_account.name %}
+
+  <section class="SC-Card SC-Card-floating sc-mb-medium sc-expand">
+    {% render "account/profile/contact" %}
+  </section>
+
+  <section class="SC-Card SC-Card-floating sc-mb-medium sc-expand">
+    {% render "account/profile/credentials" %}
+  </section>
+
+  <div class="sc-flex-row-sm sc-gap-medium">
+    <section class="SC-Card SC-Card-floating sc-mb-medium sc-expand">
+      {% render "account/profile/shipping" %}
+    </section>
+
+    <section class="SC-Card SC-Card-floating sc-mb-medium sc-expand">
+      {% render "account/profile/billing" %}
+    </section>
+  </div>
+
+  <section class="SC-Card SC-Card-floating sc-mb-medium sc-expand">
+    {% render "account/profile/orders" %}
+  </section>
+
+  {%- if current_customer.subscriptions.size > 0 %}
+    <section class="SC-Card SC-Card-floating sc-mb-medium sc-expand">
+      {% render "account/profile/subscriptions" %}
+    </section>
+  {%- endif %}
+
+  {%- if current_account.account_credits.size > 0 and current_customer.can_use_account_credit? %}
+    <section class="SC-Card SC-Card-floating sc-mb-medium sc-expand">
+      {% render "account/profile/account_credits" %}
+    </section>
+  {%- endif %}
+
+  {%- if current_store.display_points? and current_customer.can_use_account_points? %}
+    <section class="SC-Card SC-Card-floating sc-mb-medium sc-expand">
+      {% render "account/profile/account_points" %}
+    </section>
+  {%- endif %}
+
+  {%- if current_account.product_approvals.size > 0 %}
+    <section class="SC-Card SC-Card-floating sc-mb-medium sc-expand">
+      {% render "account/profile/product_approvals" %}
+    </section>
+  {%- endif %}
+{%- endunless %}

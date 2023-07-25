@@ -1,0 +1,19 @@
+{%- cache "footer", items: [current_store, current_customer, current_privacy] -%}
+  {%- if current_store.footer != blank %}
+    {{ current_store.footer.render }}
+  {%- else %}
+    <footer class="SC-Footer" id="SC-Footer">
+      {%- if current_store.footer_menu != blank %}
+        {{ current_store.footer_menu.render }}
+      {%- endif %}
+      <div style="opacity: 0.2">
+        &copy; {{ current_store.name | default: "StoreConnect" }} {{ current_store.timezone | now | date: "%Y" }}
+        {%- if current_privacy.accepted? %}
+          <div>
+            <a class="sc-show-privacy-settings">{{ "privacy.manage_settings" | t }}</a>
+          </div>
+        {%- endif %}
+      </div>
+    </footer>
+  {%- endif %}
+{%- endcache %}
