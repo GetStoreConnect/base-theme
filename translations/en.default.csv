@@ -124,7 +124,7 @@ accounts.product_approvals.index.approved_from,Valid From
 accounts.product_approvals.index.approved_until,Valid Until
 accounts.product_approvals.index.heading,Product Approvals
 accounts.product_approvals.index.no_product_approvals,No Product Approvals
-accounts.product_approvals.index.product,Product
+accounts.product_approvals.index.product,Product / Category
 accounts.product_approvals.index.remaining_quantity,Remaining
 accounts.product_approvals.index.status,Status
 accounts.product_approvals.index.view_details_link,View
@@ -143,11 +143,13 @@ accounts.product_approvals.show.heading,Product Approval
 accounts.product_approvals.show.no_orders,No Orders
 accounts.product_approvals.show.orders.date,Date
 accounts.product_approvals.show.orders.order,Order
+accounts.product_approvals.show.orders.product,Product
 accounts.product_approvals.show.orders.quantity,Quantity
 accounts.product_approvals.show.orders.status,Status
 accounts.product_approvals.show.orders_heading,Orders
 accounts.product_approvals.show.pending_quantity,Pending Orders
 accounts.product_approvals.show.product,Product
+accounts.product_approvals.show.product_category,Product Category
 accounts.product_approvals.show.purchased_quantity,Already Purchased
 accounts.product_approvals.show.remaining_quantity,Remaining
 accounts.product_approvals.show.status,Status
@@ -275,9 +277,9 @@ auth.login.sso.reset_password,Reset
 auth.login.sso.sign_in,Sign in
 auth.login.sso.sign_in_or_register,Sign in or up
 auth.passwords.forgot.form.email,Email
-auth.passwords.forgot.form.submit,Send me reset password instructions
+auth.passwords.forgot.form.submit,Reset password
 auth.passwords.forgot.heading,Reset password
-auth.passwords.forgot.via,Or via one of these:
+auth.passwords.forgot.unsupported,Password reset is not supported for this account. Please contact support for assistance.
 auth.passwords.reset.form.password,New password
 auth.passwords.reset.form.password_confirmation,Confirm new password
 auth.passwords.reset.form.submit,Change my password
@@ -476,7 +478,11 @@ order_summary.voucher,Voucher
 pagination.first,First
 pagination.last,Last
 pagination.next,Next
+pagination.paged_title,"%{title}, page %{page}"
 pagination.previous,Previous
+pricing.alternative_currency_pricing,(or %{price} when paying with cash)
+pricing.alternative_points_pricing,(or %{points})
+pricing.currency_and_points,%{currency} and %{points}
 pricing.currency_or_points,%{currency} or %{points}
 pricing.currency_or_points_connector,or
 pricing.deposit,Deposit
@@ -492,6 +498,7 @@ pricing.points.purchase.variable,From
 pricing.subscription_timespan,Every %{timespan}
 pricing.subscription_total,%{total_amount} over %{full_timespan}
 pricing.total_due,Total due
+pricing.use_points,Use points
 pricing.variable,From %{price}
 privacy.accept_all,Accept All
 privacy.manage_settings,Manage Cookies
@@ -639,12 +646,13 @@ sc.auth.sessions.signed_out,Signed out successfully.
 sc.auth.sso.azure.fail,Could not authenticate you from Azure because: %{reason}
 sc.auth.sso.azure.success,Successfully authenticated from your Azure account.
 sc.auth.sso.azure.support,"There was a problem processing your registration, please contact support."
-sc.auth.sso.customer_saml.fail,Could not authenticate you from because: %{reason}
-sc.auth.sso.customer_saml.success,Successfully authenticated from your account.
-sc.auth.sso.customer_saml.support,"There was a problem processing your registration, please contact support."
+sc.auth.sso.experience_cloud.fail,Could not authenticate you from the portal because: %{reason}
+sc.auth.sso.experience_cloud.success,Successfully authenticated from your account.
+sc.auth.sso.experience_cloud.support,"There was a problem processing your registration, please contact support."
 sc.auth.sso.google.fail,Could not authenticate you from Google because: %{reason}
 sc.auth.sso.google.success,Successfully authenticated from your Google account.
 sc.auth.sso.google.support,"There was a problem processing your registration, please contact support."
+sc.auth.sso.incorrect_provider,"Could not authenticate, account is already linked to a different provider."
 sc.bundles.add.errors.could_not_add_product,Could not add %{name} to cart: %{message}
 sc.bundles.add.notices.success,Bundle added to your cart!
 sc.cart.add.errors.out_of_stock,%{name} is out of stock
@@ -1143,6 +1151,7 @@ sc.locale.views.pagination.first,First
 sc.locale.views.pagination.last,Last
 sc.locale.views.pagination.next,Next
 sc.locale.views.pagination.previous,Previous
+sc.locale.views.pagination.truncate,""
 sc.location.errors.not_found,That page was not found.
 sc.location_group.errors.not_found,That page was not found.
 sc.orders.reorder.errors.not_found,Could not find order to reorder. Please wait a moment and try again.
