@@ -12,8 +12,16 @@
       </tr>
       {% for approval in current_account.product_approvals %}
         <tr>
-          <td data-th="{{ "accounts.product_approvals.index.product" | t }}"><a href="{{ approval.product.path }}">{{ approval.product.name }}</a></td>
-          <td data-th="{{ "accounts.product_approvals.index.status" | t }}">{{ "accounts.product_approvals.shared.status.enum." | append: approval.product.approval_status | t }}</td>
+          <td data-th="{{ "accounts.product_approvals.index.product" | t }}">
+            {% if approval.product %}
+              <a href="{{ approval.product.path }}">{{ approval.product.name }}</a>
+            {% else %}
+              <a href="{{ approval.product_category.path }}">{{ approval.product_category.name }}</a>
+            {% endif %}
+          </td>
+          <td data-th="{{ "accounts.product_approvals.index.status" | t }}">
+            {{ "accounts.product_approvals.shared.status.enum." | append: approval.approval_status | t }}
+          </td>
           <td data-th="{{ "accounts.product_approvals.index.approved_from" | t }}">{% render "shared/date", timestamp: approval.approved_from %}</td>
           <td data-th="{{ "accounts.product_approvals.index.approved_until" | t }}">{% render "shared/date", timestamp: approval.approved_until %}</td>
           <td data-th="{{ "accounts.product_approvals.index.remaining_quantity" | t }}">{{ "accounts.product_approvals.shared.quantity.count" | t, count: approval.remaining_quantity }}</td>

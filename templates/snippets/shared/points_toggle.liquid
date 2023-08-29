@@ -1,0 +1,36 @@
+{%- default style_class: blank -%}
+{%- default default: false -%}
+{%- default checked: blank -%}
+{%- if default %}
+  {%- assign checked = 'checked="checked"' -%}
+{%- endif %}
+{%- capture data %}
+  data-input-line-item-id="{{ line_item.id }}"
+{%- endcapture %}
+{%- capture field_name %}
+  line_items[{{ line_item.id }}][use_points]
+{%- endcapture %}
+{%- capture field_id %}
+  line_items_{{ line_item.id }}_use_points
+{%- endcapture %}
+
+<div class="SC-PointsToggle {{ style_class }}" data-pts-toggle>
+  <div class="SC-Checkbox">
+    <input
+      name="{{ field_name | strip }}"
+      style="display: none"
+      value="false"
+    /> 
+    <input
+      id="{{ field_id | strip }}"
+      name="{{ field_name | strip }}"
+      class="SC-Checkbox_input"
+      type="checkbox"
+      value="true"
+      {{ checked }}
+      {{ data }}
+      stype="text-align: end;"
+    />
+    <label class="SC-Checkbox_label" for="{{ field_id | strip }}">{{ "pricing.use_points" | t }}</label>
+  </div>
+</div>

@@ -90,6 +90,15 @@
             {{ "line_items.links.remove_item" | t }}
           </a>
         </div>
+        <div class="sc-expand sc-text-right" data-line-item-use-points="{{ line_item.id }}" data-product-id="{{ line_item.product.id }}">
+          {%- if line_item.pricing.can_purchase_with_currency? and line_item.pricing.can_purchase_with_points? %}
+            {%
+              render "shared/points_toggle",
+                default: line_item.pricing.use_points?,
+                line_item: line_item
+            %}
+          {%- endif %}
+        </div>
       {%- endif %}
 
       {%- comment %} Total {% endcomment %}

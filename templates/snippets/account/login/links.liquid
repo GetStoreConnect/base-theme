@@ -1,23 +1,21 @@
 {%- default context: "login" %}
 
-{% if current_store.local_login? %}
-  <div>
-    {%- unless context == "login" %}
-      <div class="sc-mb-small">
-        <a href="{{ current_store.login_path}}" class="SC-Link">{{ "auth.shared.links.log_in" | t }}</a>
-      </div>
-    {%- endunless %}
+<div>
+  {%- unless context == "login" %}
+    <div class="sc-mb-small">
+      <a href="{{ current_store.login_path}}" class="SC-Link">{{ "auth.shared.links.log_in" | t }}</a>
+    </div>
+  {%- endunless %}
 
-    {%- unless context == "password" %}
-      <div class="sc-mb-small">
-        <a href="{{ current_store.forgot_password_path}}" class="SC-Link">{{ "auth.shared.links.forgot_you_password" | t }}</a>
-      </div>
-    {%- endunless %}
+  {%- unless context == "password" %}
+    <div class="sc-mb-small">
+      <a href="{{ current_store.forgot_password_path}}" class="SC-Link">{{ "auth.shared.links.forgot_you_password" | t }}</a>
+    </div>
+  {%- endunless %}
 
-    {%- unless context == "confirmation" %}
-      <div class="sc-mb-small">
-        <a href="{{ current_store.resend_confirmation_path}}" class="SC-Link">{{ "auth.shared.links.didnt_receive_confirmation_instructions" | t }}</a>
-      </div>
-    {%- endunless %}
-  </div>
-{%- endif %}
+  {%- unless context == "confirmation" %}
+    <div class="sc-mb-small">
+      <a href="{{ current_store.resend_confirmation_path}}" class="SC-Link">{{ "auth.shared.links.didnt_receive_confirmation_instructions" | t }}</a>
+    </div>
+  {%- endunless %}
+</div>

@@ -1,6 +1,9 @@
 {%- default: reset: false %}
 
 {%- for provider in current_store.authentication_providers %}
+  {%- if only_sso_provider and provider.provider != only_sso_provider %}
+    {%- continue %}
+  {%- endif %}
   <div class="sc-mb-base">
     {%- if reset == true %}
       {%- unless provider.supports_reset_password? %}

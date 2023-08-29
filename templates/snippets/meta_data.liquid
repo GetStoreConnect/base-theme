@@ -22,11 +22,17 @@
     endif
     assign image = current_product_category.social_image | default: current_product_category.image
   -%}
+{%- elsif current_search != blank and current_search.type == "products" -%}
+  {%- assign canonical_url = current_search.url -%}
+{%- elsif current_search != blank and current_search.type == "articles" -%}
+  {%- assign canonical_url = current_search.url -%}
+{%- elsif current_search != blank and current_search.type == "pages" -%}
+  {%- assign canonical_url = current_search.url -%}
 {%- elsif current_article != blank %}
   {%- comment -%} Article {%- endcomment -%}
   {%- liquid
     assign type = "article"
-    assign canonical_url = current_article.url
+    assign canonical_url = current_article.canonical_url
     assign image = current_article.social_image | default: current_article.hero_image
   -%}
 {%- elsif current_article_category != blank %}
@@ -66,7 +72,11 @@
     assign image = current_store.social_image | default: current_store.logo
   -%}
 {%- endif -%}
-
+{%- liquid
+  if current_request.params['page'] != blank
+    assign title = "pagination.paged_title" | t: title: title, page: current_request.params['page']
+  endif
+-%}
 <title>{{ title }}</title>
 <meta name="keywords" content="{{ meta_keywords }}" />
 <meta name="description" content="{{ meta_description }}" />

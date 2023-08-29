@@ -57,21 +57,24 @@
 
       {%- comment %} Taxes {% endcomment %}
       {%- unless current_store.tax_inclusive? and current_store.display_currency? %}
-        <div class="SC-OrderTotal_line">
-          <div class="SC-OrderTotal_line_label">
-            {%- capture tax_label %}
-              {%- if source.taxes.size == 1 %}
-                {{- source.taxes.first.name }}
-              {%- else %}
-                {{- "order_summary.tax_label" | t }}
-              {%- endif %}
-            {%- endcapture %}
-            {{ "order_summary.includes_tax" | t, tax_label: tax_label }}
+        {%- assign taxes = source.taxes %}
+        {%- if taxes.size > 0 %}
+          <div class="SC-OrderTotal_line">
+            <div class="SC-OrderTotal_line_label">
+              {%- capture tax_label %}
+                {%- if taxes.size == 1 %}
+                  {{- taxes.first.name }}
+                {%- else %}
+                  {{- "order_summary.tax_label" | t }}
+                {%- endif %}
+              {%- endcapture %}
+              {{ "order_summary.includes_tax" | t, tax_label: tax_label }}
+            </div>
+            <div class="SC-OrderTotal_line_total" data-order-tax-amount="{{ source.total_tax | money }}">
+              {{ source.total_tax | money }}
+            </div>
           </div>
-          <div class="SC-OrderTotal_line_total" data-order-tax-amount="{{ source.total_tax | money }}">
-            {{ source.total_tax | money }}
-          </div>
-        </div>
+        {%- endif %}
       {%- endunless %}
 
       {%- comment %} Total Paid {% endcomment %}
