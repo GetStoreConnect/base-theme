@@ -13,7 +13,7 @@ The Base Theme can help you with any of the following customizations:
 
 We currently provide liquid templates to generate front-end components such as pages, content block templates, snippets, and components. Most pages are liquidify, meaning that you can access their page templates.
 
-However, there are some exceptions such as product and category pages. On such cases, you can still access product cards, notices bars, and various sections that can be modified. You can even insert custom content blocks using the StoreConnect interface. You can learn more about how to customize your store in this [article](<https://help.getstoreconnect.com/documentation/how-to-customise-the-design-of-your-store.html>){: target="_blank"}.
+However, there are some exceptions such as product and category pages. On such cases, you can still access product cards, notices bars, and various sections that can be modified. You can even insert custom content blocks using the StoreConnect interface. You can learn more about how to customize your store in this [article](https://help.getstoreconnect.com/documentation/how-to-customise-the-design-of-your-store.html).
 
 One important point to note is that you don't need to upload the entire base theme if you have modified or added any of the pages, templates, or snippets. You can simply override them directly into a new theme in your StoreConnect app.
 
@@ -46,9 +46,9 @@ Stores your CSS and JS assets.
 There are two ways to develop a theme:
 
 1. Create a new theme in your StoreConnect app. We recommend this approach if you are working on a single store.
-2. Create a new theme using this base theme, customize it within your own dev environment, and then install it via the theme installer (provided by StoreConnect). We recommend this approach for devs creating new themes for multiple stores. Also you can take a look to our [Clean Theme](https://github.com/GetStoreConnect/clean-theme){: target="_blank" } for further reference.
+2. Create a new theme using this base theme, customize it within your own dev environment, and then install it via the theme installer (provided by StoreConnect). We recommend this approach for devs creating new themes for multiple stores. Also you can take a look to our [Clean Theme](https://github.com/GetStoreConnect/clean-theme) for further reference.
 
-If you have chosen the first option, you can follow the theme reference instructions which gives you a quick start. You can also find a complete guide on how to create a new theme within your store in the [](){: target="_blank"} article.
+If you have chosen the first option, you can follow the theme reference instructions which gives you a quick start. You can also find a complete guide on how to create a new theme within your store in the [Theme Builder Reference](https://help.getstoreconnect.com/documentation/themes/theme-reference.html) article.
 
 Following the point #2 you will need to upload your theme using theme installer.
 
