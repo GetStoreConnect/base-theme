@@ -46,7 +46,7 @@ Stores your CSS and JS assets.
 There are two ways to develop a theme:
 
 1. Create a new theme in your StoreConnect app. We recommend this approach if you are working on a single store.
-2. Create a new theme using this base theme, customize it within your own dev environment, and then install it via the theme installer (provided by StoreConnect). We recommend this approach for devs creating new themes for multiple stores.
+2. Create a new theme using this base theme, customize it within your own dev environment, and then install it via the theme installer (provided by StoreConnect). We recommend this approach for devs creating new themes for multiple stores. Also you can take a look to our [Clean Theme](https://github.com/GetStoreConnect/clean-theme){: target="_blank" } for further reference.
 
 If you have chosen the first option, you can follow the theme reference instructions which gives you a quick start. You can also find a complete guide on how to create a new theme within your store in the [](){: target="_blank"} article.
 
@@ -60,4 +60,4 @@ Following the point #2 you will need to upload your theme using theme installer.
 
 The theme installer is located in your Salesforce org, where you need to upload this theme as a zip file. Before uploading, remove the .git directory and README.md file from this repo. The theme installer displays errors if it does not find the standard directory structure.
 
-** Compatible with StoreConnect Liquid 0.11.3 and above **
+** Compatible with StoreConnect Liquid 0.11.3 and up **
