@@ -42,17 +42,12 @@
         {{ "pricing.deposit" | t }}
 
         {%- comment %} Currency Price {% endcomment %}
-        {%- if use_currency and pricing.checkout_price > 0 %}
+        {%- if pricing.use_currency? and pricing.checkout_price > 0 %}
           <span data-currency>{{ pricing.checkout_price | money }}</span>
         {%- endif %}
 
-        {%- comment %} Or {% endcomment %}
-        {%- if use_currency and pricing.checkout_price > 0 and use_points and pricing.checkout_points > 0 %}
-          {{ "pricing.currency_or_points_connector" | t }}
-        {%- endif %}
-
         {%- comment %} Points Price {% endcomment %}
-        {%- if use_points and pricing.checkout_points > 0 %}
+        {%- if pricing.use_points? and pricing.checkout_points > 0 %}
           <span data-points>{{ pricing.checkout_points | points }}</span>
         {%- endif %}
       </div>
@@ -60,17 +55,12 @@
       {%- comment %} Checkout Price {% endcomment %}
       <div class="sc-mb-tiny sc-font-{% if large %}large{% else %}small{%- endif -%}" data-line-item-amount>
         {%- comment %} Currency Price {% endcomment %}
-        {%- if use_currency %}
+        {%- if pricing.use_currency? %}
           <span data-currency>{{ pricing.checkout_price | money }}</span>
         {%- endif %}
 
-        {%- comment %} Or {% endcomment %}
-        {%- if use_currency and use_points %}
-          {{ "pricing.currency_or_points_connector" | t }}
-        {%- endif %}
-
         {%- comment %} Points Price {% endcomment %}
-        {%- if use_points %}
+        {%- if pricing.use_points? %}
           <span data-points>{{ pricing.checkout_points | points }}</span>
         {%- endif %}
       </div>
@@ -82,17 +72,12 @@
         {{ "pricing.total_due" | t }}
 
         {%- comment %} Currency Price {% endcomment %}
-        {%- if use_currency %}
+        {%- if pricing.use_currency? %}
           <span data-currency>{{ pricing.price | money }}</span>
         {%- endif %}
 
-        {%- comment %} Or {% endcomment %}
-        {%- if use_currency and use_points %}
-          {{ "pricing.currency_or_points_connector" | t }}
-        {%- endif %}
-
         {%- comment %} Points Price {% endcomment %}
-        {%- if use_points %}
+        {%- if pricing.use_points? %}
           <span data-points>{{ pricing.points | points }}</span>
         {%- endif %}
       </div>
@@ -104,17 +89,12 @@
         <div class="sc-color-sale {{ font_class }}" data-line-item-original-amount="{{ pricing.product.id }}">
           {{ "pricing.original_price" | t }}
           {%- comment %} Currency Price {% endcomment %}
-          {%- if use_currency and pricing.on_sale? %}
+          {%- if pricing.use_currency? and pricing.on_sale? %}
             <span data-currency>{{ pricing.original_price | money }}</span>
           {%- endif %}
 
-          {%- comment %} Or {% endcomment %}
-          {%- if on_sale and points_sale %}
-            {{ "pricing.currency_or_points_connector" | t }}
-          {%- endif %}
-
           {%- comment %} Points Price {% endcomment %}
-          {%- if points_sale %}
+          {%- if pricing.use_points? and pricing.points_sale? %}
             <span data-points>{{ pricing.original_points | points }}</span>
           {%- endif %}
         </div>
@@ -153,18 +133,30 @@
         %}
       {%- endcapture %}
       {%- liquid
-        if use_currency and use_points
-          assign currency = pricing.subscription_total_price | money
-          assign points = pricing.subscription_total_points | points
-          assign full_price = "pricing.currency_or_points" | t: currency: currency, points: points
-        elsif use_currency
+        if pricing.use_currency?
           assign full_price = pricing.subscription_total_price | money
-        elsif use_points
+        elsif pricing.use_points?
           assign full_price = pricing.subscription_total_points | points
         endif
       %}
       <div class="sc-shade-neutral sc-mt-tiny {{ font_class }}" data-line-item-subscription-amount>
         {{ "pricing.subscription_total" | t: total_amount: full_price, full_timespan: full_timespan }}
+      </div>
+    {%- endif %}
+
+    {%- comment %} Alternative Currency Price {% endcomment %}
+    {%- if compact == false and pricing.use_points? and pricing.can_purchase_with_currency? and pricing.checkout_price > 0 %}
+      <div class="sc-shade-neutral sc-mt-tiny sc-font-{% if large %}large{% else %}small{% endif %}">
+        {% assign checkout_price = pricing.checkout_price | money %}
+        {{ "pricing.alternative_currency_pricing" | t: price: checkout_price }}
+      </div>
+    {%- endif %}
+
+    {%- comment %} Alternative Points Price {% endcomment %}
+    {%- if compact == false and pricing.use_currency? and pricing.can_purchase_with_points? and pricing.checkout_points > 0 %}
+      <div class="sc-shade-neutral sc-mt-tiny sc-font-{% if large %}large{% else %}small{%- endif -%}">
+        {% assign checkout_points = pricing.checkout_points | points %}
+        {{ "pricing.alternative_points_pricing" | t: points: checkout_points }}
       </div>
     {%- endif %}
 

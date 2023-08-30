@@ -62,15 +62,23 @@
                           {{ "privacy.modal.enabled_label" | t }}
                         </label>
                       {%- else %}
+                        {%- if cookie.enabled? %}
+                          {%- assign cookie_checked = 'checked' %}
+                          {%- assign cookie_label = "privacy.modal.enabled_label" | t %}
+                        {%- else %}
+                          {%- assign cookie_checked = nil %}
+                          {%- assign cookie_label = "privacy.modal.disabled_label" | t %}
+                        {%- endif %}
+
                         <label
                           data-cookie-label
                           data-enabled-label="{{ "privacy.modal.enabled_label" | t }}"
                           data-disabled-label="{{ "privacy.modal.disabled_label" | t }}">
-                          {{ "privacy.modal.disabled_label" | t }}
+                          {{ cookie_label }}
                         </label>
                         <label class="SC-Switch" data-cookie-optional>
                           <input name="privacy_settings[groups][{{ group.id }}][cookies][{{ cookie.id }}][enabled]" type="hidden" value="0" autocomplete="off">
-                          <input id="{{ cookie.id }}" data-group="0010k00000gqItyuRP" type="checkbox" value="1" name="privacy_settings[groups][{{ group.id }}][cookies][{{ cookie.id }}][enabled]">
+                          <input id="{{ cookie.id }}" data-group="{{ group.id }}" type="checkbox" value="1" name="privacy_settings[groups][{{ group.id }}][cookies][{{ cookie.id }}][enabled]" {{ cookie_checked }}>
                           <div class="SC-Switch_control"></div>
                         </label>
                       {%- endif %}
