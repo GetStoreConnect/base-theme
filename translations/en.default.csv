@@ -324,7 +324,7 @@ checkout.customer_information.billing_address.heading,Billing Address
 checkout.customer_information.buttons.finish_quote,Submit Quote Request
 checkout.customer_information.buttons.next,Continue
 checkout.customer_information.form.company_name,Company name (if applicable)
-checkout.customer_information.form.company_name_hint,You can edit your comapny name in your account settings
+checkout.customer_information.form.company_name_hint,You can edit your company name in your account settings
 checkout.customer_information.form.email_address,Email address
 checkout.customer_information.form.email_address_confirmation,Confirm email address
 checkout.customer_information.form.email_address_explanation,(for your order confirmation)
