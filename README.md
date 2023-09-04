@@ -2,6 +2,9 @@
 
 The StoreConnect Base theme is a clean and simple boilerplate ready for use. This starter theme is the default theme used in every StoreConnect installation.
 
+![base_theme_banner](https://github.com/GetStoreConnect/base-theme/assets/77841884/8ae12805-438b-4d72-b224-f8496448b5d4)
+
+
 ## General Description
 
 The Base Theme can help you with any of the following customizations:
@@ -25,6 +28,8 @@ Page-level templates are templates that are output as the content of the entire 
 
 Templates control the content you see on your Store. They define the HTML layout as well as the data content you want to show. There are several kinds of templates, with each serving a different purpose. You should customize them based on what you want to achieve.
 
+![base_theme_preview](https://github.com/GetStoreConnect/base-theme/assets/77841884/76c06cba-c554-4857-a9cf-366dc06cde30)
+                                                                                                                                                                
 ### Snippets
 
 Snippets are reusable templates that you can load from any other template. For example, you may have a header that you want to use on each page.
