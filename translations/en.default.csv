@@ -640,8 +640,8 @@ sc.auth.registrations.signed_up_but_unconfirmed,A message with a confirmation li
 sc.auth.registrations.update_needs_confirmation,"You updated your account successfully, but we need to verify your new email address. Please check your email and follow the confirmation link to confirm your new email address."
 sc.auth.registrations.updated,Your account has been updated successfully.
 sc.auth.registrations.updated_but_not_signed_in,"Your account has been updated successfully, but since your password was changed, you need to sign in again."
-sc.auth.sessions.already_signed_out,""
-sc.auth.sessions.signed_in,""
+sc.auth.sessions.already_signed_out,"You are already signed out."
+sc.auth.sessions.signed_in,"Signed out successfully."
 sc.auth.sessions.signed_out,Signed out successfully.
 sc.auth.sso.azure.fail,Could not authenticate you from Azure because: %{reason}
 sc.auth.sso.azure.success,Successfully authenticated from your Azure account.
