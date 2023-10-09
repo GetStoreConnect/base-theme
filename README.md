@@ -58,7 +58,10 @@ If you have chosen the first option, you can follow the theme reference instruct
 Following the point #2 you will need to upload your theme using theme installer.
 
 - Ensure that your root directory does not contain any .git hidden folders or files
+- Follow the base theme folder directory even when the folder are empty
+- Make sure the root folder is named `theme`
 - Compress it to a zip file
+- Name your zip file `theme`
 - Upload it via the theme importer
 - Now, go to the theme template list and remove the .liquid on each template
 - Preview your theme
