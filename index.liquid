@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>StoreConnect Test Page</title>
+    {% render "templates.liquid" %}
+  </head>
+  <body>
+    <sc-product-list></sc-product-list>
+    {% render "snippets/shared/quantity_picker.liquid" %}
+    <script src="https://cdn.jsdelivr.net/npm/liquidjs/dist/liquid.browser.umd.js"></script>
+    <script type="module" src="assets/pages/products.js"></script>
+  </body>
+</html>
