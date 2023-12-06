@@ -21,12 +21,3 @@ async function parseLiquid(textHTML, props = DUMMY_DATA) {
 
   return parser.parseFromString(textHtml,'text/html')
 }
-
-export function appendTemplateToDOM(template) {
-  document.querySelector('head').appendChild(template)
-}
-
-export default {
-  fetchAndParseTemplates,
-  appendTemplateToDOM,
-}

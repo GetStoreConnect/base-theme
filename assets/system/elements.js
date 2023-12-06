@@ -1,12 +1,21 @@
 import ProductCard from '/elements/products/product-card'
 import ProductList from '/elements/products/product-list'
-import Accordion from '/elements/shared/accordion'
+import BaseCard from '/elements/shared/base-card'
 
 export const elements = {
   'sc-product-card': ProductCard,
   'sc-product-list': ProductList,
-  'sc-accordion': Accordion,
+  'sc-card': BaseCard,
   // etc...
+}
+
+// Creates a shadow DOM and appends the template
+export function initShadowDOM(element) {
+  const shadow = element.attachShadow({ mode: 'open' })
+  const template = document.querySelector('template#' + element.id)
+
+  shadow.appendChild(template.content.cloneNode(true))
+  return shadow
 }
 
 // Searches through nodes, finds custom elements and

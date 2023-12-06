@@ -1,15 +1,14 @@
+import { initShadowDOM } from "/assets/system/elements"
+
 export default class ProductCard extends HTMLElement {
   constructor() {
     super()
+    this.id = 'sc-product-card'
   }
 
-  async connectedCallback() {
-    const shadow = this.attachShadow({ mode: 'open' })
-    const template = document.querySelector('template#sc-product-card')
-    const clone = template.content.cloneNode(true)
-    const button = clone.querySelector('a')
-
-    shadow.appendChild(clone)
+  connectedCallback() {
+    const element = initShadowDOM(this)
+    const button = element.querySelector('a')
 
     // Setup event listeners
     button.addEventListener('click', this.handleClick)
