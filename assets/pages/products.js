@@ -6,7 +6,5 @@ import { initCustomElements } from "../system/elements"
 // all custom elements used on a given page.
 initCustomElements()
 
-// Alternately we manually define custom elements:
-// import ProductCard from '/elements/products/product-card'
-// customElements.define('sc-product-card', ProductCard)
-// etc...
+// Clients can add custom page JS here
+// NOTE: This file should run through a build step
