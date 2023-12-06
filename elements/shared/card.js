@@ -1,6 +1,6 @@
-import { initShadowDOM } from "/assets/system/elements"
+import { initShadowDOM } from "/system/elements"
 
-export default class BaseCard extends HTMLElement {
+export default class CardElement extends HTMLElement {
   constructor() {
     super()
     this.id = 'sc-card'

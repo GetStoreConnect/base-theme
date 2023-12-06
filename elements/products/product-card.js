@@ -1,6 +1,6 @@
-import { initShadowDOM } from "/assets/system/elements"
+import { initShadowDOM } from "/system/elements"
 
-export default class ProductCard extends HTMLElement {
+export default class ProductCardElement extends HTMLElement {
   constructor() {
     super()
     this.id = 'sc-product-card'

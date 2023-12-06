@@ -1,4 +1,4 @@
-import { initCustomElements } from "../system/elements"
+import { initCustomElements } from "/system/elements"
 
 // Searches through nodes, finds custom elements and
 // initalises them. Some performance testing needed.

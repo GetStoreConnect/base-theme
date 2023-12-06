@@ -1,11 +1,11 @@
-import ProductCard from '/elements/products/product-card'
-import ProductList from '/elements/products/product-list'
-import BaseCard from '/elements/shared/base-card'
+import CardElement from '/elements/shared/card'
+import ProductCardElement from '/elements/products/product-card'
+import ProductListElement from '/elements/products/product-list'
 
 export const elements = {
-  'sc-product-card': ProductCard,
-  'sc-product-list': ProductList,
-  'sc-card': BaseCard,
+  'sc-card': CardElement,
+  'sc-product-card': ProductCardElement,
+  'sc-product-list': ProductListElement,
   // etc...
 }
 
