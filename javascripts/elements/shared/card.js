@@ -1,4 +1,4 @@
-import { initShadowDOM } from "/system/elements"
+import { initShadowDOM } from "../../system/elements"
 
 export default class CardElement extends HTMLElement {
   constructor() {

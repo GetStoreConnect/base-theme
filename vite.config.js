@@ -1,15 +1,18 @@
+import TEST_DATA from './data.json'
 import liquid from '@vituum/vite-plugin-liquid'
 
 export default {
   plugins: [
     liquid({
-      root: './templates'
-    })
-  ],
+      root: './templates',
+      globals: TEST_DATA,
+    }
+  )],
   build: {
     rollupOptions: {
       input: {
-        products: '/assets/pages/products.js',
+        theme: '/stylesheets/theme.css',
+        products: '/javascripts/products.js',
       },
     }
   }

@@ -1,0 +1,11 @@
+:root {
+  --sc-spacing-micro: 3px;
+  --sc-spacing-tiny: 5px;
+  --sc-spacing-small: 10px;
+  --sc-spacing-medium: 15px;
+  --sc-spacing-base: 20px;
+  --sc-spacing-large: 30px;
+  --sc-spacing-xlarge: 40px;
+  --sc-spacing-xxlarge: 60px;
+  --sc-spacing-huge: 80px;
+}

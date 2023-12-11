@@ -4,13 +4,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>StoreConnect Test Page</title>
-    <link rel="stylesheet" href="assets/products.css" />
-    {% render "templates.liquid" %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" />
+    <link rel="stylesheet" href="/stylesheets/theme.scss" />
+    <script src="https://cdn.jsdelivr.net/npm/liquidjs/dist/liquid.browser.umd.js"></script>
+    {% render 'templates.liquid' %}
   </head>
   <body>
-    <sc-card></sc-card>
-    <sc-product-list></sc-product-list>
-    <script src="https://cdn.jsdelivr.net/npm/liquidjs/dist/liquid.browser.umd.js"></script>
-    <script type="module" src="assets/products.js"></script>
+    {% render 'pages/products.liquid' %}
+    <script type="module" src="/javascripts/products.js"></script>
   </body>
 </html>

@@ -1,0 +1,14 @@
+:root {
+  --sc-font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  --sc-font-tiny: 14px;
+  --sc-font-small: 15px;
+  --sc-font-base: 16px;
+  --sc-font-medium: 18px;
+  --sc-font-large: 20px;
+  --sc-font-xlarge: 24px;
+  --sc-font-xxlarge: 30px;
+  --sc-font-huge: 35px;
+  --sc-font-gigantic: 45px;
+  --sc-font-normal: 400;
+  --sc-font-bold: 600;
+}

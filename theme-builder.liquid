@@ -1,0 +1,14 @@
+<form style="position: fixed; right: 20px; top: 20px; z-index: 99">
+  {% for setting in theme.settings %}
+    <div>
+      <label for="{{ setting.name }}">
+        {{ setting.name }}
+      </label>
+      <input
+        type="text"
+        name="{{ setting.key }}"
+        value="{{ setting.value }}"
+      />
+    </div>
+  {% endfor %}
+</form>
