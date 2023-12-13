@@ -7,10 +7,16 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" />
     <link rel="stylesheet" href="/stylesheets/theme.scss" />
     <script src="https://cdn.jsdelivr.net/npm/liquidjs/dist/liquid.browser.umd.js"></script>
-    {% render 'templates.liquid' %}
   </head>
   <body>
-    {% render 'pages/products.liquid' %}
+    <main></main>
+    <script type="module">
+      import { fetchAndParseTemplate } from './javascripts/system/templates.js'
+
+      fetchAndParseTemplate('./templates/pages/products.liquid', page => {
+        document.querySelector('main').appendChild(page)
+      })
+    </script>
     <script type="module" src="/javascripts/products.js"></script>
   </body>
 </html>

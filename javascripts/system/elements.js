@@ -1,3 +1,11 @@
+export function attachElementTemplate(element, templateId) {
+  const shadow = element.attachShadow({ mode: 'open' })
+  const template = document.querySelector('template#' + templateId)
+
+  shadow.appendChild(template.content.cloneNode(true))
+  return shadow
+}
+
 // Searches through nodes, finds custom elements and
 // initalises them. Some performance testing needed.
 // Alternately, we require users to manually define

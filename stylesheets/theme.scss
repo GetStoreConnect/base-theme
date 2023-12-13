@@ -2,6 +2,9 @@
  * Global Theme CSS
  */
 
+@import "base/typography";
+
+@import "settings/border";
 @import "settings/color";
 @import "settings/font";
 @import "settings/shade";
@@ -10,3 +13,7 @@
 
 // Client can add custom CSS here and optionally
 // choose to include any default imports above
+
+.ProductCard {
+  background-color: red;
+}
