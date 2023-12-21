@@ -1,5 +1,4 @@
 import { LitElement, html, css } from 'lit'
-import { defineCustomElem } from '/src/scripts/system/elements'
 
 export default class Input extends LitElement {
   static properties = {
@@ -65,4 +64,4 @@ export default class Input extends LitElement {
   }
 }
 
-defineCustomElem('sc-input', Input)
+customElements.define('sc-input', Input)

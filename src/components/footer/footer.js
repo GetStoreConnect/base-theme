@@ -1,8 +1,5 @@
 import { LitElement } from 'lit'
-import {
-  attachElemTemplate,
-  defineCustomElem,
-} from '/src/scripts/system/elements'
+import { attachElemTemplate } from '/src/scripts/system/elements'
 
 export default class Footer extends LitElement {
   constructor() {
@@ -14,4 +11,4 @@ export default class Footer extends LitElement {
   }
 }
 
-defineCustomElem('sc-footer', Footer)
+customElements.define('sc-footer', Footer)

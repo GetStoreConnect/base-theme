@@ -9,9 +9,11 @@
   },
   "dependencies": {
     "liquidjs": "^10.9.4",
+    "normalize.css": "^8.0.1",
     "lit": "^3.1.0"
   },
   "devDependencies": {
+    "@vituum/vite-plugin-liquid": "^1.1.0",
     "sass": "^1.69.5",
     "vite": "^5.0.0",
     "vite-plugin-static-copy": "^1.0.0",

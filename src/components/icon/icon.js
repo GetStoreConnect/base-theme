@@ -1,5 +1,4 @@
 import { LitElement, html, css } from 'lit'
-import { defineCustomElem } from '/src/scripts/system/elements'
 
 export default class Icon extends LitElement {
   static properties = {
@@ -33,4 +32,4 @@ export default class Icon extends LitElement {
   }
 }
 
-defineCustomElem('sc-icon', Icon)
+customElements.define('sc-icon', Icon)

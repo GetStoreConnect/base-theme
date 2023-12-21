@@ -1,8 +1,5 @@
 import { LitElement } from 'lit'
-import {
-  attachElemTemplate,
-  defineCustomElem,
-} from '/src/scripts/system/elements'
+import { attachElemTemplate } from '/src/scripts/system/elements'
 
 export default class Navigation extends LitElement {
   constructor() {
@@ -14,4 +11,4 @@ export default class Navigation extends LitElement {
   }
 }
 
-defineCustomElem('sc-navigation', Navigation)
+customElements.define('sc-navigation', Navigation)

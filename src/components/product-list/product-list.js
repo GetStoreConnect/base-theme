@@ -1,8 +1,5 @@
 import { LitElement, css } from 'lit'
-import {
-  attachElemTemplate,
-  defineCustomElem,
-} from '/src/scripts/system/elements'
+import { attachElemTemplate } from '/src/scripts/system/elements'
 
 export default class ProductList extends LitElement {
   static properties = {
@@ -38,4 +35,4 @@ export default class ProductList extends LitElement {
   }
 }
 
-defineCustomElem('sc-product-list', ProductList)
+customElements.define('sc-product-list', ProductList)

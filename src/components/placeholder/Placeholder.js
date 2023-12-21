@@ -1,5 +1,4 @@
 import { LitElement, html, css } from 'lit'
-import { defineCustomElem } from '/src/scripts/system/elements'
 
 export default class Placeholder extends LitElement {
   static properties = {
@@ -46,4 +45,4 @@ export default class Placeholder extends LitElement {
   }
 }
 
-defineCustomElem('sc-placeholder', Placeholder)
+customElements.define('sc-placeholder', Placeholder)

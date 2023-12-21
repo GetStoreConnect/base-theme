@@ -1,5 +1,4 @@
 import { LitElement, html, css } from 'lit-element'
-import { defineCustomElem } from '/src/scripts/system/elements.js'
 
 class RangeSlider extends LitElement {
   static get properties() {
@@ -178,4 +177,4 @@ class RangeSlider extends LitElement {
   }
 }
 
-defineCustomElem('sc-range-slider', RangeSlider)
+customElements.define('sc-range-slider', RangeSlider)

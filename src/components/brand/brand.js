@@ -1,5 +1,4 @@
 import { LitElement, html, css } from 'lit'
-import { defineCustomElem } from '/src/scripts/system/elements'
 
 export default class Brand extends LitElement {
   static properties = {
@@ -42,4 +41,4 @@ export default class Brand extends LitElement {
   }
 }
 
-defineCustomElem('sc-brand', Brand)
+customElements.define('sc-brand', Brand)

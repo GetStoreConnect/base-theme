@@ -1,5 +1,4 @@
 import { LitElement, html, css } from 'lit'
-import { defineCustomElem } from '/src/scripts/system/elements'
 
 export default class BaseCard extends LitElement {
   static properties = {
@@ -40,4 +39,4 @@ export default class BaseCard extends LitElement {
   }
 }
 
-defineCustomElem('sc-base-card', BaseCard)
+customElements.define('sc-base-card', BaseCard)

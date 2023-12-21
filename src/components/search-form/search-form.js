@@ -1,8 +1,5 @@
 import { LitElement } from 'lit'
-import {
-  attachElemTemplate,
-  defineCustomElem,
-} from '/src/scripts/system/elements'
+import { attachElemTemplate } from '/src/scripts/system/elements'
 
 export default class SearchForm extends LitElement {
   static properties = {
@@ -18,4 +15,4 @@ export default class SearchForm extends LitElement {
   }
 }
 
-defineCustomElem('sc-search-form', SearchForm)
+customElements.define('sc-search-form', SearchForm)

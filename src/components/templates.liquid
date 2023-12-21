@@ -1,11 +1,13 @@
 {% render 'components/button/button.liquid' %}
-{% render 'components/input/input.liquid' %}
 {% render 'components/navigation/navigation.liquid' %}
 {% render 'components/product-card/product-card.liquid' %}
-{% render 'components/product-list/product-list.liquid' %}
+{% render 'components/product-list/product-list.liquid',
+  products: products
+%}
 {% render 'components/search-form/search-form.liquid' %}
-{% render 'components/theme/theme.liquid' %}
-{% render 'components/top-bar/top-bar.liquid' %}
+{% render 'components/top-bar/top-bar.liquid',
+  current_store: current_store
+%}
 {% render 'components/user-navigation/user-navigation.liquid' %}
 {% render 'components/footer/footer.liquid' %}
 {% render 'components/product-points/product-points.liquid' %}

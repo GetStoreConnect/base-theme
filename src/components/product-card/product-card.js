@@ -1,8 +1,5 @@
 import { LitElement } from 'lit'
-import {
-  attachElemTemplate,
-  defineCustomElem,
-} from '/src/scripts/system/elements'
+import { attachElemTemplate } from '/src/scripts/system/elements'
 
 export default class ProductCard extends LitElement {
   static get properties() {
@@ -23,4 +20,4 @@ export default class ProductCard extends LitElement {
   }
 }
 
-defineCustomElem('sc-product-card', ProductCard)
+customElements.define('sc-product-card', ProductCard)

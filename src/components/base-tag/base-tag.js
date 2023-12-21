@@ -1,5 +1,4 @@
 import { LitElement, html, css } from 'lit'
-import { defineCustomElem } from '/src/scripts/system/elements'
 
 export default class BaseTag extends LitElement {
   static styles = css`
@@ -22,4 +21,4 @@ export default class BaseTag extends LitElement {
   }
 }
 
-defineCustomElem('sc-base-tag', BaseTag)
+customElements.define('sc-base-tag', BaseTag)

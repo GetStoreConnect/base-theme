@@ -5,12 +5,6 @@ export function attachElemTemplate(element, selector) {
   else element.renderRoot.appendChild(template.content.cloneNode(true))
 }
 
-export function defineCustomElem(name, element) {
-  document.addEventListener('sc-templates-ready', () => {
-    customElements.define(name, element)
-  })
-}
-
 // Searches through nodes, finds custom elements and
 // initalises them. Some performance testing needed.
 // Alternately, we require users to manually define

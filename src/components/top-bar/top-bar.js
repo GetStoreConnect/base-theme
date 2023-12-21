@@ -1,17 +1,14 @@
 import { LitElement } from 'lit'
-import {
-  attachElemTemplate,
-  defineCustomElem,
-} from '/src/scripts/system/elements'
+import { attachElemTemplate } from '/src/scripts/system/elements'
 
 export default class Topbar extends LitElement {
   constructor() {
     super()
   }
 
-  connectedCallback() {
+  render() {
     attachElemTemplate(this, 'template#sc-top-bar')
   }
 }
 
-defineCustomElem('sc-top-bar', Topbar)
+customElements.define('sc-top-bar', Topbar)

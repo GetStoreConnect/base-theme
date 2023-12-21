@@ -1,5 +1,4 @@
 import { LitElement, html, css } from 'lit'
-import { defineCustomElem } from '/src/scripts/system/elements'
 
 export default class BaseButton extends LitElement {
   static properties = {
@@ -64,4 +63,4 @@ export default class BaseButton extends LitElement {
   }
 }
 
-defineCustomElem('sc-button', BaseButton)
+customElements.define('sc-button', BaseButton)

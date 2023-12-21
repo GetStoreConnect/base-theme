@@ -1,13 +1,8 @@
 import StoreConnectTheme from './system/theme.js'
-import { fetchAndParseTemplate } from './system/templates.js'
 
 const theme = new StoreConnectTheme()
 
 theme.init()
-
-fetchAndParseTemplate('/src/pages/products/products.liquid', (page) => {
-  document.querySelector('main').appendChild(page)
-})
 
 // function getCSSPropsFromStyleBlock() {
 //   const styleProps = style.sheet.cssRules[0].style

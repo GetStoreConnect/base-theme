@@ -1,8 +1,5 @@
 import { LitElement } from 'lit'
-import {
-  attachElemTemplate,
-  defineCustomElem,
-} from '/src/scripts/system/elements'
+import { attachElemTemplate } from '/src/scripts/system/elements'
 
 export default class ProductPoints extends LitElement {
   static properties = {
@@ -19,4 +16,4 @@ export default class ProductPoints extends LitElement {
   }
 }
 
-defineCustomElem('sc-product-points', ProductPoints)
+customElements.define('sc-product-points', ProductPoints)

@@ -1,6 +1,8 @@
 $core_override: () !default;
 $override: () !default;
 
+@import 'normalize.css';
+
 @import 'functions/color';
 @import 'functions/deep-map-get';
 @import 'functions/map-extend';
