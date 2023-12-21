@@ -1,0 +1,29 @@
+.SC-OrderTotal, .OrderTotal {
+
+
+  /**
+   * Line
+   */
+
+  &_line {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: spacing('tiny');
+    font-size: var(--sc-font-small);
+    color: shade('dark');
+
+    &:last-child {margin-bottom: 0;}
+
+
+    // Total
+
+    &_total {text-align: right;}
+  }
+
+
+  /**
+   * Modifier: Position right
+   */
+
+  &-right {margin-left: auto;}
+}

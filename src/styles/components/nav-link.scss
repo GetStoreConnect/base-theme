@@ -1,0 +1,98 @@
+/**
+ * DEPRECATED: Use menu.scss
+ */
+
+$NavLink: (
+  'root-color': (
+    'resting': shade('dark'),
+    'hover': color('primary')
+  )
+) !default;
+
+@if (map-has-key($override, 'NavLink') == true) {
+  $NavLink: map-extend($NavLink, map-get($override, 'NavLink'), true);
+}
+
+@function NavLink($keys...) { @return deep-map-get($NavLink, $keys...); }
+
+
+.SC-NavLink, .NavLink {
+  @include reset-button-styles;
+  -webkit-tap-highlight-color: transparent;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: var(--sc-font-large);
+  padding: spacing('medium');
+  color: currentColor;
+  font-weight: var(--sc-font-normal);
+
+  &:focus {
+    color: shade('darkest');
+  }
+
+  @include large-and-up {
+    padding: spacing('tiny') 0;
+    font-size: var(--sc-font-base);
+    justify-content: flex-start;
+
+    &:hover, &:focus {
+      color: color('primary');
+    }
+  }
+
+
+  /**
+   * Root
+   */
+
+  &-root {
+    @include large-and-up {
+      padding: spacing('base') spacing('medium');
+      color: NavLink('root-color', 'resting');
+
+      &:hover, &:focus {
+        color: NavLink('root-color', 'hover');
+      }
+    }
+  }
+
+
+  /**
+   * Heading
+   */
+
+  &-heading {
+    @include large-and-up {
+      min-width: 200px;
+      padding: spacing('small') 0;
+      color: shade('darkest');
+      font-weight: var(--sc-font-bold);
+    }
+  }
+
+
+  /**
+   * Back
+   */
+
+  &-close {
+    color: color('primary');
+    margin-bottom: spacing('base');
+  }
+
+
+  /**
+   * Chevron
+   */
+
+  &_chevron {
+    transform: rotate(-90deg);
+    width: 9px;
+    height: 9px;
+    @include large-and-up {
+      display: none;
+    }
+  }
+}

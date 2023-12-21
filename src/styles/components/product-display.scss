@@ -1,0 +1,55 @@
+$ProductDisplay: (
+  'max-image-width': 600px,
+  'max-details-width': 500px
+) !default;
+
+@if (map-has-key($override, 'ProductDisplay') == true) {
+  $ProductDisplay: map-extend($ProductDisplay, map-get($override, 'ProductDisplay'), true);
+}
+
+@function ProductDisplay($key) { @return map-get($ProductDisplay, $key); }
+
+
+.SC-ProductDisplay, .ProductDisplay {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: spacing('xlarge');
+  @include medium-and-up {
+    flex-direction: row;
+  }
+  @include huge-and-up {
+    margin-bottom: spacing('huge');
+  }
+
+
+  /**
+   * Images
+   */
+
+  &_images {
+    flex-shrink: 0;
+    width: 100%;
+    margin-bottom: spacing('base');
+    @include medium-and-up {
+      max-width: 50%;
+      margin-bottom: 0;
+      margin-right: spacing('xlarge');
+    }
+    @include large-and-up {
+      max-width: ProductDisplay('max-image-width');
+      margin-right: spacing('huge');
+    }
+  }
+
+
+  /**
+   * Details
+   */
+
+  &_details {
+    @include large-and-up {
+      width: 100%;
+      max-width: ProductDisplay('max-details-width');
+    }
+  }
+}

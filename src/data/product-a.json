@@ -1,0 +1,31 @@
+{
+  "id": 1,
+  "path": "products/test",
+  "is_master": true,
+  "is_active": true,
+  "image": null,
+  "available_on": "2023-1-1",
+  "shipping_methods": "pick_up;regular_post;express_post;courier",
+  "slug": "sneakers",
+  "name": "Sneakers",
+  "product_code": "000001",
+  "summary_markdown": "Sneakers. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean ullamcorper commodo nisl. Proin quam tortor, porta ut imperdiet sed, porta ac diam. Nullam erat tellus, luctus eget aliquam imperdiet, dictum nec arcu.\n#{lqd}",
+  "features_markdown": "Aenean vitae mollis ligula. Vivamus a orci et lorem sollicitudin porttitor. Cras facilisis eget sem eu congue. Quisque nulla augue, egestas a risus quis, viverra dapibus leo. Donec dui lorem, pulvinar ut risus vel, interdum viverra ex. Integer et dui nec justo finibus mattis. Vivamus eu nibh lorem.",
+  "specifications_markdown": "Aenean vitae mollis ligula. Vivamus a orci et lorem sollicitudin porttitor. Cras facilisis eget sem eu congue. Quisque nulla augue, egestas a risus quis, viverra dapibus leo. Donec dui lorem, pulvinar ut risus vel, interdum viverra ex. Integer et dui nec justo finibus mattis. Vivamus eu nibh lorem.",
+  "warranty_markdown": "<p>Cras facilisis eget sem eu congue. Quisque nulla augue, egestas a risus quis, viverra dapibus leo.</p><p>Integer et dui nec justo finibus mattis.</p>",
+  "downloads_markdown": "Aenean vitae mollis ligula. Vivamus a orci et lorem sollicitudin porttitor. Cras facilisis eget sem eu congue. Quisque nulla augue, egestas a risus quis, viverra dapibus leo. Donec dui lorem, pulvinar ut risus vel, interdum viverra ex. Integer et dui nec justo finibus mattis. Vivamus eu nibh lorem.",
+  "support_markdown": "<p>Vivamus a orci et lorem sollicitudin porttitor. Cras facilisis eget sem eu congue.</p>",
+  "tax_category_code": "PC040147",
+  "can_add_to_cart?": true,
+  "can_purchase?": true,
+  "display_points?": true,
+  "pricing": {
+    "has_price?": true,
+    "can_purchase_with_currency?": true,
+    "price": 100,
+    "cost_price": 50,
+    "currency_code": "AUD",
+    "tax_included": true
+  },
+  "tags": [{ "value": "new" }]
+}

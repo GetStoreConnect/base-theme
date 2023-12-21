@@ -1,0 +1,21 @@
+<template id="sc-cart-preview">
+  <style>
+
+  </style>
+  <div class="SC-Cart SC-Menu dropdown" data-nav="cart" data-sc-cart>
+    <button class="SC-Menu_button sc-hide-medium-and-up" data-nav-close="root" type="button">
+      {{ "header.dropdowns.cart.close" | t }}
+    </button>
+    {%- comment %} Line items {% endcomment %}
+
+    <div class="SC-CartProducts sc-grow u-overflow-y-auto">
+      {%- render "shared/cart/items", source: current_cart, compact: true, width: "70px" %}
+    </div>
+    {%- comment %} Cart total {% endcomment %}
+    <div class="sc-mb-small" data-cart-nav-summary>
+      {%- render "shared/order_total", source: current_cart, compact: true %}
+    </div>
+    {%- comment %} Checkout button {% endcomment %}
+    {%- render "shared/cart/checkout_button", class: "SC-Button SC-Button-primary SC-Button-expanded" %}
+  </div>
+</template>

@@ -1,0 +1,46 @@
+@mixin container($max-width: true) {
+  width: 100%;
+  padding-left: spacing('small');
+  padding-right: spacing('small');
+
+  @include small-and-up {
+    padding-left: spacing('medium');
+    padding-right: spacing('medium');
+  }
+
+  @include medium-and-up {
+    padding-left: spacing('base');
+    padding-right: spacing('base');
+  }
+
+  @include large-and-up {
+    padding-left: spacing('large');
+    padding-right: spacing('large');
+  }
+
+  @if $max-width {
+    max-width: breakpoint('huge');
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+@mixin container-padding {
+  padding-left: spacing('small');
+  padding-right: spacing('small');
+
+  @include small-and-up {
+    padding-left: spacing('medium');
+    padding-right: spacing('medium');
+  }
+
+  @include medium-and-up {
+    padding-left: spacing('base');
+    padding-right: spacing('base');
+  }
+
+  @include large-and-up {
+    padding-left: spacing('large');
+    padding-right: spacing('large');
+  }
+}

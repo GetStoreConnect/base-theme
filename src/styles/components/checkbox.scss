@@ -1,0 +1,51 @@
+.SC-Checkbox, .Checkbox {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  user-select: none;
+  margin-bottom: spacing('medium');
+  @include medium-and-up {
+    margin-bottom: spacing('small');
+  }
+
+  &:last-child {margin-bottom: 0;}
+
+
+  /**
+   * Input
+   */
+
+  &_input {
+    @include reset-input-styles;
+    flex-shrink: 0;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: white;
+    background-size: 70%;
+    width: 22px;
+    height: 22px;
+    margin-right: spacing('small');
+    border: 1px solid shade($a: 0.3);
+    border-radius: 3px;
+
+
+    // State: Checked
+
+    &:checked {
+      border-color: color('primary');
+      background-image: asset-url("theme/icons/check");
+      background-color: color('primary');
+    }
+  }
+
+
+  /**
+   * Label
+   */
+
+  &_label {
+    cursor: pointer;
+    flex-grow: 1;
+    margin: 0;
+  }
+}

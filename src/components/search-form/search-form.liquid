@@ -1,0 +1,24 @@
+<template id="sc-search-form">
+  <style>
+    form {
+      padding: var(--sc-spacing-small);
+    }
+
+    input {
+      width: 100%;
+    }
+  </style>
+  <form
+    action="{{ current_store.search_path }}"
+    accept-charset="UTF-8"
+    method="get"
+  >
+    <sc-input
+      type="search"
+      name="q"
+      id="q"
+      autocomplete="off"
+      placeholder="{{ 'header.search.placeholder' | t }}"
+    ></sc-input>
+  </form>
+</template>

@@ -1,0 +1,85 @@
+$BannerOverlay: (
+  'bg': linear-gradient(45deg, shade($a: 0.1), white),
+  'color': currentColor,
+  'count': (
+    'size': 26px,
+    'bg': color('primary'),
+    'color': white
+  )
+) !default;
+
+@if (map-has-key($override, 'BannerOverlay') == true) {
+  $BannerOverlay: map-extend($BannerOverlay, map-get($override, 'BannerOverlay'), true);
+}
+
+@function BannerOverlay($keys...) { @return deep-map-get($BannerOverlay, $keys...); }
+
+
+.SC-BannerOverlay, .BannerOverlay {
+  @include pin-bottom(fixed);
+  z-index: depth('overlay');
+  transition: 0.1s transform ease;
+  background: BannerOverlay('bg');
+  color: BannerOverlay('color');
+  box-shadow: 0 -2px 10px rgba(0,0,0,0.1); // TODO: Move to variable
+
+
+  /**
+   * State
+   */
+
+  &.is-hidden {transform: translateY(100%);}
+
+
+  /**
+   * Container
+   */
+
+  &_container {
+    @include container;
+    padding-top: spacing('small');
+    padding-bottom: spacing('small');
+    height: 100%;
+    display: flex;
+    align-items: center;
+    @include up-to-small {
+      flex-direction: column;
+      justify-content: center;
+    }
+    @include small-and-up {
+      flex-direction: wrap;
+      flex-direction: row;
+      justify-content: space-between;
+    }
+  }
+
+
+  /**
+   * Section
+   */
+
+  &_section {
+    display: flex;
+    align-items: center;
+    padding: spacing('tiny') 0;
+  }
+
+
+  /**
+   * Section
+   */
+
+  &_count {
+    text-align: center;
+    border-radius: 100%;
+    margin-right: spacing('small');
+    font-weight: var(--sc-font-bold);
+    @include set('width', BannerOverlay('count','size'));
+    @include set('height', BannerOverlay('count','size'));
+    @include set('line-height', BannerOverlay('count','size'));
+    @include set('color', BannerOverlay('count','color'));
+    @include set('background-color', BannerOverlay('count','bg'));
+
+    @include up-to-small {display: none;}
+  }
+}

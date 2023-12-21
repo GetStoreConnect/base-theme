@@ -1,0 +1,10 @@
+.Traits, .SC-Traits {
+  display: block;
+  margin-bottom: var(--sc-spacing-base);
+
+  &_category {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sc-spacing-medium);
+  }
+}

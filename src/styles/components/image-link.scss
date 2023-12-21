@@ -1,0 +1,7 @@
+.SC-ImageLink, .ImageLink {
+  @include overlay;
+  width: 100%;
+  display: inline-block;
+  position: relative;
+  font-size: 0;
+}

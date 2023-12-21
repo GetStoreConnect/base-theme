@@ -1,0 +1,123 @@
+.SC-PricePicker, .PricePicker {
+  flex-shrink: 0;
+  position: relative;
+  min-width: 80px;
+
+
+  /**
+   * Trigger
+   */
+
+  &_trigger {
+    @include reset-button-styles;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    text-align: left;
+    line-height: 1;
+    padding: spacing('small') spacing('medium');
+    border-radius: var(--sc-border-radius);
+    background-color: white;
+    border: 1px solid shade($l: 80%);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+
+    .SC-PricePicker-large &,
+    .PricePicker-large & {
+      padding: spacing('medium') spacing('base');
+    }
+
+    &.is-hidden {display: none;}
+
+
+    // Label
+
+    &_label {pointer-events: none;}
+
+
+    // Icon
+
+    svg {
+      pointer-events: none;
+      margin-left: spacing('tiny');
+      width: 8px;
+      height: 8px;
+
+      .SC-PricePicker-large &,
+      .PricePicker-large & {
+        width: 10px;
+        height: 10px;
+        margin-left: spacing('small');
+      }
+    }
+  }
+
+
+  /**
+   * Input (hidden by default)
+   */
+
+  &_input[type=number] {
+    display: none;
+    height: auto;
+    line-height: inherit;
+    padding: spacing('tiny') spacing('small');
+    background-color: white;
+    border: 1px solid shade($l: 80%);
+    width: 9em;
+
+    &:focus, &:hover {
+      border: 1px solid shade($l: 80%);
+      background-color: white;
+    }
+
+    // State: Active
+
+    &.is-active {display: block;}
+  }
+
+
+
+  /**
+   * List
+   */
+
+  &_list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    position: absolute;
+    z-index: var(--sc-depth-foreground);
+    left: 0;
+    top: 0;
+    width: 140%;
+    border-radius: var(--sc-border-radius);
+    background: white;
+    border: 1px solid shade($l: 80%);
+    box-shadow: 0 5px 8px shade($a: 0.1);
+    display: none;
+
+
+    // State: Active
+
+    &.is-active {display: block;}
+
+
+    // Button
+
+    &_button {
+      @include reset-button-styles;
+      display: flex;
+      align-items: center;
+      width: 100%;
+      text-align: left;
+      padding: spacing('tiny') spacing('small');
+
+      & > span {pointer-events: none;}
+
+      &:hover, &:focus {
+        background-color: shade($a: 0.1);
+      }
+    }
+  }
+}

@@ -1,0 +1,61 @@
+:root {
+  --sc-font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  --sc-font-tiny: 14px;
+  --sc-font-small: 15px;
+  --sc-font-base: 16px;
+  --sc-font-medium: 18px;
+  --sc-font-large: 20px;
+  --sc-font-xlarge: 24px;
+  --sc-font-xxlarge: 30px;
+  --sc-font-huge: 35px;
+  --sc-font-gigantic: 45px;
+  --sc-font-normal: 400;
+  --sc-font-bold: 600;
+}
+
+
+/**
+ * DEPRECATED - Use CSS custom props (above) directly
+ */
+
+$font-settings: (
+
+  // Family
+
+  'family': (-apple-system, BlinkMacSystemFont, sans-serif),
+
+
+  // Size
+
+  'size': (
+    'tiny':           14px,
+    'small':          15px,
+    'base':           16px,
+    'medium':         18px,
+    'large':          20px,
+    'xlarge':         24px,
+    'xxlarge':        30px,
+    'huge':           35px,
+    'gigantic':       45px,
+  ),
+
+
+  // Weight
+
+  'weight': (
+    'normal':         400,
+    'bold':           600,
+  )
+) !default;
+
+@if (map-has-key($core_override, 'font') == true) {
+  $font-settings: map-extend($font-settings, map-get($core_override, 'font'), true);
+}
+
+@function font($keys...) {
+  @if length($keys) == 1 {
+    @return var(--sc-font-#{nth($keys, 1)});
+  } @else {
+    @return var(--sc-font-#{nth($keys, 2)});
+  }
+}

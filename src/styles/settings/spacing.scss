@@ -1,0 +1,25 @@
+$spacing: (
+  'micro':        3px,
+  'tiny':         5px,
+  'small':        10px,
+  'medium':       15px,
+  'base':         20px,
+  'large':        30px,
+  'xlarge':       40px,
+  'xxlarge':      60px,
+  'huge':         80px,
+) !default;
+
+@if (map-has-key($core_override, 'spacing') == true) {
+  $spacing: map-extend($spacing, map-get($core_override, 'spacing'), true);
+}
+
+:root {
+  @each $key, $value in $spacing {
+    --sc-spacing-#{$key}: #{$value};
+  }
+}
+
+@function spacing($key) {
+  @return var(--sc-spacing-#{$key});
+}

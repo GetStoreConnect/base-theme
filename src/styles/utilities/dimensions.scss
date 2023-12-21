@@ -1,0 +1,44 @@
+/**
+ * Width
+ */
+
+
+// Viewport
+
+.sc-30vw {
+  width: 30vw;
+}
+.sc-40vw {
+  width: 40vw;
+}
+
+@media only screen and (min-width: breakpoint('medium')) {
+  .sc-md\:30vw {
+    width: 30vw;
+  }
+  .sc-md\:40vw {
+    width: 40vw;
+  }
+}
+
+@media only screen and (min-width: breakpoint('large')) {
+  .sc-lg\:30vw {
+    width: 30vw;
+  }
+  .sc-lg\:40vw {
+    width: 40vw;
+  }
+}
+
+
+/**
+ * Height
+ */
+
+.sc-input-height {
+  height: var(--sc-input-height);
+}
+
+.sc-max-50vh {
+  max-height: 50vh;
+}

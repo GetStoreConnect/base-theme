@@ -1,0 +1,26 @@
+.sc-container, .container {
+    @include container;
+
+  /**
+   * Modifiers
+   */
+
+  &-skinny {
+    max-width: breakpoint('xlarge');
+    @include large-and-up {
+      width: 80%;
+    }
+  }
+
+  &-spacious {
+    padding-top: spacing('small');
+    @include medium-and-up {
+      padding-top: spacing('xlarge');
+      padding-bottom: spacing('huge');
+    }
+  }
+
+  &-capsule {max-width: 500px;}
+
+  &-expanded {max-width: none;}
+}

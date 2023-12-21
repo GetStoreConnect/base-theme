@@ -1,0 +1,18 @@
+.SC-ProductPrice, .ProductPrice {
+  line-height: 1;
+  display: flex;
+  align-items: baseline;
+  font-size: var(--sc-font-large);
+  margin-bottom: spacing('base');
+  margin-top: spacing('tiny');
+
+  &-small {
+    color: shade('dark');
+    font-size: var(--sc-font-base)
+  }
+}
+
+.SC-DepositAmount,
+.DepositAmount {
+  font-size: var(--sc-font-large);
+}

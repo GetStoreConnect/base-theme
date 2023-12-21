@@ -1,0 +1,58 @@
+$breakpoints: (
+  'small':      576px,
+  'medium':     768px,
+  'large':      992px,
+  'xlarge':     1400px,
+  'huge':       1700px,
+) !default;
+
+$bp: (
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1400px,
+  hg: 1700px
+) !default;
+
+@if (map-has-key($core_override, 'breakpoints') == true) {
+  $breakpoints: map-extend($breakpoints, map-get($core_override, 'breakpoints'), true);
+}
+
+@function breakpoint($key) {
+  @return deep-map-get($breakpoints, $key);
+}
+
+
+// These elements are used in our javascript
+// components to detect the CSS breakpoints
+// and execute code based on them.
+
+[data-breakpoint="0"] {
+  @media (min-width: breakpoint('small')) {
+    display: none;
+  }
+}
+
+[data-breakpoint="1"] {
+  @media (min-width: breakpoint('medium')) {
+    display: none;
+  }
+}
+
+[data-breakpoint="2"] {
+  @media (min-width: breakpoint('large')) {
+    display: none;
+  }
+}
+
+[data-breakpoint="3"] {
+  @media (min-width: breakpoint('xlarge')) {
+    display: none;
+  }
+}
+
+[data-breakpoint="4"] {
+  @media (min-width: breakpoint('huge')) {
+    display: none;
+  }
+}

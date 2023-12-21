@@ -1,0 +1,18 @@
+// Sizes match app/models/store_connect/medium.rb named sizes
+
+$image: (
+  'small':      100px,
+  'thumb':      240px,
+  'medium':     480px,
+  'large':      640px,
+  'huge':       1024px,
+  'massive':    2048px
+) !default;
+
+@if (map-has-key($core_override, 'image') == true) {
+  $image: map-extend($image, map-get($core_override, 'image'), true);
+}
+
+@function image($key) {
+  @return deep-map-get($image, $key);
+}

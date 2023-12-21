@@ -1,0 +1,59 @@
+.SC-Variant, .Variant {
+  margin: 0;
+  display: inline-block;
+  color: shade('darker');
+
+  &:last-child {margin: 0;}
+
+
+  /**
+   * Label
+   */
+
+  &_label {
+    cursor: pointer;
+    position: relative;
+    background-color: white;
+    text-align: center;
+    padding: spacing('small') spacing('base');
+    border-radius: var(--sc-border-radius);
+    border: 1px solid shade($l: 80%);
+    box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+    margin: 0;
+  }
+
+
+  /**
+   * State
+   */
+
+  &_input:checked + .SC-Variant_label,
+  &_input:checked + .Variant_label {
+    color: color('primary');
+
+    &:after {
+      @include pin-all-sides(absolute);
+      content: '';
+      border: 2px solid color('primary');
+      border-radius: var(--sc-border-radius);
+      margin: -1px;
+    }
+  }
+
+  &_input:disabled + .SC-Variant_label,
+  &_input:disabled + .Variant_label {
+    background-color: shade('lightest');
+    color: shade($a: 0.3);
+    border-color: shade('lightest');
+  }
+
+  &_input:not(:disabled) + .SC-Variant_label,
+  &_input:not(:disabled) + .Variant_label {cursor: pointer;}
+
+
+  /**
+   * Input (hidden)
+   */
+
+  &_input {display: none;}
+}

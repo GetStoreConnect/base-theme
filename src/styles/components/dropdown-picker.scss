@@ -1,0 +1,122 @@
+/**
+ * Note: This should be consolidated with
+ * existing patterns for dropdowns and
+ * fields, but would result in changes too
+ * wide-reaching for this piece of work,
+ * and effect client upgrades on custom
+ * projects.
+ */
+
+.SC-DropdownPicker {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+
+  // State: Active
+
+  &.is-active {
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+
+    svg {
+      transform: rotate(180deg) translateY(50%);
+    }
+  }
+
+
+  /**
+   * Button (trigger & options)
+   */
+
+  button {
+    position: relative;
+    cursor: pointer;
+    text-align: left;
+    width: 100%;
+    padding: spacing('medium') spacing('base');
+
+    label {
+      pointer-events: none;
+      cursor: pointer;
+      font-size: var(--sc-font-tiny);
+      font-weight: var(--sc-font-bold);
+      text-transform: uppercase;
+      margin-bottom: spacing('tiny');
+    }
+
+    span {
+      pointer-events: none;
+      cursor: pointer;
+    }
+  }
+
+
+  /**
+   * Dropdown menu
+   */
+
+  menu {
+    z-index: var(--sc-depth-foreground);
+    overflow: hidden;
+    position: absolute;
+    top: calc(100%);
+    right: -1px;
+    width: calc(100% + 2px);
+    display: flex;
+    flex-direction: column;
+    display: none;
+    background-color: white;
+    border-radius: var(--sc-border-radius);
+    border: 1px solid shade('lighter');
+    box-shadow: 0 4px 8px shade($a: 0.1);
+
+    label {
+      cursor: pointer;
+      margin: 0;
+      padding: spacing('medium') spacing('base');
+      background-color: white;
+      transition: 200ms background-color ease;
+
+      &:hover {
+        background-color: shade($l: 97%);
+      }
+    }
+
+
+    // State: Active
+
+    &[aria-expanded=true] {
+      display: block;
+    }
+  }
+
+
+  /**
+   * Chevron
+   */
+
+  svg {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: spacing('base');
+  }
+
+
+  /**
+   * Modifiers
+   */
+
+  &-right {
+    border-left: 0;
+    border-top-right-radius: var(--sc-border-radius);
+    border-bottom-right-radius: var(--sc-border-radius);
+  }
+
+  &-left {
+    border-top-left-radius: var(--sc-border-radius);
+    border-bottom-left-radius: var(--sc-border-radius);
+  }
+}

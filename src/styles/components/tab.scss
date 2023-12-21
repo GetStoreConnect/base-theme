@@ -1,0 +1,48 @@
+.SC-Tab, .Tab {
+  @include reset-button-styles;
+  position: relative;
+  padding: spacing('small') spacing('base');
+  margin-bottom: spacing('small');
+  border-bottom: 2px solid shade('lightest');
+  width: 100%;
+  max-width: 200px;
+  @include small-and-up {
+    width: calc(50% - #{spacing('tiny')});
+  }
+
+  &.is-active {
+    border-color: color('primary');
+  }
+
+
+  /**
+   * Variants
+   */
+
+  &-button {
+    padding: spacing('medium') spacing('large');
+    border: 1px solid shade($a: 0.2);
+    border-radius: var(--sc-border-radius);
+    font-weight: var(--sc-font-bold);
+    font-size: var(--sc-font-medium);
+    max-width: none;
+    @include small-and-up {
+      &:nth-child(odd) {margin-right: spacing('tiny');}
+      &:nth-child(even) {margin-left: spacing('tiny');}
+    }
+
+    &:after {
+      content: "";
+      border: 2px solid transparent;
+      border-radius: var(--sc-border-radius);
+      @include pin-all-sides;
+    }
+
+    &.is-active {
+      border-color: transparent;
+      color: color('primary');
+
+      &:after {border-color: color('primary');}
+    }
+  }
+}

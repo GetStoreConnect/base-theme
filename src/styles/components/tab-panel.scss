@@ -1,0 +1,217 @@
+/**
+ * Deprecated
+ */
+
+$TabPanel: (
+  'num_of_tabs': 5,
+  'even_distribution': false,
+  'gutter': unset,
+  'radius': unset,
+  'border': unset,
+
+  'tab': (
+    'bg': transparent,
+    'padding': spacing('base'),
+    'text-transform': unset,
+    'font-weight': var(--sc-font-bold),
+    'font-size': var(--sc-font-medium),
+    'color': (
+      'resting': shade($a: 0.6),
+      'hover': shade($a: 0.9),
+      'active': shade($a: 0.9)
+    ),
+    'underline': (
+      'color': (
+        'resting': shade($a: 0.1),
+        'active': color('primary')
+      ),
+      'height': 2px,
+    ),
+    'icon': (
+      'size': 12px,
+      'color': shade($a: 0.6)
+    )
+  ),
+
+  'body': (
+    'bg': unset,
+    'padding': spacing('base')
+  )
+) !default;
+
+@if (map-has-key($override, 'TabPanel') == true) {
+  $TabPanel: map-extend($TabPanel, map-get($override, 'TabPanel'), true);
+}
+
+@function TabPanel($keys...) { @return deep-map-get($TabPanel, $keys...); }
+
+
+.TabPanel {
+  $num_of_tabs: TabPanel('num_of_tabs');
+
+  display: flex;
+  flex-wrap: wrap;
+
+
+  /**
+   * Tab
+   */
+
+  &_tab {
+    cursor: pointer;
+    border: none;
+    outline: none;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    text-align: left;
+    @include set('font-weight', TabPanel('tab','font-weight'));
+    @include set('text-transform', TabPanel('tab','text-transform'));
+    @include set-adaptive-prop('padding', TabPanel('tab','padding'));
+    @include set-adaptive-prop('font-size', TabPanel('tab','font-size'));
+    @include set-state-prop('background', TabPanel('tab','bg'));
+    @include small-and-up {
+      order: 1;
+      justify-content: center;
+      width: auto;
+      max-width: calc(100%/#{$num_of_tabs});
+      @include set-state-prop('color', TabPanel('tab','color'));
+    }
+
+
+    // Even distribution
+
+    @if TabPanel('even_distribution') {
+      @include small-and-up {width: 100%;}
+    }
+
+
+    // Gutter
+
+    @if TabPanel('gutter') != unset {
+      $gutter: TabPanel('gutter');
+      $gutter-offset: ($gutter/$num_of_tabs) * ($num_of_tabs - 1);
+
+      @include small-and-up {
+        max-width: calc((100%/#{$num_of_tabs}) - #{$gutter-offset});
+        margin-left: $gutter;
+        &:first-child {margin-left: 0;}
+      }
+    }
+
+
+    // Radius
+
+    @if TabPanel('radius') != unset {
+      $radius: TabPanel('radius');
+
+      @include up-to-small {
+        &:first-child {border-radius: $radius $radius 0 0;}
+        &:not(.is-active).is-last {border-radius: 0 0 $radius $radius;}
+      }
+      @include small-and-up {border-radius: $radius $radius 0 0;}
+    }
+
+
+    // Border
+
+    @if TabPanel('border') != unset {
+      $width: TabPanel('border','width');
+      $color: TabPanel('border','color');
+
+      border-style: solid;
+      border-color: $color;
+      @include up-to-small {
+        border-width: 0 $width $width;
+        &:first-child {border-width: $width;}
+      }
+      @include small-and-up {border-width: $width $width 0;}
+    }
+
+
+    // Underline
+
+    @if TabPanel('tab','underline') != unset {
+      &:after {
+        content: '';
+        @include pin-bottom(absolute);
+        background: TabPanel('tab','underline','color','resting');
+        height: TabPanel('tab','underline','height');
+        width: 100%;
+      }
+
+      &.is-active:after {
+        background: TabPanel('tab','underline','color','active');
+      }
+    }
+
+    // Icon
+
+    &_icon {
+      @include small-and-up {display: none;}
+
+      svg {
+        width: TabPanel('tab','icon','size');
+        height: TabPanel('tab','icon','size');
+        fill: TabPanel('tab','icon','color');
+        &:first-child {display: none;}
+      }
+    }
+
+
+    // State: Active
+
+    &.is-active {
+
+      & + .TabPanel_body {display: block;}
+
+      svg {
+        display: none;
+        &:first-child {display: block;}
+      }
+    }
+  }
+
+
+  /**
+   * Body
+   */
+
+  &_body {
+    display: none;
+    width: 100%;
+    @include set-adaptive-prop('padding', TabPanel('body','padding'));
+    @include set('background-color',TabPanel('body','bg'));
+    @include small-and-up {order: 2;}
+
+
+    // Border
+
+    @if TabPanel('border') != unset {
+      $width: TabPanel('border','width');
+      $color: TabPanel('border','color');
+
+      border-style: solid;
+      border-color: $color;
+      border-width: 0 $width $width;
+      @include small-and-up {border-width: $width;}
+    }
+
+
+    // Radius
+
+    @if TabPanel('radius') != unset {
+      $radius: TabPanel('radius');
+
+      &.is-last {border-radius: 0 0 $radius $radius;}
+      @include small-and-up {border-radius: 0 0 $radius $radius;}
+    }
+
+
+    // TODO: Remove and replace with new subtype for container that doesn't included padding
+
+    .Section {padding: 0 !important;}
+  }
+}

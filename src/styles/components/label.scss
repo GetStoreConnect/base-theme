@@ -1,0 +1,30 @@
+.SC-Label, .Label {
+  line-height: 1;
+  display: inline-block;
+  background-color: color('primary', $lighten: 45%);
+  color: color('primary');
+  padding: spacing('tiny');
+  border-radius: var(--sc-border-radius);
+  font-weight: var(--sc-font-normal);
+  font-size: var(--sc-font-base);
+
+
+  /**
+   * Variants
+   */
+
+  &-small {
+    font-size: var(--sc-font-tiny);
+    padding: spacing('micro') spacing('tiny');
+  }
+
+  &-alert {
+    background-color: color('error', $lighten: 50%);
+    color: color('error');
+  }
+
+  &-subtle {
+    background-color: shade('lightest');
+    color: shade('dark');
+  }
+}

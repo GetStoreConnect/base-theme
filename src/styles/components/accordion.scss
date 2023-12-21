@@ -1,0 +1,65 @@
+.SC-Accordion, .Accordion {
+  text-align: left;
+  border-top: var(--sc-border-width) solid var(--sc-border-color);
+
+
+  /**
+   * Header
+   */
+
+  &_header {
+    @include reset-button-styles;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: spacing('medium') 0;
+
+
+    // Heading
+
+    &_heading {
+      pointer-events: none;
+      font-weight: var(--sc-font-bold);
+      flex-grow: 1;
+      text-align: left;
+      margin: 0;
+      @include truncate-single-line;
+    }
+
+
+    // Icon
+
+    &_icon {
+      flex-shrink: 0;
+      width: 10px;
+      height: 10px;
+      pointer-events: none;
+      margin-right: spacing('small');
+      fill: shade('darkest');
+
+      &.is-active > rect:nth-child(2) {
+        display: none;
+      }
+    }
+  }
+
+
+  /**
+   * Body
+   */
+
+  &_body {
+    display: none;
+    color: shade('darkest');
+    padding: 0 0 spacing('base') 0;
+
+    p:last-child {margin: 0;}
+
+
+    // State: Expanded
+
+    &.is-expanded {
+      display: block;
+    }
+  }
+}

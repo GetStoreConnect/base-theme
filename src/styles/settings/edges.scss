@@ -1,0 +1,18 @@
+/**
+ * DEPRECATED: Use /store_connect/settings/border.scss
+ */
+
+$edges: (
+  'border': (
+    'width': 1px,
+    'color':  hsl(0, 0%, 85%),
+    'radius': 4px,
+    'rounded': 12px
+  )
+) !default;
+
+@if (map-has-key($core_override, 'edges') == true) {
+  $edges: map-extend($edges, map-get($core_override, 'edges'), true);
+}
+
+@function edges($keys...) { @return deep-map-get($edges, $keys...) }

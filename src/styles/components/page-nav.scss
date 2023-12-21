@@ -1,0 +1,75 @@
+.SC-PageNav, .PageNav {
+  @include medium-and-up {
+    margin-bottom: spacing('base');
+  }
+
+  &_link {
+    display: block;
+    padding: spacing('tiny') 0;
+    margin: 0;
+    color: shade('dark');
+
+    &.is-current {
+      color: shade('darkest');
+    }
+  }
+
+  &_heading {
+    font-weight: var(--sc-font-bold);
+    padding: spacing('medium') 0;
+    margin: 0;
+  }
+
+
+  /**
+   * Modifier: Inline
+   */
+
+  &-inline {
+    width: auto;
+
+    .SC-PageNav_link,
+    .PageNav_link {
+      display: inline-block;
+      margin-right: spacing('base');
+    }
+  }
+
+  /**
+    * Mobile handling
+    */
+  &_content {
+    &.is-hidden {
+      display: none;
+    }
+    @include medium-and-up {
+      &.is-hidden {
+        display: block;
+      }
+      display: block;
+    }
+  }
+
+  &_menu-toggle {
+    width: 100%;
+    max-width: 100%;
+    text-align: center;
+    transform: rotate(180deg);
+    height: 2em;
+    line-height: 2em;
+    cursor: pointer;
+
+    &:hover {
+      background: shade($a: 0.02);
+    }
+
+    &.target-hidden {
+      transform: rotate(0deg);
+    }
+
+    @include medium-and-up {
+      display: none;
+    }
+  }
+
+}

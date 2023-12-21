@@ -1,0 +1,25 @@
+/**
+ * Deprecated
+ */
+
+.SC-ProductImage, .ProductImage {
+  @include aspect-ratio(1, 1);
+  font-size: 0;
+  background-color: white;
+  border-radius: var(--sc-border-radius);
+  border: 1px solid var(--sc-border-color);
+
+  &-small {
+    width: 90px;
+  }
+
+  img, svg {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    max-width: 90%;
+    max-height: 90%;
+    transform: translateY(-50%) translateX(-50%);
+    height: auto;
+  }
+}

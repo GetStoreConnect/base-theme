@@ -1,0 +1,41 @@
+{
+  "name": "StoreConnect",
+  "timezone": "America/Los_Angeles",
+  "display_currency?": "USD",
+  "display_points?": true,
+  "global_css": "body { background-color: red; }",
+  "navigation_categories": [
+    {
+      "name": "Products",
+      "path": "/products",
+      "navigation_children": [
+        {
+          "name": "All products",
+          "path": "/products"
+        },
+        {
+          "name": "Collections",
+          "path": "/collections"
+        },
+        {
+          "name": "Gift cards",
+          "path": "/gift_cards"
+        }
+      ]
+    },
+    {
+      "name": "Orders",
+      "path": "/orders",
+      "navigation_children": [
+        {
+          "name": "All orders",
+          "path": "/orders"
+        },
+        {
+          "name": "Abandoned checkouts",
+          "path": "/abandoned_checkouts"
+        }
+      ]
+    }
+  ]
+}

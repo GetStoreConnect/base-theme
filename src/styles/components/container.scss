@@ -1,0 +1,47 @@
+.sc-container, .container {
+  width: 100%;
+  padding-left: var(--sc-spacing-small);
+  padding-right: var(--sc-spacing-small);
+  max-width: 1700px;
+  margin-left: auto;
+  margin-right: auto;
+
+  @media only screen and (min-width: 576px) {
+    padding-left: var(--sc-spacing-medium);
+    padding-right: var(--sc-spacing-medium);
+  }
+
+  @media only screen and (min-width: 768px) {
+    padding-left: var(--sc-spacing-base);
+    padding-right: var(--sc-spacing-base);
+  }
+
+  @media only screen and (min-width: 768px) {
+    padding-left: var(--sc-spacing-large);
+    padding-right: var(--sc-spacing-large);
+  }
+
+
+  /**
+   * Modifiers
+   */
+
+  &-skinny {
+    max-width: 1400px;
+    @media only screen and (min-width: 992px) {
+      width: 80%;
+    }
+  }
+
+  &-spacious {
+    padding-top: var(--sc-spacing-small);
+    @media only screen and (min-width: 768px) {
+      padding-top: var(--sc-spacing-xlarge);
+      padding-bottom: var(--sc-spacing-huge);
+    }
+  }
+
+  &-capsule {max-width: 500px;}
+
+  &-expanded {max-width: none;}
+}

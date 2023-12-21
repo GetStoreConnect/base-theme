@@ -1,0 +1,78 @@
+<template id="sc-top-bar">
+  <style>
+    :host {
+      grid-area: topbar;
+      position: sticky;
+      z-index: 3;
+      top: 0;
+    }
+
+    header {
+      display: grid;
+      align-items: center;
+      background-color: white;
+      background-color: var(--sc-topbar-bg);
+      border-bottom: 1px solid var(--sc-shade-lightest);
+      color: var(--sc-topbar-color);
+      grid-template-areas:
+        "menu brand user"
+        "search search search";
+    }
+    @media only screen and (min-width: 576px) {
+      header {
+        grid-template-areas:
+          "brand search user"
+          "nav nav nav";
+      }
+    }
+
+    form {
+      grid-area: search;
+      padding: var(--sc-spacing-small);
+    }
+
+    button[name="init-menu"] {
+      cursor: pointer;
+      appearance: none;
+      display: none;
+      background: transparent;
+      border: 0;
+      font-size: 0;
+      width: 30px;
+      height: 30px;
+      padding: 4px;
+      grid-area: menu;
+    }
+
+    menu {
+      margin: 0;
+      height: 100%;
+      grid-area: user;
+    }
+
+    /* span {
+      height: 100%;
+      display: flex;
+      flex-grow: 1;
+      flex-basis: 0;
+      align-items: center;
+    } */
+  </style>
+
+  <header>
+    <button
+      data-menu-init="header"
+      name="init-menu"
+      type="button"
+    >
+      {% comment %} {%- render "shared/icons/hamburger.liquid" %} {% endcomment %}
+    </button>
+    <sc-brand
+      href="{{ current_store.home_path }}"
+      logo="{{ current_store.logo }}"
+    ></sc-brand>
+    <sc-search-form></sc-search-form>
+    <sc-user-navigation></sc-user-navigation>
+    <sc-navigation></sc-navigation>
+  </header>
+</template>

@@ -1,0 +1,59 @@
+.SC-Grid, .Grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: [sidebar] auto
+                      [main] 1fr
+                      [summary] auto;
+
+  @media only screen and (min-width: 768px) {
+    grid-template-columns: [sidebar] auto
+                           [main] 1fr
+                           [summary] auto;
+  }
+
+
+  /**
+   * Main
+   */
+
+  &_main {
+    @media only screen and (min-width: 768px) {
+      grid-row: 1;
+      grid-column: main;
+    }
+  }
+
+
+  /**
+   * Sidebar
+   */
+
+  &_sidebar {
+    @media only screen and (min-width: 768px) {
+      grid-column: sidebar;
+      width: 160px;
+      margin-right: var(--sc-spacing-large);
+      &_spacious {
+        width: 250px;
+      }
+    }
+  }
+
+
+  /**
+   * Summary
+   */
+
+  &_summary {
+    @media only screen and (min-width: 768px) {
+      grid-column: summary;
+      width: 380px;
+      margin-left: var(--sc-spacing-large);
+    }
+
+    @media only screen and (min-width: 992px) {
+      margin-left: var(--sc-spacing-xlarge);
+    }
+  }
+}

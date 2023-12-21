@@ -1,0 +1,158 @@
+/**
+ * DEPRECATED: Use menu.scss
+ */
+
+$Nav: (
+  'dropdown': (
+    'width': 300px,
+    'border': true
+  ),
+) !default;
+
+@function Nav($keys...) { @return deep-map-get($Nav, $keys...); }
+
+@if (map-has-key($override, 'Nav') == true) {
+  $Nav: map-extend($Nav, map-get($override, 'Nav'), true);
+}
+
+@mixin dropdown {
+  z-index: depth('overlay');
+  left: 0;
+  border-top: 1px solid rgba(black,.1);
+  box-shadow: 0 8px 10px rgba(black,.1);
+  opacity: 0;
+  pointer-events: none;
+
+  &.is-open {
+    opacity: 1;
+    pointer-events: inherit;
+  }
+}
+
+
+.SC-Nav, .Nav {
+  background-color: white;
+
+
+  /**
+   * On touch devices all tiers of navigation overlay the screen
+   */
+
+  @include up-to-large {
+    position: fixed;
+    z-index: depth('overlay');
+    overflow-y: auto;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    padding: spacing('small');
+    pointer-events: none;
+    opacity: 0;
+    transform-origin: center;
+    transform: translateX(100%) scale(1);
+    transition: 200ms transform ease, 200ms opacity ease;
+
+
+    // Open
+
+    &.is-open {
+      opacity: 1;
+      pointer-events: inherit;
+      transform: translateX(0) scale(1);
+    }
+  }
+
+
+  /**
+   * Root
+   */
+
+  &-root {
+    @include up-to-large {
+      transform: translateX(0%) scale(0.8);
+      transition: 100ms transform ease, 100ms opacity ease;
+
+      &.is-open {
+        transform: translateX(0%) scale(1);
+      }
+    }
+
+    @include large-and-up {
+      background-color: transparent;
+    }
+  }
+
+
+  /**
+   * Cart
+   */
+
+   &-cart {
+    display: flex;
+    flex-direction: column;
+
+    @include up-to-large {
+      transition: 0.1s transform ease, 0.1s opacity ease;
+      transform: translateX(0%) scale(0.8);
+      overflow-y: hidden;
+    }
+
+    @include large-and-up {
+      @include dropdown;
+      width: 400px;
+      max-height: 70vh;
+      position: absolute;
+      right: 0;
+      left: auto;
+      padding: spacing('base');
+      border: none;
+    }
+  }
+
+
+
+  /**
+   * Account
+   */
+
+   &-account {
+    @include large-and-up {
+      @include dropdown;
+      width: Nav('dropdown','width');
+      position: absolute;
+      right: 0;
+      left: auto;
+      padding: spacing('base');
+      border: none;
+    }
+  }
+
+
+  /**
+   * Slim
+   */
+
+  &-slim {
+    @include large-and-up {
+      @include dropdown;
+      width: Nav('dropdown','width');
+      position: absolute;
+      padding: spacing('base');
+    }
+  }
+
+
+  /**
+   * Mega
+   */
+
+  &-mega {
+    @include large-and-up {
+      @include dropdown;
+      position: fixed;
+      width: 100%;
+      padding: spacing('base') spacing('large');
+    }
+  }
+}

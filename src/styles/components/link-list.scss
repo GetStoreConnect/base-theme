@@ -1,0 +1,87 @@
+$LinkList: (
+  'spacing':                spacing('base'),
+  'item': (
+    'spacing':              spacing('small')
+  ),
+  'link': (
+    'size':                 inherit,
+    'color': (
+      'resting':            color('primary'),
+      'hover':              color('primary')
+    )
+  ),
+  'heading': (
+    'size':                 inherit,
+    'weight':               #{var(--sc-font-normal)},
+    'text-transform':       unset,
+    'color': (
+      'resting':            currentColor,
+      'hover':              color('primary')
+    )
+  ),
+
+) !default;
+
+@if (map-has-key($override, 'LinkList') == true) {
+  $LinkList: map-extend($LinkList, map-get($override, 'LinkList'), true);
+}
+
+@function LinkList($keys...) { @return deep-map-get($LinkList, $keys...); }
+
+
+.SC-LinkList, .LinkList {
+  @include reset-list-styles;
+  display: flex;
+  flex-direction: column;
+
+  &_item {
+    color: currentColor;
+    margin: 0 0 LinkList('item','spacing');
+
+    .SC-LinkList-inline &,
+    .LinkList-inline & {
+      margin: 0 (calc(#{LinkList('item','spacing')} * 3)) 0 0;
+    }
+  }
+
+  &_link {
+    display: block;
+    font-size: LinkList('link','size');
+    color: LinkList('link','color','resting');
+
+    &:hover {text-decoration: underline;}
+  }
+
+  &_heading {
+    display: block;
+    font-size: LinkList('heading','size');
+    font-weight: LinkList('heading','weight');
+    color: LinkList('heading','color','resting');
+    text-transform: LinkList('heading','text-transform');
+
+    &:hover {color: LinkList('heading','color','hover');}
+  }
+
+
+  /**
+   * Modifier: Wrap
+   */
+
+  &-wrap {
+    flex-wrap: wrap;
+    align-content: flex-start;
+    max-height: 500px;
+
+    .SC-LinkList_item,
+    .LinkList_item {
+      margin-right: spacing('large');
+    }
+  }
+
+
+  /**
+   * Modifier: Inline
+   */
+
+  &-inline {flex-direction: row;}
+}

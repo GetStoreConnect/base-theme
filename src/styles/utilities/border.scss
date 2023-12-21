@@ -1,0 +1,143 @@
+.sc-border-rounded {
+  border-radius: var(--sc-border-rounded);
+}
+
+.sc-border-radius {
+  border-radius: var(--sc-border-radius);
+}
+
+.sc-border {
+  border: var(--sc-border-width) solid var(--sc-border-color);
+}
+
+.sc-border-top {
+  border-top: var(--sc-border-width) solid var(--sc-border-color);
+}
+
+.sc-border-right {
+  border-right: var(--sc-border-width) solid var(--sc-border-color);
+}
+
+.sc-border-bottom {
+  border-bottom: var(--sc-border-width) solid var(--sc-border-color);
+}
+
+.sc-border-left {
+  border-left: var(--sc-border-width) solid var(--sc-border-color);
+}
+
+.sc-border-ends {
+  border-top: var(--sc-border-width) solid var(--sc-border-color);
+  border-bottom: var(--sc-border-width) solid var(--sc-border-color);
+}
+
+.sc-border-sides {
+  border-left: var(--sc-border-width) solid var(--sc-border-color);
+  border-right: var(--sc-border-width) solid var(--sc-border-color);
+}
+
+.sc-border-none {
+  border: none;
+}
+
+
+/**
+ * Borders for shades
+ */
+
+@each $shade, $value in $shades {
+  .sc-border-#{$shade} {
+    border: var(--sc-border-width) solid $value;
+  }
+
+  .sc-border-top-#{$shade} {
+    border-top: var(--sc-border-width) solid $value;
+  }
+
+  .sc-border-right-#{$shade} {
+    border-right: var(--sc-border-width) solid $value;
+  }
+
+  .sc-border-bottom-#{$shade} {
+    border-bottom: var(--sc-border-width) solid $value;
+  }
+
+  .sc-border-left-#{$shade} {
+    border-left: var(--sc-border-width) solid $value;
+  }
+
+  .sc-border-ends-#{$shade} {
+    border-top: var(--sc-border-width) solid $value;
+    border-bottom: var(--sc-border-width) solid $value;
+  }
+
+  .sc-border-sides-#{$shade} {
+    border-left: var(--sc-border-width) solid $value;
+    border-right: var(--sc-border-width) solid $value;
+  }
+}
+
+
+/**
+ * Deprecated
+ */
+
+.u-border-none {
+  border: none;
+}
+
+.u-border {
+  border: var(--sc-border-width) solid var(--sc-border-color);
+}
+
+.u-border-top {
+  border-top: var(--sc-border-width) solid var(--sc-border-color);
+}
+
+.u-border-right {
+  border-right: var(--sc-border-width) solid var(--sc-border-color);
+}
+
+.u-border-bottom {
+  border-bottom: var(--sc-border-width) solid var(--sc-border-color);
+}
+
+.u-border-left {
+  border-left: var(--sc-border-width) solid var(--sc-border-color);
+}
+
+
+.u-border-sides {
+  border-left: var(--sc-border-width) solid var(--sc-border-color);
+  border-right: var(--sc-border-width) solid var(--sc-border-color);
+}
+
+@each $key, $value in $shades {
+  $property-value: var(--sc-border-width) solid shade($key);
+
+  .u-border-top-#{$key} {
+    border-top: $property-value;
+  }
+
+  .u-border-right-#{$key} {
+    border-right: $property-value;
+  }
+
+  .u-border-bottom-#{$key} {
+    border-bottom: $property-value;
+  }
+
+  .u-border-left-#{$key} {
+    border-left: $property-value;
+  }
+
+  .u-border-ends-#{$key} {
+    border-top: $property-value;
+    border-bottom: $property-value;
+  }
+
+  .u-border-sides-#{$key} {
+    border-left: $property-value;
+    border-right: $property-value;
+  }
+}

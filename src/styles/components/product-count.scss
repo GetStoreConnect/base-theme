@@ -1,0 +1,6 @@
+// Explicit ID to add a hidden product count to taxon#show
+// This is for the products count to not be present by default on the taxon page
+// but can be added by the clients
+#SC-category-products-count {
+  display: none;
+}

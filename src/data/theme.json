@@ -1,0 +1,15 @@
+{
+  "name": "StoreConnect Base Theme",
+  "properties": {
+    "sc-body-bg": "hsl(0, 0%, 97%)",
+    "sc-font-family": "-apple-system, BlinkMacSystemFont, sans-serif",
+    "sc-font-base": "16px",
+    "sc-navigation-height": "60px",
+    "sc-base-tag-height": "18px",
+    "sc-base-tag-radius": "3px"
+  },
+  "templates": [],
+  "assets": [],
+  "locales": [],
+  "settings": []
+}

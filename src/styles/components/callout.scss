@@ -1,0 +1,19 @@
+.SC-Callout, .Callout {
+  border-radius: var(--sc-border-radius);
+  background-color: white;
+  padding: spacing('base');
+  border: var(--sc-border-width) solid var(--sc-border-color);
+  box-shadow: 0 2px 2px hsla(0, 0%, 0%, 0.05);
+
+
+  /**
+   * Variant: Floating
+   */
+
+  &-floating {
+    border-radius: var(--sc-border-rounded);
+    padding: spacing('large');
+    border-color: transparent;
+    box-shadow: 0 2px 10px hsla(0, 0%, 0%, 0.1);
+  }
+}

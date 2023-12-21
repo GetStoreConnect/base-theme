@@ -1,0 +1,45 @@
+body {
+  font-family: var(--sc-font-family);
+  font-size: var(--sc-font-base);
+  line-height: 1.3;
+  color: shade('darkest');
+}
+
+h1, h2, h3, h4, h5 {
+  margin: 0 0 spacing('small');
+  font-weight: var(--sc-font-bold);
+}
+
+h1 {
+  font-size: var(--sc-font-xlarge);
+  margin-bottom: spacing('small');
+  @include medium-and-up {
+    font-size: var(--sc-font-xxlarge);
+    margin-bottom: spacing('base');
+  }
+}
+
+h2 {
+  font-size: var(--sc-font-large);
+  @include medium-and-up {
+    font-size: var(--sc-font-xlarge);
+  }
+}
+
+h3 {font-size: var(--sc-font-large);}
+
+h4 {font-size: var(--sc-font-medium);}
+
+h5 {
+  font-size: var(--sc-font-small);
+  text-transform: uppercase;
+  color: shade('dark');
+}
+
+strong {font-weight: var(--sc-font-bold);}
+
+p {margin: 0 0 spacing('base');}
+
+small {font-size: var(--sc-font-small);}
+
+::placeholder {color: rgba(0,0,0,0.45);}

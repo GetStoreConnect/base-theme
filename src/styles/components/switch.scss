@@ -1,0 +1,40 @@
+.SC-Switch {
+  --height: 25px;
+  --width: 50px;
+  margin: 0;
+
+  input {display: none;}
+
+  input:checked ~ .SC-Switch_control {
+    background-color: color('primary');
+    border-color: color('primary');
+
+    &:before {
+      transform: translateX(100%);
+    }
+  }
+
+  &_control {
+    cursor: pointer;
+    width: var(--width);
+    height: var(--height);
+    border-radius: var(--height);
+    position: relative;
+    background-color: shade('lighter');
+    transition: 100ms ease background-color,
+                100ms ease border;
+
+    &:before {
+      content: '';
+      transition: 100ms ease transform;
+      position: absolute;
+      left: 0;
+      width: var(--height);
+      height: var(--height);
+      background: white;
+      border-radius: 100%;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15),
+                  0 0 2px rgba(0, 0, 0, 0.4);
+    }
+  }
+}

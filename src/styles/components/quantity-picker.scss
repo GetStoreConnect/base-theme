@@ -1,0 +1,145 @@
+.SC-QuantityPicker, .QuantityPicker {
+  display: inline-flex;
+  flex-shrink: 0;
+  position: relative;
+  min-width: 80px;
+  white-space: nowrap;
+
+
+  /**
+   * Trigger
+   */
+
+  &_trigger {
+    @include reset-button-styles;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    text-align: left;
+    line-height: 1;
+    padding: spacing('small') spacing('medium');
+    border-radius: var(--sc-border-radius);
+    background-color: white;
+    border: 1px solid shade($l: 80%);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+
+    .QuantityPicker-large &,
+    .SC-QuantityPicker-large & {
+      padding: spacing('medium') spacing('base');
+    }
+
+    &.is-hidden {display: none;}
+
+
+    // Label
+
+    &_label {pointer-events: none;}
+
+
+    // Icon
+
+    svg {
+      pointer-events: none;
+      margin-left: spacing('tiny');
+      width: 8px;
+      height: 8px;
+      flex-shrink: 0;
+
+      .QuantityPicker-large &,
+      .SC-QuantityPicker-large & {
+        width: 10px;
+        height: 10px;
+        margin-left: spacing('small');
+      }
+    }
+  }
+
+
+  /**
+   * Input (hidden by default)
+   */
+
+  &_input[type=number] {
+    border: none;
+    display: none;
+    height: auto;
+    max-width: 100px;
+    line-height: 1;
+    padding: calc(#{spacing('small')} - 1px) calc(#{spacing('medium')} - 1px);
+    border-radius: var(--sc-border-radius);
+    background-color: white;
+    border: 1px solid shade($l: 80%);
+    box-shadow: inset 0 1px 2px shade($a: 0.05);
+
+    &:focus, &:hover {
+      background-color: white;
+    }
+
+    &.is-active {display: block;}
+
+
+    // Modifier: Large
+
+    .SC-QuantityPicker-large &,
+    .QuantityPicker-large & {
+      padding: calc(#{spacing('medium')} - 1px) calc(#{spacing('base')} - 1px);
+    }
+  }
+
+
+  /**
+   * Update
+   */
+
+  &_update {
+    @include reset-button-styles;
+    margin-left: spacing('small');
+    line-height: 1;
+    padding: spacing('small');
+    border-radius: edges('border','radius');
+    color: color('primary');
+    text-decoration: underline;
+
+    &:hover {text-decoration: none;}
+  }
+
+
+  /**
+   * Dropdown list of quantity options
+   */
+
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    position: absolute;
+    z-index: var(--sc-depth-foreground);
+    left: 0;
+    top: 0;
+    width: 140%;
+    border-radius: var(--sc-border-radius);
+    background: white;
+    border: 1px solid shade($l: 80%);
+    box-shadow: 0 5px 8px shade($a: 0.1);
+    display: none;
+
+    // State: Active
+
+    &.is-active {display: block;}
+
+
+    // Quantity option
+
+    button {
+      @include reset-button-styles;
+      display: flex;
+      align-items: center;
+      width: 100%;
+      text-align: left;
+      padding: spacing('tiny') spacing('small');
+
+      & > span {pointer-events: none;}
+    }
+  }
+}

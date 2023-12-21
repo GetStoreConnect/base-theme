@@ -1,0 +1,175 @@
+.sc-font-family {
+  font-family: var(--sc-font-family);
+}
+
+.sc-font-normal {
+  font-weight: var(--sc-font-normal);
+}
+
+.sc-font-bold {
+  font-weight: var(--sc-font-bold);
+}
+
+.sc-font-line-through {
+  text-decoration: line-through;
+}
+
+
+/**
+ * Size
+ */
+
+.sc-font-zero {
+  font-size: 0;
+}
+
+.u-font-size-tiny,
+.sc-font-tiny {
+  font-size: var(--sc-font-tiny);
+}
+
+.u-font-size-small,
+.sc-font-small {
+  font-size: var(--sc-font-small);
+}
+
+.u-font-size-base,
+.sc-font-base {
+  font-size: var(--sc-font-base);
+}
+
+.sc-font-medium,
+.sc-font-medium {
+  font-size: var(--sc-font-medium);
+}
+
+.u-font-size-large,
+.sc-font-large {
+  font-size: var(--sc-font-large);
+}
+
+.u-font-size-xlarge,
+.sc-font-xlarge {
+  font-size: var(--sc-font-xlarge);
+}
+
+.u-font-size-xxlarge,
+.sc-font-xxlarge {
+  font-size: var(--sc-font-xxlarge);
+}
+
+.u-font-size-huge,
+.sc-font-huge {
+  font-size: var(--sc-font-huge);
+}
+
+.u-font-size-gigantic,
+.sc-font-gigantic {
+  font-size: var(--sc-font-gigantic);
+}
+
+
+/**
+ * Colors & Shades
+ */
+
+@each $color, $value in $colors {
+  .sc-color-#{$color} {
+    color: color($color);
+  }
+}
+
+@each $key, $value in $shades {
+  .sc-shade-#{$key} {
+    color: shade($key);
+  }
+}
+
+
+/**
+ * Whitespace
+ */
+
+.sc-whitespace-nowrap {
+  white-space: nowrap;
+}
+
+
+/**
+ * Weight
+ */
+
+.sc-font-normal {
+  font-weight: var(--sc-font-normal);
+}
+
+.sc-font-bold {
+  font-weight: var(--sc-font-bold);
+}
+
+
+/**
+ * Misc
+ */
+
+.sc-uppercase {
+  text-transform: uppercase;
+}
+
+.sc-truncate {
+  @include truncate-single-line;
+}
+
+
+/**
+ * Alignment
+ */
+
+.sc-text-left {
+  text-align: left;
+}
+
+.sc-text-right {
+  text-align: right;
+}
+
+.sc-text-center {
+  text-align: center;
+}
+
+
+/**
+ * DEPRECATED
+ */
+
+@each $color, $value in $colors {
+  .u-color-#{$color} {
+    color: color($color);
+  }
+}
+
+@each $key, $value in $shades {
+  .u-shade-#{$key} {
+    color: shade($key);
+  }
+}
+
+.u-font-bold {
+  font-weight: var(--sc-font-bold);
+}
+
+.u-font-weight-normal {
+  font-weight: var(--sc-font-normal);
+}
+
+.u-font-weight-bold {
+  font-weight: var(--sc-font-bold);
+}
+
+.u-text-decoration-none {
+  text-decoration: none;
+}
+
+.u-text-uppercase {
+  text-transform: uppercase;
+}

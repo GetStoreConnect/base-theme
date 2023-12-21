@@ -1,0 +1,137 @@
+$PriceSlider: (
+  'height': 40px,
+  'line': (
+    'height': 4px,
+    'color': shade($a: 0.1)
+  ),
+  'bar': (
+    'color': color('primary')
+  ),
+  'handle': (
+    'width': 26px,
+    'height': 26px,
+    'bg': white,
+    'shadow': 0 1px 3px rgba(0,0,0,0.1),
+    'radius': var(--sc-border-radius),
+    'border': (
+      'width': var(--sc-border-width),
+      'color': shade($a: 0.3)
+    )
+  ),
+  'label': (
+    'bg': color('primary'),
+    'color': white
+  )
+) !default;
+
+@if (map-has-key($override, 'PriceSlider') == true) {
+  $PriceSlider: map-extend($PriceSlider, map-get($override, 'PriceSlider'), true);
+}
+
+@function PriceSlider($keys...) { @return deep-map-get($PriceSlider, $keys...); }
+
+.irs--storeconnect {
+  height: PriceSlider('height');
+  margin-bottom: (PriceSlider('handle','height')/2) + spacing('base');
+
+
+  /**
+   * Line
+   */
+
+  .irs-line {
+    top: PriceSlider('height');
+    transform: translateY(-50%);
+    height: PriceSlider('line','height');
+    background-color: PriceSlider('line','color');
+    border-radius: PriceSlider('line','height');
+  }
+
+
+  /**
+   * Bar
+   */
+
+  .irs-bar {
+    top: 100%;
+    transform: translateY(-50%);
+    height: PriceSlider('line','height');
+    background-color: PriceSlider('bar','color');
+  }
+
+
+  /**
+   * Handle
+   */
+
+  .irs-handle {
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    top: 100%;
+    transform: translateY(-50%);
+    width: PriceSlider('handle','width');
+    height: PriceSlider('handle','height');
+    background-color: PriceSlider('handle','bg');
+    box-shadow: PriceSlider('handle','shadow');
+    border-radius: PriceSlider('handle','radius');
+    @include set-state-prop('background-color', PriceSlider('handle','bg'));
+    border-color: shade($a: 0.3);
+    border-width: var(--sc-border-width);
+
+    i {
+      display: block;
+      padding: 0;
+      height: 2px;
+      border-radius: 2px;
+      width: 12px;
+      margin: 1px 0;
+      background: shade('light');
+    }
+  }
+
+
+  /**
+   * Label
+   */
+
+  .irs-min, .irs-max, .irs-from, .irs-to, .irs-single {
+    line-height: 1;
+    padding: spacing('micro') spacing('tiny');
+    border-radius: PriceSlider('line','height');
+  }
+
+  .irs-min, .irs-max {
+    top: 0;
+    background-color: shade('light');
+    color: shade($a: 0.7);
+  }
+
+  .irs-from, .irs-to, .irs-single {
+    background-color: PriceSlider('label','bg');
+    color: PriceSlider('label','color');
+    border-radius: PriceSlider('line','height');
+
+    &:before {
+      position: absolute;
+      display: block;
+      content: "";
+      bottom: -6px;
+      left: 50%;
+      width: 0;
+      height: 0;
+      margin-left: -3px;
+      overflow: hidden;
+      border: 3px solid transparent;
+      border-top-color: PriceSlider('label','bg');
+    }
+  }
+}
+
+[data-js-range-slider] {
+  display: none;
+  -webkit-appearance: none;
+  appearance: none;
+}

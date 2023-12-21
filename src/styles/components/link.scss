@@ -1,0 +1,43 @@
+$Link: (
+  'color': (
+    'resting': color('primary'),
+    'hover': color('primary')
+  ),
+  'decoration': (
+    'resting': underline,
+    'hover': none
+  )
+) !default;
+
+@if (map-has-key($override, 'Link') == true) {
+  $Link: map-extend($Link, map-get($override, 'Link'), true);
+}
+
+@function Link($keys...) { @return deep-map-get($Link, $keys...); }
+
+
+.SC-Link, .Link {
+  @include reset-button-styles;
+  -webkit-tap-highlight-color: transparent;
+  display: inline-block;
+  @include set-state-prop('color', Link('color'));
+  @include set-state-prop('text-decoration', Link('decoration'));
+
+
+  /**
+   * Modifiers
+   */
+
+  &-bold {
+    display: inline-block;
+    border-radius: var(--sc-border-radius);
+    padding: spacing('medium') 0;
+  }
+
+  &-expanded {width: 100%;}
+
+  &-subtle {
+    color: currentColor;
+    &:hover, &:focus {color: currentColor}
+  }
+}

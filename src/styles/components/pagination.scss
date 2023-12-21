@@ -1,0 +1,52 @@
+/**
+ * Kaminari classes
+ */
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .first, .prev, .next, .last {
+    margin: 0 spacing('small');
+    transition: 0.2s color ease;
+    font-size: var(--sc-font-small);
+    color: shade('dark');
+
+    &:hover {color: color('primary');}
+
+    &.disabled {
+      color: shade('light');
+      &:hover {color: shade('light');}
+    }
+  }
+
+  .page {
+    cursor: pointer;
+    display: block;
+    text-align: center;
+    transition: 0.2s background-color ease, 0.2s color ease;
+    margin: 0 spacing('small');
+    width: 25px;
+    height: 25px;
+    line-height: 25px;
+    border-radius: 2px;
+    font-size: var(--sc-font-small);
+    color: shade('dark');
+    background-color: shade('lightest');
+
+    &:hover {
+      background-color: shade('lighter');
+      color: shade('dark');
+    }
+
+    &.current {
+      background-color: color('primary');
+      color: white;
+    }
+
+    a {display: block;}
+
+    a:hover {color: currentColor;}
+  }
+}

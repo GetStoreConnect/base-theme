@@ -1,0 +1,15 @@
+/**
+ * [1] Ensures the footer is "sticky" when main
+ * content ends before the fold
+ */
+
+body {
+  overflow-x: hidden;
+  min-height: 100vh;
+  display: flex; // [1]
+  flex-direction: column; // [1]
+}
+
+main {
+  flex-grow: 1;
+} // [1]

@@ -1,0 +1,81 @@
+.sc-bg-white {
+  background-color: white;
+}
+
+
+/* Shades */
+
+@each $key, $value in $shades {
+  .sc-bg-#{$key} {
+    background-color: $value;
+  }
+
+  // Hover
+  .sc-hover-bg-#{$key}:hover {
+    background-color: $value;
+  }
+
+  // Focus
+  .sc-focus\:bg-#{$key}:focus {
+    background-color: $value;
+  }
+
+  // Checked
+  input:checked + .sc-checked-bg-#{$key} {
+    background-color: $value;
+  }
+
+  // DEPRECATED
+
+  .sc-bg-#{$key}-light {
+    background-color: hsl(
+      var(--sc-color-#{$key}-h),
+      var(--sc-color-#{$key}-s),
+      80%
+    )
+  }
+}
+
+
+/* Colors */
+
+@each $key, $value in $colors {
+  .sc-bg-#{$key} {
+    background-color: $value;
+  }
+
+  // Hover
+  .sc-hover-bg-#{$key}:hover {
+    background-color: $value;
+  }
+
+  // Focus
+  .sc-focus\:bg-#{$key}:focus {
+    background-color: $value;
+  }
+
+  // DEPRECATED
+  .sc-bg-#{$key}-light {
+    background-color: hsl(
+      var(--sc-color-#{$key}-h),
+      var(--sc-color-#{$key}-s),
+      90%
+    )
+  }
+
+  .sc-bg-#{$key}-subtle {
+    background-color: hsl(
+      var(--sc-color-#{$key}-h),
+      var(--sc-color-#{$key}-s),
+      93%
+    )
+  }
+
+  .sc-hover-bg-#{$key}-subtle:hover {
+    background-color: hsl(
+      var(--sc-color-#{$key}-h),
+      var(--sc-color-#{$key}-s),
+      95%
+    )
+  }
+}

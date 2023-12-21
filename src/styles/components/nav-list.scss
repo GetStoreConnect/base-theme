@@ -1,0 +1,58 @@
+/**
+ * DEPRECATED: Use menu.scss
+ */
+
+$NavList: (
+  'color': shade('neutral'),
+  'mega': (
+    'max-height': 360px
+  )
+) !default;
+
+@function NavList($keys...) { @return deep-map-get($NavList, $keys...); }
+
+@if (map-has-key($override, 'NavList') == true) {
+  $NavList: map-extend($NavList, map-get($override, 'NavList'), true);
+}
+
+
+.SC-NavList, .NavList {
+  @include reset-list-styles;
+  display: flex;
+  flex-direction: column;
+  color: NavList('color');
+
+
+  /**
+   * Root
+   */
+
+  &-root {
+    width: 100%;
+    @include large-and-up {
+      flex-direction: row;
+      width: auto;
+      height: 100%;
+      align-items: center;
+      margin-left: - spacing('medium');
+      margin-right: - spacing('medium');
+
+
+      & > li {flex-shrink: 0;}
+    }
+  }
+
+
+  /**
+   * Mega
+   */
+
+  &-mega {
+    @include large-and-up {
+      display: inline-flex;
+      flex-direction: column;
+      flex-wrap: wrap;
+      max-height: NavList('mega', 'max-height');
+    }
+  }
+}

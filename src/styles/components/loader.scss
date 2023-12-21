@@ -1,0 +1,96 @@
+.SC-Loader, .Loader {
+  --sc-spinner-color: var(--sc-shade-light);
+  --sc-spinner-size: 40px;
+
+  @include pin-all-sides(fixed);
+  z-index: var(--sc-depth-foreground);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: hsla(0, 0%, 100%, 0.8);
+  opacity: 0;
+  animation: enter 100ms ease;
+  transition: opacity 100ms ease;
+  pointer-events: none;
+
+  svg {display: none;}
+
+
+  /**
+   * Contextual
+   */
+
+  &.is-contextual {
+    position: absolute;
+    pointer-events: none;
+  }
+
+
+  /**
+   * Active
+   */
+
+  &.is-active {
+    pointer-events: none;
+    opacity: 1;
+
+    svg {display: block;}
+  }
+
+
+  /**
+   * Size
+   */
+
+  &.is-small {
+    --sc-spinner-size: 30px;
+  }
+}
+
+@keyframes enter {
+  0% {opacity: 0}
+  100% {opacity: 1}
+}
+
+
+/**
+ * Spinner
+ */
+
+.spinner {
+  animation: rotate 2s linear infinite;
+  z-index: 2;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: calc(var(--sc-spinner-size) / -2) 0 0 calc(var(--sc-spinner-size) / -2);
+  width: var(--sc-spinner-size);
+  height: var(--sc-spinner-size);
+
+  .path {
+    stroke: var(--sc-spinner-color);
+    stroke-linecap: round;
+    animation: dash 1.5s ease-in-out infinite;
+  }
+}
+
+@keyframes rotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes dash {
+  0% {
+    stroke-dasharray: 1, 150;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -35;
+  }
+  100% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -124;
+  }
+}

@@ -1,0 +1,17 @@
+/**
+ * DEPRECATED
+ */
+
+@function hsl-var($identifier, $hsl_value: false) {
+
+  @if $hsl_value {
+    $identifier_css_variable: var(#{'--sc-color-' + $identifier + $hsl_value});
+
+    @if $identifier_css_variable {
+      @return $identifier_css_variable;
+    } @else {
+      // TODO: Warning message
+      @return false;
+    }
+  }
+};

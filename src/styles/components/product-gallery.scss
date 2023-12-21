@@ -1,0 +1,70 @@
+.SC-ProductGallery, .ProductGallery {
+  @include pin-all-sides(fixed);
+  z-index: depth('floating');
+  background: white;
+  pointer-events: none;
+  opacity: 0;
+  text-align: center;
+  transition: 0.2s ease opacity;
+
+
+  // State: Active
+
+  &.is-active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+
+  /**
+   * Image
+   */
+
+  &_image {
+    max-width: image('huge');
+    width: 100%;
+    height: auto;
+    position: absolute;
+    z-index: var(--sc-depth-foreground);
+    top: 50%;
+    left: 50%;
+    transform-origin: center;
+    transition: 0.2s ease transform;
+    transform: translateY(-50%) translateX(-50%) scale(0.75);
+    cursor: zoom-in;
+
+
+    // State: Zoomed in
+
+    &.is-zoomed {
+      transform: translateY(-50%) translateX(-50%) scale(1);
+      cursor: grab;
+    }
+
+
+    // State: Dragging
+
+    &.is-dragging {cursor: grabbing;}
+  }
+
+
+  /**
+   * Close button
+   */
+
+   &_close {
+    @include reset-button-styles;
+    font-size: 0;
+    z-index: depth('floating');
+    position: absolute;
+    top: spacing('small');
+    right: spacing('small');
+    padding: spacing('base');
+
+    svg {
+      fill: shade($a: 0.9);
+      width: 15px;
+      height: 15px;
+    }
+  }
+}

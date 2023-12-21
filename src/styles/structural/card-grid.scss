@@ -1,0 +1,37 @@
+.SC-CardGrid, .CardGrid {
+  display: grid;
+  gap: var(--sc-spacing-base);
+  grid-template-columns: repeat(2, 1fr);
+  @include small-and-up {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  @include xlarge-and-up {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+
+  /**
+   * Variants
+   */
+
+  &-prominent {
+    @include small-and-up {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    @include large-and-up {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  &.is-offset-by-sidebar {
+    @include medium-and-up {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    @include large-and-up {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    @include xlarge-and-up {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+}

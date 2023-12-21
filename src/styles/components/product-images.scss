@@ -1,0 +1,126 @@
+$ProductImages: (
+  'max-image-width': none,
+  'thumbnail-width': 100px
+) !default;
+
+@if (map-has-key($override, 'ProductImages') == true) {
+  $ProductImages: map-extend($ProductImages, map-get($override, 'ProductImages'), true);
+}
+
+@function ProductImages($key) { @return map-get($ProductImages, $key); }
+
+
+.SC-ProductImages, .ProductImages {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  @include small-and-up {flex-direction: row-reverse;}
+  @include medium-and-up {flex-direction: column;}
+  @include xlarge-and-up {flex-direction: row-reverse;}
+
+
+  /**
+   * Main image
+   */
+
+  &_main {
+    cursor: zoom-in;
+    font-size: 0;
+    flex-grow: 1;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+
+    img, svg {
+      width: 100%;
+      max-width: ProductImages('max-image-width');
+    }
+  }
+
+
+  /**
+   * List of thumbnails
+   */
+
+  @mixin ListOfThumbnails($direction) {
+    @if $direction == 'y' {
+      width: ProductImages('thumbnail-width');
+      margin: 0 spacing('small') 0 0;
+    }
+    @if $direction == 'x' {
+      width: 100%;
+      margin: spacing('small') 0 0 0;
+    }
+  }
+
+
+  /**
+   * TODO: Handle overflow
+   */
+
+  &_thumbnails {
+    position: relative;
+    flex-shrink: 0;
+    font-size: 0;
+    margin: spacing('small') 0 0;
+    @include ListOfThumbnails('x');
+    @include small-and-up  {@include ListOfThumbnails('y')}
+    @include medium-and-up  {@include ListOfThumbnails('x')}
+    @include xlarge-and-up {@include ListOfThumbnails('y')}
+
+
+    // Track (with scroll)
+
+    @mixin thumbnailScroller($direction) {
+      @if $direction == 'x' {
+        flex-direction: row;
+        position: static;
+        width: 100%;
+      }
+      @if $direction == 'y' {
+        flex-direction: column;
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+      }
+    }
+
+    &_track {
+      overflow-y: auto;
+      display: flex;
+      align-items: center;
+      @include thumbnailScroller('x');
+      @include small-and-up  {@include thumbnailScroller('y')}
+      @include medium-and-up  {@include thumbnailScroller('x')}
+      @include xlarge-and-up {@include thumbnailScroller('y')}
+    }
+  }
+
+
+  /**
+   * Thumbnail
+   */
+
+  &_thumbnail {
+    cursor: pointer;
+    height: auto;
+    margin: 0 spacing('small') 0 0;
+    transition: 0.1s opacity ease;
+    width: 25%;
+    @include small-and-up {
+      width: 100%;
+      margin: 0 0 spacing('small');
+    }
+    @include medium-and-up {
+      width: 25%;
+      margin: 0 spacing('small') 0 0;
+    }
+    @include xlarge-and-up {
+      width: 100%;
+      margin: 0 0 spacing('small');
+    }
+
+    &.is-active, &:hover {opacity: 1;}
+  }
+}

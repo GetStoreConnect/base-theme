@@ -1,0 +1,38 @@
+.sc-pos-relative {
+  position: relative;
+}
+
+.sc-pos-absolute {
+  position: absolute;
+}
+
+.sc-pos-static {
+  position: static;
+}
+
+.sc-pos-sticky {
+  position: sticky;
+  top: 0;
+}
+
+.sc-top-100 {
+  top: 100%;
+}
+
+.sc-top-0 {
+  top: 0;
+}
+
+.sc-sides-0 {
+  left: 0;
+  right: 0;
+}
+
+
+/**
+ * DEPRECATED
+ */
+
+.u-position-relative {
+  position: relative;
+}
