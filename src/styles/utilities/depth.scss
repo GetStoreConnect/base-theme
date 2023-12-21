@@ -1,0 +1,5 @@
+@each $key, $value in $depths {
+  .sc-depth-#{$key} {
+    z-index: $value;
+  }
+}

@@ -1,0 +1,23 @@
+@mixin reset-button-styles {
+  background: none;
+  padding: 0;
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+
+@mixin reset-input-styles {
+  appearance: none;
+  -webkit-appearance: none;
+  background: none;
+  border: 0;
+  border-radius: 0;
+  outline: none;
+  cursor: pointer;
+}
+
+@mixin reset-list-styles {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}

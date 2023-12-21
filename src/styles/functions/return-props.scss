@@ -1,0 +1,31 @@
+/**
+ * DEPRECATED
+ */
+
+@function return-props($component, $child_key, $prop_key) {
+  @if $child_key {
+    // If the component contains child key
+    @if map-has-key($component, $child_key) {
+      $child_prop: map-get($component, $child_key);
+
+      // If the child is a map
+      @if type-of($child_prop) == 'map' {
+        // If the child contains the desired props
+        @if map-has-key($child_prop, $prop_key) {
+          @return map-get($child_prop, $prop_key);
+        } @else { @error "'#{$child_key}' does not contain '#{$prop_key}' props"; }
+      }
+      // Return the value
+      @else { @return $child_prop; }
+
+    } @else { @error "Component does not contain the prop '#{$child_key}'"; }
+  }
+
+  @else if type-of($component) == 'map' {
+    // If the component contains the desired props
+    @if map-has-key($component, $prop_key) {
+     @return map-get($component, $prop_key);
+    } @else { @error "Component does not contain '#{$prop_key}' props"; }
+
+  } @else { @error "Component does not contain a map of props"; }
+}

@@ -1,0 +1,19 @@
+:root {
+  --sc-depth-background: -1;
+  --sc-depth-neutral: 1;
+  --sc-depth-foreground: 2;
+  --sc-depth-floating: 3;
+  --sc-depth-overlay: 4;
+}
+
+$depths: (
+  'background':   -1,
+  'neutral':       1,
+  'foreground':    2,
+  'floating':      3,
+  'overlay':       4,
+) !default;
+
+@function depth($key) {
+  @return deep-map-get($depths, $key);
+}

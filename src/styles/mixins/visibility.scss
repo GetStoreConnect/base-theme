@@ -1,0 +1,9 @@
+@mixin toggle-visibility {
+  opacity: 0;
+  pointer-events: none;
+
+  &.is-active {
+    opacity: 1;
+    pointer-events: inherit;
+  }
+}

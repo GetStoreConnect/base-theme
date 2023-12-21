@@ -1,0 +1,88 @@
+.SC-CardCarousel, .CardCarousel {
+  overflow: hidden;
+  position: relative;
+  width: calc(100% + #{spacing('small')});
+  @include small-and-up  {
+    width: calc(100% + #{spacing('medium')});
+  }
+  @include medium-and-up  {
+    width: calc(100% + #{spacing('base')});
+  }
+  @include large-and-up {
+    width: calc(100% + #{spacing('large')});
+  }
+
+
+  /**
+   * Header
+   */
+
+  &_header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: spacing('small');
+    padding-right: spacing('small');
+    @include small-and-up {
+      padding-right: spacing('medium');
+    }
+    @include medium-and-up {
+      padding-right: spacing('base');
+    }
+    @include large-and-up {
+      padding-right: spacing('large');
+    }
+  }
+
+
+  /**
+   * Heading
+   */
+
+  &_heading {margin: 0;}
+
+
+  /**
+   * Track
+   */
+
+  &_track {
+    -webkit-overflow-scrolling: touch;
+    overflow-x: scroll;
+    display: flex;
+    padding-bottom: var(--sc-spacing-base);
+  }
+
+
+  /**
+   * Item
+   */
+
+  &_item {
+    width: 65%;
+    flex-shrink: 0;
+    padding-right: spacing('small');
+    @include small-and-up  {
+      width: 40%;
+      padding-right: spacing('medium');
+    }
+    @include medium-and-up {width: 30%;}
+    @include large-and-up {width: 27%;}
+    @include xlarge-and-up {width: 23%;}
+    @include huge-and-up {width: 20%;}
+
+
+    // Variants
+
+    .SC-CardCarousel-large &,
+    .CardCarousel-large & {
+      width: 85%;
+
+      @include medium-and-up  {width: 60%;}
+
+      @include xlarge-and-up {width: 45%;}
+
+      @include huge-and-up {width: 50%;}
+    }
+  }
+}

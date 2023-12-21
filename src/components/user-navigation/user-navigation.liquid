@@ -1,0 +1,52 @@
+<template id="sc-user-navigation">
+  <style>
+    menu {
+      padding: 0 var(--sc-spacing-base);
+      display: flex;
+      justify-content: flex-end;
+      list-style: none;
+    }
+
+    a {
+      display: inline-flex;
+      align-items: center;
+      text-decoration: none;
+      color: currentColor;
+      font-size: var(--sc-font-small);
+      padding: 0 var(--sc-spacing-small);
+      height: var(--sc-input-height);
+    }
+  </style>
+  <nav>
+    <menu>
+      <li class="SC-Menu_item dropdown sc-hide-up-to-medium">
+        {%- if current_customer != blank %}
+          <a href="{{ current_store.account_path }}" class="SC-Menu_link" data-nav-trigger="account">
+            Account
+            {% comment %} {{ "header.dropdowns.account.heading" | t }} {% endcomment %}
+          </a>
+          <sc-account-menu></sc-account-menu>
+        {%- else %}
+          <a href="{{ current_store.login_path }}" class="SC-Menu_link">
+            Login
+            {% comment %} {{ "header.dropdowns.account.login" | t }} {% endcomment %}
+          </a>
+        {%- endif %}
+      </li>
+      <li data-root-nav data-cart-menu>
+        <a href="{{ current_store.cart_path }}" class="SC-Menu_link sc-hide-up-to-medium" data-nav-trigger="cart">
+          <span class="sc-hide-up-to-medium u-pointer-events-none">
+            Cart
+            {% comment %} {{ "header.dropdowns.cart.heading" | t }} {% endcomment %}
+          </span>
+          {{ item_count }}
+        </a>
+        {% comment %} <a href="{{ current_store.cart_path }}" class="SC-Icon SC-Icon-button SC-Icon-large sc-hide-medium-and-up">
+          {%- render "shared/icons/cart" %}
+          {{ item_count }}
+        </a>
+        <sc-cart-preview></sc-cart-preview> {% endcomment %}
+      </li>
+    </menu>
+  </nav>
+</template>

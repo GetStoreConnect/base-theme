@@ -1,0 +1,181 @@
+.SC-Table, .Table {
+  position: relative;
+  z-index: var(--sc-depth-neutral);
+  display: flex;
+  flex-direction: column;
+  max-height: 100%;
+  overflow-x: auto;
+
+
+  /**
+   * Header
+   */
+
+  &_header {
+    position: sticky;
+    top: 0;
+    z-index: var(--sc-depth-foreground);
+    margin-bottom: spacing('small');
+  }
+
+
+  /**
+   * Section
+   */
+
+  &_section {
+    position: relative;
+    margin-bottom: spacing('small');
+  }
+
+
+  /**
+   * Row
+   */
+
+  &_row {
+    display: flex;
+
+
+    // Head
+
+    &-header {padding: spacing('tiny') 0;}
+  }
+
+
+  /**
+   * Column
+   */
+
+  &_cell {
+    display: flex;
+    flex-basis: 0;
+    flex-grow: 1;
+    background: white;
+
+    @include small-and-up {
+      padding: spacing('small');
+    }
+
+    @include up-to-small {
+      padding: spacing('tiny') spacing('small');
+      min-width: 70%;
+    }
+
+
+    // Header
+
+    &-header {
+      overflow-x: hidden;
+      font-weight: var(--sc-font-bold);
+      padding: spacing('medium') spacing('small');
+      @include small-and-up {
+        padding: spacing('base') spacing('small');
+      }
+    }
+
+
+    // Anchor
+
+    a {
+      text-decoration: underline;
+      &:hover {text-decoration: none;}
+    }
+
+
+    // Skinny
+
+    &-skinny {
+      flex-grow: 0;
+      flex-basis: 200px;
+    }
+
+
+    // Sticky
+
+    &-sticky {
+      position: sticky;
+      left: 0;
+      background: white;
+    }
+  }
+
+
+  /**
+   * Label
+   */
+
+  &_label {
+    color: currentColor;
+  }
+
+
+  /**
+   * Value
+   */
+
+  &_value {color: shade($a: 0.7);}
+}
+
+
+
+table {
+  &.sc-compact {
+    min-width: auto;
+  }
+
+  @include up-to-small {
+    th {
+      display: none;
+    }
+
+    td {
+      display: block;
+      margin-bottom: 0.25em;
+
+      &:first-child {
+        padding-top: .5em;
+      }
+
+      &:last-child {
+        padding-bottom: .5em;
+      }
+
+      padding-left: 8em;
+      text-indent: -8em;
+      word-break: break-all;
+      &:before {
+        content: " ";
+        text-indent: 0em;
+        width: 8em;
+        display: inline-block;
+      }
+
+      &[data-th] {
+        &:before {
+          content: attr(data-th)": ";
+          font-weight: bold;
+        }
+      }
+    }
+  }
+
+  @include small-and-up {
+    min-width: 100%;
+
+    th, td {
+      text-align: left;
+      vertical-align: top;
+      display: table-cell;
+      padding: .25em .5em;
+
+      &:first-child {
+        padding-left: 0;
+      }
+
+      &:last-child {
+        padding-right: 0;
+      }
+    }
+  }
+}

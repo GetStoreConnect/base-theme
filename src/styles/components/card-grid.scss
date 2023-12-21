@@ -1,0 +1,37 @@
+.SC-CardGrid, .CardGrid {
+  display: grid;
+  gap: var(--sc-spacing-base);
+  grid-template-columns: repeat(2, 1fr);
+  @media only screen and (min-width: 576px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  @media only screen and (min-width: 1400px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+
+  /**
+   * Variants
+   */
+
+  &-prominent {
+    @media only screen and (min-width: 576px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    @media only screen and (min-width: 992px) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  &.is-offset-by-sidebar {
+    @media only screen and (min-width: 768px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    @media only screen and (min-width: 992px) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    @media only screen and (min-width: 1400px) {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+}

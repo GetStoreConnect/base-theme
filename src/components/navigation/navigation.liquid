@@ -1,0 +1,42 @@
+<template id="sc-navigation">
+  <style>
+    :host {
+      grid-area: nav;
+    }
+
+    nav {
+      display: flex;
+      padding: 0 var(--sc-spacing-small);
+    }
+
+    menu {
+      display: flex;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    a {
+      display: inline-flex;
+      align-items: center;
+      text-decoration: none;
+      color: currentColor;
+      height: var(--sc-navigation-height);
+      padding: 0 var(--sc-spacing-base);
+    }
+  </style>
+  <nav role="navigation">
+    <menu>
+      {% for category in current_store.navigation_categories %}
+        <li>
+          <a href="{{ category.url }}">
+            {{ category.name }}
+          </a>
+          {% if category.navigation_children.size == 0 %}
+            <menu></menu>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </menu>
+  </nav>
+</template>

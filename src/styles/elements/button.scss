@@ -1,0 +1,7 @@
+button {
+  @include reset-button-styles;
+  cursor: pointer;
+  color: currentColor;
+  line-height: inherit;
+  text-align: left;
+}

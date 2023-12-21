@@ -1,0 +1,27 @@
+<template id="sc-footer">
+  <style>
+    :host {
+      grid-area: footer;
+    }
+
+    footer {
+      background-color: var(--sc-color-primary);
+      color: white;
+      padding: var(--sc-spacing-large);
+      min-height: 200px;
+    }
+  </style>
+  <footer>
+    {%- if current_store.footer_menu != blank %}
+      {{ current_store.footer_menu.render }}
+    {%- endif %}
+    <div style="opacity: 0.2">
+      &copy; {{ current_store.name | default: "StoreConnect" }} {{ current_store.timezone | now | date: "%Y" }}
+      {%- if current_privacy.accepted? %}
+        <div>
+          <a class="sc-show-privacy-settings">{{ "privacy.manage_settings" | t }}</a>
+        </div>
+      {%- endif %}
+    </div>
+  </footer>
+</template>

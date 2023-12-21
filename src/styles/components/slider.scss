@@ -1,0 +1,103 @@
+$Slider: (
+  'arrow': (
+    'size': 45px,
+    'bg': (
+      'resting': rgba(black,0.1),
+      'hover': rgba(black,0.2)
+    ),
+    'icon': asset-url('theme/icons/chevron.svg'),
+    'icon-size': 30%,
+
+  )
+) !default;
+
+@if (map-has-key($override, 'Slider') == true) {
+  $Slider: map-extend($Slider, map-get($override, 'Slider'), true);
+}
+
+@function Slider($keys...) { @return deep-map-get($Slider, $keys...); }
+
+
+/**
+ * Nesting to override the
+ * default 'tiny-slider' css
+ */
+
+.tns-outer {position: relative;}
+
+
+/**
+ * Arrow Controls
+ */
+
+.tns-controls {
+
+  button {
+    @include reset-button-styles;
+    z-index: var(--sc-depth-foreground);
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: 0.2s background-color ease;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 100%;
+    color: transparent; // Hides text
+    @include set('width', Slider('arrow','size'));
+    @include set('height', Slider('arrow','size'));
+    @include set-state-prop('background-color', Slider('arrow','bg'));
+    @include set('background-image', Slider('arrow','icon'));
+    @include set('background-size', Slider('arrow','icon-size'));
+
+
+    // Prev
+
+    &[data-controls=prev] {
+      left: spacing('small');
+      transform: translateY(-50%) rotate(90deg);
+      @include medium-and-up {left: spacing('base');}
+    }
+
+
+    // Next
+
+    &[data-controls=next] {
+      right: spacing('small');
+      transform: translateY(-50%) rotate(-90deg);
+      @include medium-and-up {right: spacing('base');}
+    }
+  }
+}
+
+
+/**
+ * Item
+ */
+
+.tns-item img {width: 100%;}
+
+
+/**
+ * Nav
+ */
+
+.tns-nav {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: spacing('base');
+  z-index: var(--sc-depth-foreground);
+  display: flex;
+  justify-content: center;
+
+  button {
+    @include reset-button-styles;
+    width: 10px;
+    height: 10px;
+    background: rgba(0,0,0,0.2);
+    border-radius: 100%;
+    margin: 0 6px;
+
+    &.tns-nav-active {background: rgba(0,0,0,0.7);}
+  }
+}

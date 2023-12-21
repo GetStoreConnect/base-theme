@@ -1,0 +1,38 @@
+/**
+ * DEPRECATED
+ */
+
+.SC-Section, .Section {
+  overflow: hidden;
+  width: 100%;
+  padding-top: spacing('large');
+  padding-bottom: spacing('large');
+
+
+  /**
+   * Header
+   */
+
+  &_header {
+    margin-bottom: spacing('base');
+    text-align: left;
+
+
+    // Heading
+
+    &_heading {
+      margin: 0;
+    }
+  }
+
+
+  /**
+   * Variant: Offset
+   */
+
+  &-offset {
+    background-color: shade('lightest');
+    padding-top: spacing('xlarge');
+    padding-bottom: spacing('xlarge');
+  }
+}

@@ -1,0 +1,78 @@
+$Breadcrumb: (
+  'hide-on-mobile': false,
+  'spacing': 0,
+  'font-size': (
+    'mobile': var(--sc-font-small),
+    'desktop': var(--sc-font-base)
+  ),
+  'color': (
+    'resting': shade('neutral'),
+    'hover': color('primary')
+  ),
+  'border': (
+    'width': 0
+  ),
+  'hover': (
+    'color': color('primary'),
+  ),
+  'divider': (
+    'symbol': "/",
+    'color': currentColor,
+    'spacing': spacing('tiny'),
+  )
+) !default;
+
+@if (map-has-key($override, 'Breadcrumb') == true) {
+  $Breadcrumb: map-extend($Breadcrumb, map-get($override, 'Breadcrumb'), true);
+}
+
+@function Breadcrumb($keys...) { @return deep-map-get($Breadcrumb, $keys...); }
+
+
+.SC-Breadcrumb, .Breadcrumb {
+  display: if(Breadcrumb('hide-on-mobile'), none, flex);
+  flex-wrap: wrap;
+  align-items: center;
+  color: Breadcrumb('color', 'resting');
+  border-style: solid;
+  border-color: Breadcrumb('border', 'color');
+  border-width: 0 0 Breadcrumb('border', 'width');
+  padding: 0;
+  margin: 0 0 spacing('base');
+  @include set-adaptive-prop('font-size', Breadcrumb('font-size'));
+  @include small-and-up {
+    display: flex;
+  }
+
+
+  /**
+   * Item
+   */
+
+  &_item {
+    display: flex;
+    align-items: center;
+
+
+    // Divider
+
+    &:after {
+      content: Breadcrumb('divider', 'symbol');
+      margin: 0 Breadcrumb('divider', 'spacing');
+      color: Breadcrumb('divider', 'color');
+    }
+
+    &:last-child:after {display: none;}
+  }
+
+
+  /**
+   * Link
+   */
+
+  a {
+    color: Breadcrumb('color', 'resting');
+
+    &:hover, &:focus {color: Breadcrumb('color', 'hover');}
+  }
+}

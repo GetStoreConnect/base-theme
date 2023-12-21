@@ -1,0 +1,51 @@
+.SC-ArticleCard, .ArticleCard {
+  display: block;
+
+  &:hover {
+    color: currentColor;
+  }
+
+
+  /**
+   * Image
+   */
+
+  &_image {
+    @include overlay;
+    position: relative;
+    display: block;
+    font-size: 0;
+    margin-bottom: var(--sc-spacing-medium);
+
+    img {width: 100%;}
+  }
+
+
+  /**
+   * Heading
+   */
+
+  &_heading {
+    font-size: var(--sc-font-base);
+    font-weight: var(--sc-font-bold);
+    color: var(--sc-shade-darkest);
+    @include medium-and-up {
+      font-size: var(--sc-font-medium);
+    }
+  }
+
+
+  /**
+   * Date
+   */
+
+  &_date {
+    font-size: var(--sc-font-small);
+    color: var(--sc-shade-neutral);
+    margin-top: var(--sc-spacing-tiny);
+    @include medium-and-up {
+      font-size: var(--sc-font-base);
+      margin-top: var(--sc-spacing-small);
+    }
+  }
+}

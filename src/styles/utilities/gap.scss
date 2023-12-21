@@ -1,0 +1,15 @@
+.sc-gap {
+  gap: var(--sc-spacing-base);
+}
+
+@each $name, $value in $spacing {
+  .sc-gap-#{$name} {
+    gap: $value;
+  }
+
+  @include medium-and-up {
+    .sc-gap-#{$name}-medium-and-up {
+      gap: $value;
+    }
+  }
+}

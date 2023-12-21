@@ -1,0 +1,162 @@
+/**
+ * Display
+ */
+
+.sc-display-inline-block {
+  display: inline-block;
+}
+
+.sc-display-inline {
+  display: inline;
+}
+
+.sc-display-block {
+  display: block;
+}
+
+
+/**
+ * Visibility
+ */
+
+.sc-hide {
+  display: none;
+}
+
+.sc-invisible {
+  visibility: hidden;
+}
+
+
+// Hide by breakpoint
+
+.sc-hide-up-to-small {
+  @include up-to-small {
+    display: none;
+  }
+}
+
+.sc-hide-up-to-medium {
+  @include up-to-medium {
+    display: none;
+  }
+}
+
+.sc-hide-up-to-large {
+  @include up-to-large {
+    display: none;
+  }
+}
+
+.sc-hide-medium-and-up {
+  @include medium-and-up {
+    display: none;
+  }
+}
+
+.sc-hide-large-and-up {
+  @include large-and-up {
+    display: none;
+  }
+}
+
+.sc-hide-xlarge-and-up {
+  @include xlarge-and-up {
+    display: none;
+  }
+}
+
+.sc-hide-huge-and-up {
+  @include huge-and-up {
+    display: none;
+  }
+}
+
+
+/**
+ * DEPRECATED
+ */
+
+.u-hide, .hide {display: none;}
+
+.u-hide-up-to-small {
+  @include up-to-small {
+    display: none;
+  }
+}
+
+.u-hide-up-to-medium {
+  @include up-to-medium {
+    display: none;
+  }
+}
+
+.u-hide-up-to-large {
+  @include up-to-large {
+    display: none;
+  }
+}
+
+.u-hide-medium-and-up {
+  @include medium-and-up {
+    display: none;
+  }
+}
+
+.u-hide-large-and-up {
+  @include large-and-up {
+    display: none;
+  }
+}
+
+.u-hide-xlarge-and-up {
+  @include xlarge-and-up {
+    display: none;
+  }
+}
+
+.u-hide-huge-and-up {
+  @include huge-and-up {
+    display: none;
+  }
+}
+
+.u-hide-inactive:not(.is-active) {
+  display: none;
+}
+
+.u-display-inline-block {display: inline-block;}
+
+.u-display-inline {display: inline;}
+
+.u-display-block {display: block;}
+
+.u-display-block-small-and-up {
+  @include small-and-up {display: block;}
+}
+
+.u-display-block-medium-and-up {
+  @include medium-and-up {display: block;}
+}
+
+.u-display-block-large-and-up {
+  @include large-and-up {display: block;}
+}
+
+.u-display-block-xlarge-and-up {
+  @include xlarge-and-up {display: block;}
+}
+
+.u-display-block-huge-and-up {
+  @include huge-and-up {display: block;}
+}
+
+.u-invisible {visibility: hidden;}
+
+.u-hide-tablet-and-up {@include tablet-and-up {display: none;}}
+
+.u-hide-mobile {@include mobile-only {display: none;}}
+
+.u-hide-handheld {@include tablet-only {display: none;}}
+
+.u-hide-desktop {@include xlarge-and-up {display: none;}}

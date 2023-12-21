@@ -1,0 +1,40 @@
+.sc-overflow-scroll {
+  overflow: scroll;
+}
+
+.sc-overflow-x-scroll {
+  overflow-x: scroll;
+}
+
+.sc-overflow-y-scroll {
+  overflow-y: scroll;
+}
+
+/**
+ * Deprecated
+ */
+
+.u-overflow-x-auto,
+.sc-overflow-x-auto {
+  overflow-x: auto;
+}
+
+.u-overflow-y-auto,
+.sc-overflow-y-auto {
+  overflow-y: auto;
+}
+
+.u-overflow-hidden,
+.sc-overflow-hidden {
+  overflow: hidden;
+}
+
+.u-overlfow-x-hidden,
+.sc-overflow-x-hidden {
+  overflow-x: hidden;
+}
+
+.u-overlfow-y-hidden,
+.sc-overflow-y-hidden {
+  overflow-y: hidden;
+}

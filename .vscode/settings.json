@@ -1,0 +1,4 @@
+{
+  "prettier.trailingComma": "none",
+  "debug.console.wordWrap": false
+}

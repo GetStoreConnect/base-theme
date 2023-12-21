@@ -1,0 +1,40 @@
+<template id="sc-product-card">
+  <style>
+    .ProductCard {
+      display: flex;
+      flex-direction: column;
+      text-decoration: none;
+      color: currentColor;
+      gap: var(--sc-spacing-small);
+      background-color: var(--sc-product-card-bg-color);
+      border-radius: var(--sc-product-card-border-radius);
+    }
+
+    .ProductCard_primary {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: var(--sc-spacing-tiny);
+    }
+
+    .ProductCard_secondary {
+      display: flex;
+      flex-direction: column;
+      text-align: center;
+      gap: var(--sc-spacing-tiny);
+    }
+  </style>
+  <a class="ProductCard" href="{{ this.href }}">
+    <div class="ProductCard_primary">
+      <slot name="image"></slot>
+      <slot name="tags"></slot>
+    </div>
+    <slot name="tags"></slot>
+    <div class="ProductCard_secondary">
+      <slot name="headline"></slot>
+      <slot name="description"></slot>
+      <slot name="price"></slot>
+    </div>
+  </a>
+  <sc-theme-button></sc-theme-button>
+</template>

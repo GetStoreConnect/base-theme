@@ -1,0 +1,12 @@
+@mixin overlay {
+  position: relative;
+
+  &:after {
+    content: '';
+    @include pin-all-sides(absolute);
+    background-color: rgba(black, 0);
+    transition: 0.2s background-color ease;
+  }
+
+  &:hover:after {background-color: rgba(black, 0.08);}
+}

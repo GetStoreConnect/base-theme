@@ -1,0 +1,58 @@
+/**
+ * Must be provided as HSL colours. We separate
+ * hue, saturation, lightness, and alpha values
+ * to allow greater flexibility in lightening,
+ * darkening, and otherwise adjusting colours
+ * without the use of SASS compilation.
+ */
+
+
+$colors: (
+  'primary':      hsl(212, 100%, 50%),
+  'secondary':    hsl(0, 0%, 15%),
+  'error':        hsl(0, 100%, 45%),
+  'sale':         hsl(0, 100%, 45%),
+  'bonus':        hsl(212, 100%, 50%)
+) !default;
+
+@if (map-has-key($core_override, 'colors') == true) {
+  $colors: map-extend($colors, map-get($core_override, 'colors'), true);
+}
+
+:root {
+  @each $key, $value in $colors {
+    --sc-color-#{$key}: #{$value};
+    --sc-color-#{$key}-h: #{hue($value)};
+    --sc-color-#{$key}-s: #{saturation($value)};
+    --sc-color-#{$key}-l: #{lightness($value)};
+  }
+}
+
+
+/**
+ * Used to retrieve variable values from a map. Usage:
+ * color('primary')
+ * color('primary', $l: 10%)
+ * color('primary', $a: 0.1)
+ */
+
+@function color($key, $lighten: false, $darken: false, $s: false, $l: false, $a: 1) {
+  $color: map-get($colors, $key);
+  $hue: var(--sc-color-#{$key}-h);
+  $saturation: var(--sc-color-#{$key}-s);
+  $lightness: var(--sc-color-#{$key}-l);
+  $alpha: var(--sc-color-#{$key}-a);
+
+  @if $lighten or $darken {
+    $lightness:
+      if($lighten,
+        calc(#{$lightness} + #{$lighten}),
+        calc(#{$lightness} - #{$darken}));
+  }
+
+  @if $l {$lightness: $l;}
+  @if $s {$saturation: $s;}
+  @if $a {$alpha: $a;}
+
+  @return hsla($hue, $saturation, $lightness, $alpha);
+}

@@ -1,0 +1,59 @@
+$dl: (
+  'bg': transparent,
+  'bg-offset': shade('lightest'),
+  'definition': (
+    'color': shade($a: 0.8),
+    'weight': var(--sc-font-normal),
+  ),
+  'term': (
+    'color': shade('neutral'),
+    'width': 185px
+  )
+) !default;
+
+@if (map-has-key($core_override, 'dl') == true) {
+  $dl: map-extend($dl, map-get($core_override, 'dl'), true);
+}
+
+@function dl($keys...) { @return deep-map-get($dl, $keys...); }
+
+
+dl {
+  margin: 0;
+  display: inline-grid;
+  grid-template-columns: dl('term','width') 1fr;
+
+  dt, dd {
+    height: 100%;
+    background: dl('bg');
+    padding: spacing('small') spacing('medium');
+
+    &:nth-of-type(2n) {background: dl('bg-offset');}
+
+    &:only-of-type {padding: 0;}
+  }
+
+
+  /**
+   * Term
+   */
+
+  dt {
+    color: dl('term','color');
+
+    &:only-of-type {
+      padding-right: spacing('medium');
+    }
+  }
+
+
+  /**
+   * Definition
+   */
+
+  dd {
+    margin: 0;
+    color: dl('definition','color');
+    font-weight: dl('definition','weight');
+  }
+}

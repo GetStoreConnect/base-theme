@@ -1,0 +1,23 @@
+<template id="sc-product-points">
+  {%- if current_store.display_points? and product.pricing.hide_price? == false %}
+    sdf
+    {%- unless product.restricted? and product.restricted_text != blank %}
+      {%- if product.pricing.can_earn_points? and product.pricing.total_earn_points > 0 %}
+        <div class="SC-ProductCard_points">
+          {{ "pricing.points.earn.earn_label" | t }}
+          {%- if product.pricing.variable_pricing? %}
+            {{ "pricing.points.earn.variable_points_label" | t }}
+          {%- endif %}
+          {%- if product.pricing.points_bonus? %}
+            <span class="SC-ProductCard_points_earn is-bonus">
+              {{ product.pricing.total_earn_points }}
+            </span>
+          {%- endif %}
+          <span class="SC-ProductCard_points_earn{% if product.pricing.points_bonus? %} is-original{% endif %}">
+            {{ product.pricing.earn_points | points }}
+          </span>
+        </div>
+      {%- endif %}
+    {%- endunless %}
+  {%- endif %}
+</template>

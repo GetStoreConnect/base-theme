@@ -1,0 +1,18 @@
+.sc-rich-text,
+.rich-text {
+
+  pre {
+    background: rgb(235, 236, 240);
+    font-family: var(--sc-font-family);
+    font-size: var(--sc-font-base);
+    margin: 0 0 var(--sc-spacing-base);
+    padding: var(--sc-spacing-small);
+    overflow-x: auto;
+    white-space: unset;
+  }
+
+  a:not([class]) {
+    color: color('primary');
+    text-decoration: underline;
+  }
+}

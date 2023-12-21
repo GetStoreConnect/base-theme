@@ -1,9 +1,0 @@
-:root {
-  --sc-shade-lightest: hsl(0, 0%, 95%);
-  --sc-shade-lighter: hsl(0, 0%, 87%);
-  --sc-shade-light: hsl(0, 0%, 70%);
-  --sc-shade-neutral: hsl(0, 0%, 45%);
-  --sc-shade-dark: hsl(0, 0%, 30%);
-  --sc-shade-darker: hsl(0, 0%, 10%);
-  --sc-shade-darkest: hsl(0, 0%, 0%);
-}

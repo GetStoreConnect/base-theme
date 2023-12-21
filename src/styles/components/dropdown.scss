@@ -1,0 +1,136 @@
+$Dropdown: (
+  'button': (
+    'weight': var(--sc-font-bold),
+    'color': shade('darkest'),
+  ),
+  'menu': (
+    'shadow': 0 4px 10px shade($a: 0.08),
+  )
+) !default;
+
+@if (map-has-key($override, 'Dropdown') == true) {
+  $Dropdown: map-extend($Dropdown, map-get($override, 'Dropdown'), true);
+}
+
+@function Dropdown($keys...) { @return deep-map-get($Dropdown, $keys...); }
+
+
+.SC-Dropdown, .Dropdown {
+  position: relative;
+  margin-right: spacing('base');
+
+  &:last-child {margin: 0;}
+
+
+  /**
+   * Button
+   */
+
+  &_button {
+    @include reset-button-styles;
+    line-height: 1;
+    position: relative;
+    z-index: var(--sc-depth-foreground);
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: spacing('small') spacing('medium');
+    border-radius: var(--sc-border-radius);
+    font-weight: Dropdown('button','weight');
+    color: Dropdown('button','color');
+    border: 1px solid transparent;
+
+    @include medium-and-up {
+      &:hover {
+        background-color: color('primary', $l: 97%);
+        color: color('primary');
+      }
+    }
+
+    .is-active & {
+      background-color: white;
+      border: 1px solid shade('lighter');
+      border-bottom-color: transparent;
+      color: currentColor;
+      border-radius: var(--sc-border-radius) var(--sc-border-radius) 0 0;
+
+      &:hover {box-shadow: none;}
+
+      svg {transform: rotate(180deg);}
+    }
+
+
+    // Label
+
+    &_label {
+      color: currentColor;
+    }
+
+
+    // Icon
+
+    svg {
+      width: 10px;
+      height: 10px;
+      margin-left: 5px;
+      transform: translateY(1px);
+    }
+  }
+
+
+  /**
+   * Body
+   */
+
+  &_body {
+    z-index: var(--sc-depth-neutral);
+    position: absolute;
+    left: 0;
+    min-width: 300px;
+    margin-top: -1px;
+    background: white;
+    border-radius: var(--sc-border-radius) 0 var(--sc-border-radius) var(--sc-border-radius);
+    padding: spacing('medium');
+    border: 1px solid shade('lighter');
+    box-shadow: Dropdown('menu','shadow');
+
+
+    // State: Active
+
+    .SC-Dropdown.is-active &,
+    .Dropdown.is-active & {display: block;}
+
+
+    // Variant: Right
+
+    &-right {
+      left: auto;
+      right: 0;
+    }
+  }
+
+
+  /**
+   * Option
+   */
+
+  &_option {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: spacing('small');
+    transition: 200ms background-color ease,
+                200ms color ease;
+
+    &:hover {color: color('primary');}
+  }
+
+  input:checked ~ .SC-Dropdown_option,
+  input:checked ~ .Dropdown_option {
+    color: color('primary');
+  }
+
+  label {margin: 0;}
+
+  input {display: none;}
+}

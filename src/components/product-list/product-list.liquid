@@ -1,0 +1,48 @@
+<template id="sc-product-list">
+  <style>
+    ul {
+      margin: 0;
+      padding: var(--sc-spacing-base) var(--sc-spacing-small);
+      gap: var(--sc-spacing-small);
+      display: grid;
+      grid-template-columns: repeat(
+        auto-fill,
+        minmax(var(--sc-product-card-min-width), 1fr)
+      );
+    }
+
+    h3, p {
+      margin: 0;
+    }
+  </style>
+
+  <ul>
+    {% for product in products %}
+      <sc-product-card href="{{ product.path }}">
+        {% if product.image == blank %}
+          <sc-placeholder
+            slot="image"
+            height="200"
+            rx="6"
+          ></sc-placeholder>
+        {% else %}
+          <img
+            slot="image"
+            loading="lazy"
+            src="{{ product.image.medium_url }}"
+          />
+        {% endif %}
+        {% if product.tags.size > 0 %}
+          <div slot="tags">
+            {% for tag in product.tags %}
+              <sc-base-tag>{{ tag.value }}</sc-base-tag>
+            {% endfor %}
+          </div>
+        {% endif %}
+        <h3 slot="headline">{{ product.name  }}</h3>
+        <p slot="description">{{ product.description }}</p>
+        <p slot="price">{{ product.pricing.price }}</p>
+      </sc-product-card>
+    {% endfor %}
+  </ul>
+</template>

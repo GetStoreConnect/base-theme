@@ -1,22 +1,22 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>StoreConnect Test Page</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" />
-    <link rel="stylesheet" href="/stylesheets/theme.scss" />
-    <script src="https://cdn.jsdelivr.net/npm/liquidjs/dist/liquid.browser.umd.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"
+    />
+    <link rel="stylesheet" href="/src/styles/theme.scss" />
+    <script type="module" src="/src/scripts/theme.js"></script>
   </head>
-  <body>
-    <main></main>
-    <script type="module">
-      import { fetchAndParseTemplate } from './javascripts/system/templates.js'
-
-      fetchAndParseTemplate('./templates/pages/products.liquid', page => {
-        document.querySelector('main').appendChild(page)
-      })
-    </script>
-    <script type="module" src="/javascripts/products.js"></script>
+  <body data-mode="theme">
+    <div>
+      <sc-top-bar></sc-top-bar>
+      <main></main>
+      <sc-footer></sc-footer>
+    </div>
+    <sc-theme-form></sc-theme-form>
+    <script type="module" src="/src/pages/products/products.js"></script>
   </body>
 </html>

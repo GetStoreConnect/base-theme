@@ -1,0 +1,18 @@
+$Alert: (
+  'bg': #f9d1cc,
+  'color': color('error')
+) !default;
+
+@if (map-has-key($override, 'Alert') == true) {
+  $Alert: map-extend($Alert, map-get($override, 'Alert'), true);
+}
+
+@function Alert($keys...) { @return deep-map-get($Alert, $keys...); }
+
+.SC-Alert, .Alert {
+  background: Alert('bg');
+  color: Alert('color');
+  padding: spacing('base');
+  border-radius: var(--sc-border-radius);
+  margin-bottom: spacing('base');
+}

@@ -1,0 +1,78 @@
+.SC-ProductListCard, .ProductListCard {
+  @include reset-button-styles;
+  cursor: inherit;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  text-align: left;
+  margin: 0;
+  border-radius: var(--sc-border-radius);
+  font-size: var(--sc-font-small);
+
+
+  /**
+   * Image
+   */
+
+  &_image {
+    position: relative;
+    flex-shrink: 0;
+    font-size: 0;
+  }
+
+
+  /**
+   * Detail
+   */
+
+  &_detail {
+    align-self: center;
+    flex-grow: 1;
+
+
+    // Heading
+
+    &_headline {
+      font-size: var(--sc-font-base);
+      font-weight: var(--sc-font-bold);
+      margin-bottom: spacing('tiny');
+    }
+
+
+    // Subheadline
+
+    &_subheadline {
+      color: shade('neutral');
+    }
+  }
+
+
+  /**
+   * Remove
+   */
+
+  &_remove {
+    align-self: center;
+  }
+
+
+  /**
+   * Variants
+   */
+
+  &-placeholder {
+    transition: 200ms background-color ease;
+    padding: spacing('tiny');
+
+    .SC-ProductImage,
+    .ProductImage {
+      border: 1px dashed shade('lighter');
+    }
+  }
+
+  &-trigger {
+    cursor: pointer;
+
+    &:hover {background-color: hsl(0,0,95%);}
+  }
+}

@@ -1,0 +1,162 @@
+/**
+ * Privacy banner
+ */
+
+.SC-PrivacyBanner {
+  @include container-padding;
+  z-index: var(--sc-depth-foreground);
+  position: sticky;
+  top: 120px;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  gap: spacing('base');
+  align-items: center;
+  padding-top: spacing('base');
+  padding-bottom: spacing('base');
+  background-color: white;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+
+  @include medium-and-up {
+    flex-direction: row;
+  }
+
+
+  // Markdown
+
+  &_markdown {
+    flex-grow: 1;
+
+    p:last-of-type {margin-bottom: 0;}
+  }
+
+
+  // Actions
+
+  &_actions {
+    display: flex;
+    gap: spacing('small');
+    flex-shrink: 0;
+    align-items: center;
+
+    button, input[type=submit] {
+      @include reset-button-styles;
+      flex-shrink: 0;
+      border-radius: edges('border','radius');
+      padding: spacing('small') spacing('base');
+      background-color: color('secondary');
+      color: white;
+    }
+  }
+}
+
+
+/**
+ * Privacy settings form
+ */
+
+.SC-PrivacySettingsForm {
+  z-index: depth('overlay');
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: 0.2s opacity ease;
+  pointer-events: none;
+
+  &.is-active {
+    pointer-events: inherit;
+    opacity: 1;
+  }
+
+  &_overlay {
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+    background-color: hsla(0, 0%, 0%, 0.5);
+  }
+
+  &_inner {
+    position: absolute;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 90vw;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    background: white;
+    border-radius: edges('border','radius');
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15),
+                0 1px 1px rgba(0, 0, 0, 0.05);
+
+    @include medium-and-up {
+      max-width: 700px;
+    }
+  }
+
+  &_header {
+    padding: spacing('large') spacing('large') 0;
+  }
+
+  &_body {
+    padding: 0 spacing('large');
+    max-height: 50vh;
+    overflow-y: auto;
+
+
+    // TODO: Refactor to Accordion modifier
+    .Accordion_header_heading {
+      white-space: inherit;
+      overflow: visible;
+    }
+  }
+
+  &_footer {
+    padding: spacing('large');
+  }
+}
+
+
+/**
+ * Cookie
+ */
+
+.SC-Cookie {
+  display: flex;
+  align-items: center;
+  gap: spacing('small');
+  font-size: font('size','small');
+  margin-bottom: spacing('base');
+  @include medium-and-up {
+    gap: spacing('large');
+  }
+
+  &_details {flex-grow: 1;}
+
+  &_name {
+    margin-bottom: spacing('tiny');
+    font-weight: font('weight','bold');
+  }
+
+  &_control {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: spacing('small');
+    @include small-and-up {
+      flex-direction: row;
+    }
+
+    label {
+      flex-shrink: 0;
+      margin: 0;
+      color: shade('neutral');
+      font-size: font('size','small');
+    }
+  }
+}
