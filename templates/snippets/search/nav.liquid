@@ -1,0 +1,13 @@
+<nav class="SC-PageNav SC-PageNav-inline">
+  {% assign source = current_search.fields.source %}
+  {% assign sources = current_search.fields.sources %}
+  {% for source_option in sources.options %}
+    {%- if sources.value contains source_option.value %}
+      <a href="{{ current_search.path }}" data-search-nav-source="{{ source_option.value }}"
+        class="SC-PageNav_link{% if source.value == source_option.value %} is-current{% endif %}">
+        {{ source_option.label }}
+        ({{ current_search.results[source_option.value].size }})
+      </a>
+    {%- endif %}
+  {% endfor %}
+</nav>
