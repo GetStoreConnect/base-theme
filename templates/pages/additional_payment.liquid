@@ -1,0 +1,23 @@
+<div class='sc-container sc-container-skinny sc-container-spacious' data-general-error-message="{{ "checkout.payment.error" | t }}">
+  <a href="{{ current_order.path }}" class="SC-Link sc-mb-large">
+    {{ "accounts.orders.navigation.back_to_show" | t }}
+  </a>
+  <div class="SC-Panel_header">
+    <div class="SC-Panel_header_heading">
+      {{ "checkout.payment.header" | t }}
+    </div>
+  </div>
+
+   <div class="SC-Grid">
+     <div class="SC-Grid_main">
+        {%- if current_order.total_payable <= 0 %}
+          {{ "additional_payments.not_required" | t }}
+        {%- else %}
+          {% render "checkout/payment_information/select_and_payment" %}
+        {%- endif %}
+     </div>
+     <div class="SC-Grid_summary sc-mb-base">
+      {% render "orders/order_summary", source: current_order %}
+     </div>
+   </div>
+ </div>

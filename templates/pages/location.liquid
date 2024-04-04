@@ -8,11 +8,11 @@
 {%- endunless %}
 {%- assign google_maps_api_key = store_variables['google_maps_api_key'] %}
 
-<article data-location-search class="sc-pos-relative sc-border-bottom sc-md:flex-row">
+<article data-location-record class="sc-pos-relative sc-border-bottom sc-md:flex-row">
   <section
     itemscope itemtype="https://schema.org/LocalBusiness"
     class="sc-md:40vw sc-lg:30vw sc-no-shrink sc-pos-relative sc-flex-col sc-shadow-2">
-    <div class="sc-shadow-2 sc-p-base">
+    <div class="sc-p-base">
       <a href="{{ nav_path }}" class="sc-color-primary sc-flex-row sc-gap-tiny sc-align-items-center">
         {%- render "icons/chevron", width: 12, style_class: "sc-rotate-90" %}
         <span>{{ nav_label }}</span>
@@ -83,7 +83,7 @@
   {%- unless google_maps_api_key == blank %}
     {%- render "shared/loader", active: true, contextual: true %}
     <div
-      data-location-search-map
+      data-location-map
       data-title="{{ location.name }}"
       data-lat="{{ location.latitude }}"
       data-lng="{{ location.longitude }}"
@@ -91,7 +91,7 @@
       style="width: 100%; height: 100%;"></div>
   {%- else %}
     <iframe
-      data-location-search-map
+      data-location-map
       class="sc-bg-shade-lightest"
       style="width: 100%; height: calc(100vh);"
       frameborder="0"
@@ -103,7 +103,12 @@
   {%- endunless %}
 </article>
 
-<script src="{{ 'location-search.js' | asset_url }}"></script>
 {%- unless google_maps_api_key == blank %}
-  <script async src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&libraries=places&callback=StoreConnect.LocationSearch.initWithMap&v=weekly"></script>
+  <script>
+    (g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})({
+      key: "{{ google_maps_api_key }}",
+      v: "weekly"
+    });
+  </script>
+  <script src="{{ 'location.js' | asset_url }}"></script>
 {%- endunless %}
