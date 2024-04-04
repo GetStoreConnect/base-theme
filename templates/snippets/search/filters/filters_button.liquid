@@ -1,0 +1,19 @@
+{%- default width: 16 %}
+{%- default stroke: 12 %}
+
+<button
+  onclick="window.StoreConnectUI.Filters.toggle()"
+  class="SC-Button SC-Button-subtle" type="button"
+  id="SC-ProductCategoryFiltersButton"
+  data-filters-trigger>
+  <svg class="sc-mr-tiny" width="{{ width }}" viewBox="0 0 100 100">
+    <rect x="0" y="20" width="100%" height="{{ stroke }}" rx="{{ stroke | divided_by: 2 }}"></rect>
+    <rect x="0" y="67" width="100%" height="{{ stroke }}" rx="{{ stroke | divided_by: 2 }}"></rect>
+    <ellipse cx="35%" cy="26" rx="14" ry="14" stroke-width="{{ stroke }}" fill="white" stroke="currentColor"></ellipse>
+    <ellipse cx="65%" cy="73" rx="14" ry="14" stroke-width="{{ stroke }}" fill="white" stroke="currentColor"></ellipse>
+  </svg>
+  <span>
+    {{ 'shared.filters_button.show' | t }}
+    {{ 'shared.filters_button.filter' | t }}
+  </span>
+</button>

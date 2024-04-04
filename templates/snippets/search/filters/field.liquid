@@ -1,0 +1,33 @@
+{%- default field: blank %}
+{%- default label: blank %}
+{%- default data_attribute: blank %}
+{%- default style_class: blank %}
+
+{% if field.options.size > 0 %}
+  {%- for option in field.options %}
+    {%- assign id = field.id | append: option.label | parameterize %}
+    {%- if field.value contains option.value -%}
+      {%- assign checked = true -%}
+    {%- else -%}
+      {%- assign checked = false -%}
+    {%- endif -%}
+
+    <label {%- if data_attribute %}{{ data_attribute }}{%- endif %}
+      class="SC-Checkbox{%- if style_class %} {{ style_class }}{%- endif %}">
+      <input
+        class="SC-Checkbox_input"
+        type="checkbox"
+        name="{{ field.name }}"
+        value="{{ option.value }}"
+        onchange="window.StoreConnectUI.Filters.submit()"
+        {%- if checked == true %}checked{% endif %}/>
+      <div class="SC-Checkbox_label">
+        {%- if label == blank %}
+          {{ option.label }}
+        {%- else %}
+          {{ label }}
+        {%- endif %}
+      </div>
+    </label>
+  {%- endfor %}
+{%- endif %}

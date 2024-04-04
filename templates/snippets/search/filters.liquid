@@ -1,0 +1,53 @@
+{%- default fields: current_search.fields %}
+
+<form url="{{ current_search.path }}" method="get" class="SC-Overlay" local="true" data-filters scope>
+  <div class="SC-Overlay_close" onclick="window.StoreConnectUI.Filters.toggle()">
+    {{ "search.filters.close" | t }}
+  </div>
+
+  <div class="SC-Overlay_body">
+    <section class="SC-Filters">
+      <div id="SC-FilterByKeyword" class="SC-Field SC-Field-icon SC-Field-special">
+        {%- if current_product_category == blank %}
+          {%- assign placeholder = "search.filters.global_placeholder" | t %}
+        {%- else %}
+          {%- assign placeholder = "search.filters.category_placeholder" | t: name: current_product_category.name %}
+        {%- endif %}
+        <input type="search"
+          name="q"
+          value="{{ fields.q.value }}"
+          placeholder="{{ placeholder }}"
+          class="SC-Field_input">
+        {%- render "shared/icons/search" %}
+      </div>
+
+      {%- if fields.filters %}
+        {%- render "search/filters/sources", fields: fields %}
+        {%- if current_product_category != blank %}
+          {%- render "search/filters/traits", fields: fields %}
+        {%- endif %}
+
+        {%- render "search/filters/tags", fields: fields %}
+        {%- if theme_variables["products.brands"] == true %}
+          {%- render "search/filters/brands", fields: fields %}
+        {%- endif %}
+
+        {%- render "search/filters/price_availability", fields: fields %}
+
+        {%- if current_product_category == blank %}
+          {%- render "search/filters/categories", fields: fields %}
+        {%- endif %}
+      {%- endif %}
+
+      <input name="source" type="hidden" value="{{ current_search.type }}"/>
+      <input name="{{ fields.sort.name }}" type="hidden" value="{{ fields.sort.value }}"/>
+    </section>
+  </div>
+
+
+  <footer class="SC-Overlay_footer">
+    <button class="SC-Button SC-Button-primary SC-Button-expanded" type="submit">
+      {{ "search.filters.apply_filters" | t }}
+    </button>
+  </footer>
+</form>

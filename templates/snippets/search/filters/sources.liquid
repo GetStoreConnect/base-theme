@@ -1,0 +1,12 @@
+{%- default fields: current_search.fields %}
+{%- assign sources = fields.sources %}
+
+{% if sources and theme_variables["sources.user_choice"] == true %}
+  {% capture content %}
+    {% render "search/filters/field", field: sources %}
+  {% endcapture %}
+  {% render "shared/accordion",
+            data_attribute: "data-filter data-featured data-count",
+            heading: "t.search.filters.sources",
+            content: content %}
+{% endif %}
