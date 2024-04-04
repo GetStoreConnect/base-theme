@@ -21,7 +21,9 @@
       <div class="SC-CardCarousel_track">
         {%- for product in content_block.products %}
           <div class="SC-CardCarousel_item">
-            {%- render "products/card", product: product %}
+            {%- cache "product", items: [product, current_store, current_customer] -%}
+              {%- render "products/card", product: product %}
+            {%- endcache -%}
           </div>
         {%- endfor %}
       </div>
