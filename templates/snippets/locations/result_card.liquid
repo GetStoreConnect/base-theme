@@ -21,7 +21,6 @@
 
   <div
     class="sc-bg-white sc-border sc-border-radius sc-shadow sc-pos-relative sc-flex-col"
-    style="min-width: 340px"
     itemscope itemtype="https://schema.org/LocalBusiness"
     data-location
     data-id="{{ match.identifier }}"
@@ -45,16 +44,16 @@
       {%- unless match.logo == blank %}
         <img src="{{ match.logo.pico_url }}" alt="{{ match.name }}" width="60">
       {%- endunless %}
-      <span class="sc-flex-col sc-expand sc-gap-micro sc-font-small">
+      <span class="sc-flex-col sc-expand sc-gap-micro">
         <div itemprop="name" class="sc-truncate">
           <strong>{{ match.name }}</strong>
         </div>
         {%- if distance_string != blank %}
-          <div class="sc-shade-dark">
+          <div>
             {{ "locations.search.results.formatters.distance_away" | t: distance: distance_string }}
           </div>
         {%- endif %}
-        <div class="sc-truncate sc-shade-dark">
+        <div class="sc-truncate sc-shade-dark sc-font-small">
           {%- render "shared/address_multi_line", street1: match.street, city: match.city, state: match.state, country: match.country, postal_code: match.postal_code %}
         </div>
         {%- unless match.phone == blank %}
