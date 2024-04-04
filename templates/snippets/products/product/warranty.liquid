@@ -1,0 +1,8 @@
+{%- if product.warranty_content != blank %}
+  {%- capture content %}
+    <div class="sc-rich-text">
+      <div>{{ product.warranty_content }}</div>
+    </div>
+  {%- endcapture %}
+  {% render "shared/accordion", heading: product.warranty_label, content: content %}
+{%- endif %}

@@ -1,0 +1,196 @@
+{%- default product: blank -%}
+{%- default strip_zeroes: true -%}
+{%- default large: true -%}
+
+{% unless product == blank %}
+  {%- assign pricing = product.pricing %}
+  <div class="sc-mb-tiny sc-font-{% if large %}large{% else %}small{% endif %}">
+    {%- if product.restricted? and product.restricted_text != blank %}
+      {{ product.restricted_text }}
+    {%- else %}
+      {%- if pricing.hide_price? %}
+        {{ pricing.hide_price_text }}
+      {%- elsif pricing.has_price? %}
+        {%# Deposit %}
+        {%- if pricing.deposit_required? %}
+          <div class="sc-mb-tiny sc-font-{% if large %}large{% else %}small{%- endif -%}" data-deposit-price>
+            {{ "pricing.deposit" | t }}
+
+            {%# Currency Price %}
+            {%- if pricing.use_currency? and pricing.checkout_price > 0 %}
+              <span data-currency>{{ pricing.checkout_price | money }}</span>
+            {%- endif %}
+
+            {%# Points Price %}
+            {%- if pricing.use_points? and pricing.checkout_points > 0 %}
+              <span data-points>{{ pricing.checkout_points | points }}</span>
+            {%- endif %}
+          </div>
+        {%- else %}
+
+
+
+
+          {%# Current Price %}
+          {%- if current_store.display_currency? and pricing.can_purchase_with_currency? %}
+            {%# Currency %}
+            {%- if pricing.price == 0 %}
+              {{ "pricing.free" | t }}
+            {%- else %}
+              <span data-current-price>
+                {% if pricing.variable_pricing? %}
+                  {%- capture price %}{{ pricing.price | money }}{%- endcapture %}
+                  {{ "pricing.variable" | t: price: price }}
+                {%- else -%}
+                  {{ pricing.price | money }}
+                {%- endif %}
+              </span>
+            {%- endif %}
+          {%- endif -%}
+
+          {%- if current_store.display_points? and pricing.can_purchase_with_points? %}
+            {%# Or %}
+            {%- if current_store.display_currency? and pricing.can_purchase_with_currency? %}
+              {{ "pricing.currency_or_points_connector" | t }}
+            {%- elsif pricing.variable_pricing? %}
+              {%# From %}
+              {{ "pricing.points.purchase.variable" | t }}
+            {%- endif %}
+
+            {%# Points %}
+            {%- if pricing.points == 0 %}
+              {{ "pricing.free" | t }}
+            {%- else %}
+              <span data-current-points-price>
+                {{ pricing.points | points }}
+              </span>
+            {%- endif %}
+          {%- endif %}
+
+          {%# Original Price %}
+          <div>
+            {%- if pricing.on_sale? and current_store.display_currency? and pricing.can_purchase_with_currency? %}
+              {%# Currency %}
+              <span class="sc-color-sale sc-font-{% if large %}base{% else %}tiny{% endif %}" data-original-price>
+                {%- capture price %}{{ pricing.original_price | money }}{%- endcapture %}
+                {{ "products.pricing.original_price" | t: amount: price }}
+              </span>
+            {%- endif %}
+
+            {%- if pricing.points_sale? and current_store.display_points? and pricing.can_purchase_with_points? %}
+              {%- if current_store.display_points? and pricing.can_purchase_with_points? %}
+                {% default both_on_sale: blank %}
+
+                {%# Or %}
+                {%- if pricing.on_sale? and current_store.display_currency? and pricing.can_purchase_with_currency? %}
+                  {% assign both_on_sale = true %}
+                  {{ "pricing.currency_or_points_connector" | t }}
+                {%- elsif pricing.variable_pricing? %}
+                  {%# From %}
+                  {{ "pricing.points.purchase.variable" | t }}
+                {%- endif %}
+              {%- endif %}
+
+              {%# Points %}
+              <span class="sc-color-sale sc-font-{% if large %}base{% else %}tiny{% endif %}" data-original-points-price>
+                {%- if both_on_sale == true %}
+                  {{ pricing.original_points | points }}
+                {%- else %}
+                  {%- capture points %}{{ pricing.original_points | points }}{%- endcapture %}
+                  {{ "products.pricing.original_price" | t: amount: points }}
+                {%- endif %}
+              </span>
+            {%- endif %}
+          </div>
+        {%- endif %}
+
+
+
+        {%# Full Price %}
+        {%- if pricing.deposit_required? %}
+          <div class="sc-shade-neutral sc-font-{% if large %}base{% else %}tiny{% endif %}" data-deposit-full-price>
+            {{ "pricing.total_due" | t }}
+
+            {%# Currency Price %}
+            {%- if pricing.use_currency? %}
+              <span data-currency>{{ pricing.price | money }}</span>
+            {%- endif %}
+
+            {%# Points Price %}
+            {%- if pricing.use_points? %}
+              <span data-points>{{ pricing.points | points }}</span>
+            {%- endif %}
+          </div>
+        {%- endif %}
+
+        {%# Subscriptions %}
+        {%- if product.subscription? %}
+          {%- capture timespan %}
+            {%- liquid
+              assign term = pricing.subscription_term | round
+              assign unit = pricing.subscription_term_unit
+
+              if term != blank and unit != blank
+                render "shared/subscriptions/term_unit", unit: unit, number: term
+              endif
+            %}
+          {%- endcapture %}
+          <div class="sc-mt-tiny sc-shade-neutral sc-font-{% if large %}base{% else %}tiny{% endif %}">
+            {{ "pricing.subscription_timespan" | t: timespan: timespan }}
+          </div>
+
+          {%# Fixed-term Subscriptions %}
+          {%- if pricing.fixed_term_subscription? %}
+            {%- capture full_timespan %}
+              {%- liquid
+                assign term = pricing.subscription_term | round
+                assign unit = pricing.subscription_term_unit
+                assign term_count = pricing.subscription_term_count | round
+
+                if term != blank and unit != blank and term_count != blank
+                  assign term_total = term | times: pricing.subscription_term_count
+                  render "shared/subscriptions/term_unit", unit: unit, number: term_total
+                endif
+              %}
+            {%- endcapture %}
+            {%- liquid
+              if pricing.use_currency?
+                assign full_price = pricing.subscription_total_price | money
+              elsif pricing.use_points?
+                assign full_price = pricing.subscription_total_points | points
+              endif
+            %}
+            <div class="sc-mt-tiny sc-shade-neutral sc-font-{% if large %}base{% else %}tiny{% endif %}">
+              {{ "pricing.subscription_total" | t: total_amount: full_price, full_timespan: full_timespan }}
+            </div>
+          {%- endif %}
+        {%- endif %}
+
+        {%# Earn Points %}
+        {%- if pricing.can_earn_points? and pricing.total_earn_points > 0 %}
+          <div class="sc-shade-neutral sc-mt-tiny sc-font-tiny">
+            {% assign total_earn_points = pricing.total_earn_points | points %}
+            {{ "pricing.points.earn.earn_points" | t: points: total_earn_points }}
+            {%- if pricing.points_bonus? %}
+              <span class="sc-font-line-through">{{ pricing.earn_points | points }}</span>
+            {%- endif %}
+
+            {%- if pricing.subscription? %}
+              {%- capture timespan %}
+                {%- liquid
+                  assign term = pricing.subscription_term | number, compact: true
+                  assign unit = pricing.subscription_term_unit
+
+                  if term != blank and unit != blank
+                    render "shared/subscriptions/term_unit", unit: unit, number: term
+                  endif
+                %}
+              {%- endcapture %}
+              {{ "pricing.points.earn.every_timespan" | t: timespan: timespan }}
+            {%- endif %}
+          </div>
+        {%- endif %}
+      {%- endif %}
+    {%- endif %}
+  </div>
+{% endunless %}

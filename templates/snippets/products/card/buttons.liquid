@@ -1,7 +1,7 @@
 {%- form "add-to-cart", product_id: product.id, class: "SC-ProductCard_action", data-cart-form: "" %}
   <input type="hidden" name="after" value="cart">
   <input type="hidden" name="quantity" value="1">
-  {%- if product.can_purchase? %}
+  {%- if product.can_add_to_cart? %}
     {%- if product.bookable? %}
       <a href="{{ product.path }}" class="SC-Button SC-Button-secondary SC-Button-expanded" data-js-buy-now="true">
         {{ "shared.product_buttons.check_availability" | t }}
@@ -14,6 +14,8 @@
       <a href="{{ product.path }}" class="SC-Button SC-Button-secondary SC-Button-expanded" data-js-buy-now="true">
         {{ "shared.product_buttons.select_option" | t }}
       </a>
+    {%- elsif product.can_purchase? == false %}
+      <input type="submit" value="{{ "shared.product_buttons.add_to_cart" | t }}" class="SC-Button SC-Button-secondary SC-Button-expanded" data-js-buy-now="true">
     {%- else %}
       <input type="submit" value="{{ product.buy_it_now_text }}" class="SC-Button SC-Button-secondary SC-Button-expanded" data-js-buy-now="true">
     {%- endif %}

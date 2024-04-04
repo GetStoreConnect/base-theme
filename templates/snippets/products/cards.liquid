@@ -1,0 +1,11 @@
+{% default products: current_search.results.products %}
+{% default allow_comparisons: false %}
+{% paginate products by current_search.per_page %}
+  {% for product in products %}
+    <div class="SC-CardGrid_item">
+      {%- cache "product", items: [product, current_store, current_customer] -%}
+        {%- render "products/card", product: product, allow_comparisons: allow_comparisons %}
+      {%- endcache -%}
+    </div>
+  {% endfor %}
+{% endpaginate %}

@@ -1,0 +1,3 @@
+{% if product.pricing.has_price? %}
+  {% render "products/product/price_item", product: product %}
+{% endif %}

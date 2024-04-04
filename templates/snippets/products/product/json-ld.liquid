@@ -1,0 +1,57 @@
+{%- default product: blank %}
+
+{% unless product == blank %}
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org/",
+    "@type": "Product",
+    "sku": "{{ product.product_code }}",
+    {%- if product.upc %}
+    "gtin": "0{{ product.upc }}",
+    {%- endif %}
+    {%- assign images = product.images %}
+    {%- if product.master %}
+      {%- if images.size > 0 %}
+        {%- assign images = images | concat: product.master.images | uniq %}
+      {% else %}
+        {%- assign images = product.master.images %}
+      {%- endif %}
+    {%- endif %}
+    {%- if images.size > 0 %}
+      "image": {{ images | pluck: "huge_url" | json }},
+    {%- endif %}
+    "name": "{{ product.name }}",
+    "description": "{{- product.search_description }}",
+    {%- if product.brand %}
+    "brand": {
+      "@type": "Brand",
+      "name": "{{ product.brand.name }}"
+    },
+    {%- endif %}
+    "offers": {
+      "@type": "Offer",
+      {%- if product.condition == 'new' %}
+        "itemCondition": "http://schema.org/NewCondition",
+      {%- else %}
+        "itemCondition": "http://schema.org/UsedCondition",
+      {%- endif %}
+      {%- if product.track_inventory? %}
+        {%- if product.can_purchase? %}
+          "availability": "http://schema.org/InStock",
+        {%- else %}
+          "availability": "http://schema.org/OutOfStock",
+        {%- endif %}
+      {%- else %}
+        "availability": "http://schema.org/InStock",
+      {%- endif %}
+      {%- if product.pricing.on_sale? and product.pricing.sale_price > 0 %}
+        "price": "{{ product.pricing.sale_price }}",
+      {%- else %}
+        "price": "{{ product.pricing.original_price }}",
+      {%- endif %}
+      "priceCurrency": "{{ current_store.currency_code }}",
+      "url": "{{ product.url }}"
+    }
+  }
+</script>
+{% endunless %}

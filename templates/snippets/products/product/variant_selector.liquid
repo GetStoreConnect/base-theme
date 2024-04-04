@@ -1,0 +1,90 @@
+{%- default product: blank %}
+{%- default choices: blank %}
+
+{% if product %}
+  {% if product.variant_types.size > 0 %}
+    {% render "products/product/variant.json", product: product %}
+    {%- if product.variant? and product.variant_choices.size > 0 %}
+      {% assign choices = product.variant_choices | pluck: "form_value" %}
+    {%- endif %}
+    <section id="SC-VariantSelector" class="sc-mb sc-flex-col sc-gap-small sc-align-items-start" data-variant-option-selector>
+      {% for variant_type in product.variant_types %}
+        {%- capture field_name %}{{ variant_type.form_value }}{% endcapture %}
+        <div data-variant-type="{{ variant_type.form_value }}">
+          {%- if variant_type.variant_choices.size > theme_variables["product.variants.selector.buttons.maximum"] %}
+              <div class="SC-Field SC-Field-small sc-mb-micro">
+                <select class="SC-Field_select" name="{{ field_name }}" autocomplete="off">
+                  {%- if variant_type.variant_choices.size == 0 %}
+                    <option disabled selected>{{ "products.variant_options.no_stock" }}</option>
+                  {%- else %}
+                    <option disabled selected>{{ "products.variant_options.select" | t, variant_type: variant_type.label }}</option>
+                  {%- endif %}
+                  {% for variant_choice in variant_type.variant_choices %}
+                    {% assign selected = choices | contains: variant_choice.form_value %}
+                    {%- capture field_id %}{{ variant_type.form_value | append: "-" | append: variant_choice.form_value }}{% endcapture %}
+                    <option
+                      value="{{ variant_choice.form_value }}"
+                      data-variant-option
+                      id="{{ field_id }}"
+                      data-type="{{ variant_type.form_value }}"
+                      {%- if selected %}selected data-selected="true"{% endif %}
+                      >
+                      {{ variant_choice.label }}
+                    </option>
+                  {% endfor %}
+                </select>
+              </div>
+          {%- else %}
+              <label class="sc-mb-tiny sc-font-small sc-shade-dark">
+                {{ "products.variant_options.select" | t, variant_type: variant_type.name }}
+              </label>
+              {%- if variant_type.variant_choices.size == 0 %}
+                <p>{{ "products.variant_options.no_stock" }}</p>
+              {%- endif %}
+              <div class="sc-flex-row sc-flex-wrap sc-gap-tiny">
+                {% for variant_choice in variant_type.variant_choices %}
+                  {% assign selected = choices | contains: variant_choice.form_value %}
+                  {%- capture field_id %}{{ variant_type.form_value | append: "-" | append: variant_choice.form_value }}{% endcapture %}
+                  <label class="SC-Variant" for="{{ field_id }}">
+                    <input
+                      class="SC-Variant_input"
+                      type="radio"
+                      autocomplete="off"
+                      id="{{ field_id }}"
+                      name="{{ field_name }}"
+                      value="{{ variant_choice.form_value }}"
+                      data-variant-option
+                      data-type="{{ variant_type.form_value }}"
+                      {%- if selected %}checked data-checked="true"{% endif %}
+                      />
+                    <div class="SC-Variant_label">{{ variant_choice.label }}</div>
+                  </label>
+                {% endfor %}
+              </div>
+          {%- endif %}
+          </div>
+      {% endfor %}
+
+      {%- assign load_master = theme_variables["product.variants.selector.clear.load_master"] %}
+      <div>
+        {%- if product.variant? %}
+          {%- if product.variant_types.size > 1 or load_master == true %}
+              <button class="SC-Button SC-Button-subtle SC-Button-small sc-me-medium" type="button" data-variant-clear-button {% if load_master == true %}data-clear-path="{% if product.variant? %}{{ product.master.path }}{% endif %}"{% endif %}>
+                {{ "products.variant_options.clear_choices" | t }}
+              </button>
+          {%- endif %}
+        {%- endif %}
+        {%- if product.variant_types.size > 1 %}
+          <button class="SC-Button SC-Button-subtle SC-Button-small sc-me-medium is-hidden" type="button" data-variant-reset-button>
+            {{ "products.variant_options.reset_choices" | t }}
+          </button>
+        {%- endif %}
+        {%- if product.master? %}
+          <div class="SC-Notice sc-mb" data-variant-selection-prompt>
+            {{ "products.show.select_option" | t }}
+          </div>
+        {%- endif %}
+      </div>
+    </section>
+    {%- endif %}
+{%- endif %}

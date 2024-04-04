@@ -1,0 +1,56 @@
+{%- default product: blank %}
+
+<input type="hidden" name="{{ form.fields["product_bookable_location_id"].name }}">
+<input type="hidden" name="{{ form.fields["booking_start"].name }}">
+<input type="hidden" name="{{ form.fields["booking_end"].name }}">
+
+<section class="SC-Booking" data-booking data-id="{{ product.id }}">
+  <menu class="SC-Booking_filters sc-shadow sc-border-light">
+    <div class="SC-DropdownPicker sc-border-right">
+      <button type="button" data-booking-dates>
+        <label>{{ "products.booking.dates" | t }}</label>
+        <span></span>
+        <span class="u-pointer-events-inherit">
+          {%- render "icons/chevron", width: 11 %}
+        </span>
+      </button>
+    </div>
+
+    <div class="SC-DropdownPicker">
+      <button type="button" data-bookable-locations data-dropdown-trigger>
+        <label>{{ "products.booking.location" | t }}</label>
+        <span>{{ "products.booking.all_locations" | t }}</span>
+        <span class="u-pointer-events-inherit ">
+          {%- render "icons/chevron", width: 11 %}
+        </span>
+      </button>
+      <menu data-dropdown-target>
+        <label data-dropdown-option>
+          <input
+            type="radio"
+            name="bookable-location"
+            class="sc-hide"
+            data-bookable-location
+            data-name="{{ "products.booking.all_locations" | t }}"/>
+          {{ "products.booking.all_locations" | t }}
+        </label>
+        {%- for product_bookable_location in product.product_bookable_locations %}
+          <label data-dropdown-option>
+            <input
+              type="radio"
+              name="bookable-location"
+              class="sc-hide"
+              {% if current_request.params["booking-location-id"] == product_bookable_location.id %}checked{% endif %}
+              value="{{ product_bookable_location.id }}"
+              data-bookable-location
+              data-name="{{ product_bookable_location.bookable_location.name }}"
+              data-timezone="{{ product_bookable_location.bookable_location.timezone }}"/>
+              {{ product_bookable_location.bookable_location.name }}
+          </label>
+        {%- endfor %}
+      </menu>
+    </div>
+
+  </menu>
+  <div class="SC-Booking_availabilities" data-booking-timeslots data-booking-availabilities-url="{{ current_store.booking_availabilities_path }}" data-booking-fetch-error="{{ "sc.errors.unexpected" | t }}"></div>
+</section>

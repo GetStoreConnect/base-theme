@@ -1,0 +1,8 @@
+{%- if product.support_content != blank %}
+  {%- capture content %}
+    <div class="sc-rich-text">
+      <div>{{ product.support_content }}</div>
+    </div>
+  {%- endcapture %}
+  {% render "shared/accordion", heading: product.support_label, content: content %}
+{%- endif %}

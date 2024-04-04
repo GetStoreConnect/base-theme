@@ -1,0 +1,25 @@
+{% default products: current_search.results.products %}
+{% default allow_comparisons: false %}
+{%- if current_search.count > 0 %}
+  {% paginate products by current_search.per_page %}
+    <div id="SC-ProductsGrid" class="SC-CardGrid is-offset-by-sidebar sc-mb-base" data-card-grid data-show-more>
+      {% for product in products %}
+        <div class="SC-CardGrid_item">
+          {%- cache "product", items: [product, current_store, current_customer] -%}
+            {%- render "products/card", product: product, allow_comparisons: allow_comparisons %}
+          {%- endcache -%}
+        </div>
+      {% endfor %}
+    </div>
+    {% render 'shared/pagination-nav', paginate: paginate %}
+  {% endpaginate %}
+
+  {%- if allow_comparisons and theme_variables["products.comparisons"] == true %}
+    {% render "products/comparison_banner" %}
+    {% render "products/screen" %}
+  {%- endif %}
+{% else %}
+  <div class="SC-Fallback">
+    {{ "search.products.index.no_results" | t  }}
+  </div>
+{% endif %}

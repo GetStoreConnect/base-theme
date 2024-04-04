@@ -1,0 +1,32 @@
+{%- default columns: 4 %}
+{%- default how_many_to_show: 4 %}
+{%- default related_products: blank %}
+
+{%- if related_products == blank and current_product.related_products.size > 0 %}
+  {% capture related_products %}
+    {% assign count = 0 %}
+    {% for product in current_product.related_products %}
+      {% if product.can_purchase? %}
+        {% assign count = count | plus: 1 %}
+        <div class="SC-CardGrid_item">
+          {% render 'products/card', product: product %}
+        </div>
+
+        {%- if count == how_many_to_show %}
+          {% break %}
+        {%- endif %}
+      {% endif %}
+    {% endfor %}
+  {% endcapture %}
+{%- endif %}
+
+{% if related_products != blank %}
+  <section class="SC-RelatedProducts SC-Section" id="SC-RelatedProducts">
+    <header class="SC-Section_header">
+      <h2 class="SC-Section_header_heading">{{ "products.related_products.title" | t }}</h2>
+    </header>
+    <div class="SC-CardGrid SC-CardGrid-{{ columns }}">
+      {{ related_products }}
+    </div>
+  </section>
+{% endif %}

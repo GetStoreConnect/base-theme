@@ -1,0 +1,21 @@
+<div class="SC-BannerOverlay is-hidden" data-js-compare>
+  <div class="SC-BannerOverlay_container">
+    <div class="SC-BannerOverlay_section">
+      <div class="SC-BannerOverlay_count" data-js-compare-count>1</div>
+      {{ "products.compare.banner.you_must_select_at_least_two_products_to_compare" | t }}
+    </div>
+
+    <div class="SC-BannerOverlay_section">
+      <button class="SC-Link sc-mr-base" data-js-compare-cancel type="button">
+        {{ "products.compare.banner.unselect_all" | t }}
+      </button>
+      <button
+        class="SC-Button SC-Button-primary"
+        type="button"
+        disabled="true"
+        data-js-compare-trigger="{{ current_product_category.id }}">
+        {{ "products.compare.banner.compare_products" | t }}
+      </button>
+    </div>
+  </div>
+</div>
