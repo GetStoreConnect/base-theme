@@ -15,19 +15,13 @@
 {%- elsif current_product_category != blank %}
   {%- comment -%} Product Category {%- endcomment -%}
   {%- liquid
-    if current_search != blank and current_search.type == "product"
+    if current_search != blank
       assign canonical_url = current_search.url
     else
       assign canonical_url = current_product_category.url
     endif
     assign image = current_product_category.social_image | default: current_product_category.image
   -%}
-{%- elsif current_search != blank and current_search.type == "products" -%}
-  {%- assign canonical_url = current_search.url -%}
-{%- elsif current_search != blank and current_search.type == "articles" -%}
-  {%- assign canonical_url = current_search.url -%}
-{%- elsif current_search != blank and current_search.type == "pages" -%}
-  {%- assign canonical_url = current_search.url -%}
 {%- elsif current_article != blank %}
   {%- comment -%} Article {%- endcomment -%}
   {%- liquid
@@ -58,7 +52,7 @@
   {%- comment -%} Location Group {%- endcomment -%}
   {%- liquid
     assign type = "page"
-    if current_search != blank and current_search.type == "location"
+    if current_search != blank and current_search.type == "locations"
       assign canonical_url = current_search.url
     else
       assign canonical_url = current_location_group.url
@@ -66,15 +60,14 @@
     assign image = current_location_group.social_image
   -%}
 {%- else %}
-  {%- comment -%} Home / Other {%- endcomment -%}
   {%- liquid
     assign canonical_url = current_request.url
     assign image = current_store.social_image | default: current_store.logo
   -%}
 {%- endif -%}
 {%- liquid
-  if current_request.params['page'] != blank
-    assign title = "pagination.paged_title" | t: title: title, page: current_request.params['page']
+  if current_request.params["page"] != blank
+    assign title = "pagination.paged_title" | t: title: title, page: current_request.params["page"]
   endif
 -%}
 <title>{{ title }}</title>
@@ -89,4 +82,7 @@
   <meta property="og:image" content="{{ image.huge_url }}" />
 {%- endif %}
 <meta name="sc-path" content="{{ current_store.path }}" />
+{% if current_search %}
+  <meta name="sc-type" content="{{ current_search.type }}" />
+{%- endif %}
 <link rel="canonical" href="{{ canonical_url }}" />
