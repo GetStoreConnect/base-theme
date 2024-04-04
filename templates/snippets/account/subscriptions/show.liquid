@@ -109,17 +109,17 @@
     {% if subscription.can_update_payment_source? %}
       <div class="sc-hide" data-payment-details-forms>
         <section data-tabs="payment" class="sc-mb" style="max-width: 600px">
-          {{ subscription.payment_provider.payment_instructions_content }}
-          {%- assign form_id = "PaymentForm" | prepend: subscription.payment_provider.code | append: subscription.payment_provider.id %}
+          {%- assign payment_provider = subscription.payment_provider %}
+          {%- assign form_id = "PaymentForm" | prepend: payment_provider.code | append: payment_provider.id %}
+
+          {{ payment_provider.payment_instructions_content }}
           {%- form "update-subscription-payment-details",
                     subscription: subscription,
                     id: form_id,
                     class: "SC-Panel SC-Panel-default",
-                    data-provider: subscription.payment_provider.code,
-                    data-type: "PaymentForm",
-                    data-id: form_id
-          %}
-            {% render "payment_providers/form", provider: subscription.payment_provider, order: subscription.order %}
+                    data-provider: payment_provider.code,
+                    data-provider-id: payment_provider.id %}
+            {% render "account/subscriptions/payment_providers/form", form: form, payment_provider: payment_provider, order: subscription.order %}
           {%- endform %}
         </section>
       </div>

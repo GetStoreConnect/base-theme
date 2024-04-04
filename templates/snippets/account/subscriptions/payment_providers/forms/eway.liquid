@@ -1,0 +1,22 @@
+{%- assign provider_id = payment_provider.id %}
+{%- assign provider = payment_provider.code %}
+{%- assign button_id = provider | append: "PaymentButton" | append: provider_id %}
+
+{%- comment %}
+This form uses eWAY's client-side encryption to ensure PCI compliance.
+Relevant eWAY docs are: https://eway.io/api-v3/?ruby#automatic-encryption
+Key takeways are:
+* Fields with data-eway-encrypt-target=... will be encrypted
+* Only Card number and CVN should be encrypted, not other fields (name, expiry, etc)
+* Our JS updates the hidden fields with the encrypted values.
+{%- endcomment %}
+{% render "checkout/payment_information/payment_providers/eway/form", form: form, payment_provider: payment_provider  %}
+
+<input id="{{ button_id }}" type="submit" class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small" data-payment-info-submit
+  value="{{ "accounts.subscriptions.show.submit_update_button_label" | t }}" />
+
+<script>
+  StoreConnect.Gateways.Eway({
+    providerId: "{{ provider_id }}",
+  });
+</script>
