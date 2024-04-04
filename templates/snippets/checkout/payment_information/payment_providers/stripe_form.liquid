@@ -1,0 +1,44 @@
+{%- assign provider_id = payment_provider.id %}
+{%- assign provider = payment_provider.code %}
+{%- assign form_id = provider | append: "PaymentForm" | append: provider_id %}
+{%- assign button_id = provider | append: "PaymentButton" | append: provider_id %}
+
+<div id="StripeWalletsContainer{{ provider_id }}" style="margin-bottom: 20px">
+  <div id="StripeWalletsCheckout{{ provider_id }}">
+  </div>
+
+  <div id="StripeWalletsError{{ provider_id }}">
+  </div>
+</div>
+
+{%- form "payment", provider: payment_provider,
+            id: form_id,
+            class: "SC-Panel",
+            data-provider: provider,
+            data-provider-id: provider_id,
+            data-use-intents: true %}
+
+  {{ payment_provider.description_content }}
+
+  {% render "checkout/payment_information/payment_providers/stripe/form",
+          form: form, provider_id: provider_id  %}
+
+  <input type="submit"
+    value="{{ 'checkout.gateways.form.pay_now' | t }}"
+    id="{{ button_id }}"
+    class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small"
+    data-disable-with="{{ 'checkout.gateways.form.pay_now' | t }}"
+    data-payment-info-submit />
+
+  {% render "checkout/customer_notes", form: form %}
+
+  {% if current_store.staff.size > 0 %}
+    {% render "checkout/assisted_by_user", form: form %}
+  {% endif %}
+
+{%- endform %}
+
+{%# This should be placed at the bottom so that it executes at the end of html load %}
+<script>
+  StoreConnect.Gateways.Stripe({ providerId: "{{ payment_provider.id }}" });
+</script>

@@ -1,0 +1,16 @@
+{% assign field = form.fields["customer_notes"] %}
+{% if current_cart %}
+  <div class="sc-mt">
+    <button type="button" class="Link"
+      data-toggle-visibility="customer-notes">
+      {{ "checkout.customer_notes.add_notes_about_your_order" | t }}
+    </button>
+    <div data-toggle-visibility-target="customer-notes" class="SC-Field sc-mt-small{% if field.value == blank %} is-hidden{% endif %}">
+      <textarea id="{{ field.id }}"
+                name="{{ field.name }}"
+                class="SC-Field_textarea sc-one-whole"
+                placeholder="{{ "checkout.customer_notes.enter_notes" | t }}"
+                size="50x3">{{ field.value }}</textarea>
+    </div>
+  </div>
+{% endif %}

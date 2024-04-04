@@ -1,0 +1,43 @@
+{%- assign provider_id = payment_provider.id %}
+{%- assign provider = payment_provider.code %}
+{%- assign form_id = provider | append: "PaymentForm" %}
+{%- assign button_id = provider | append: "PaymentButton" %}
+
+{%- unless current_account.credit_hold? %}
+  {%- form "payment", provider: payment_provider,
+              id: form_id,
+              class: "SC-Panel SC-Panel-default",
+              data-provider: provider,
+              data-provider-id: provider_id %}
+    <div id="{{ provider }}ScriptBlock"></div>
+    <div id="{{ provider }}PaymentBlock"></div>
+
+    {{ payment_provider.description_content }}
+
+    <div id="PayByAccountForm">
+      <div class="SC-Field">
+        {% assign field = form.fields["tok_id"] %}
+        <input type="text" id="{{ field.id }}" name="{{ field.name }}" value="{{ field.value }}"
+          placeholder="{{ "checkout.gateways.pay_by_account_form.enter_purchase_order_number" | t }}"
+          class="SC-Field_input"
+          size="40"
+          {% unless theme_variables["checkout.pay_by_account.require_po_number"] == false %}required{% endunless %}
+        />
+      </div>
+    </div>
+
+    <input type="submit"
+      value="{{ 'checkout.gateways.pay_by_account_form.pay_now' | t }}"
+      id="{{ button_id }}"
+      class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small" />
+
+    {% render "checkout/customer_notes", form: form %}
+
+    {% if current_store.staff.size > 0 %}
+      {% render "checkout/assisted_by_user", form: form %}
+    {% endif %}
+  {%- endform %}
+
+{%- else %}
+  {{ "checkout.gateways.pay_by_account_form.account_on_credit_hold" | t }}
+{%- endunless %}

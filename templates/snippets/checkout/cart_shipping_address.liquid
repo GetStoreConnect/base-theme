@@ -1,0 +1,6 @@
+<address>
+  {% for address_line in current_cart.shipping_address.street_lines %}
+    <div data-shipping-address-line-{{ forloop.index }}>{{ address_line }}</div>
+  {% endfor %}
+  <div>{{ current_cart.shipping_address.city }}, {{ current_cart.shipping_address.state }} {{ current_cart.shipping_address.postal_code }}</div>
+</address>

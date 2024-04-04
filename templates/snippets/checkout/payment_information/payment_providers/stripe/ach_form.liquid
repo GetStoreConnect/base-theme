@@ -1,0 +1,58 @@
+<div id="StripeAchScriptBlock{{ provider_id }}"></div>
+<fieldset class="SC-Fieldset sc-mb">
+  <div class="SC-Field">
+    {% assign field = form.fields["ach_account_name"] %}
+    <label for="{{ field.id }}" class="SC-Field_label">
+      {{ "checkout.gateways.stripe_ach_form.account_name" | t }}
+    </label>
+    <input type="text" name="{{ field.name }}" id="{{ field.id }}" value="{{ field.value }}" class="SC-Field_input sc-expand" required
+      autocomplete="cc-name">
+  </div>
+  <div class="SC-Field sc-hide">
+    {% assign field = form.fields["ach_email"] %}
+    <label for="{{ field.id }}" class="SC-Field_label">
+      {{ "checkout.gateways.stripe_ach_form.email" | t }}
+    </label>
+    <input type="email" name="{{ field.name }}" id="{{ field.id }}" value="{{ field.value }}" class="SC-Field_input sc-expand" required>
+  </div>
+  <div class="SC-Field">
+    {% assign field = form.fields["ach_account_number"] %}
+    <label for="{{ field.id }}" class="SC-Field_label">
+      {{ "checkout.gateways.stripe_ach_form.account_number" | t }}
+    </label>
+    <input type="text" name="{{ field.name }}" id="{{ field.id }}" value="{{ field.value }}" class="SC-Field_input sc-expand" required>
+  </div>
+  <div class="SC-Field">
+    {% assign field = form.fields["ach_routing_number"] %}
+    <label for="{{ field.id }}" class="SC-Field_label">
+      {{ "checkout.gateways.stripe_ach_form.routing_number" | t }}
+    </label>
+    <input type="text" name="{{ field.name }}" id="{{ field.id }}" value="{{ field.value }}" class="SC-Field_input sc-expand" required>
+  </div>
+  <div class="SC-Field">
+    {% assign field = form.fields["ach_account_holder_type"] %}
+    <label for="{{ field.id }}" class="SC-Field_label">
+      {{ "checkout.gateways.stripe_ach_form.account_holder_type" | t }}
+    </label>
+    <select name="{{ field.name }}" id="{{ field.id }}" class="SC-Field_select sc-expand" required>
+      <option value="" selected>{{ "checkout.gateways.stripe_ach_form.account_holder_prompt" | t }}</option>
+      <option value="individual">{{ "checkout.gateways.stripe_ach_form.individual" | t }}</option>
+      <option value="company">{{ "checkout.gateways.stripe_ach_form.company" | t }}</option>
+    </select>
+  </div>
+
+  <div>
+    {{ "checkout.gateways.stripe_ach_form.accept_terms" | t: name: current_store.name }}
+  </div>
+
+  <div class="SC-Checkbox sc-mb">
+    {% assign field = form.fields["ach_terms"] %}
+    <input type="hidden" name="{{ field.name }}" value="0">
+    <input type="checkbox" name="{{ field.name }}" id="{{ field.id }}" value="1" class="SC-Checkbox_input">
+    <label for="{{ field.id }}" class="SC-Checkbox_label" required>
+      {{ "checkout.gateways.stripe_ach_form.accept" | t }}
+    </label>
+  </div>
+</fieldset>
+
+<div id="StripeAchPaymentError{{ provider_id }}" class="SC-Field SC-Alert sc-hide"></div>

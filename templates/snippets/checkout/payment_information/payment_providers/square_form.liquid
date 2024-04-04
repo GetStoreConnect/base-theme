@@ -1,0 +1,86 @@
+{%- assign provider_id = payment_provider.id %}
+{%- assign provider = payment_provider.code %}
+{%- assign form_id = provider | append: "PaymentForm" | append: provider_id %}
+{%- assign button_id = provider | append: "PaymentButton" | append: provider_id %}
+
+<style>
+   .square-apple-pay-button {
+      height: 48px;
+      width: 300px;
+      display: inline-block;
+      -webkit-appearance: -apple-pay-button;
+      -apple-pay-button-type: plain;
+      -apple-pay-button-style: black;
+    }
+
+    .gpay-card-info-container {
+      height: 48px;
+      width: 300px;
+    }
+</style>
+
+<div id="SquareWalletsContainer{{ provider_id }}" class="sc-mb">
+  <!-- Square Apple Pay form -->
+  <div id="payment-form">
+    <div id="payment-status-container"></div>
+    <button id="SquareApplePaymentButton{{ provider_id }}" class="square-apple-pay-button"></button>
+  </div>
+
+  <!-- Square Google Pay form -->
+  {%- form "payment", provider: payment_provider,
+              id: "SquareGooglePaymentForm{{ provider_id }}",
+              class: "SC-Panel",
+              data-provider: provider,
+              data-provider-id: provider_id %}
+    <button type="submit" id="SquareGooglePaymentButton{{ provider_id }}"></button>
+  {%- endform %}
+</div>
+
+<!-- Square Credit Card form -->
+{%- form "payment", provider: payment_provider,
+            id: form_id,
+            class: "SC-Panel SC-Panel-default sq-payment-form",
+            data-provider: provider,
+            data-provider-id: provider_id %}
+
+  {{ payment_provider.description_content }}
+
+  <div id="{{ provider }}ScriptBlock{{ provider_id }}"></div>
+  <div id="{{ provider }}PaymentFields{{ provider_id }}"></div>
+  <div id="{{ provider }}PaymentStatus{{ provider_id }}"></div>
+  <div id="{{ provider }}PaymentError{{ provider_id }}" class="SC-Field SC-Alert sc-hide"></div>
+
+  <input type="submit"
+    id="{{ button_id }}"
+    value="{{ 'checkout.gateways.form.pay_now' | t }}"
+    class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small"
+    data-payment-info-submit />
+
+  {% render "checkout/customer_notes", form: form %}
+
+  {% if current_store.staff.size > 0 %}
+    {% render "checkout/assisted_by_user", form: form %}
+  {% endif %}
+{%- endform %}
+
+{% liquid
+  assign contact = current_cart.contact
+  assign billing_address = current_cart.billing_address
+  if current_order
+    assign currency_code = current_order.currency_code
+    assign contact = current_order.contact
+    assign billing_address = current_order.billing_address
+  endif
+%}
+<script type="text/javascript">
+  StoreConnect.Gateways.Square({
+    providerId: '{{ provider_id }}',
+    firstname: '{{ contact.firstname }}',
+    lastname: '{{ contact.lastname }}',
+    email: '{{ contact.email }}',
+    phone: '{{ contact.phone }}',
+    billingStreet: '{{ billing_address.street }}',
+    billingCity: '{{ billing_address.city }}',
+    billingCountry: '{{ billing_address.country }}'
+  });
+</script>

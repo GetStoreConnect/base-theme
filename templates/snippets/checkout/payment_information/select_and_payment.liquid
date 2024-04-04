@@ -1,0 +1,68 @@
+{% assign valid_providers = current_store.payment_providers | where: "valid_payment_method?" %}
+{% assign first_provider = valid_providers | first %}
+{% assign multiple_providers = valid_providers.size > 1 %}
+
+<section id="select-and-payment" data-tabs="payment" class="sc-mb" style="max-width: 600px" data-currency-payment>
+  {%# if current_store.payment_providers has 2+ items then show a menu %}
+  {% if multiple_providers %}
+    <menu class="sc-flex-wrap sc-mb">
+      {%- for payment_provider in valid_providers %}
+        <button class="Tab Tab-button" data-tab-trigger="{{ payment_provider.id }}" data-payment-provider-tab="{{ payment_provider.id }}" data-spec-payment-provider="{{ payment_provider.code }}">
+          {{ payment_provider.name }}
+        </button>
+      {%- endfor %}
+    </menu>
+  {% endif %}
+
+  {%- for payment_provider in valid_providers %}
+    <div data-tab="{{ payment_provider.id  }}" class="{% unless multiple_providers %}sc-hide{% endunless %}">
+      {%- if payment_provider.validation_errors == blank %}
+        {% case payment_provider.code %}
+        {% when "Adyen" %}
+          {% render "checkout/payment_information/payment_providers/adyen_form", payment_provider: payment_provider %}
+        {% when "AdyenAch" %}
+          {% render "checkout/payment_information/payment_providers/adyen_ach_form", payment_provider: payment_provider %}
+        {% when "AuthorizeNet" %}
+          {% render "checkout/payment_information/payment_providers/authorize_net_form", payment_provider: payment_provider %}
+        {% when "Bambora" %}
+          {% render "checkout/payment_information/payment_providers/bambora_form", payment_provider: payment_provider %}
+        {% when "Braintree" %}
+          {% render "checkout/payment_information/payment_providers/braintree_form", payment_provider: payment_provider %}
+        {% when "Cboss" %}
+          {% render "checkout/payment_information/payment_providers/cboss_form", payment_provider: payment_provider %}
+        {% when "Eway" %}
+          {% render "checkout/payment_information/payment_providers/eway_form", payment_provider: payment_provider %}
+        {% when "PayLater" %}
+          {% render "checkout/payment_information/payment_providers/pay_later_form", payment_provider: payment_provider %}
+        {% when "Paypal" %}
+          {% render "checkout/payment_information/payment_providers/paypal_form", payment_provider: payment_provider %}
+        {% when "PayByAccount" %}
+          {% render "checkout/payment_information/payment_providers/pay_by_account_form", payment_provider: payment_provider %}
+        {% when "SecurePay" %}
+          {% render "checkout/payment_information/payment_providers/secure_pay_form", payment_provider: payment_provider %}
+        {% when "Square" %}
+          {% render "checkout/payment_information/payment_providers/square_form", payment_provider: payment_provider %}
+        {% when "Stripe" %}
+          {% render "checkout/payment_information/payment_providers/stripe_form", payment_provider: payment_provider %}
+        {% when "StripeAch" %}
+          {% render "checkout/payment_information/payment_providers/stripe_ach_form", payment_provider: payment_provider %}
+        {% when "Windcave" %}
+          {% render "checkout/payment_information/payment_providers/windcave_form", payment_provider: payment_provider %}
+        {% when "Zippay" %}
+          {% render "checkout/payment_information/payment_providers/zippay_form", payment_provider: payment_provider %}
+        {% else %}
+          <p>Missing payment method - set it up now in <code>app/liquid/store_connect/theme/snippets/checkout/payment_information/page.liquid</code></p>
+          <p>payment_provider.code = <code>{{ payment_provider.code }}</code></p>
+        {% endcase %}
+      {%- else %}
+        <div class="SC-Alert">
+          <h3>{{ "salesforce_payments.errors.unable_to_proceed" | t }} ({{ payment_provider.name }})</h3>
+          {%- for error in payment_provider.validation_errors %}
+            <p>{{ error }}</p>
+          {%- endfor %}
+          <p>{{ "salesforce_payments.errors.fix_data_in_sf" | t }}</p>
+        </div>
+      {%- endif %}
+    </div>
+  {%- endfor %}
+</section>

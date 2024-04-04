@@ -1,0 +1,152 @@
+<header class="SC-Panel_header is-active">
+  <h2 class="SC-Panel_header_heading">
+    {{ "checkout.customer_information.header" | t }}
+  </h2>
+</header>
+
+<div id="SC-Checkout-CustomerInformation" data-reset-cookie-checkout class="SC-Panel_section">
+  {% if current_customer %}
+    <section class="sc-mb">
+      {% render "checkout/customer_information/new_recipient", form: form %}
+      <div data-account-address>
+        {%- assign field = form.fields["full_name"] %}
+        <div class="SC-Field SC-Field-expand{% if field.errors != blank %} has-error{% endif %}{% if field.required? %} required{% endif %}">
+          <label for="{{ field.id }}" class="SC-Field_label">{{ "checkout.customer_information.form.full_name" | t }}</label>
+          <input class="SC-Field_input" id="{{ field.id }}" value="{{ field.value }}" disabled/>
+          <p class="SC-Field_hint">{{ "checkout.customer_information.form.full_name_hint" | t }}</p>
+          <span class="SC-Field_error">{{ field.errors | try: "messages" }}</span>
+        </div>
+
+        {% if store_variables["enable_company_name"] %}
+          {%- assign field = form.fields["company_name"] %}
+          <div class="SC-Field SC-Field-expand{% if field.errors != blank %} has-error{% endif %}{% if field.required? %} required{% endif %}">
+            <label for="{{ field.id }}" class="SC-Field_label">{{ "checkout.customer_information.form.company_name" | t }}</label>
+            <input class="SC-Field_input" id="{{ field.id }}" value="{{ field.value }}" disabled/>
+            <p class="SC-Field_hint">{{ "checkout.customer_information.form.company_name_hint" | t }}</p>
+            <span class="SC-Field_error">{{ field.errors | try: "messages" }}</span>
+          </div>
+        {% endif %}
+
+        {% render "checkout/customer_information/address", form: form, address_type: "shipping" %}
+      </div>
+    </section>
+  {% else %}
+    {%- assign field = form.fields["email"] %}
+    <div class="SC-Field SC-Field-expand{% if field.errors != blank %} has-error{% endif %}{% if field.required? %} required{% endif %}">
+      <label for="{{ field.id }}" class="SC-Field_label">
+        {{ "checkout.customer_information.form.email_address" | t }}
+        <small>{{ "checkout.customer_information.form.email_address_explanation" | t }}</small>
+      </label>
+      <input type="email" autocomplete="email" id="{{ field.id }}" name="{{ field.name }}" value="{{ field.value }}" class="SC-Field_input"{% if field.required? %} required{% endif %}>
+      <span class="SC-Field_error">{{ field.errors | try: "messages" }}</span>
+    </div>
+    {%- assign field = form.fields["email_confirmation"] %}
+    {% if field %}
+      <div class="SC-Field SC-Field-expand{% if field.errors != blank %} has-error{% endif %}{% if field.required? %} required{% endif %}">
+        <label for="{{ field.id }}" class="SC-Field_label">
+          {{ "checkout.customer_information.form.email_address_confirmation" | t }}
+        </label>
+        <input type="email" autocomplete="email" id="{{ field.id }}" name="{{ field.name }}" value="{{ field.value }}" class="SC-Field_input"{% if field.required? %} required{% endif %}>
+        <span class="SC-Field_error">{{ field.errors | try: "messages" }}</span>
+      </div>
+    {% endif %}
+
+    {%- assign field = form.fields["full_name"] %}
+    {% if field %}
+      <div class="SC-Field SC-Field-expand{% if field.errors != blank %} has-error{% endif %}{% if field.required? %} required{% endif %}">
+        <label for="{{ field.id }}" class="SC-Field_label">{{ "checkout.customer_information.form.full_name" | t }}</label>
+        <input id="{{ field.id }}" name="{{ field.name }}" value="{{ field.value }}" autocomplete="name" class="SC-Field_input"{% if field.required? %} required{% endif %}>
+        <span class="SC-Field_error">{{ field.errors | try: "messages" }}</span>
+      </div>
+    {% else %}
+      <div class="SC-Fieldset_row">
+        {%- assign field = form.fields["first_name"] %}
+        <div class="SC-Field SC-Field-expand{% if field.errors != blank %} has-error{% endif %}{% if field.required? %} required{% endif %}">
+          <label for="{{ field.id }}" class="SC-Field_label">{{ "checkout.customer_information.form.first_name" | t }}</label>
+          <input id="{{ field.id }}" name="{{ field.name }}" value="{{ field.value }}" autocomplete="given-name" class="SC-Field_input"{% if field.required? %} required{% endif %}>
+          <span class="SC-Field_error">{{ field.errors | try: "messages" }}</span>
+        </div>
+        {%- assign field = form.fields["last_name"] %}
+        <div class="SC-Field SC-Field-expand{% if field.errors != blank %} has-error{% endif %}{% if field.required? %} required{% endif %}">
+          <label for="{{ field.id }}" class="SC-Field_label">{{ "checkout.customer_information.form.last_name" | t }}</label>
+          <input id="{{ field.id }}" name="{{ field.name }}" value="{{ field.value }}" autocomplete="family-name" class="SC-Field_input"{% if field.required? %} required{% endif %}>
+          <span class="SC-Field_error">{{ field.errors | try: "messages" }}</span>
+        </div>
+      </div>
+    {% endif %}
+
+    {%- assign field = form.fields["phone"] %}
+    <div class="SC-Field SC-Field-expand{% if field.errors != blank %} has-error{% endif %}{% if field.required? %} required{% endif %}">
+      <label for="{{ field.id }}" class="SC-Field_label">
+        {{ "checkout.customer_information.form.phone_number" | t }}
+        <small>{{ "checkout.customer_information.form.phone_number_explanation" | t }}</small>
+      </label>
+      <input id="{{ field.id }}" name="{{ field.name }}" value="{{ field.value }}" autocomplete="tel" class="SC-Field_input"{% if field.required? %} required{% endif %}>
+      <span class="SC-Field_error">{{ field.errors | try: "messages" }}</span>
+    </div>
+
+    {% if store_variables["enable_company_name"] %}
+      {%- assign field = form.fields["company_name"] %}
+      <div class="SC-Field SC-Field-expand{% if field.errors != blank %} has-error{% endif %}{% if field.required? %} required{% endif %}">
+        <label for="{{ field.id }}" class="Field_label">
+          {{ "checkout.customer_information.form.company_name" | t }}
+        </label>
+        <input id="{{ field.id }}" name="{{ field.name }}" value="{{ field.value }}" autocomplete="account" class="Field_input">
+        <span class="SC-Field_error">{{ field.errors | try: "messages" }}</span>
+      </div>
+    {% endif %}
+
+    {% render "checkout/customer_information/address", form: form, address_type: "shipping" %}
+  {% endif %}
+
+  {% render "checkout/customer_information/billing_address", form: form %}
+
+  {% render "captcha", action: "checkout" %}
+
+  <div class="Field">
+    {% capture button_text %}
+      {% if current_cart.quotable? %}
+        {{ "checkout.customer_information.buttons.finish_quote" | t }}
+      {% else %}
+        {{ "checkout.customer_information.buttons.next" | t }}
+      {% endif %}
+    {% endcapture %}
+    <input type="submit" value="{{ button_text | strip_newlines }}" class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small" data-customer-info-submit />
+  </div>
+
+  {% if current_cart.quotable? %}
+    {% render "checkout/customer_notes", form: form %}
+
+    {% if current_store.staff.size > 0 %}
+      {% render "checkout/assisted_by_user", form: form %}
+    {% endif %}
+  {% endif %}
+</div>
+
+{% unless current_cart.quotable? %}
+  {% if current_cart.require_delivery_method? %}
+    <div class="SC-Panel_header is-disabled">
+      <div class="SC-Panel_header_heading">
+        {{ "checkout.delivery.header" | t }}
+      </div>
+    </div>
+  {% endif %}
+
+  {% if current_store.accept_terms_enabled? %}
+    <div class="SC-Panel_header is-disabled">
+      <div class="SC-Panel_header_heading">
+        {% if current_store.terms_conditions_page %}
+          {{ current_store.terms_conditions_page.title }}
+        {% else %}
+          {{ "checkout.accept_terms.header" | t }}
+        {% endif %}
+      </div>
+    </div>
+  {% endif %}
+
+  <div class="SC-Panel_header is-disabled">
+    <div class="SC-Panel_header_heading">
+      {{ "checkout.payment.header" | t }}
+    </div>
+  </div>
+{% endunless %}

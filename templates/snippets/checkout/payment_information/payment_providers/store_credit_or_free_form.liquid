@@ -1,0 +1,28 @@
+{%- default type: "store-credit" %}
+{%- if current_cart.applied_credits.size > 0 %}
+  <p>{{ "checkout.gateways.store_credit_form.paying_with_account_credit" | t }}</p>
+{%- endif %}
+{%- if current_cart.applied_vouchers.size > 0 %}
+  <p>{{ "checkout.gateways.store_credit_form.paying_with_voucher" | t }}</p>
+{%- endif %}
+
+{%- if current_cart.applied_credits.size == 0 and current_cart.applied_vouchers.size == 0 %}
+  {%- assign type = "no-payment" %}
+  <p>{{ "checkout.gateways.free_form.no_payment_required" | t }}</p>
+{%- endif %}
+
+{%- form "payment-not-required", type: type,
+              id: "FreePaymentForm",
+              class: "SC-Panel SC-Panel-default" %}
+
+  <input type="submit"
+    value="{{ 'checkout.gateways.store_credit_form.purchase' | t }}"
+    class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small"
+    data-payment-info-submit />
+
+  {% render "checkout/customer_notes", form: form %}
+
+  {% if current_store.staff.size > 0 %}
+    {% render "checkout/assisted_by_user", form: form %}
+  {% endif %}
+{%- endform %}

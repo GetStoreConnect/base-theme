@@ -1,0 +1,79 @@
+<div id="{{ payment_provider.code }}ScriptBlock{{ payment_provider.id }}"></div>
+
+<fieldset class="Fieldset EwayForm">
+  <div class="SC-Field">
+    {% assign field = form.fields["card_number"] %}
+    <label for="{{ field.id }}" class="SC-Field_label">
+      {{ 'checkout.gateways.form.card_number' | t }}
+    </label>
+    <input type="text" name="{{ field.name }}" id="{{ field.id }}"
+      autocomplete="cc-number"
+      required
+      maxlength="16"
+      data-encrypt-name="EWAY_CARDNUMBER"
+      placeholder="{{ 'checkout.gateways.form.card_number_placeholder' | t }}"
+      class="SC-Field_input sc-expand"
+      value="{{ field.value }}">
+  </div>
+
+  <div class="SC-Field">
+    {% assign field = form.fields["card_name"] %}
+    <label for="{{ field.id }}" class="SC-Field_label">
+      {{ 'checkout.gateways.form.card_name' | t }}
+    </label>
+    <input type="text" name="{{ field.name }}" id="{{ field.id }}"
+      autocomplete="cc-name"
+      required
+      class="SC-Field_input sc-expand"
+      value="{{ field.value }}">
+  </div>
+
+  <div class="SC-Fieldset_row">
+    <div class="SC-Field SC-Field-small">
+      {% assign field = form.fields["card_month"] %}
+      <label for="{{ field.id }}" class="SC-Field_label">
+        {{ 'checkout.gateways.form.expiry_month' | t }}
+      </label>
+      <input type="text" name="{{ field.name }}" id="{{ field.id }}"
+        autocomplete="cc-exp-month"
+        required
+        maxlength="2"
+        size="8"
+        placeholder="{{ 'checkout.gateways.form.expiry_month_placeholder' | t }}"
+        class="SC-Field_input"
+        value="{{ field.value }}">
+    </div>
+
+    <div class="SC-Field SC-Field-small">
+      {% assign field = form.fields["card_year"] %}
+      <label for="{{ field.id }}" class="SC-Field_label">
+        {{ 'checkout.gateways.form.expiry_year' | t }}
+      </label>
+      <input type="text" name="{{ field.name }}" id="{{ field.id }}"
+        autocomplete="cc-exp-year"
+        required
+        maxlength="4"
+        size="8"
+        placeholder="{{ 'checkout.gateways.form.expiry_year_placeholder' | t }}"
+        class="SC-Field_input"
+        value="{{ field.value }}">
+    </div>
+
+    <div class="SC-Field SC-Field-small">
+      {% assign field = form.fields["card_verification"] %}
+      <label for="{{ field.id }}" class="SC-Field_label">
+        {{ 'checkout.gateways.form.verification' | t }}
+      </label>
+      <input type="text" name="{{ field.name }}" id="{{ field.id }}"
+        autocomplete="cc-csc"
+        required
+        maxlength="4"
+        size="8"
+        data-encrypt-name="EWAY_CARDCVN"
+        class="SC-Field_input"
+        value="{{ field.value }}">
+    </div>
+  </div>
+</fieldset>
+
+<div id="{{ payment_provider.code }}PaymentError{{ payment_provider.id }}" class="SC-Field SC-Alert sc-hide"></div>

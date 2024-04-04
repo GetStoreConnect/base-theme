@@ -1,0 +1,43 @@
+{%- assign provider_id = payment_provider.id %}
+{%- assign provider = payment_provider.code %}
+{%- assign form_id = provider | append: "PaymentForm" | append: provider_id %}
+{%- assign button_id = provider | append: "PaymentButton" %}
+
+{%- form "payment", provider: payment_provider,
+            id: form_id,
+            class: "SC-Panel SC-Panel-default",
+            data-provider: provider,
+            data-provider-id: provider_id %}
+
+  <div id="PaypalScriptBlock{{ provider_id }}"></div>
+  <div id="PaypalPaymentBlock{{ provider_id }}"></div>
+
+  {{ payment_provider.description_content }}
+
+  <div id="PaypalPaymentError{{ provider_id }}" class="SC-Field SC-Alert sc-hide"></div>
+
+  <div id="PaypalButton{{ provider_id }}">
+    <div id="paypal-button-container{{ provider_id }}"></div>
+  </div>
+
+  <input type="submit"
+    value="{{ 'checkout.gateways.form.notices.processing' | t }}"
+    id="{{ button_id }}"
+    class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small sc-hide"
+    data-payment-info-submit
+    data-loading="true" />
+
+  {% render "checkout/customer_notes", form: form %}
+
+  {% if current_store.staff.size > 0 %}
+    {% render "checkout/assisted_by_user", form: form %}
+  {% endif %}
+{%- endform %}
+
+{%# This should be placed at the bottom so that it executes after all the html loads %}
+<script>
+var currency = "{{ current_store.currency_code }}"; // currency value is needed for paypal to load the right javascript
+var providerId = "{{ provider_id }}";
+
+StoreConnect.Gateways.Paypal({currency, providerId});
+</script>

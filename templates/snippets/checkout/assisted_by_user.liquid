@@ -1,0 +1,11 @@
+{% assign field = form.fields["assisted_by_user_id"] %}
+<div class="sc-mt sc-mb SC-Field">
+  <select name="{{ field.name }}" id="{{ field.id }}" class="SC-Field_select">
+    <option selected disabled>
+      {{ "checkout.assisted_by.were_you_assisted_with_this_order" | t }}
+    </option>
+    {% for staff in current_store.staff %}
+      <option value="{{ staff.id }}"{% if staff.id == field.value %} selected{% endif %}>{{ staff.name }}</option>
+    {% endfor %}
+  </select>
+</div>
