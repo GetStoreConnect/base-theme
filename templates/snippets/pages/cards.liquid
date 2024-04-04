@@ -1,0 +1,5 @@
+{% paginate current_search.results.pages by current_search.per_page %}
+  {% for page in pages %}
+    {% render "pages/card", page: page %}
+  {% endfor %}
+{% endpaginate %}

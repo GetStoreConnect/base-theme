@@ -1,0 +1,12 @@
+<div class="SC-CardGrid_item">
+  <a href="{{ page.path }}" class="SC-PageCard sc-mb-spacious">
+    {%- if page.social_image != blank %}
+      <div class="SC-PageCard_image">
+        <img src="{{ page.social_image.medium_url }}" loading="lazy">
+      </div>
+    {%- endif %}
+    <h3 class="SC-PageCard_heading">
+      {{ page.title }}
+    </h3>
+  </a>
+</div>
