@@ -4,10 +4,10 @@
 {%- comment %} Source is either a Cart or an Order {% endcomment %}
 {%- if source != blank %}
   {% capture source_type %}{{ source | downcase }}{% endcapture %}
-  <div class="SC-OrderTotal">
+  <div class="SC-OrderTotal SC-OrderTotal-{{ source }}">
     {%- comment %} Adjustment line items {% endcomment %}
     {%- for line_item in source.adjustment_items %}
-      <div class="SC-OrderTotal_line">
+      <div class="SC-OrderTotal_line SC-AdjustmentItem">
         <div class="SC-OrderTotal_line_label">
           {{ line_item.name }}
         </div>

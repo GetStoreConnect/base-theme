@@ -1,0 +1,70 @@
+{%- default pricing: blank %}
+{%- default data: blank %}
+{%- default style_class: blank -%}
+{%- default field_name: "quantity" -%}
+{%- default field_id: "quantity" -%}
+{%- default field: blank -%}
+
+{% if field != blank %}
+  {% assign field_name = field.name %}
+  {% assign field_id = field.id %}
+{% endif %}
+
+{%- if pricing != blank %}
+  {%- assign show_picker = false %}
+  {%- if pricing.variable_pricing? and pricing.variable_pricing_amounts.size > 0 %}
+    {%- assign show_picker = true %}
+  {%- endif %
+  {%- assign default = pricing.variable_pricing_amounts.first | default: pricing.sale_price | default: pricing.original_price %}
+
+  <div class="SC-PricePicker {{ style_class }}" data-price-picker>
+    <button
+      onclick="window.StoreConnectUI.PricePicker.init(event)"
+      class="SC-PricePicker_trigger{% if show_picker == false %} is-hidden{% endif %}"
+      data-price-picker-trigger type="button">
+      <span class="SC-PricePicker_trigger_label">
+      {{ "shared.variable_pricing_picker.label" | t }}
+        <span data-price-picker-value>
+          {{ default | money }}
+        </span>
+      </span>
+      {%- render "icons/chevron" %}
+    </button>
+
+    <input type="number"
+      name="{{ field_name }}"
+      id="{{ field.id }}"
+      min="{{ pricing.price }}"
+      value="{{ default }}"
+      class="SC-PricePicker_input{% if show_picker == false %} is-active{% endif %}"
+      placeholder="{{ "shared.variable_pricing_picker.placeholder" | t }}"
+      data-price-picker-input
+      {{ data }}
+    />
+
+    <ul class="SC-PricePicker_list" data-price-picker-list aria-hidden="true">
+      {%- for amount in pricing.variable_pricing_amounts %}
+        <li class="SC-PricePicker_list_item">
+          <button class="SC-PricePicker_list_button"
+                  data-price-picker-btn
+                  value="{{ amount }}"
+                  type="button">
+            {{ amount | money }}
+          </button>
+        </li>
+      {%- endfor %}
+
+      {%- if pricing.variable_pricing_custom_allowed? %}
+        <li class="SC-PricePicker_list_item">
+          <button class="SC-PricePicker_list_button"
+                  data-price-picker-btn
+                  value="max"
+                  onClick="window.StoreConnectUI.PricePicker.manualEntry()"
+                  type="button">
+            {{ "shared.variable_pricing_picker.other_amount" | t }}
+          </button>
+        </li>
+      {%- endif %}
+    </ul>
+  </div>
+{%- endif %}
