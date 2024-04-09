@@ -1,0 +1,51 @@
+<div class="sc-container sc-me">
+  {%- render "breadcrumbs" %}
+
+  <h1>{{ current_product_category.name }}</h1>
+
+  <div class="SC-Grid">
+    <div class="SC-Grid_sidebar SC-Grid_sidebar_spacious" data-product-sidebar>
+      {%- if current_product_category.subtitle %}
+        <p id="SC-CategorySubtitle">
+          {{ current_product_category.subtitle }}
+        </p>
+      {%- endif %}
+
+      {%- if current_product_category.navigation_children.size > 0 %}
+        <div class="SC-CategorySubcategories sc-mb">
+          <nav class="SC-PageNav">
+            {%- for subcategory in current_product_category.navigation_children %}
+              <a href="{{ subcategory.path }}" class="SC-PageNav_link">
+                {{ subcategory.name }}
+              </a>
+            {%- endfor %}
+          </nav>
+        </div>
+      {%- endif %}
+
+      {%- render "search/filters" %}
+    </div>
+    <div class="SC-Grid_main" data-product-grid>
+      <menu class="SC-Menu sc-justify-space-between sc-mb-small">
+        {%- render "search/filters/filters_button" %}
+        {%- render "search/filters/sort_dropdown" %}
+      </menu>
+
+      {%- if current_product_category.introduction_content %}
+        <div id="SC-ProductCategoryIntroduction class"sc-rich-text">
+          {{ current_product_category.introduction_content }}
+        </div>
+      {%- endif %}
+
+      <div class="sc-mb">
+        {%- render "products/wrapper", allow_comparisons: true %}
+      </div>
+
+      {%- if current_product_category.information_content %}
+        <div id="SC-ProductCategoryInformation class"sc-rich-text">
+          {{ current_product_category.information_content }}
+        </div>
+      {%- endif %}
+    </div>
+  </div>
+</div>

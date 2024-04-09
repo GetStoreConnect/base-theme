@@ -1,0 +1,87 @@
+{% liquid
+  assign delivery_available = false
+  assign shipping_active = false
+  assign click_and_collect_active = false
+
+  if current_cart.shipping_rates.size > 0
+    assign delivery_available = true
+    assign shipping_active = true
+  endif
+
+  for cc in current_cart.pickup_options
+    if cc.in_stock?
+      assign delivery_available = true
+      assign click_and_collect_active = true
+    endif
+  endfor
+%}
+<section id="SC-CheckoutDeliveryOptions" class="SC-Panel SC-Panel-numbered">
+  <div class="SC-Panel_header is-filled">
+    <div class="SC-Panel_header_heading">
+      {{ "checkout.customer_information.header" | t }}
+    </div>
+    <div class="SC-Panel_header_summary">
+      {% render "checkout/cart_shipping_address" %}
+    </div>
+  </div>
+
+  <header class="SC-Panel_header is-active">
+    <h2 class="SC-Panel_header_heading">
+      {{ "checkout.delivery.header" | t }}
+    </h2>
+  </header>
+
+  <div class="SC-Panel_section">
+    <div class="sc-mb-large" style="max-width: 600px">
+      {%# Are there any shipping_rates? or any click_and_collect options that are in-stock? %}
+      {% if delivery_available %}
+        <section data-tabs="fulfilment">
+          <menu class="sc-flex-wrap sc-mb-small">
+            <button type="button"
+                class="SC-Tab SC-Tab-button{% if shipping_active %} is-active{% endif %}"
+                data-tab-trigger="delivery">
+                  {{ "checkout.shipping.form.shipping" | t }}
+            </button>
+            <button type="button"
+                class="SC-Tab SC-Tab-button{% unless shipping_active %} is-active{% endunless %}"
+                data-tab-trigger="click-and-collect">
+                  {{ "checkout.shipping.form.click_and_collect" | t }}
+            </button>
+          </menu>
+          <div data-tab="delivery" class="{% unless shipping_active %}sc-hide{% endunless %}">
+            {% render "checkout/shipping_information/delivery", form: form, shipping_active: shipping_active, click_and_collect_active: click_and_collect_active %}
+          </div>
+          <div data-tab="click-and-collect" class="{% if shipping_active %}sc-hide{% endif %}">
+            {% render "checkout/shipping_information/click_and_collect", form: form, shipping_active: shipping_active, click_and_collect_active: click_and_collect_active %}
+          </div>
+        </section>
+      {% else %}
+        <section>
+          {% render "checkout/shipping_information/unavailable", shipping_type: "shipping", shipping_active: shipping_active, click_and_collect_active: click_and_collect_active %}
+        </section>
+      {% endif %}
+    </div>
+    <input type="submit"
+      value="{{ "checkout.shipping.form.next" | t }}"
+      class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small"
+      data-fulfilment-button disabled type="button">
+  </div>
+
+  {% if current_store.accept_terms_enabled? %}
+    <div class="SC-Panel_header is-disabled">
+      <div class="SC-Panel_header_heading">
+        {% if current_store.terms_conditions_page %}
+          {{ current_store.terms_conditions_page.title }}
+        {% else %}
+          {{ "checkout.accept_terms.header" | t }}
+        {% endif %}
+      </div>
+    </div>
+  {% endif %}
+
+  <div class="SC-Panel_header is-disabled">
+    <div class="SC-Panel_header_heading">
+      {{ "checkout.payment.header" | t }}
+    </div>
+  </div>
+</section>

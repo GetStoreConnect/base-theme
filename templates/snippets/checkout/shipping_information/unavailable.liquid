@@ -1,0 +1,62 @@
+{% default shipping_type: "shipping" %}
+<div class="SC-Notice sc-mb">
+  {%- case shipping_type -%}
+  {%- when "click and collect" -%}
+    {%- if shipping_active %}
+      {{ "checkout.shipping.unavailable.click_and_collect_prompt_or_ship" | t }}
+    {%- else %}
+      {{ "checkout.shipping.unavailable.click_and_collect_prompt" | t }}
+    {%- endif %}
+  {%- when "shipping" -%}
+    {%- if click_and_collect_active %}
+      {{ "checkout.shipping.unavailable.shipping_option_prompt_or_click_and_collect" | t }}
+    {%- else %}
+      {{ "checkout.shipping.unavailable.shipping_option_prompt" | t }}
+    {%- endif %}
+  {%- endcase -%}
+</div>
+
+{% for line_item in current_cart.items %}
+  <div id="unavailable-product-{{ line_item.product.id }}" class="SC-Callout sc-flex-row sc-mb-small">
+    <div class="sc-grow">
+      <div class="sc-mb-small">
+        <strong>{{ line_item.name }}</strong>
+      </div>
+      <div class="sc-shade-dark">
+        {%- if line_item.shipping_methods.size > 0 %}
+          <p class="sc-mb-tiny">{{ "checkout.shipping.unavailable.we_can_deliver_via" | t }}</p>
+          <ul class="sc-m-none">
+
+          {%- for method_name in line_item.shipping_methods %}
+            {%- if method_name == 'pick_up' and line_item.pickup_options.size > 0 %}
+              {%- for cc_location in line_item.pickup_options %}
+                <li>{{ cc_location.stock_location.name }}</li>
+              {%- endfor %}
+            {%- else %}
+              {% liquid
+                assign shipping_method_rate = blank
+                for shipping_rate in current_cart.shipping_rates
+                  if shipping_rate.shipping_method == method_name
+                    assign shipping_method_rate = shipping_rate
+                    break
+                  endif
+                endfor
+              %}
+              {% if shipping_method_rate %}
+                <li>{{ shipping_method_rate.name }}</li>
+              {% endif %}
+            {%- endif %}
+          {%- endfor %}
+        {% else %}
+          <p class="sc-mb-tiny">
+            {{ "checkout.shipping.unavailable.no_shipping_available" | t }}
+          </p>
+        {% endif %}
+      </div>
+    </div>
+    <div>
+      <a href="{{ line_item.delete_path }}?redirect_to=/checkout/shipping_information/edit"
+          rel="nofollow" data-method="delete" class="SC-Link sc-ml-base">Remove</a>
+    </div>
+  </div>
+{% endfor %}

@@ -1,0 +1,56 @@
+<div class="SC-Panel_header is-filled">
+  <div class="SC-Panel_header_heading">
+    {{ "checkout.customer_information.header" | t }}
+  </div>
+  <div class="SC-Panel_header_summary">
+    {% render "checkout/cart_shipping_address" %}
+  </div>
+</div>
+
+{% if current_cart.require_delivery_method? %}
+  <div class="SC-Panel_header is-filled">
+    <div class="SC-Panel_header_heading">
+      {{ "checkout.delivery.header" | t }}
+    </div>
+    <div class="SC-Panel_header_summary">
+      {% render "checkout/cart_delivery_method" %}
+    </div>
+  </div>
+{% endif %}
+
+<div class="SC-Panel_header">
+  <div class="SC-Panel_header_heading">
+    {% if current_store.terms_conditions_page %}
+      {{ current_store.terms_conditions_page.title }}
+    {% else %}
+      {{ "checkout.accept_terms.header" | t }}
+    {% endif %}
+  </div>
+</div>
+
+<div class="SC-Panel_section">
+  <div class="sc-mb">
+    {% if current_store.terms_conditions_page.subtitle %}
+      <h4>{{ current_store.terms_conditions_page.subtitle }} </h4>
+    {% endif %}
+    {{ current_store.terms_conditions_page.body_content }}
+  </div>
+  <div class="SC-Checkbox sc-mb">
+    {% assign field = form.fields["terms_accepted"] %}
+    <input type="hidden" name="{{ field.name }}" value="0" />
+    <input type="checkbox" name="{{ field.name }}" id="{{ field.id }}" value="1" class="SC-Checkbox_input" />
+    <label for="{{ field.id }}" class="SC-Checkbox_label">
+      {{ "checkout.accept_terms.accept_terms_and_conditions" | t }}
+    </label>
+  </div>
+
+  <input type="submit" type="button"
+    value="{{ "checkout.accept_terms.next" | t }}"
+    class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small">
+</div>
+
+<div class="SC-Panel_header is-disabled">
+  <div class="SC-Panel_header_heading">
+    {{ "checkout.payment.header" | t }}
+  </div>
+</div>

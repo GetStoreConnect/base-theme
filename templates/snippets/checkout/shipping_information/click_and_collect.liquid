@@ -1,0 +1,133 @@
+<section>
+  <div class="sc-mb">
+    {%- if click_and_collect_active %}
+      {% assign method_field = form.fields["method"] %}
+      {% assign field = form.fields["click_and_collect_option"] %}
+      {% for option in current_cart.pickup_options %}
+        <div class="SC-OptionCard{% if option.disabled? %} is-disabled{% endif %}{% if option.collection_points.size > 1 %} SC-OptionCard-parent{% endif %}" data-fulfilment-option>
+          <label class="SC-OptionCard_label"{% unless option.disabled? %} data-fulfilment-option-trigger{% endunless %}>
+            <div class="SC-OptionCard_radio">
+              <div class="SC-RadioInput">
+                {% unless option.disabled? %}
+                  {% assign default_collection_point = option.collection_points | first %}
+                  <input type="radio" name="{{ method_field.name }}"  id="{{ option.form_id }}" value="{{ option.form_value }}_{{ default_collection_point.id }}" class="SC-ClickCollect">
+                {% endunless %}
+                <svg viewBox="0 0 100 100">
+                  <ellipse cx="50" cy="50" rx="45" ry="45"></ellipse>
+                  <ellipse cx="50"  cy="50" rx="28" ry="28"></ellipse>
+                </svg>
+              </div>
+            </div>
+
+            {%# Stock location %}
+            <div class="SC-OptionCard_detail">
+              <div class="SC-OptionCard_detail_primary">
+                <div>
+                  <strong>{{ option.stock_location.name }}</strong>
+                </div>
+                <div class="sc-shade-neutral sc-mt-tiny">
+                  {%- if option.stock_location.address1 %}
+                    {{ option.stock_location.address1 %}}
+                  {%- endif %}
+                  {{ option.stock_location.city }}
+                </div>
+                {%- if option.collection_points.size == 1 %}
+                  {% assign collection_point = option.collection_points | first %}
+                  <div class="sc-shade-neutral sc-mt-tiny">
+                    {%- if collection_point.name %}
+                      <strong>{{ collection_point.name }}</strong>
+                    {%- endif %}
+                    {%- if collection_point.description %}
+                      <div class="sc-shade-neutral sc-mt-tiny">
+                        {{ collection_point.description }}
+                      </div>
+                    {%- endif %}
+                    {%- if option.immediately_available? %}
+                      <div class="sc-shade-neutral sc-mt-tiny">
+                        {%- if collection_point.lead_time? %}
+                          {%- capture lead_time %}
+                            {% render "shared/duration", duration: collection_point.lead_time_duration, unit: collection_point.lead_time_units %}
+                          {%- endcapture %}
+                          {{ "checkout.shipping.click_and_collect.lead_time" | t: lead_time: lead_time }}
+                        {%- else %}
+                          {{ "checkout.shipping.click_and_collect.lead_time_immediate" | t }}
+                        {%- endif %}
+                      </div>
+                    {%- endif %}
+                  </div>
+                {%- endif %}
+              </div>
+              {%- unless option.immediately_available? %}
+                <div class="SC-OptionCard_detail_secondary">
+                  {% assign available = option.days_until_available and !option.disabled? %}
+                  {% if available %}
+                    <div class="SC-Notice SC-Notice-compact">
+                      {% assign date_available = "now" | date: "%Y-%m-%dT%H:%M:%S" | date_add: days: option.days_until_available | date: "%-d %b %Y" %}
+                      {{ "checkout.shipping.click_and_collect.available_from" | t: from: date_available }}
+                    </div>
+                  {% else %}
+                    <div class="SC-Notice SC-Notice-alert SC-Notice-compact">
+                      {{ "checkout.shipping.click_and_collect.out_of_stock" | t }}
+                    </div>
+                  {% endif %}
+                </div>
+              {%- endunless %}
+            </div>
+          </label>
+
+          {%# List of collection points %}
+          {%- if option.collection_points.size > 1 %}
+            {%- unless option.disabled? %}
+              <section class="SC-OptionCard_subset" data-fulfilment-option-subset>
+                {% for collection_point in option.collection_points %}
+                  {%# Collection point %}
+                  <div class="SC-OptionCard SC-OptionCard-child">
+                    <label class="SC-OptionCard_label" data-fulfilment-option-trigger>
+                      <div class="SC-OptionCard_radio">
+                        <div class="SC-RadioInput">
+                          <input type="radio" name="{{ method_field.name }}" id="{{ option.form_id }}_{{ collection_point.id }}" value="{{ option.form_value }}_{{collection_point.id}}" class="SC-ClickCollect-CollectionPoint">
+                          <svg viewBox="0 0 100 100">
+                            <ellipse cx="50" cy="50" rx="45" ry="45"></ellipse>
+                            <ellipse cx="50"  cy="50" rx="28" ry="28"></ellipse>
+                          </svg>
+                        </div>
+                      </div>
+                      <div class="SC-OptionCard_detail">
+                        <div class="SC-OptionCard_detail_primary">
+                          {%- if collection_point.name %}
+                            <strong>{{ collection_point.name }}</strong>
+                          {%- endif %}
+                          {%- if collection_point.description %}
+                            <div class="sc-shade-neutral sc-mt-tiny">
+                              {{ collection_point.description }}
+                            </div>
+                          {%- endif %}
+                          {%- if option.immediately_available? %}
+                            <div class="sc-shade-neutral sc-mt-tiny">
+                              {%- if collection_point.lead_time? %}
+                                {%- capture lead_time %}
+                                  {% render "shared/duration", duration: collection_point.lead_time_duration, unit: collection_point.lead_time_units %}
+                                {%- endcapture %}
+                                {{ "checkout.shipping.click_and_collect.lead_time" | t: lead_time: lead_time }}
+                              {%- else %}
+                                {{ "checkout.shipping.click_and_collect.lead_time_immediate" | t }}
+                              {%- endif %}
+                            </div>
+                          {%- endif %}
+                        </div>
+                      </div>
+                    </label>
+                  </div>
+
+                {%- endfor %}
+              </section>
+            {%- endunless %}
+          {%- endif %}
+        </div>
+      {%- endfor %}
+      {% render "checkout/shipping_information/collection_time", form: form %}
+    {%- else %}
+      {% render "checkout/shipping_information/unavailable", shipping_type: "click and collect", shipping_active: shipping_active, click_and_collect_active: click_and_collect_active %}
+    {%- endif %}
+  </div>
+</section>

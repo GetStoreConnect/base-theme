@@ -1,0 +1,15 @@
+{%- assign provider_id = payment_provider.id %}
+{%- assign provider = payment_provider.code %}
+{%- assign button_id = provider | append: "PaymentButton" | append: provider_id %}
+
+{% render "checkout/payment_information/payment_providers/stripe/form", form: form, provider_id: provider_id  %}
+
+<input id="{{ button_id }}" type="submit" class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small" data-payment-info-submit
+  value="{{ "accounts.subscriptions.show.submit_update_button_label" | t }}" />
+
+{%# This should be placed at the bottom so that it executes at the end of html load %}
+<script>
+  StoreConnect.Gateways.Stripe({
+    providerId: "{{ payment_provider.id }}"
+  });
+</script>

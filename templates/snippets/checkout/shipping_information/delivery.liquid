@@ -1,0 +1,53 @@
+<section class="sc-mb-large">
+  {%- if shipping_active -%}
+    {%- for shipping_rate in current_cart.shipping_rates %}
+      {% if shipping_rate.product_type == blank %}
+        {% render "checkout/shipping_information/custom_shipping_rate", form: form, shipping_rate: shipping_rate %}
+      {% else %}
+        {% render "checkout/shipping_information/provider_shipping_rate", form: form, shipping_rate: shipping_rate %}
+      {% endif %}
+    {% endfor %}
+
+    {%- assign field = form.fields["notes"] %}
+    {% if field %}
+      <div class="sc-mt" data-shipping-notes>
+        <button type="button" class="Link"
+          data-toggle-visibility="shipping-notes">
+          {{ "checkout.shipping.shipping_notes.reveal_label" | t }}
+        </button>
+
+        <div data-toggle-visibility-target="shipping-notes" class="sc-mt-small{% if field.value == blank %} is-hidden{% endif %}">
+          <textarea name="{{ field.name }}" id="{{ field.id }}"
+            class="SC-Field_textarea sc-expand"
+            rows="3"
+            placeholder="{{ "checkout.shipping.shipping_notes.placeholder" | t }}"
+          >{{ field.value }}</textarea>
+        </div>
+      </div>
+    {% endif %}
+
+    {%- assign field = form.fields["use_points"] %}
+    {% if field %}
+      <div class="SC-OptionCard">
+        <label for="{{ field.id }}" class="SC-OptionCard_label">
+          <div class="SC-OptionCard_checkbox">
+            <input type="checkbox" class="SC-Checkbox_input" name="{{ field.name }}" id="{{ field.id }}">
+          </div>
+          <div class="SC-OptionCard_detail">
+            <div class="SC-OptionCard_detail_primary">
+              <div>
+                {{  "pricing.use_points" | t }}
+              </div>
+            </div>
+            <div class="SC-OptionCard_detail_secondary">
+            </div>
+          </div>
+        </label>
+      </div>
+    {% endif %}
+  {%- else -%}
+    {% render "checkout/shipping_information/unavailable", shipping_type: "shipping", shipping_active: shipping_active, click_and_collect_active: click_and_collect_active %}
+  {%- endif -%}
+</section>
+
+{% render "checkout/delivery_windows", form: form %}

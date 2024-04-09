@@ -1,0 +1,38 @@
+{%- default component: "accordion" %}
+{%- default fields: current_search.fields %}
+
+{%- assign traits = fields.filters.traits %}
+
+{%- unless traits == blank %}
+<section class="SC-Filters_traits">
+  {%- for trait in traits.keys %}
+    {%- assign field = traits[trait] %}
+
+    {%- unless field == blank or field.options.size == 0 %}
+      {%- assign open = false %}
+      {%- unless field.value == blank %}
+        {%- assign open = true %}
+      {%- endunless %}
+
+      {%- capture content -%}
+        {%- render "search/filters/field", field: field %}
+      {%- endcapture -%}
+
+      {% case component %}
+        {% when "accordion" %}
+          {% render "shared/accordion",
+                    data_attribute: "data-filter data-source='products'",
+                    heading: field.label,
+                    content: content,
+                    open: open %}
+        {% when "dropdown" %}
+          {% render "shared/dropdown",
+                    data_attribute: "data-filter data-source='products'",
+                    heading: field.label,
+                    content: content,
+                    open: open %}
+      {% endcase %}
+    {%- endunless %}
+  {% endfor %}
+</section>
+{% endunless %}

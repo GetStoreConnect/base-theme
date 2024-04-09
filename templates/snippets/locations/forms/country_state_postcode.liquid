@@ -1,0 +1,89 @@
+<template id="sc-location-form-exact">
+  {%- assign states = location_group.locations | pluck: "state" | uniq | sort_natural %}
+  {%- assign countries = location_group.locations | pluck: "country" | uniq | sort_natural %}
+
+  <form
+    class="sc-container sc-container-capsule"
+    method="get"
+    data-location-search-form="exact"
+    data-location-search-group="{{ location_group.identifier }}">
+    <input type="hidden" name="search_by" value="exact">
+    {%- if countries.size > 1 %}
+      {%- render "shared/dropdown",
+          selection: current_request.params.country,
+          options: countries,
+          name: "country",
+          style_class: "sc-mb-small",
+          label: "t.locations.search.forms.exact.fields.country.label",
+          all_label: "t.locations.search.forms.exact.fields.country.all_label" %}
+    {%- endif %}
+
+    <div class="sc-flex-row sc-gap-small sc-align-items-center">
+      {%- if countries.size > 1 and current_request.params.country == blank %}
+        <div data-combined-state-selector class="sc-pos-relative sc-expand sc-mb-small">
+          <button data-dropdown-trigger class="sc-input-height sc-bg-white sc-shadow sc-border-light sc-border-radius sc-top-100 sc-flex-row sc-expand sc-align-items-center sc-ps-medium" type="button">
+            <span data-dropdown-selection data-default="{{ "locations.search.forms.exact.fields.state.label" | t }}" class="sc-grow">
+              {%- if current_request.params.state == blank %}
+                {{ "locations.search.forms.exact.fields.state.label" | t }}
+              {%- else %}
+                {{ current_request.params.state }}
+              {%- endif %}
+            </span>
+            {%- render "icons/chevron", width: 11 %}
+          </button>
+          <menu data-dropdown-target aria-expanded="false" class="sc-hide sc-max-50vh sc-overflow-y-scroll sc-sides-0 sc-bg-white sc-depth-foreground sc-border-radius sc-shadow-3 sc-pos-absolute sc-flex-col sc-expand sc-p-none">
+            {%- for country in countries %}
+              {%- assign country_states = location_group.locations | where: "country", country | pluck: "state" | uniq | sort_natural %}
+              <fieldset class="sc-pb-small{% unless forloop.last == true %} sc-border-bottom{% endunless %}">
+                <h4 class="sc-font-small sc-shade-dark sc-mt-medium sc-mb-small sc-ms-medium">
+                  {{ country }}
+                </h4>
+                {%- for state in country_states %}
+                  <label class="sc-cursor-pointer sc-hover-bg-lightest sc-pe-small sc-ps-medium sc-m-none sc-pos-relative sc-flex-row sc-gap-small sc-align-items-center sc-expand" type="button">
+                    <input data-dropdown-option{% if state == current_request.params.state %} checked{% endif %} data-country="{{ country }}" type="radio" name="state" value={{ state }} id="{{ state }}" />
+                    {{ state }}
+                  </label>
+                {%- endfor %}
+              </fieldset>
+            {%- endfor %}
+          </menu>
+        </div>
+      {%- endif %}
+
+      {%- for country in countries %}
+        {%- assign country_states = location_group.locations | where: "country", country | pluck: "state" | uniq | sort_natural %}
+
+        {%- if current_request.params.country == country or countries.size == 1 %}
+          {%- assign style_class = "sc-mb-small" %}
+          {%- assign selection = current_request.params.state %}
+        {%- else %}
+          {%- assign style_class = "sc-hide sc-mb-small" %}
+          {%- assign selection = null %}
+        {%- endif %}
+        {%- render "shared/dropdown",
+            id: country,
+            selection: selection,
+            options: country_states,
+            name: "state",
+            style_class: style_class,
+            label: "t.locations.search.forms.exact.fields.state.label",
+            all_label: "t.locations.search.forms.exact.fields.state.all_label" %}
+      {%- endfor %}
+
+      <div class="SC-Field sc-mb-small">
+        <input
+          type="text"
+          name="postcode"
+          class="SC-Field_input sc-expand"
+          id="locations_postcode"
+          placeholder="{{ "locations.search.forms.exact.fields.postcode.placeholder" | t }}"
+          value="{{ current_request.params.postcode }}"/>
+      </div>
+    </div>
+    {%- render "locations/product", product: filter_product, location_group: location_group %}
+    {%- render "locations/forms/category", location_group: location_group, form_id: "exact" %}
+    <button class="SC-Button SC-Button-primary sc-expand" type="submit">
+      {{ "locations.search.forms.exact.buttons.submit" | t: name: location_group.name }}
+    </button>
+  </form>
+</template>

@@ -1,0 +1,25 @@
+{%- default range: blank %}
+
+{%- unless range == blank %}
+  {% if current_store.display_points? %}
+    <div id="points-range" class="sc-pt-small sc-pb-small">
+      <input data-skin="storeconnect"
+        data-js-range-slider
+        data-type="double"
+        data-from="{{ range.min.value | default: range.min.options.first.value }}"
+        data-to="{{ range.max.value | default: range.max.options.first.value }}"
+        data-min="{{ range.min.options.first.value }}"
+        data-max="{{ range.max.options.first.value }}"
+        data-js-filter-on-finish="true"
+        min="{{ range.min.options.first.value }}"
+        max="{{ range.max.options.first.value }}"
+        type="range"
+        id="_points_points_range"
+        class="irs-hidden-input"
+        tabindex="-1"
+        readonly>
+      <input id="_points_min" name="[filters][points][min]" value="{{ range.min.value }}" data-js-range-min autocomplete="off" type="hidden">
+      <input id="_points_max" name="[filters][points][max]" value="{{ range.max.value }}" data-js-range-max autocomplete="off" type="hidden">
+    </div>
+  {%- endif %}
+{%- endunless %}

@@ -1,0 +1,87 @@
+<div class="SC-Dropdown" data-sort>
+  <button
+    class="SC-Dropdown_button"
+    data-dropdown-trigger
+    type="button">
+    <div class="SC-Dropdown_button_label">
+      {{  "shared.sort.sort" | t }}
+    </div>
+    {% render "icons/chevron" %}
+  </button>
+  <div class="SC-Dropdown_body SC-Dropdown_body-right sc-hide" data-dropdown-target aria-expanded="false">
+    {%- for option in current_search.fields.sort.options %}
+      {%- case option.value %}
+      {%- when 'relevance' %}
+        <label for="sort_relevance">
+          <input type="radio" name="sort" id="sort_relevance" value="relevance" onchange="window.StoreConnectUI.Sort.update(event.currentTarget.value)">
+          <div class="SC-Dropdown_option">
+            {{ "shared.sort.sort_relevance" | t }}
+          </div>
+        </label>
+      {%- when 'position' %}
+        <label for="sort_position">
+          <input type="radio" name="sort" id="sort_position" value="position" onchange="window.StoreConnectUI.Sort.update(event.currentTarget.value)">
+          <div class="SC-Dropdown_option">
+            {{ "shared.sort.sort_position" | t }}
+          </div>
+        </label>
+      {%- when 'a-z' %}
+        <label for="sort_a-z">
+          <input type="radio" name="sort" id="sort_a-z" value="a-z" onchange="window.StoreConnectUI.Sort.update(event.currentTarget.value)">
+          <div class="SC-Dropdown_option">
+            {{ "shared.sort.sort_name_a_to_z" | t }}
+          </div>
+        </label>
+      {%- when 'z-a' %}
+        <label for="sort_z-a">
+          <input type="radio" name="sort" id="sort_z-a" value="z-a" onchange="window.StoreConnectUI.Sort.update(event.currentTarget.value)">
+          <div class="SC-Dropdown_option">
+            {{ "shared.sort.sort_name_z_to_a" | t }}
+          </div>
+        </label>
+      {%- when 'low-high' %}
+        <label for="sort_low-high">
+          <input type="radio" name="sort" id="sort_low-high" value="low-high" onchange="window.StoreConnectUI.Sort.update(event.currentTarget.value)">
+          <div class="SC-Dropdown_option">
+            {{ "shared.sort.sort_price_low_to_high" | t }}
+          </div>
+        </label>
+      {%- when 'high-low' %}
+        <label for="sort_high-low">
+          <input type="radio" name="sort" id="sort_high-low" value="high-low" onchange="window.StoreConnectUI.Sort.update(event.currentTarget.value)">
+          <div class="SC-Dropdown_option">
+            {{ "shared.sort.sort_price_high_to_low" | t }}
+          </div>
+        </label>
+      {%- when 'points-low-high' %}
+        <label for="sort_points-low-high">
+          <input type="radio" name="sort" id="sort_points-low-high" value="points-low-high" onchange="window.StoreConnectUI.Sort.update(event.currentTarget.value)">
+          <div class="SC-Dropdown_option">
+            {{ "shared.sort.sort_points_low_to_high" | t }}
+          </div>
+        </label>
+      {%- when 'points-high-low' %}
+        <label for="sort_points-high-low">
+          <input type="radio" name="sort" id="sort_points-high-low" value="points-high-low" onchange="window.StoreConnectUI.Sort.update(event.currentTarget.value)">
+          <div class="SC-Dropdown_option">
+            {{ "shared.sort.sort_points_high_to_low" | t }}
+          </div>
+        </label>
+      {%- when 'newest' %}
+        <label for="sort_newest">
+          <input type="radio" name="sort" id="sort_newest" value="newest" onchange="window.StoreConnectUI.Sort.update(event.currentTarget.value)">
+          <div class="SC-Dropdown_option">
+            {{ "shared.sort.sort_newest" | t }}
+          </div>
+        </label>
+      {%- when 'oldest' %}
+        <label for="sort_oldest">
+          <input type="radio" name="sort" id="sort_oldest" value="oldest" onchange="window.StoreConnectUI.Sort.update(event.currentTarget.value)">
+          <div class="SC-Dropdown_option">
+            {{ "shared.sort.sort_oldest" | t }}
+          </div>
+        </label>
+      {%- endcase %}
+    {%- endfor %}
+  </div>
+</div>

@@ -1,0 +1,71 @@
+{% default order_source: current_cart %}
+<div
+  id="SC-CheckoutPaymentFrom"
+  class="SC-Panel SC-Panel-numbered"
+  data-general-error-message="{{ "checkout.payment.error" | t }}"
+>
+  <div class="SC-Panel_header is-filled">
+    <div class="SC-Panel_header_heading">
+      {{ "checkout.customer_information.header" | t }}
+    </div>
+    <div class="SC-Panel_header_summary">
+      {% render "checkout/cart_shipping_address" %}
+    </div>
+  </div>
+
+  {% if current_cart.require_delivery_method? %}
+    <div class="SC-Panel_header is-filled">
+      <div class="SC-Panel_header_heading">
+        {{ "checkout.delivery.header" | t }}
+      </div>
+      <div class="SC-Panel_header_summary">
+        {% render "checkout/cart_delivery_method" %}
+      </div>
+    </div>
+  {% endif %}
+
+  {% if current_store.accept_terms_enabled? %}
+    <div class="SC-Panel_header is-filled">
+      <div class="SC-Panel_header_heading">
+        {% if current_store.terms_conditions_page %}
+          {{ current_store.terms_conditions_page.title }}
+        {% else %}
+          {{ "checkout.accept_terms.header" | t }}
+        {% endif %}
+      </div>
+    </div>
+  {% endif %}
+
+  <div class="SC-Panel_header">
+    <div class="SC-Panel_header_heading">
+      {{ "checkout.payment.header" | t }}
+    </div>
+  </div>
+
+  <div>
+    {%- if current_cart.points_payment_required? or current_cart.currency_payment_required? %}
+      {%- if current_cart.points_payment_required? and current_account == blank %}
+        <div class="SC-Notice sc-mb">
+          {{ "checkout.points.requires_login" | t }}
+        </div>
+        {% render "account/login/form" %}
+      {%- elsif current_cart.points_payment_required? and current_account.account_points.current_balance < current_cart.total_payable_points %}
+        <div class="SC-Notice sc-mb">
+          {{ "checkout.points.insufficient_balance" | t }}
+        </div>
+      {%- else %}
+        {%- if current_cart.currency_payment_required? %}
+          {% render "checkout/payment_information/select_and_payment" %}
+        {%- elsif current_cart.points_payment_required? %}
+          <section data-points-payment class="sc-mb" style="max-width: 600px">
+            {% render "checkout/payment_information/payment_providers/points_form" %}
+          </section>
+        {%- endif %}
+      {%- endif %}
+    {%- else %}
+      <div class="sc-mb">
+        {% render "checkout/payment_information/payment_providers/store_credit_or_free_form" %}
+      </div>
+    {%- endif %}
+  </div>
+</div>

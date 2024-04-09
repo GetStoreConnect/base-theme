@@ -1,0 +1,15 @@
+{%- assign provider_id = payment_provider.id %}
+{%- assign provider = payment_provider.code %}
+{%- assign form_id = provider | append: "PaymentForm" | append: provider_id %}
+{%- assign button_id = provider | append: "PaymentButton" | append: provider_id %}
+
+{%- form "payment", provider: payment_provider, id: form_id, data-provider: provider, data-provider-id: provider_id, method: 'post' %}
+  <input type="submit"
+         value="{{ 'checkout.gateways.form.pay_now' | t }}"
+         id="{{ button_id }}"
+         class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small" />
+{% endform -%}
+
+<script>
+  StoreConnect.Gateways.Cboss({ providerId: "{{ provider_id }}", providerName: "{{ provider }}" });
+</script>

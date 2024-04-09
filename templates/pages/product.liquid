@@ -1,0 +1,147 @@
+{%- cache "product", items: [current_product, current_store, current_customer, current_cart] %}
+  <div data-remote-target="product">
+    {%- assign is_bundle = current_product.bundle_lead? %}
+
+    <div>
+      <div class="sc-container sc-me" id="SC-product-{{ current_product.slug }}">
+        {%- render "breadcrumbs" %}
+
+        <section class="SC-ProductDisplay{% if is_bundle %} ProductDisplay-bundle{% endif %}" id="SC-ProductDisplay">
+          {%# Images %}
+          <div class="SC-ProductDisplay_images" id="SC-ProductDisplayImages">
+            {%- render "products/product/images", product: current_product %}
+          </div>
+
+          <div class="SC-ProductDisplay_details sc-flex-col sc-gap-small" id="SC-ProductDisplayDetails">
+            <header class="sc-flex-col sc-gap-small">
+              {%# Brand %}
+              {%- if current_product.brand %}
+                <div>{{ current_product.brand.name }}</div>
+              {%- endif %}
+
+              {%# Name %}
+              <div>
+                <h1 class="sc-m-none">{{ current_product.name }}</h1>
+                {%- if current_product.discontinued? %}
+                  {{ "products.show.discontinued" | t }}
+                {%- endif %}
+              </div>
+
+              {%# Code %}
+              <div class="sc-font-small sc-shade-dark">
+                {{ current_product.product_code }}
+              </div>
+
+              {%# Price %}
+              {%- unless is_bundle %}
+                {% render "products/product/price", product: current_product %}
+              {%- endunless %}
+
+              {%# Out of stock %}
+              {%- if current_product.out_of_stock? %}
+                <div class="sc-color-error sc-font-medium sc-mb">
+                  {{ current_product.out_of_stock_text }}
+                </div>
+              {%- endif %}
+
+              {%# Restricted %}
+              {%- if current_product.restricted? %}
+                {% render "products/restricted", product: current_product %}
+              {%- endif %}
+
+              {%- unless is_bundle %}
+                {%# Variant Selector %}
+                {% render "products/product/variant_selector", product: current_product %}
+
+                {%# Add to cart %}
+                <div class="sc-mb">
+                  {% render "products/product/add_to_cart", product: current_product %}
+                </div>
+
+                {%# Summary %}
+                <div class="sc-mb sc-mt">
+                  <div>{{ current_product.summary_content }}</div>
+                  {%# Tax exclusion %}
+                  {%- unless current_product.pricing.hide_price? or current_store.tax_inclusive? or current_product.restricted_text %}
+                    {% if current_product.pricing.price > 0 %}
+                      <div class="SC-ExcludesTax">
+                        {{ "products.show.excluding_tax" | t }}
+                      </div>
+                    {% endif %}
+                  {% endunless %}
+                </div>
+              {%- endunless %}
+            </header>
+
+            {%# Bundle configuration %}
+            {%- if is_bundle %}
+              {%# Price %}
+              {% if current_product.pricing.has_price? %}
+                <div data-bundle-price></div>
+              {% endif %}
+
+              {%# Product options %}
+              <section id="SC-BundleProducts" class="sc-pos-relative" style="min-height: 300px">
+                <div data-bundle="{{ current_product.id }}" class="sc-flex-col sc-gap">
+                  {%- render "shared/loader", active: true %}
+                  {{ "products.show.loading_bundles" | t }}
+                </div>
+              </section>
+            {%- else %}
+              {%# Delivery and pickup %}
+              <div class="sc-mb">
+                {%- render "products/product/inventory", product: current_product %}
+              </div>
+
+              {%# Warranty %}
+              {%- render "products/product/warranty", product: current_product %}
+
+              {%# Support %}
+              {%- render "products/product/support", product: current_product %}
+
+              {%# Downloads %}
+              {%- render "products/product/downloads", product: current_product %}
+            {%- endif %}
+          </div>
+        </section>
+
+        {%- if is_bundle %}
+          <div data-bundle-anchor-variants></div>
+        {%- else %}
+          <div class="sc-mb-spacious" class="SC-ProductContentBlocks" id="SC-ProductContentBlocks">
+            {%# Features %}
+            {%- if current_product.features_content != blank %}
+              <section class="SC-ProductFeatures sc-mb-spacious">
+                <h4 class="SC-ProductFeatures_title">{{ current_product.features_label }}</h4>
+                <div class="sc-rich-text sc-mb">
+                  <div>
+                    {{ current_product.features_content }}
+                  </div>
+                </div>
+              </section>
+            {%- endif %}
+
+            {%# Specifications %}
+            {%- if current_product.specifications_content != blank %}
+              <section class="SC-ProductSpecifications sc-mb-spacious">
+                <h4 class="SC-ProductSpecifications_title">{{ current_product.specifications_label }}</h4>
+                <div class="sc-rich-text sc-mb">
+                  <div>
+                    {{ current_product.specifications_content }}
+                  </div>
+                </div>
+              </section>
+            {%- endif %}
+          </div>
+        {%- endif %}
+
+        {% render "products/product/json-ld", product: current_product %}
+
+        {%# Related products %}
+        <section class="sc-mb">
+          {% render "products/related_products", product: current_product %}
+        </section>
+      </div>
+    </div>
+  </div>
+{%- endcache %}

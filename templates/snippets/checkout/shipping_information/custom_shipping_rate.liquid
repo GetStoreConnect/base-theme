@@ -1,0 +1,29 @@
+<div class="SC-OptionCard custom-shipping-rate" data-fulfilment-option>
+  <label class="SC-OptionCard_label" data-fulfilment-option-trigger>
+    <div class="SC-OptionCard_radio">
+      <div class="SC-RadioInput">
+        {% assign field = form.fields["method"] %}
+        <input type="radio" name="{{ field.name }}" value="{{ shipping_rate.form_value }}" class="SC-Radio_input">
+        <svg viewBox="0 0 100 100">
+          <ellipse cx="50" cy="50" rx="45" ry="45"></ellipse>
+          <ellipse cx="50"  cy="50" rx="28" ry="28"></ellipse>
+        </svg>
+      </div>
+    </div>
+    <div class="SC-OptionCard_detail">
+      <div class="SC-OptionCard_detail_primary">
+        <div>
+          <strong>{{ shipping_rate.name }}</strong>
+        </div>
+        {%- if shipping_rate.instructions_content %}
+          <div class="sc-shade-neutral sc-mt-tiny">
+            {{ shipping_rate.instructions_content }}
+          </div>
+        {%- endif %}
+      </div>
+      <div class="SC-OptionCard_detail_secondary">
+        {{ shipping_rate.price | money }}
+      </div>
+    </div>
+  </label>
+</div>

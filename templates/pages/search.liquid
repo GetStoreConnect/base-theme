@@ -1,0 +1,31 @@
+<div class="sc-container sc-me">
+  {% render "breadcrumbs" %}
+
+  <h1>{{ "search.search_results" | t  }}</h1>
+
+  <div class="sc-mb">
+    {%- render "search/nav" %}
+  </div>
+
+  <div class="SC-Grid">
+    <div class="SC-Grid_sidebar SC-Grid_sidebar_spacious" data-product-sidebar>
+      {%- render "search/filters" %}
+    </div>
+    <div class="SC-Grid_main" data-product-grid>
+      <menu class="SC-Menu sc-justify-space-between sc-mb-small">
+        {%- render "search/filters/filters_button" %}
+        {%- render "search/filters/sort_dropdown" %}
+      </menu>
+
+      <div class="sc-mb">
+        {% if current_search.type == "products" %}
+          {%- render "products/wrapper" %}
+        {% elsif current_search.type == "articles" %}
+          {%- render "articles/wrapper" %}
+        {% elsif current_search.type == "pages" %}
+          {%- render "pages/wrapper" %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>

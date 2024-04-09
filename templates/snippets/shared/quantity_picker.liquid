@@ -6,6 +6,13 @@
 {%- default data: blank -%}
 {%- default update_button: false -%}
 {%- default field_name: "quantity" -%}
+{%- default field_id: "quantity" -%}
+{%- default field: blank -%}
+
+{% if field != blank %}
+  {% assign field_name = field.name %}
+  {% assign field_id = field.id %}
+{% endif %
 
 {%- liquid
 if max != blank
@@ -15,7 +22,7 @@ else
 endif
 %}
 
-<div class="SC-QuantityPicker {{ style_class }}" data-qty-picker>
+<div data-qty-picker class="SC-QuantityPicker {{ style_class }}">
   <button
     class="SC-QuantityPicker_trigger"
     data-qty-picker-trigger
@@ -29,20 +36,26 @@ endif
     {%- render "shared/icons/chevron" %}
   </button>
 
-  <input type="number" name="{{ field_name | strip }}"
-    {% if min != blank %} min="{{ min }}"{% endif %}
-    {% if max != blank %} max="{{ max }}"{% endif %}
+  <input
+    data-qty-picker-input
+    type="number"
+    name="{{ field_name | strip }}"
+    id="{{ field_id }}"
     value="{{ default }}"
     class="SC-QuantityPicker_input"
+    {% if min != blank %} min="{{ min }}"{% endif %}
+    {% if max != blank %} max="{{ max }}"{% endif %}
     {{ data }}
-    />
+  />
+
   {%- if update_button == true %}
     <input
+      data-qty-picker-update
       type="submit"
       value="{{ "shared.quantity_picker.update_label" | t }}"
       class="QuantityPicker_update"
       style="display: none"
-      data-qty-picker-update/>
+    />
   {%- endif %}
   <ul></ul>
 </div>

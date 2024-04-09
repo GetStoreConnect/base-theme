@@ -1,0 +1,16 @@
+{%- form "payment-not-required", type: "points",
+            id: "PointsPaymentForm",
+            class: "SC-Panel SC-Panel-default" %}
+
+  <input type="submit"
+    value="{{ 'checkout.gateways.points_form.pay_now' | t }}"
+    class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small"
+    data-payment-info-submit />
+
+  {% render "checkout/customer_notes", form: form %}
+
+  {% if current_store.staff.size > 0 %}
+    {% render "checkout/assisted_by_user", form: form %}
+  {% endif %}
+
+{%- endform %}

@@ -34,6 +34,37 @@
               country: order.shipping_country,
               postal_code: order.shipping_postal_code %}
     </section>
+
+    {%- comment %} Delivery Options {% endcomment %}
+    {%- default show_deliveries: false %}
+    {%- capture deliveries_content %}
+      {%- for item in order.items %}
+        {%- if item.delivery_date != blank or item.delivery_day != blank %}
+            {%- assign show_deliveries = true %}
+            <div>
+              {{ item.name }}:
+              {%- if item.delivery_day != blank %}
+                {% assign day_of_week = item.delivery_day | downcase %}
+                {{ "deliveries.days.enum." | append: day_of_week | t -}}
+              {%- else %}
+                {{ item.delivery_date | date: "%B %-d, %Y" -}}
+              {%- endif -%}
+              {%- if item.delivery_time != blank -%}
+                , {{ item.delivery_time }}
+              {%- endif %}
+            </div>
+        {%- endif %}
+      {%- endfor %}
+    {%- endcapture %}
+
+    {%- if show_deliveries %}
+      <section class="SC-Panel sc-mb-large" data-order-item-delivery-options="{{ item.id }}">
+        <header class="SC-Panel_header SC-Panel_header-border">
+          <h2 class="SC-Panel_header_heading">{{ "accounts.orders.delivery.heading" | t }}</h2>
+        </header>
+        {{ deliveries_content }}
+      </section>
+    {%- endif %}
   {%- endif %}
 
   {%- comment %} Shipping Notes {% endcomment %}
@@ -47,6 +78,8 @@
       </div>
     </section>
   {%- endif %}
+
+  {%- comment %} Order Items {% endcomment %}
 
   {%- comment %} Payment method {% endcomment %}
   {%- if order.payments.size > 0 %}

@@ -17,8 +17,9 @@
       {%- render "header/geolocation" %}
       <div class="SC-Header_inner">
 
+        {%- assign menu_identifier = current_store.header_menu | try: "identifier" | default: "header" %}
         <div class="SC-Header_inner_left">
-          <button data-menu-init="header" class="SC-Icon SC-Icon-button SC-Icon-large sc-hide-medium-and-up" type="button">
+          <button data-menu-init="{{ menu_identifier }}" class="SC-Icon SC-Icon-button SC-Icon-large sc-hide-medium-and-up" type="button">
             {%- render "shared/icons/hamburger" %}
           </button>
           <div class="sc-hide-up-to-medium">

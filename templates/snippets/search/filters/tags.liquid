@@ -1,0 +1,22 @@
+{%- default component: "accordion" %}
+{%- default fields: current_search.fields %}
+
+{%- assign field = fields.filters.tags %}
+
+{%- unless field == blank or field.options.size == 0 %}
+  {%- assign heading = "t.search.products.filters.tags" %}
+  {%- assign open = false %}
+  {%- if field.value != blank %}
+    {%- assign open = true %}
+  {%- endif %}
+
+  {%- capture content -%}
+    {%- render "search/filters/field", field: field %}
+  {%- endcapture-%}
+
+  {%- if component == "accordion" %}
+    {% render "shared/accordion", heading: heading, open: open, content: content %}
+  {%- else %}
+    {% render "shared/dropdown", heading: heading, open: open, content: content %}
+  {%- endif %}
+{%- endunless %}

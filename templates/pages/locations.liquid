@@ -1,26 +1,74 @@
 {%- default location_group: blank -%}
 {%- default filter_product: blank -%}
-
+{%- default found_locations: "no-search" -%}
 {%- assign google_maps_api_key = store_variables['google_maps_api_key'] %}
+{%- assign initial_location = current_store.location_finder.fallback_initial_location %}
 
-<article id="location-search-{{ location_group.identifier }}">
-  {%- unless google_maps_api_key == blank %}
-    {%- render "locations/forms/near",
-      location_group: location_group,
-      filter_product: filter_product,
-      found_locations: found_locations,
-      google_maps_api_key: google_maps_api_key %}
-  {%- else %}
-    {%- render "locations/forms/exact",
-      location_group: location_group,
-      filter_product: filter_product,
-      found_locations: found_locations %}
-  {%- endunless %}
-</article>
+{%- render "locations/forms/exact",
+    location_group: location_group,
+    filter_product: filter_product,
+    found_locations: found_locations %}
+{%- render "locations/forms/near",
+    location_group: location_group,
+    filter_product: filter_product,
+    found_locations: found_locations,
+    google_maps_api_key: google_maps_api_key %}
 
-<script src="{{ 'location-search.js' | asset_url }}"></script>
-{%- if google_maps_api_key == blank %}
-  <script>window.StoreConnect.LocationSearch.init()</script>
+{%- unless google_maps_api_key == blank %}
+  <article
+    data-location-search
+    id="location-search-{{ location_group.identifier }}"
+    class="sc-pos-relative sc-bg-lightest sc-md:flex-row"
+  >
+    <section class="sc-pos-relative sc-flex-col overflow-hidden sc-md:40vw sc-lg:30vw sc-no-shrink sc-shadow-2">
+      <h1 class="sc-mb-small sc-hide">{{ location_group.name }}</h1>
+      {% comment %} Location form {% endcomment %}
+      <div data-location-search-form class="sc-p-small"></div>
+      {% comment %} Found locations {% endcomment %}
+      {%- unless found_locations == "no-search" %}
+        <div data-locations class="sc-pos-relative sc-flex-col sc-gap-small sc-p-small sc-overflow-y-scroll">
+          {%- for match in found_locations %}
+            {%- render "locations/result_card",
+              match: match,
+              google_maps_api_key: google_maps_api_key,
+              distance_unit: current_request.params.distance_unit %}
+          {%- endfor %}
+        </div>
+      {%- endunless %}
+    </section>
+    {% comment %} Location map {% endcomment %}
+    <section
+      data-location-map
+      class="sc-color-primary"
+      style="width: 100%; height: 100%;"
+    ></section>
+  </article>
+  <script>
+    (g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})({
+      key: "{{ google_maps_api_key }}",
+      v: "weekly"
+    });
+  </script>
+  <script src="{{ 'locations.js' | asset_url }}"></script>
+
+{% comment %} Without google API {% endcomment %}
 {%- else %}
-  <script async src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&libraries=places&callback=StoreConnect.LocationSearch.initWithMap&v=weekly"></script>
-{%- endif %}
+  <article data-location-search id="location-search-{{ location_group.identifier }}">
+    <section class="sc-p-small sc-pos-relative sc-flex-col">
+      <div data-location-search-form
+        style="max-width: 500px; width: 100%; margin: 0 auto;"
+        class="sc-p-base"></div>
+      {%- unless found_locations == "no-search" %}
+        <div data-locations class="sc-container sc-overflow-x-scroll sc-flex-wrap sc-flex-col sc-gap-small" style="max-height: 420px;">
+          {%- for match in found_locations %}
+            {%- render "locations/result_card",
+              match: match,
+              google_maps_api_key: google_maps_api_key,
+              distance_unit: current_request.params.distance_unit %}
+          {%- endfor %}
+        </div>
+      {%- endunless %}
+    </section>
+  </article>
+   <script src="{{ 'locations.js' | asset_url }}"></script>
+{%- endunless %}

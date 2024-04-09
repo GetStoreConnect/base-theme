@@ -1,0 +1,12 @@
+{%- if product.available_for_pickup? %}
+  <div id="SC-ProductInventory" class="SC-Callout sc-mb-medium">
+    {%# Pick up availability %}
+    <div class="sc-mb-tiny">
+      <strong>{{ "products.inventory.want_to_click_and_collect" | t }}</strong>
+    </div>
+    <div>
+      <strong>{{ "products.inventory.available" | t }}</strong>
+      {{ product.pickup_locations | pluck: "name" | join: ", " }}
+    </div>
+  </div>
+{%- endif %}

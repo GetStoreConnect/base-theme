@@ -1,0 +1,32 @@
+{%- default product: blank %}
+{%- if product != blank %}
+  {%- assign master = product.master | default: product %}
+
+  {%- cache "variant_json", items: [master, current_store, current_customer], expires_in: 3600 -%}
+    {%- capture variant_options -%}
+      [
+      {%- for option in product.variant_options %}
+        {
+          "path": "{{ option.variant.path }}",
+          {%- for type in option.variant_types %}
+            "{{ type.form_value }}": "{{ type.variant_choices.first.form_value }}"
+            {%- unless forloop.last %},{% endunless %}
+          {%- endfor %}
+        }{% unless forloop.last %},{% endunless %}
+      {%- endfor %}
+      ]
+    {%- endcapture %}
+
+    <script>
+      window.variantData = {
+        "types": [
+          {%- assign variant_types = product.variant_types | pluck: "form_value" %}
+          {%- for variant_type in variant_types %}
+            "{{ variant_type | j }}"{% unless forloop.last %},{% endunless %}
+          {%- endfor %}
+        ],
+        "products": {{ variant_options }}
+      }
+    </script>
+  {%- endcache %}
+{%- endif %}

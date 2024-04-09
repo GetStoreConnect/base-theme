@@ -1,0 +1,74 @@
+{% liquid
+assign media = product.media | only: "file_type", "image", "video" | where: "url"
+
+if product.variant? and product.master.media.size > 0
+  assign master_media = product.master.media | only: "file_type", "image", "video" | where: "url"
+  assign media = media | concat: master_media | uniq: "id"
+endif
+
+if product.master? and product.variant_media.size > 0
+  assign variant_media = product.variant_media | only: "file_type", "image", "video" | where: "url" | slice: 0, theme_variables["product.variants.images.max_variant_images"]
+  assign media = media | concat: variant_media | uniq: "id"
+endif
+
+assign main_medium = media.first
+%}
+<section class="SC-ProductImages">
+  {%- if main_medium != blank %}
+    {%# Main image %}
+    <div class="SC-ProductImages_main" data-product-image-container>
+      <img data-product-image class="sc-hide">
+      <video data-product-video class="sc-hide" controls style="width: 100%;"><source></video>
+    </div>
+  {% else %}
+    {%# Placeholder %}
+    <div class="SC-ProductImages_main">
+      {% render "shared/placeholder_image" %}
+    </div>
+  {%- endif %}
+
+  {%# Thumbnails %}
+  {%- if media.size > 0 %}
+    <div id="SC-ProductThumbnails" class="SC-ProductImages_thumbnails sc-hide" data-product-thumbnails-container>
+      <div class="SC-ProductImages_thumbnails_track" data-product-thumbnails>
+        {% for medium in media %}
+          {% if medium.video? %}
+            <video
+                id="thumbnail-{{ medium.id }}"
+                class="SC-ProductImages_thumbnail"
+                class="SC-ProductImages_thumbnail"
+                data-product-thumbnail="{{ medium.id }}"
+                data-src="{{ medium.url }}">
+              <source src="{{ medium.url }}">
+            </video>
+          {% else %}
+            {% assign image = medium.image %}
+            <img
+                src="{{ image.thumb_url }}"
+                id="thumbnail-{{ image.id }}"
+                alt="{{ image.alt_text | default: product.name }}"
+                class="SC-ProductImages_thumbnail"
+                data-product-thumbnail="{{ image.id }}"
+                data-src="{{ image.large_url }}"
+                data-src-zoom="{{ image.huge_url }}">
+          {%- endif %}
+        {%- endfor %}
+      </div>
+    </div>
+  {%- endif %}
+
+  {%# Gallery %}
+  {%- if main_medium != blank %}
+    <div class="SC-ProductGallery" data-product-gallery>
+      <button class="SC-ProductGallery_close" data-product-gallery-close type="button">
+        {% render "/shared/icons/close" %}
+      </button>
+      <img src
+          loading="lazy"
+          class="SC-ProductGallery_image"
+          draggable="false"
+          width="640"
+          data-product-gallery-image>
+    </div>
+  {%- endif %}
+</section>

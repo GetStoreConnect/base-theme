@@ -1,0 +1,16 @@
+{% default action: "checkout" %}
+{% default name: "captcha_token" %}
+
+{% if store_variables["captcha_site_key"] %}
+  {% assign captcha_site_key = store_variables["captcha_site_key"] %}
+
+  {% capture captcha_token %}captcha_{{ "now" | date: "%N" }}{% endcapture %}
+  <input name="{{ name }}" id="{{ captcha_token }}" type="hidden" />
+  <script>
+    grecaptcha.ready(function() {
+      grecaptcha.execute("{{ captcha_site_key }}", {action: "{{ action }}"}).then(function(token) {
+        document.getElementById("{{ captcha_token }}").value = token;
+      });
+    });
+  </script>
+{% endif %}

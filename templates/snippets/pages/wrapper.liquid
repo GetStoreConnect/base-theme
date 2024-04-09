@@ -1,0 +1,15 @@
+{% default pages: current_search.results.pages %}
+{%- if current_search.count > 0 %}
+  {% paginate pages by current_search.per_page %}
+    <div data-show-more>
+      {% for page in pages %}
+        {% render "pages/card", page: page %}
+      {% endfor %}
+    </div>
+    {% render 'shared/pagination-nav', paginate: paginate %}
+  {% endpaginate %}
+{% else %}
+  <div class="SC-Fallback">
+    {{ "search.pages.index.no_results" | t  }}
+  </div>
+{% endif %}

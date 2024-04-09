@@ -1,0 +1,40 @@
+<div class="sc-container sc-container-skinny sc-container-spacious">
+  <h1>
+    {{ "checkout.title" | t }}{% if current_cart.test_order? %} - TESTING ONLY {% endif %}
+  </h1>
+  <div class="SC-Grid">
+    <div class="SC-Grid_main">
+      {%- case current_checkout_step %}
+      {%- when "customer_information" %}
+        {%- form "checkout-customer-information",
+              id: 'SC-CheckoutShippingForm',
+              class: 'SC-Panel SC-Panel-numbered',
+              data-required-fields-form: true %}
+          {% render "form_errors", errors: form.errors %}
+          {% render "checkout/customer_information/form", form: form %}
+        {%- endform %}
+      {%- when "shipping_information" %}
+        {%- form "checkout-shipping-information",
+              class: 'SC-Panel SC-Panel-numbered' %}
+          {% render "form_errors", errors: form.errors %}
+          {% render "checkout/shipping_information/form", form: form %}
+        {%- endform %}
+      {%- when "accept_terms" %}
+        {%- form "checkout-accept-terms",
+              id: 'SC-CheckoutTerms',
+              class: 'SC-Panel SC-Panel-numbered' %}
+          {% render "form_errors", errors: form.errors %}
+          {% render "checkout/accept_terms/form", form: form %}
+        {%- endform %}
+      {%- when "payment_information" %}
+        {% render "checkout/payment_information/page" %}
+      {%- endcase %}
+    </div>
+    <div class="SC-Grid_summary">
+      {% render "orders/order_summary", source: current_cart %}
+      {% render "checkout/account_credit" %}
+      {% render "checkout/vouchers" %}
+      {% render "checkout/promo_code" %}
+    </div>
+  </div>
+</div>

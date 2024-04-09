@@ -1,0 +1,69 @@
+{%- default product: blank %}
+
+{%- if product.pricing.has_price? %}
+  {%- form "add-to-cart", product_id: product.id, data-cart-form: true %}
+    {%# Booking %}
+    {%- if product.bookable? && ! product.variants.size > 0 %}
+      {% render "products/product/booking", product: product, form: form %}
+    {%- endif %}
+
+    {% render "products/in_your_cart", compact: true, hide_image: true %}
+
+    {% if product.can_add_to_cart? %}
+      {%- assign button_disabled = false %}
+      {% if product.master? and product.variants.size > 0 or product.bookable? %}
+        {%- assign button_disabled = true %}
+      {%- endif %}
+      <div class="SC-AddToCart">
+        {%# Quantity picker %}
+        {%- if product.can_select_quantity? %}
+          {%
+            render "shared/quantity_picker",
+              min: 1,
+              style_class: "SC-QuantityPicker-large sc-mr-small",
+              field: form.fields["quantity"]
+          %}
+        {%- else %}
+          <input type="hidden" name="quantity" value="{{ product.total_available_to_sell }}">
+        {%- endif %}
+
+        {%# Variable price picker %}
+        {%- if product.pricing.variable_pricing? %}
+          {%
+            render "shared/variable_pricing_picker",
+              pricing: product.pricing,
+              min: 1,
+              style_class: "SC-PricePicker-large sc-mr-small",
+              field: form.fields["price"]
+          %}
+        {%- endif %}
+
+        {%# Add to cart %}
+        <input type="submit"
+              formaction="{{ form.path | params: after: "product" }}"
+              class="SC-Button SC-Button-add sc-grow"
+              {% if button_disabled %}disabled{% endif %}
+              data-add-to-cart
+              value="{{ product.add_to_cart_text }}"
+              data-disable-with="{{ product.add_to_cart_text }}"
+        />
+
+        {%- if product.can_purchase? and theme_variables["products.card.hide_purchase_button"] == false %}
+          {%# Buy now %}
+          <input type="submit"
+                 formaction="{{ form.path | params: after: "cart" }}"
+                 class="SC-Button SC-Button-buy SC-Button-expanded-up-to-large"
+                 {% if button_disabled %}disabled{% endif %}
+                 data-buy-now
+                 value="{{ product.buy_it_now_text }}"
+                 data-disable-with="{{ product.buy_it_now_text }}"
+          />
+        {%- endif %}
+      </div>
+    {%- endif %}
+  {% endform %}
+{%- else %}
+  <div class="sc-shade-neutral sc-mb-small">
+    {{ product.unavailable_text }}
+  </div>
+{%- endif %}

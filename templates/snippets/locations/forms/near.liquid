@@ -1,72 +1,55 @@
-{%- default location_group: blank -%}
-{%- default found_locations: "no-search" -%}
-{%- default google_maps_api_key: blank -%}
+<template id="sc-location-form-near">
+  {%- default location_group: blank -%}
+  {%- default found_locations: "no-search" -%}
+  {%- default google_maps_api_key: blank -%}
 
-<article data-location-search class="sc-pos-relative sc-bg-lightest sc-md:flex-row">
   <form
-    class="sc-md:40vw sc-lg:30vw sc-no-shrink sc-pos-relative sc-flex-col sc-shadow-2"
     method="get"
+    class="sc-flex-col sc-gap-tiny"
+    data-zone="{{ current_store.zone.name }}"
     data-location-search-form="near"
     data-location-search-group="{{ location_group.identifier }}"
     data-distance-unit-imperial="{{ "locations.search.results.abbr.imperial" | t }}"
     data-distance-unit-metric="{{ "locations.search.results.abbr.metric" | t }}">
-
     <input type="hidden" name="search_by" value="near">
     <input type="hidden" name="distance_unit">
     <input type="hidden" name="lat" value="{{ current_request.params.lat }}">
     <input type="hidden" name="lng" value="{{ current_request.params.lng }}">
-
-    <header class="sc-expand sc-pos-relative sc-depth-neutral sc-bg-white sc-shadow-2 sc-p-base">
-      <h1 class="sc-mb-small">{{ location_group.name }}</h1>
-      <div class="sc-flex-row sc-gap-small">
-        <div class="SC-Field sc-grow sc-mb-small">
-          <label class="SC-Field_label" for="locations_distance">
-            {{ "locations.search.forms.near.fields.address.label" | t }}
-            <span data-location-error class="sc-color-error sc-hide">
-              {{ "locations.search.forms.near.fields.address.errors.invalid_address" | t }}
-            </span>
-            <button data-use-geoloc class="SC-Link sc-hide" type="button">
-              {{ "locations.search.forms.near.fields.address.use_current_location" | t }}
-            </button>
-          </label>
-          <input
-            type="text"
-            name="address"
-            class="SC-Field_input sc-expand"
-            id="locations_address"
-            placeholder="{{ "locations.search.forms.near.fields.address.placeholder" | t }}"
-            value="{{ current_request.params.address }}"
-            autofocus>
-        </div>
-        <div class="SC-Field sc-mb-small" style="width: 110px">
-          <label class="SC-Field_label" for="locations_distance">
-            {{ "locations.search.forms.near.fields.distance.label" | t }}
-            (<span data-distance-unit></span>)
-          </label>
-          <input type="number" name="distance" class="SC-Field_input sc-expand" id="locations_distance" min="1" placeholder="{{ "locations.search.forms.near.fields.distance.placeholder" | t }}" value="{{ current_request.params.distance | default: theme_variables["locations.search.default_distance"] }}">
-        </div>
+    <div class="sc-flex-row sc-gap-tiny">
+      <div class="SC-Field sc-grow sc-m-none">
+        <label class="SC-Field_label" for="locations_distance">
+          {{ "locations.search.forms.near.fields.address.label" | t }}
+          <span data-location-error class="sc-color-error sc-hide">
+            {{ "locations.search.forms.near.fields.address.errors.invalid_address" | t }}
+          </span>
+          <button data-use-geoloc class="SC-Link sc-hide" type="button">
+            {{ "locations.search.forms.near.fields.address.use_current_location" | t }}
+          </button>
+        </label>
+        <input
+          type="text"
+          name="address"
+          class="SC-Field_input sc-expand"
+          id="locations_address"
+          placeholder="{{ "locations.search.forms.near.fields.address.placeholder" | t }}"
+          value="{{ current_request.params.address }}"
+          autofocus>
       </div>
-      {%- render "locations/product", product: filter_product, location_group: location_group %}
-      {%- render "locations/forms/category", location_group: location_group, form_id: "near" %}
-      <button class="SC-Button SC-Button-primary sc-expand" type="submit" disabled data-submit>{{ "locations.search.forms.exact.buttons.submit" | t: name: location_group.name }}</button>
-    </header>
-    {%- render "locations/results_summary", found_locations: found_locations %}
+      <div class="SC-Field sc-m-none" style="width: 110px">
+        <label class="SC-Field_label" for="locations_distance">
+          {{ "locations.search.forms.near.fields.distance.label" | t }}
+          (<span data-distance-unit></span>)
+        </label>
+        <input type="number" name="distance" class="SC-Field_input sc-expand" id="locations_distance" min="1" placeholder="{{ "locations.search.forms.near.fields.distance.placeholder" | t }}" value="{{ current_request.params.distance | default: theme_variables["locations.search.default_distance"] }}">
+      </div>
+    </div>
+    {%- render "locations/product", product: filter_product, location_group: location_group %}
+    {%- render "locations/forms/category", location_group: location_group, form_id: "near" %}
+    <button class="SC-Button SC-Button-primary sc-expand" type="submit" disabled data-submit>
+      {{ "locations.search.forms.exact.buttons.submit" | t: name: location_group.name }}
+    </button>
     {%- unless found_locations == "no-search" %}
-      {%- if found_locations.size > 0 %}
-        <div data-location-search-results
-          class="sc-pos-relative sc-overflow-scroll sc-flex-row sc-md:flex-col sc-gap-small sc-pt-micro sc-ps-small sc-pb-small sc-md:p-small">
-          {%- for match in found_locations %}
-            {%- render "locations/result_card",
-                match: match,
-                google_maps_api_key: google_maps_api_key,
-                distance_unit: current_request.params.distance_unit %}
-          {%- endfor %}
-        </div>
-      {%- endif %}
+      {%- render "locations/results_summary", found_locations: found_locations %}
     {%- endunless %}
-    {%- render "shared/loader", active: true, contextual: true %}
   </form>
-
-  <section data-location-search-map class="sc-color-primary" style="width: 100%; height: 100%;">
-  </section>
-</article>
+</template>

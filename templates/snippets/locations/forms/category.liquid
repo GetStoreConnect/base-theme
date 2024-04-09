@@ -6,7 +6,7 @@
     {%- assign categories = location_group.categories | sort: "name" %}
 
     {%- if theme_variables["locations.search.multiple_categories"] == true %}
-      <div data-selector="categories" class="sc-pos-relative sc-expand sc-m-none sc-mb-small">
+      <div data-selector="categories" class="sc-pos-relative sc-expand sc-m-none sc-m-none">
         <button data-dropdown-trigger class="sc-input-height sc-bg-white sc-shadow sc-border-light sc-border-radius sc-flex-row sc-align-items-center sc-expand sc-ps-medium" type="button">
           <span data-dropdown-selection class="sc-grow sc-truncate">
             {{ "locations.search.forms.common.fields.category.label" | t }}
@@ -24,7 +24,7 @@
         </menu>
       </div>
     {%- else %}
-      <div class="SC-Field sc-flex-grow sc-mb-small">
+      <div class="SC-Field sc-flex-grow sc-m-none">
         <select name="category" class="SC-Field_select" id="locations_category__{{ form_id }}">
           <option value="">{{ "locations.search.forms.common.fields.category.prompt" | t }}</option>
           {%- for category in categories %}

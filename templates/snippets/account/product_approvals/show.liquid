@@ -91,7 +91,9 @@
               {{ "accounts.product_approvals.show.product" | t }}
             </h3>
           </header>
-          {% render "products/card", product: approval.product %}
+          {%- cache "product", items: [product, current_store, current_customer] -%}
+            {%- render "products/card", product: approval.product %}
+          {%- endcache -%}
         {% else %}
           <header class="SC-Panel_header SC-Panel_header-border">
             <h3 class="SC-Panel_header_heading">

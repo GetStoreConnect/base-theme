@@ -6,8 +6,17 @@
 {%- default name: blank -%}
 {%- default style_class: blank -%}
 
+{%- if options.size == 1 %}
+  {%- assign selection = options.first %}
+{%- endif %}
+
 <div data-selector="{{ name }}"{% unless id == blank %} data-id="{{ id }}" {% endunless %}class="{% unless style_class == blank %}{{ style_class }} {% endunless %}sc-pos-relative sc-expand">
-  <button data-dropdown-trigger class="sc-input-height sc-bg-white sc-shadow sc-border-light sc-border-radius sc-top-100 sc-flex-row sc-expand sc-align-items-center sc-ps-medium" type="button">
+  <button
+    data-dropdown-trigger
+    {% if options.size == 1 %}disabled{% endif %}
+    class="sc-input-height sc-bg-white sc-shadow sc-border-light sc-border-radius sc-top-100 sc-flex-row sc-expand sc-align-items-center sc-ps-medium"
+    type="button"
+  >
     <span data-dropdown-selection data-default="{{ label }}" class="sc-grow">
       {%- if selection == blank %}
         {{ label }}

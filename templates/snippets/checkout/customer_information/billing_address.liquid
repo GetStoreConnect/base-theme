@@ -1,0 +1,52 @@
+<h4>{{ "checkout.customer_information.billing_address.heading" | t }}</h4>
+<div class="sc-mb-large" data-billing-card>
+  {%# Edit %}
+  <menu class="SC-Card_menu">
+    <button data-edit-billing class="SC-Link is-hidden" type="button">
+      {{ "checkout.customer_information.billing_address.edit" | t }}
+    </button>
+  </menu>
+  {%# Checkbox %}
+  {% assign billing_same_as_shipping_field = form.fields["billing_same_as_shipping"] %}
+  <div class="SC-Checkbox" data-billing-checkbox>
+    <input type="hidden" name="{{ billing_same_as_shipping_field.name }}" value="0" />
+    <input type="checkbox" id="{{ billing_same_as_shipping_field.id }}" name="{{ billing_same_as_shipping_field.name }}" value="1" class="Checkbox_input"{% if billing_same_as_shipping_field.value %} checked{% endif %} />
+    <label for="{{ billing_same_as_shipping_field.id }}" class="Checkbox_label">
+      {{ "checkout.customer_information.billing_address.billing_address_same_as_shipping_address" | t }}
+    </label>
+  </div>
+  {%# Billing address card %}
+  {%- assign field = form.fields["billing_address_lines"] -%}
+  {%- if field %}
+    <address data-billing-address class="is-hidden">
+      <div class="sc-mb-micro">
+        {% for line in field.value %}
+          <div data-billing-address-line-{{ forloop.index }}>{{ line }}</div>
+        {% endfor %}
+      </div>
+      <div>
+        {{ form.fields["billing_city"].value }},
+        {{ form.fields["billing_state"].value }}
+        {{ form.fields["billing_postal_code"].value }}
+      </div>
+    </address>
+  {%- endif %}
+
+  {%# Edit billing address %}
+  <div data-billing-form class="{% if billing_same_as_shipping_field.value %}is-hidden{% endif %}">
+    {% render "checkout/customer_information/address", form: form, address_type: "billing" %}
+  </div>
+</div>
+
+<script>
+  (function() {
+    document.addEventListener('DOMContentLoaded', function() {
+      const billingForm = document.querySelector('[data-billing-form]');
+      const billingCheckbox = document.querySelector('[data-billing-checkbox] input[type=checkbox]');
+
+      billingCheckbox.addEventListener('change', function() {
+        billingForm.classList.toggle('is-hidden');
+      });
+    });
+  })();
+</script>

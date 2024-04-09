@@ -83,6 +83,7 @@ accounts.orders.bookings.attendees.placeholders.phone,Phone
 accounts.orders.bookings.attendees.save,Save
 accounts.orders.bookings.attendees_required_notice,Your booking has been received. Please also make sure to submit the attendee details below.
 accounts.orders.bookings.heading,Bookings
+accounts.orders.delivery.heading,Delivery Preferences
 accounts.orders.index.currency_and_points_connector,and
 accounts.orders.index.date,Date
 accounts.orders.index.heading,Orders
@@ -196,8 +197,10 @@ accounts.profile.sections.subscriptions.next_due,Next Due
 accounts.profile.sections.subscriptions.no_subscriptions,No Subscriptions
 accounts.profile.sections.subscriptions.view_all,View all
 accounts.register.form.headings.address,Address
+accounts.register.form.headings.company_name,Company details
 accounts.register.form.headings.contact,Contact details
 accounts.register.form.headings.credentials,Login details
+accounts.register.form.labels.company_name,Company name
 accounts.register.form.labels.email,Email
 accounts.register.form.labels.firstname,First name
 accounts.register.form.labels.lastname,Last name
@@ -248,6 +251,7 @@ accounts.subscriptions.status.enum.cancelled,Cancelled
 accounts.subscriptions.status.enum.delinquent,Delinquent
 accounts.subscriptions.status.enum.expired,Expired
 accounts.subscriptions.status.enum.suspended,Suspended
+additional_payments.not_required,No further payments required.
 articles.category.no_articles,There are no articles in this category
 articles.index.heading,Latest Articles
 articles.index.no_articles,There are no articles
@@ -320,6 +324,7 @@ checkout.account_credits.remove,Remove
 checkout.account_credits.select_prompt,Select an account credit...
 checkout.assisted_by.were_you_assisted_with_this_order,Were you assisted with this order?
 checkout.customer_information.billing_address.billing_address_same_as_shipping_address,Same as Shipping Address
+checkout.customer_information.billing_address.edit,Edit
 checkout.customer_information.billing_address.heading,Billing Address
 checkout.customer_information.buttons.finish_quote,Submit Quote Request
 checkout.customer_information.buttons.next,Continue
@@ -346,6 +351,13 @@ checkout.customer_information.new_recipient.ship_to_me,Ship to me
 checkout.customer_notes.add_notes_about_your_order,Add notes about your order
 checkout.customer_notes.enter_notes,Enter Notes
 checkout.delivery.header,Delivery
+checkout.delivery_options.date_prompt,Choose your preferred delivery date
+checkout.delivery_options.day_prompt,Choose your preferred day of the week for delivery
+checkout.delivery_options.delivery_date,Delivery Date
+checkout.delivery_options.header,Delivery Options
+checkout.delivery_options.no_available_delivery_dates,We will contact you to arrange your preferred delivery date.
+checkout.delivery_options.no_available_delivery_days,We will contact you to arrange your preferred delivery day.
+checkout.delivery_options.timeslot_prompt,Choose your preferred delivery time
 checkout.gateways.form.card_name,Name on card
 checkout.gateways.form.card_number,Card number
 checkout.gateways.form.card_number_placeholder,0000 0000 0000 0000
@@ -362,7 +374,6 @@ checkout.gateways.form.pay_now,Pay Now
 checkout.gateways.form.verification,CVC
 checkout.gateways.form.verification_placeholder,123
 checkout.gateways.free_form.no_payment_required,No payment required
-checkout.gateways.free_form.purchase,Purchase
 checkout.gateways.pay_by_account_form.account_on_credit_hold,"Account is on credit hold, please contact us for information."
 checkout.gateways.pay_by_account_form.enter_purchase_order_number,Enter Purchase Order Number
 checkout.gateways.pay_by_account_form.pay_now,Pay Now
@@ -374,41 +385,51 @@ checkout.gateways.store_credit_form.paying_with_voucher,Paying by voucher
 checkout.gateways.store_credit_form.purchase,Purchase
 checkout.gateways.stripe_ach_form.accept,Accept
 checkout.gateways.stripe_ach_form.accept_terms,"By clicking accept, you authorize %{name} to debit the bank account specified above for any amount owed for charges arising from your use of %{name} services and/or purchase of products from %{name}, pursuant to %{name} website and terms, until this authorization is revoked. You may amend or cancel this authorization at any time by providing notice to %{name} with 30 (thirty) days notice."
+checkout.gateways.stripe_ach_form.account_holder_prompt,Choose...
 checkout.gateways.stripe_ach_form.account_holder_type,Account Holder Type
 checkout.gateways.stripe_ach_form.account_name,Account Name
 checkout.gateways.stripe_ach_form.account_number,Account Number
+checkout.gateways.stripe_ach_form.company,Company
 checkout.gateways.stripe_ach_form.email,Email
+checkout.gateways.stripe_ach_form.individual,Individual
 checkout.gateways.stripe_ach_form.pay_now,Authorize Now
 checkout.gateways.stripe_ach_form.routing_number,Routing Number
 checkout.payment.error,"Sorry, an error occurred while trying to process the payment. Please try again later."
 checkout.payment.header,Payment
-checkout.please_fix_the_following_errors,Please fix the following errors
 checkout.points.insufficient_balance,You do not have enough points to complete this order
 checkout.points.requires_login,You must be logged in to pay with points
 checkout.promo_codes.apply,Apply
-checkout.promo_codes.enter_promo_code,Enter promo code
 checkout.promo_codes.heading,Promo Codes
 checkout.shipping.click_and_collect.available_from,Available %{from}
 checkout.shipping.click_and_collect.lead_time,Please allow %{lead_time} before collection
 checkout.shipping.click_and_collect.lead_time_immediate,Available for collection now
 checkout.shipping.click_and_collect.out_of_stock,Out of Stock
+checkout.shipping.collection_time.header,When do you expect to collect your order?
+checkout.shipping.collection_time.placeholder,Est. collection date
+checkout.shipping.form.click_and_collect,Click & Collect
 checkout.shipping.form.next,Next
-checkout.shipping.form.remove_from_cart,(Remove from cart)
-checkout.shipping.form.the_following_items_cannot_be_delivered,The following items cannot be delivered:
+checkout.shipping.form.shipping,Shipping
 checkout.shipping.shipping_notes.header,Shipping Instructions
 checkout.shipping.shipping_notes.placeholder,Enter Shipping Instructions
 checkout.shipping.shipping_notes.reveal_label,Add Shipping Instructions
-checkout.shipping.shipping_providers.australia_post.could_not_retrieve_shipping_rates,Could not retrieve shipping rates from Australia Post: %{error_message}.
-checkout.shipping.shipping_providers.star_track.could_not_retrieve_shipping_rates,Could not retrieve shipping rates from StarTrack: %{error_message}.
 checkout.shipping.unavailable.click_and_collect_prompt,Click & Collect is not available for all items in your cart. Try removing some items.
 checkout.shipping.unavailable.click_and_collect_prompt_or_ship,Click & Collect is not available for all items in your cart. Choose a shipping option or try removing some items.
+checkout.shipping.unavailable.no_shipping_available,"No shipping available, please contact us for shipping options."
 checkout.shipping.unavailable.shipping_option_prompt,There are no shipping options available that cater for all items in your cart. Try removing some items.
 checkout.shipping.unavailable.shipping_option_prompt_or_click_and_collect,There are no shipping options available that cater for all items in your cart. Try Click & Collect or remove some items.
-checkout.shipping.unavailable.we_can_deliver_via,We can deliver via:
+checkout.shipping.unavailable.we_can_deliver_via,Options are:
+checkout.title,Checkout
 checkout.vouchers.apply,Apply
 checkout.vouchers.enter_code,Enter voucher code
 checkout.vouchers.heading,Vouchers
 checkout.vouchers.remove,Remove
+deliveries.days.enum.friday,Friday
+deliveries.days.enum.monday,Monday
+deliveries.days.enum.saturday,Saturday
+deliveries.days.enum.sunday,Sunday
+deliveries.days.enum.thursday,Thursday
+deliveries.days.enum.tuesday,Tuesday
+deliveries.days.enum.wednesday,Wednesday
 geolocation.bar.choose_region,Choose your country or region
 geolocation.bar.dismiss,X
 geolocation.bar.select,Confirm
@@ -425,7 +446,7 @@ header.dropdowns.cart.close,Close
 header.dropdowns.cart.heading,Cart
 header.menu.account,Account
 header.menu.close,Close
-header.search.placeholder,"Search for products, categories or content"
+header.search.placeholder,Search for products or content
 header.submenu.back_to_main,Back to main menu
 line_items.links.edit_bundle,Edit bundle
 line_items.links.remove_item,Remove
@@ -464,6 +485,7 @@ locations.search.results.menu.view,Show details
 locations.search.results.menu.website,Website
 locations.search.results.postcode,in post code %{postcode}
 order_summary.account_credit,Account Credit
+order_summary.delivery_options.delivery_preference,Delivery: %{preference}
 order_summary.cart.total_payable,Payment due now
 order_summary.currency_and_points_connector,and
 order_summary.includes_fixed_subscriptions,Total includes %{amount} of fixed-term subscriptions
@@ -522,7 +544,7 @@ products.approvals.status.expired,Your previous approval has expired
 products.approvals.status.none,You do not have approval to purchase this item
 products.approvals.status.pending_html,Your approval starts on %{date}
 products.availability.address_label,Address
-products.availability.available,Available
+products.availability.available,%{count} Available
 products.availability.closest_with_availability,Closest dates with availability:
 products.availability.no_availabilities,No availabilities in the selected date range
 products.availability.sold_out,Sold out
@@ -562,10 +584,12 @@ products.related_products.title,Related Products
 products.show.discontinued,(Discontinued)
 products.show.excluding_tax,Price excludes tax
 products.show.loading_bundles,Loading...
+products.show.select_option,Please choose the option you would like and add it to your cart
+products.variant_options.clear_choices,Clear Choices
 products.variant_options.no_stock,No stock available
-products.variant_options.reset_choices,Reset Choices
+products.variant_options.reset_choices,Reset
 products.variant_options.select,Select %{variant_type}
-salesforce_payments.errors.already_paid,The order is fully paid but you have requested to take further payment of %{amount}
+salesforce_payments.errors.already_paid,The order has a payment listed that has not been finalised yet
 salesforce_payments.errors.continue_anyway,Continue anyway
 salesforce_payments.errors.fix_data_in_sf,"Please select another payment provider, or fix the data in Salesforce."
 salesforce_payments.errors.last_sync,"The Order was last updated %{timestamp} ago. If your recently updated the order, it might not have synced yet."
@@ -594,10 +618,11 @@ sc.accounts.orders.bookings.attendees.validation.email_or_phone_required,Either 
 sc.accounts.profile.update.errors.fail,There was an unexpected error updating your details. Please contact support for assistance.
 sc.accounts.profile.update.errors.invalid,There was an error updating your details
 sc.accounts.profile.update.notices.success,Your details were successfully updated
+sc.accounts.register.errors.duplicate_contact,This contact already exists. Please login or reset password.
 sc.accounts.register.errors.fail,"There was a problem processing your registration, please contact support."
 sc.accounts.register.errors.invalid,There was a problem creating your account
 sc.accounts.register.notices.already_signed_in,You are already signed in
-sc.accounts.register.notices.login_exists,You already have an account. Please sign in
+sc.accounts.register.notices.login_exists,You already have an account. Please sign in or reset password.
 sc.accounts.subscriptions.cancel.errors.not_allowed,That subscription cannot be cancelled
 sc.accounts.subscriptions.cancel.notices.success,Subscription has been cancelled
 sc.accounts.subscriptions.update_payment_details.errors.fail,Updating payment details failed
@@ -640,12 +665,13 @@ sc.auth.registrations.signed_up_but_unconfirmed,A message with a confirmation li
 sc.auth.registrations.update_needs_confirmation,"You updated your account successfully, but we need to verify your new email address. Please check your email and follow the confirmation link to confirm your new email address."
 sc.auth.registrations.updated,Your account has been updated successfully.
 sc.auth.registrations.updated_but_not_signed_in,"Your account has been updated successfully, but since your password was changed, you need to sign in again."
-sc.auth.sessions.already_signed_out,"You are already signed out."
-sc.auth.sessions.signed_in,"Signed out successfully."
+sc.auth.sessions.already_signed_out,""
+sc.auth.sessions.signed_in,""
 sc.auth.sessions.signed_out,Signed out successfully.
 sc.auth.sso.azure.fail,Could not authenticate you from Azure because: %{reason}
 sc.auth.sso.azure.success,Successfully authenticated from your Azure account.
 sc.auth.sso.azure.support,"There was a problem processing your registration, please contact support."
+sc.auth.sso.error,"Could not authenticate, please contact support."
 sc.auth.sso.experience_cloud.fail,Could not authenticate you from the portal because: %{reason}
 sc.auth.sso.experience_cloud.success,Successfully authenticated from your account.
 sc.auth.sso.experience_cloud.support,"There was a problem processing your registration, please contact support."
@@ -668,13 +694,15 @@ sc.cart.update.errors.restricted_products,Quantity has been reduced on the follo
 sc.cart.update.notices.success,Cart Updated
 sc.checkout.accounts.create.errors.fail,There was a problem saving your password. Please contact support.
 sc.checkout.accounts.create.errors.invalid,There was a problem saving your password
-sc.checkout.accounts.create.notices.login_exists,You already have an account. Please sign in
+sc.checkout.accounts.create.notices.login_exists,You already have an account. Please sign in or reset password.
 sc.checkout.accounts.create.notices.you_are_now_signed_in,"Thank you, you are now signed in"
 sc.checkout.accounts.create.notices.you_can_now_sign_in,"Thank you, you can now sign in"
 sc.checkout.captcha.errors.fail,"We have detected unusual activity, please try again or contact us for support."
 sc.checkout.click_and_collect.descriptor,Click and Collect
 sc.checkout.customer_information.errors.does_not_match,does not match
+sc.checkout.customer_information.errors.first_and_last_name_required,requires first and last names
 sc.checkout.customer_information.errors.invalid_details,Invalid details: %{details}
+sc.checkout.customer_information.errors.unable_to_quote,Unable to process quote request. Please try again later.
 sc.checkout.finalize.errors.invalid,Some items in your cart are no longer valid. No payment has been taken.
 sc.checkout.invalid_cart,Checkout cannot continue because your cart is invalid.
 sc.checkout.not_available,Checkout is not available at this time.
@@ -690,17 +718,17 @@ sc.checkout.payment.create.errors.no_cart_found,"We could not find your cart, pe
 sc.checkout.payment.create.errors.points.insufficient_balance,You do not have enough points to complete this order.
 sc.checkout.payment.create.errors.points.not_permitted,You are not allowed to use the account points for this account
 sc.checkout.payment.finalize_order.notices.order_processing_text,Order is still processing
-sc.checkout.payment.pay_by_account,On Account
+sc.checkout.payment.shared.errors.api_auth_error,Error authorizing with API
 sc.checkout.payment.shared.errors.during_checkout,"Something went wrong, please try again later!"
 sc.checkout.payment.shared.errors.invalid_provider,Unsupported Payment Method
 sc.checkout.payment.shared.errors.updating_subscription,We were unable to update your payment details!
 sc.checkout.payment.shared.errors.verifying_payment,We were unable to verify your payment!
 sc.checkout.shipping.errors.could_not_be_calculated,Shipping could not be calculated at this time.
+sc.checkout.shipping.errors.delivery_option_not_specified,Delivery options for some items have not been specified. Please select a delivery option for all items.
 sc.checkout.shipping.errors.no_longer_available,"The selected shipping service is no longer available for the selected shipping provider, please select another"
 sc.checkout.shipping.errors.shipping_method_not_selected,Please select a shipping method.
 sc.checkout.shipping.errors.some_items_not_shippable,Some of the items can not be shipped via the selected shipping method.
 sc.checkout.shipping.errors.tax_provider_offline,Tax provider offline. Please try again in a few minutes.
-sc.checkout.shipping.errors.unknown_shipping_provider,"Unrecognized shipping provider ""%{provider}"". Please try again."
 sc.checkout.terms_and_conditions.errors.must_accept,Please accept the terms to continue
 sc.errors.buy_button.add.fail,We were unable to add some or all of those items to your cart
 sc.errors.not_authenticated,You must be signed in to access this page.
@@ -973,6 +1001,7 @@ sc.locale.database.fields.account.shippingstate,Shipping State
 sc.locale.database.fields.account.shippingstreet,Shipping Street
 sc.locale.database.fields.contact.email,Email
 sc.locale.database.fields.contact.firstname,First name
+sc.locale.database.fields.contact.full_name,Full name
 sc.locale.database.fields.contact.lastname,Last name
 sc.locale.database.fields.contact.phone,Phone
 sc.locale.database.fields.contact.username,Username
@@ -1159,6 +1188,7 @@ sc.orders.reorder.notices.could_not_add_some,Could not add some order items from
 sc.orders.reorder.notices.success,Order items from order %{reference} have been added to your cart.
 sc.page.errors.not_found,That page was not found.
 sc.page.errors.requires_membership,You do not have the required membership level to access this page. Requires: %{membership_required}.
+sc.product.discontinued_name,(Discontinued) %{name}
 sc.product_category.errors.not_found,That page was not found.
 sc.products.add_to_cart.errors.select_option,Please select an option...
 sc.products.add_to_cart.errors.unable_to_complete,"We were unable to complete your purchase, please contact support."
@@ -1171,8 +1201,8 @@ sc.products.default_text.hide_price,POA
 sc.products.default_text.out_of_stock,Out of stock
 sc.products.default_text.unavailable,Unavailable
 sc.products.errors.not_found,That product was not found.
-sc.products.notices.please_select,Please choose the option you would like and add it to your cart
-sc.products.notices.please_select_availability,Please choose a date for the booking and add it to your cart
+sc.products.index.breadcrumb,All products
+sc.promo_codes.apply.errors.insufficient_quantity,Items in your cart do not meet the minimum quantity requirements for this promotion
 sc.promo_codes.apply.errors.invalid,The requested promotion is unavailable
 sc.promo_codes.apply.errors.no_eligible_products,The requested promotion is not valid for the items in this cart
 sc.promo_codes.apply.errors.no_longer_valid,Promo code was removed as it is no longer valid
@@ -1181,6 +1211,7 @@ sc.promo_codes.apply.notices.success,Promo code applied!
 sc.quotations.errors.not_enabled,Quotations are not enabled for this Store
 sc.salesforce_payments.errors.incomplete_billing_address,The Order is missing a Billing Address.
 sc.shared.breadcrumbs.home,Home
+sc.shared.maintenance,Maintenance is being performed. Please try again later.
 sc.themes.preview_bar.label,Previewing Theme:
 sc.themes.preview_bar.options.built_in_theme,Built-in theme
 sc.themes.preview_bar.options.close_preview,Close Preview
@@ -1196,40 +1227,50 @@ sc.vouchers.apply.notices.success,Voucher has been applied.
 sc.vouchers.descriptor,Voucher
 sc.vouchers.remove.errors.fail,The voucher could not be removed from your cart. Please contact support for assistance.
 sc.vouchers.remove.notices.success,Voucher removed
-search.content_articles.index.search_results,Search Results
-search.content_articles.index.there_are_no_content_article_results,There are no content article results
-search.content_pages.index.search_results,Search Results
-search.content_pages.index.there_are_no_content_page_results,There are no content page results
-search.products.index.no_results,No results
-search.products.index.search_results,Search Results
-search.products.index.search_using_a_keyword_or_filters,Search using a keyword or filters
-search.shared.filters.apply_filters,Apply filters
-search.shared.filters.in_stock,In Stock
-search.shared.filters.on_sale,On sale
-search.shared.filters.price,Price
-search.shared.filters.price_and_availability,Price & Availability
-search.shared.sort.sort_name_a_to_z,Sort: Name A-Z
-search.shared.sort.sort_name_z_to_a,Sort: Name Z-A
-search.shared.sort.sort_price_high_to_low,Sort: Price High-Low
-search.shared.sort.sort_price_low_to_high,Sort: Price Low-High
+search.articles.index.no_results,There are no content article results
+search.filters.apply_filters,Apply filters
+search.filters.category_placeholder,Search %{name}
+search.filters.close,Close
+search.filters.global_placeholder,Filter by keywords
+search.filters.sources,Search for
+search.pages.index.no_results,There are no content page results
+search.products.filters.brands,Brands
+search.products.filters.categories,Categories
+search.products.filters.in_stock,In Stock
+search.products.filters.on_sale,On sale
+search.products.filters.price,Price
+search.products.filters.price_and_availability,Price & Availability
+search.products.filters.tags,Tags
+search.products.index.no_results,There are no product results
+search.search_results,Search Results
+search.sources.articles,Articles
+search.sources.pages,Pages
+search.sources.products,Products
 shared.filters_button.filter,Filter
+shared.filters_button.show,Show
 shared.forms.form_has_errors,Please review the errors below.
+shared.product_buttons.add_to_cart,Add to Cart
 shared.product_buttons.check_availability,Check Availability
 shared.product_buttons.configure_bundle,Configure Bundle
 shared.product_buttons.select_option,Select Option
 shared.products.product_comparison,Product Comparison
-shared.products.there_are_no_products,There are no products
 shared.quantity_picker.label,Qty 
 shared.quantity_picker.update_label,Update
 shared.screen.close,Close
 shared.sort.sort,Sort
 shared.sort.sort_name_a_to_z,Name A-Z
 shared.sort.sort_name_z_to_a,Name Z-A
+shared.sort.sort_newest,Newest
+shared.sort.sort_oldest,Oldest
+shared.sort.sort_points_high_to_low,Highest points
+shared.sort.sort_points_low_to_high,Lowest points
 shared.sort.sort_position,Featured
 shared.sort.sort_price_high_to_low,Highest price
 shared.sort.sort_price_low_to_high,Lowest price
+shared.sort.sort_relevance,Relevance
+shared.variable_pricing_picker.label,Price
 shared.variable_pricing_picker.other_amount,Other Amount
-shared.variable_pricing_picker.price_label_html,Price <span data-price-picker-value>%{price}</span>
+shared.variable_pricing_picker.placeholder,Amount...
 subscriptions.term_units.day,day
 subscriptions.term_units.days,%{number} days
 subscriptions.term_units.fortnight,fortnight

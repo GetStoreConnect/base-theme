@@ -27,6 +27,18 @@
       </div>
     </section>
 
+    {% if store_variables["enable_company_name"] %}
+      <h3>{{ "accounts.register.form.headings.company_name" | t }}</h3>
+      <section class="sc-mb-spacious">
+        {%- assign field = form.fields["company_name"] %}
+        <div class="SC-Field SC-Field-expand{% if field.errors != blank %} has-error{% endif %}{% if field.required? %} required{% endif %}">
+          <label for="{{ field.id }}" class="SC-Field_label">{{ "accounts.register.form.labels.company_name" | t }}</label>
+          <input type="text" name="{{ field.name }}" id="{{ field.id }}" value="{{ field.value }}" placeholder="{{ "accounts.register.form.labels.company_name" | t }}" class="SC-Field_input" class="SC-Field_input">
+          <span class="SC-Field_error">{{ field.errors | try: "messages" }}</span>
+        </div>
+      </section>
+    {% endif %}
+
     <h3>{{ "accounts.register.form.headings.contact" | t }}</h3>
     <section class="sc-mb-spacious">
       {%- assign field = form.fields["firstname"] %}

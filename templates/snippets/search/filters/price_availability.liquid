@@ -1,0 +1,83 @@
+{%- default fields: current_search.fields %}
+{%- default component: "accordion" %}
+
+{%- if fields.filters %}
+  {%- liquid
+    assign on_sale_field = fields.filters.on_sale
+    assign on_sale_selected = on_sale_field.value
+
+    assign in_stock_field = fields.filters.in_stock
+    assign in_stock_selected = false
+    if in_stock_field != blank
+      assign in_stock_selected = in_stock_field.value
+    endif
+
+    assign show_price_slider = false
+    assign price_selected = false
+    assign price_fields = fields.filters.price
+    if price_fields != blank
+      assign max_price_option = price_fields.max.options | first
+      if price_fields.min.value or price_fields.max.value
+        assign price_selected = true
+      endif
+      if max_price_option.value or price_selected
+        assign show_price_slider = true
+      endif
+    endif
+
+    assign show_points_slider = false
+    assign points_selected = false
+    assign points_fields = fields.filters.points
+    if points_fields != blank
+      assign max_points_option = points_fields.max.options | first
+      if points_fields.max.value or points_fields.min.value
+        assign points_selected = true
+      endif
+      if max_points_option.value or points_selected
+        assign show_points_slider = true
+      endif
+    endif
+
+    # Open widget if any values have been already selected
+    assign open = false
+    if on_sale_selected or in_stock_selected or price_selected or points_selected
+      assign open = true
+    endif
+
+    assign show_in_stock_filter = fields.filters.in_stock != blank
+    assign heading = "t.search.products.filters.price"
+    if show_in_stock_filter
+      assign heading = "t.search.products.filters.price_and_availability"
+    endif
+  %}
+
+{%- if show_price_slider or show_points_slider %}
+  {%- capture content %}
+    {%- render "search/filters/field", field: on_sale_field, label: "t.search.products.filters.on_sale" %}
+    {% if show_in_stock_filter %}
+      {%- render "search/filters/field", field: in_stock_field, label: "t.search.products.filters.in_stock" %}
+    {% endif %}
+
+    {%- if show_price_slider %}
+      {%- render "search/filters/price_range", range: price_fields %}
+    {% endif %}
+    {%- if show_points_slider %}
+      {%- render "search/filters/points_range", range: points_fields %}
+    {% endif %}
+  {%- endcapture %}
+
+  {%- if component == "accordion" %}
+    {% render "shared/accordion",
+              data_attribute: "data-filter data-featured data-source='products'",
+              heading: heading,
+              content: content,
+              open: open %}
+  {%- else %}
+    {% render "shared/dropdown",
+              data_attribute: "data-filter data-featured data-source='products'",
+              heading: heading,
+              content: content,
+              label: true %}
+  {%- endif %}
+{%- endif %}
+{%- endif %}

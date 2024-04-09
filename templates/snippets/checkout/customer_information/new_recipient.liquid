@@ -1,0 +1,133 @@
+{%# NOTE: This form should not be used for the standard use case %}
+{%#       of shipping to an alternate name/address than the one saved or %}
+{%#       used previously, for which it is an antipattern. It should %}
+{%#       only be used in the rare case where a second email address %}
+{%#       is collected and concept of new contact creation is used. %}
+{%- if store_variables["show_new_recipient_form"] %}
+  <menu class="sc-mb-small">
+    {%# Trigger new recipient form %}
+    {%- assign recipient_field = form.fields["recipient_full_name"] %}
+    {% if recipient_field.value == blank %}
+      <div data-toggle-address-form>
+        <input type="checkbox" name="shipping_to_different_person" value="true" id="shipping_to_different_person" class="is-hidden">
+        <label for="shipping_to_different_person" class="SC-Link">
+          {{ "checkout.customer_information.new_recipient.ship_to_different_person" | t }}
+        </label>
+      </div>
+    {% else %}
+      {%# We need set the params to process correctly %}
+      <div data-toggle-address-form>
+        <input type="checkbox" name="shipping_to_different_person" value="true" checked class="is-hidden">
+      </div>
+    {% endif %}
+  </menu>
+  {%# New recipient form (hidden by default) %}
+  <div data-new-recipient-form class="sc-mb{% if recipient_field.value == blank %} is-hidden{% endif %}">
+    {%- assign field = form.fields["recipient_email"] %}
+    <div class="SC-Field SC-Field-expand">
+      <label for="{{ field.id }}" class="SC-Field_label">
+        <span>{{ "checkout.customer_information.new_recipient.email_address" | t }}</span>
+        <small>{{ "checkout.customer_information.new_recipient.email_address_explanation" | t }}</small>
+      </label>
+      <input type="email" name="{{ field.name }}" id="{{ field.id }}" autocomplete="email" data-recipient required class="SC-Field_input">
+      <p class="SC-Field_hint">
+        {{ "checkout.customer_information.new_recipient.order_confirmation_notice" | t: account_email: "TODO email" }}
+      </p>
+    </div>
+    <div class="SC-Field SC-Field-expand">
+      <label for="{{ recipient_field.id }}" class="SC-Field_label">
+        {{ "checkout.customer_information.new_recipient.full_name" | t }}
+      </label>
+      <input type="text" name="{{ recipient_field.name }}" id="{{ recipient_field.id }}" autocomplete="name" data-recipient required class="SC-Field_input">
+    </div>
+    {%- assign field = form.fields["recipient_phone"] %}
+    <div class="SC-Field SC-Field-expand">
+      <label for="{{ field.id }}" class="SC-Field_label">
+        <span>{{ "checkout.customer_information.new_recipient.phone_number" | t }}</span>
+        <small>{{ "checkout.customer_information.new_recipient.phone_number_explanation" | t }}</small>
+      </label>
+      <input type="phone" name="{{ field.name }}" id="{{ field.id }}" autocomplete="tel" data-recipient required class="SC-Field_input">
+    </div>
+    {% render "checkout/customer_information/address", form: form, address_type: "recipient" } %}
+  </div>
+
+  <script>
+    (function() {
+      document.addEventListener('DOMContentLoaded', function() {
+        const shippingFormToggle = document.querySelector('[data-toggle-address-form]');
+        const newRecipientForm = document.querySelector('[data-new-recipient-form]');
+        const accountAddressForm = document.querySelector('[data-account-address]');
+        const requiredRecipientInputs = Array.prototype.slice.call(newRecipientForm.querySelectorAll('input[required]'));
+        const billingCard = document.querySelector('[data-billing-card]');
+        const billingAddress = document.querySelector('[data-billing-address]');
+        const billingEditButton = document.querySelector('[data-edit-billing]');
+        const billingCheckbox = document.querySelector('[data-billing-checkbox]');
+        const billingForm = document.querySelector('[data-billing-form]');
+
+        // Remove required attribute until new recipient for is visible (for browser form validation)
+        requiredRecipientInputs.map(input => input.removeAttribute('required'));
+
+        // Click event handlers
+        shippingFormToggle.addEventListener('change', function() {
+          const label = shippingFormToggle.querySelector('label');
+
+          if (newRecipientForm.classList.contains('is-hidden')) {
+            label.innerText = "{{ "checkout.customer_information.new_recipient.ship_to_me" | t }}";
+            showRecipientAddress();
+          } else {
+            label.innerText = "{{ "checkout.customer_information.new_recipient.ship_to_different_person" | t }}";
+            showAccountAddress();
+          }
+        });
+
+        // Edit mode for billing form
+        billingEditButton.addEventListener('click', function() {
+          billingEditButton.classList.add('is-hidden');
+          billingForm.classList.remove('is-hidden');
+          billingAddress.classList.add('is-hidden');
+        });
+
+        function showAccountAddress() {
+          // Display appropriate form
+          accountAddressForm.classList.remove('is-hidden');
+          newRecipientForm.classList.add('is-hidden');
+          // Removed required attributes
+          requiredRecipientInputs.map(input => input.removeAttribute('required'));
+          // Return billing address to original state
+          billingCard.classList.remove('Callout','Callout-floating');
+          billingEditButton.classList.add('is-hidden');
+          billingAddress.classList.add('is-hidden');
+          billingCheckbox.classList.remove('is-hidden');
+
+          if (billingCheckbox.querySelector('input[type=checkbox]').checked === false) {
+            billingForm.classList.remove('is-hidden');
+          } else {
+            billingForm.classList.add('is-hidden');
+          }
+
+          const recipientFields = newRecipientForm.querySelectorAll('input[data-recipient]');
+          recipientFields.forEach(function(field) {
+            field.value = '';
+          });
+        }
+
+        function showRecipientAddress() {
+          // Display appropriate form
+          accountAddressForm.classList.add('is-hidden');
+          newRecipientForm.classList.remove('is-hidden');
+          // Restore required attributes for browser form validation
+          requiredRecipientInputs.map(input => input.setAttribute('required', true));
+          // Setup billing in card format for new recipient flow
+          // Note: While not relevant for Proma, for the more typical flow
+          // of using an alternate address recipient we should maintain the
+          // ability to copy across shipping details to the billing address form.
+          billingAddress.classList.remove('is-hidden');
+          billingForm.classList.add('is-hidden');
+          billingEditButton.classList.remove('is-hidden');
+          billingCard.classList.add('Callout','Callout-floating');
+          billingCheckbox.classList.add('is-hidden');
+        }
+      });
+    })();
+  </script>
+{%- endif -%}

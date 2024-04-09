@@ -6,7 +6,7 @@
   {%- assign subheading = "accounts.orders.show.order_status" | t, order_status: status %}
   {%- render "shared/page_header", heading: heading, sub_heading: subheading %}
 
-  <div class="sc-grid-half-and-half sc-gap-xlarge-medium-and-up">
+  <div id="SC-Order" data-reset-cookie-checkout class="sc-grid-half-and-half sc-gap-xlarge-medium-and-up">
     <div class="sc-grid-item">
       {% render "orders/order", order: order %}
 

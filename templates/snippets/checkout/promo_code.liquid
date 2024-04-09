@@ -1,0 +1,19 @@
+{%- if current_store.has_promotions? %}
+  <section class="SC-Card SC-Card-floating sc-mb-large">
+    <h4 class="sc-mb-small">{{ "checkout.promo_codes.heading" | t }}</h4>
+    {% form "apply-promo-code", data-spec-checkout-promo-code: true %}
+      {% render "form_errors", errors: form.errors -%}
+      <div id="SC-PromoCode" class="sc-flex-row">
+        <div class="SC-Field sc-grow sc-m-none">
+          {%- assign field = form.fields["code"] %}
+          <div class="SC-Field sc-grow sc-m-none{% if field.errors != blank %} has-error{% endif %}{% if field.required? %} required{% endif %}">
+            <input type="text" name="{{ field.name }}" id="{{ field.id }}" value="{{ field.value }}" placeholder="{{ "checkout.vouchers.enter_code" | t }}" class="SC-Field_input sc-expand">
+            <span class="SC-Field_error">{{ field.errors | try: "messages" }}</span>
+          </div>
+        </div>
+        <input type="submit" class="SC-Button SC-Button-subtle sc-ml-small" value="{{ "checkout.promo_codes.apply" | t }}">
+      </div>
+    {% endform %}
+  </section>
+{%- endif %}
+

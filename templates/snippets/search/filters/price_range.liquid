@@ -1,0 +1,26 @@
+{%- default range: blank %}
+
+{%- unless range == blank %}
+  {% if current_store.display_currency? %}
+    <div id="price-range" class="sc-pt-small sc-pb-small">
+      <input data-skin="storeconnect"
+        data-js-range-slider
+        data-type="double"
+        data-prefix="{{ current_store.currency_symbol }}"
+        data-from="{{ range.min.value | default: range.min.options.first.value }}"
+        data-to="{{ range.max.value | default: range.max.options.first.value }}"
+        data-min="{{ range.min.options.first.value }}"
+        data-max="{{ range.max.options.first.value }}"
+        data-js-filter-on-finish="true"
+        min="{{ range.min.options.first.value }}"
+        max="{{ range.max.options.first.value }}"
+        type="range"
+        id="_price_price_range"
+        class="irs-hidden-input"
+        tabindex="-1"
+        readonly>
+      <input id="_price_min" name="[filters][price][min]" value="{{ range.min.value }}" data-js-range-min autocomplete="off" type="hidden">
+      <input id="_price_max" name="[filters][price][max]" value="{{ range.max.value }}" data-js-range-max autocomplete="off" type="hidden">
+    </div>
+  {%- endif %}
+{%- endunless %}

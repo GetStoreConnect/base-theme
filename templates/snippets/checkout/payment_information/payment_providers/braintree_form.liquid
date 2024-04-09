@@ -1,0 +1,70 @@
+{%- assign provider_id = payment_provider.id %}
+{%- assign provider = payment_provider.code %}
+{%- assign form_id = provider | append: "PaymentForm" | append: provider_id %}
+{%- assign button_id = provider | append: "PaymentButton" | append: provider_id %}
+
+<div id="BraintreeWalletsContainer{{ provider_id }}" class="sc-mb"></div>
+
+{%- form "payment", provider: payment_provider,
+            id: form_id,
+            class: "SC-Panel",
+            data-provider: provider,
+            data-provider-id: provider_id %}
+
+  {{ payment_provider.description_content }}
+
+  <div id="{{ provider }}ScriptBlock{{ provider_id }}"></div>
+
+  <fieldset class="SC-Fieldset">
+    <div class="SC-Field sc-mb-small">
+      {% assign field = form.fields["card_number"] %}
+      <label class="Field_label" for="{{ field.id }}">
+        {{ "checkout.gateways.form.card_number" | t }}
+      </label>
+      <div class="SC-Field_input" id="{{ field.id }}"
+        data-placeholder="{{ "checkout.gateways.form.card_number_placeholder" | t }}"></div>
+    </div>
+
+    <div class="SC-Fieldset_row">
+      <div class="SC-Field SC-Field-small">
+        {% assign field = form.fields["card_expiry"] %}
+        <label class="SC-Field_label" for="{{ field.id }}">
+          {{ "checkout.gateways.form.expiry" | t }}
+        </label>
+        <div class="SC-Field_input" id="{{ field.id }}"
+          data-placeholder="{{ "checkout.gateways.form.expiry_placeholder" | t }}"></div>
+      </div>
+
+      <div class="SC-Field SC-Field-small">
+        {% assign field = form.fields["card_verification"] %}
+        <label class="SC-Field_label" for="{{ field.id }}">
+          {{ "checkout.gateways.form.verification" | t }}
+        </label>
+        <div class="SC-Field_input" id="{{ field.id }}"
+          data-placeholder="{{ "checkout.gateways.form.verification_placeholder" | t }}"></div>
+      </div>
+    </div>
+  </fieldset>
+
+  <div id="{{ provider }}PaymentError{{ provider_id }}"
+    class="SC-Field SC-Alert sc-hide"
+    data-placeholder="{{ "checkout.gateways.form.errors.invalid" | t }}"></div>
+
+  <input type="submit"
+    value="{{ 'checkout.gateways.form.pay_now' | t }}"
+    id="{{ button_id }}"
+    class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small"
+    data-payment-info-submit />
+
+  {% render "checkout/customer_notes", form: form %}
+
+  {% if current_store.staff.size > 0 %}
+    {% render "checkout/assisted_by_user", form: form %}
+  {% endif %}
+{%- endform %}
+
+<script src="https://pay.google.com/gp/p/js/pay.js"></script>
+
+<script>
+  StoreConnect.Gateways.Braintree({ providerId: "{{ provider_id }}" });
+</script>

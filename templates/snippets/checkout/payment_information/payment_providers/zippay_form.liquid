@@ -1,0 +1,35 @@
+{%- assign provider_id = payment_provider.id %}
+{%- assign provider = payment_provider.code %}
+{%- assign form_id = provider | append: "PaymentForm" | append: provider_id %}
+{%- assign button_id = provider | append: "PaymentButton" %}
+{%- form "payment", provider: payment_provider,
+            id: form_id,
+            class: "SC-Panel SC-Panel-default",
+            data-provider: provider,
+            data-provider-id: provider_id %}
+
+  <div id="{{ provider }}ScriptBlock{{ provider_id }}"></div>
+  <div id="{{ provider }}PaymentBlock{{ provider_id }}"></div>
+
+  {{ payment_provider.description_content }}
+
+  <div id="{{ provider }}PaymentError{{ provider_id }}" class="SC-Field SC-Alert sc-hide"></div>
+
+  <div id="ZippayForm" class="ZippayForm">
+    <button id="ZippayPayWithButton{{ provider_id }}" class="SC-Button SC-Button-primary">
+      {{ "checkout.gateways.pay_with_zip" | t }}
+    </button>
+  </div>
+
+  {% render "checkout/customer_notes", form: form %}
+
+  {% if current_store.staff.size > 0 %}
+    {% render "checkout/assisted_by_user", form: form %}
+  {% endif %}
+{%- endform %}
+
+{%# This should be placed at the bottom so that it executes at the end of html load %}
+<script>
+  var providerId = "{{ provider_id }}";
+  StoreConnect.Gateways.initZippay({providerId});
+</script>

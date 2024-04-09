@@ -1,4 +1,23 @@
 {%- liquid
+  if unit == "day"
+    assign mod = number | modulo: 7
+    if mod == 0
+      assign unit = "week"
+      assign number = number | divided_by: 7
+    endif
+
+    assign mod = number | modulo: 365
+    if mod == 0
+      assign unit = "month"
+      assign number = number | divided_by: 365 | times: 12
+    endif
+  elsif unit == "week"
+    if number == 52
+      assign unit = "year"
+      assign number = 1
+    endif
+  endif
+
   case unit
   when "day"
     render "shared/subscriptions/term_units/day", number: number

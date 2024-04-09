@@ -35,6 +35,23 @@
             {{ "line_items.quantity" | t: quantity: line_item.quantity }}
           </span>
         {%- endif %}
+        {% comment %} Delivery Options {% endcomment %}
+        {%- if line_item.delivery_date != blank or line_item.delivery_day != blank %}
+          {%- capture preference %}
+            {%- if line_item.delivery_day != blank %}
+              {% assign day_of_week = line_item.delivery_day | downcase %}
+              {{ "deliveries.days.enum." | append: day_of_week | t -}}
+            {%- else %}
+              {{ line_item.delivery_date | date: "%B %-d, %Y" -}}
+            {%- endif -%}
+            {%- if line_item.delivery_time != blank -%}
+              , {{ line_item.delivery_time }}
+            {%- endif %}
+          {%- endcapture %}
+          <span class="sc-one-whole sc-font-tiny sc-shade-neutral">
+            {{ "order_summary.delivery_options.delivery_preference" | t, preference: preference}}
+          </span>
+        {%- endif %}
         {%- comment %} Bundles {% endcomment %}
         {%- if line_item.in_bundle? %}
           {%- if extended %}
