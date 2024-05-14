@@ -1,0 +1,105 @@
+{%- if current_booking_availability %}
+  {%- assign nearest_future = current_booking_availability.nearest_future_date %}
+  {%- assign nearest_past = current_booking_availability.nearest_past_date %}
+  {%- default date_format: "%A, %B %d, %Y" %}
+  {%- default time_format: "%I:%M %p" %}
+
+  {%- if current_booking_availability.has_availability? %}
+    {%- for date in current_booking_availability.dates %}
+      {%- assign modal_content = blank %}
+      {%- assign address = blank %}
+
+      {%- if date.time_slots.size > 0 %}
+        <section class="SC-BookingDate" data-booking-date="{{ date.date }}" data-location-id="{{ date.id }}">
+          <header>
+            <div class="sc-mb-tiny">
+              <strong>{{ date.date | date: date_format }}</strong>
+            </div>
+            <div>
+              <span>
+                {{ date.location.name }}
+              </span>
+              {%- capture address %}{{ date.location.address1 }},{{ date.location.address2 }},{{ date.location.city }},{{ date.location.state }},{{ date.location.postal_code }}{% endcapture %}
+              {%- assign address = address | split: "," | compact | join: ", " %}
+              {%- if address or date.location.information_content %}
+                {%- capture modal_content %}
+                  <strong>{{ "products.availability.address_label" | t }}:</strong>
+                  {{ address }}
+                  {%- if address and date.location.information_content %}<br>{% endif %}
+                  {{ date.location.information_content }}
+                {% endcapture %}
+                <small class="sc-ml-tiny sc-shade-neutral">
+                  <button data-modal-trigger="{{ date.id }}" class="Link Link-subtle" type="button">
+                    {{ "bookings.booking_details.location_info_more" | t }}
+                  </button>
+                </small>
+              {%- endif %}
+            </div>
+          </header>
+          <ul>
+            {%- for time in date.time_slots %}
+              {%- capture date_range -%}
+                {{ time.starts_at | date: time_format }} - {{ time.ends_at | date: time_format }}
+              {%- endcapture %}
+              <li>
+                <label class="SC-BookingTimeSlot" data-time-slot-range="{{ date_range }}">
+                  <input
+                    type="radio"
+                    name="booking-time-slot"
+                    value="{{ date_range }}"
+                    data-available="{{ time.available }}"
+                    data-booking-timeslot
+                    {%#  these need to be formatted like they were originally, as dates or times  %}
+                    data-start="{{ time.starts_at }}"
+                    data-end="{{ time.ends_at }}"
+                    data-location="{{ date.id }}"
+                    {% if time.full? %}disabled{% endif %}
+                  />
+                  <button>
+                    <span>{{ date_range }}</span>
+                    {%- unless time.unlimited? %}
+                      {%- if time.available > 0 %}
+                        {{ "products.availability.available" | t: count: time.available }}
+                      {%- else %}
+                        {{ "products.availability.sold_out" | t }}
+                      {%- endif %}
+                    {%- endunless %}
+                  </button>
+                </label>
+              </li>
+            {%- endfor %}
+          </ul>
+        </section>
+      {%- endif %}
+
+      {% if modal_content != blank %}
+        {%- render "shared/modal",
+                    id: date.id,
+                    heading: date.location.name,
+                    max_width: 650,
+                    body: modal_content %}
+      {%- endif %}
+    {%- endfor %}
+  {%- else %}
+    <div class="sc-notice">
+      <div>
+        <em>{{ "products.availability.no_availabilities" | t}}</em>
+        {% if nearest_future or nearest_past %}
+          <div class="sc-mt-large">
+            <div>{{ "products.availability.closest_with_availability" | t }}</div>
+            {% if nearest_past %}
+              <button data-booking-jump="{{ nearest_past }}" data-booking-jump-direction="back" class="SC-Button" type="button">
+                {{ nearest_past | date: date_format }}
+              </button>
+            {%- endif %}
+            {% if nearest_future %}
+              <button data-booking-jump="{{ nearest_future }}" data-booking-jump-direction="forward" class="SC-Button" type="button">
+                {{ nearest_future | date: date_format }}
+              </button>
+            {%- endif %}
+          </div>
+        {%- endif %}
+      </div>
+    </div>
+  {%- endif %}
+{%- endif %}
