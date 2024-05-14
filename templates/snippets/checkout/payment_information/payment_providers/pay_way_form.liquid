@@ -1,0 +1,37 @@
+<script src="https://api.payway.com.au/rest/v1/payway.js"></script>
+{%- assign provider_id = payment_provider.id %}
+{%- assign provider = payment_provider.code %}
+{%- assign form_id = provider | append: "PaymentForm" | append: provider_id %}
+{%- assign button_id = provider | append: "PaymentButton" | append: provider_id %}
+
+{%- form "payment", provider: payment_provider,
+            id: form_id,
+            class: "SC-Panel",
+            data-provider: provider,
+            data-provider-id: provider_id%}
+  <div id="{{ provider }}ScriptBlock{{ provider_id }}"></div>
+
+  {{ payment_provider.description_content }}
+  <div id="payway-credit-card"></div>
+  <div id="{{ provider }}PaymentError{{ provider_id }}"
+    class="SC-Field SC-Alert sc-hide"
+    data-placeholder="{{ "checkout.gateways.form.errors.invalid" | t }}"></div>
+  <input type="submit"
+    value="{{ 'checkout.gateways.form.pay_now' | t }}"
+    id="{{ button_id }}"
+    class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small"
+    data-payment-info-submit disabled />
+
+ {% render "checkout/customer_notes", form: form %}
+
+ {% if current_store.staff.size > 0 %}
+   {% render "checkout/assisted_by_user", form: form %}
+ {% endif %}
+{%- endform %}
+
+<script type="text/javascript">
+  StoreConnect.Gateways.PayWay({ 
+    providerId: '{{ provider_id }}',
+    buttonId: '{{ button_id }}'
+  });
+</script>

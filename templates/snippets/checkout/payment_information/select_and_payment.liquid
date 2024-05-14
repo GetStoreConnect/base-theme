@@ -36,6 +36,8 @@
           {% render "checkout/payment_information/payment_providers/pay_later_form", payment_provider: payment_provider %}
         {% when "Paypal" %}
           {% render "checkout/payment_information/payment_providers/paypal_form", payment_provider: payment_provider %}
+        {% when "PayWay" %}
+          {% render "checkout/payment_information/payment_providers/pay_way_form", payment_provider: payment_provider %}
         {% when "PayByAccount" %}
           {% render "checkout/payment_information/payment_providers/pay_by_account_form", payment_provider: payment_provider %}
         {% when "SecurePay" %}
