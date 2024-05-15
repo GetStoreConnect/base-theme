@@ -66,5 +66,15 @@
 <script src="https://pay.google.com/gp/p/js/pay.js"></script>
 
 <script>
-  StoreConnect.Gateways.Braintree({ providerId: "{{ provider_id }}" });
+  StoreConnect.Gateways.Braintree({
+    providerId: "{{ provider_id }}",
+    firstname: "{{ contact.firstname }}",
+    lastname: "{{ contact.lastname }}",
+    email: "{{ contact.email }}",
+    phone: "{{ contact.phone }}",
+    billingStreet: "{{ billing_address.street }}",
+    billingCity: "{{ billing_address.city }}",
+    billingState: "{{ billing_address.state }}",
+    billingZip: "{{ billing_address.zip }}"
+  });
 </script>

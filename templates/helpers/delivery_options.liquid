@@ -1,0 +1,55 @@
+{%- assign current_delivery_date = current_delivery_options.line_item.delivery_date | date: "%Y-%m-%d" %}
+{%- assign delivery_window = current_delivery_options.delivery_window %}
+
+{%- if delivery_window.timeslot_groups.size > 0 %}
+  <div class="sc-p-medium" data-delivery-option-timeslots="{{ current_delivery_options.line_item.id }}">
+    <div class="sc-mb-medium">
+      <strong>{{ "checkout.delivery_options.timeslot_prompt" | t }}</strong>
+    </div>
+    <div class="SC-OptionCard sc-pl-large">
+      {%- for timeslot_group in delivery_window.timeslot_groups %}
+        <section class="sc-flex sc-flex-col">
+          {%- if timeslot_group.name %}
+            <header>
+              <div class="sc-mb-tiny">
+                <strong>{{ timeslot_group.name }}</strong>
+              </div>
+            </header>
+          {%- endif %}
+
+          {%- for timeslot in timeslot_group.timeslots %}
+            <label class="SC-OptionCard_label" data-timeslot="{{ timeslot }}">
+              <div class="SC-OptionCard_radio">
+                <div class="SC-RadioInput">
+                  <input
+                    class="sc-hide"
+                    type="radio"
+                    name="delivery_options[{{ current_delivery_options.line_item.id }}][delivery_time]"
+                    value="{{ timeslot }}"
+                    {% if current_delivery_options.line_item.delivery_time == timeslot and current_delivery_date == current_delivery_options.selected_date %}
+                      checked
+                    {% endif %}
+                    date1="{{ current_delivery_options.line_item.delivery_date }}"
+                    date2="{{ current_delivery_options.selected_date }}"
+                    required
+                  />
+                  <svg viewBox="0 0 100 100">
+                    <ellipse cx="50" cy="50" rx="45" ry="45"></ellipse>
+                    <ellipse cx="50"  cy="50" rx="28" ry="28"></ellipse>
+                  </svg>
+                </div>
+              </div>
+              <div class="SC-OptionCard_detail">
+                <div class="SC-OptionCard_detail_primary">
+                  <div>
+                    <strong>{{ timeslot }}</strong>
+                  </div>
+                </div>
+              </div>
+            </label>
+          {%- endfor %}
+        </section>
+      {%- endfor %}
+    </div>
+  </div>
+{%- endif %}

@@ -6,11 +6,11 @@
     <a href="{{ current_store.orders_path }}" class="SC-Button">{{ "accounts.profile.sections.orders.view_all" | t }}</a>
   </span>
 </div>
-{%- if current_account.orders.size > 0 %}
-  <p>{{ "accounts.profile.sections.orders.count" | t, count: current_account.orders.size }}</p>
+{%- if current_customer.orders.size > 0 %}
+  <p>{{ "accounts.profile.sections.orders.count" | t, count: current_customer.orders.size }}</p>
 
   {% comment %} Note: Orders are sorted most recent first {% endcomment %}
-  {% assign order = current_account.orders.first %}
+  {% assign order = current_customer.orders.first %}
   <h4>{{ "accounts.profile.sections.orders.most_recent" | t }}</h4>
 
   <table>

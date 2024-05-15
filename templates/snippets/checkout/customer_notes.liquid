@@ -1,5 +1,5 @@
 {% assign field = form.fields["customer_notes"] %}
-{% if current_cart %}
+{% if current_order == blank %}
   <div class="sc-mt">
     <button type="button" class="Link"
       data-toggle-visibility="customer-notes">
