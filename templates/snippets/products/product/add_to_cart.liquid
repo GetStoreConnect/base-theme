@@ -7,6 +7,11 @@
       {% render "products/product/booking", product: product, form: form %}
     {%- endif %}
 
+    {%# Questions %}
+    {%- if product.custom_forms.size > 0 %}
+      {% render "custom_forms/forms", custom_forms: product.custom_forms, form: form, display_mode: "add_to_cart" %}
+    {%- endif %}
+
     {% render "products/in_your_cart", compact: true, hide_image: true %}
 
     {% if product.can_add_to_cart? %}
@@ -20,6 +25,7 @@
           {%
             render "shared/quantity_picker",
               min: 1,
+              max: product.maximum_quantity,
               style_class: "SC-QuantityPicker-large sc-mr-small",
               field: form.fields["quantity"]
           %}
@@ -62,6 +68,11 @@
       </div>
     {%- endif %}
   {% endform %}
+  {%- unless product.subscription? %}
+    {%- if product.pricing.can_purchase_with_currency? and theme_variables["products.card.hide_purchase_button"] == false %}
+      {% render "products/product/express_checkout", product: product %}
+    {%- endif %}
+  {%- endunless %}
 {%- else %}
   <div class="sc-shade-neutral sc-mb-small">
     {{ product.unavailable_text }}

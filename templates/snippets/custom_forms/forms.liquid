@@ -1,0 +1,15 @@
+{%- default custom_forms: blank %}
+{%- default form: blank %}
+{%- default display_mode: blank %}
+
+{%- for custom_form in custom_forms %}
+  {%- if display_mode == blank or display_mode == custom_form.display_mode %}
+    {%- unless custom_form.item == blank %}
+      <section class="sc-mb">
+        <h4>{{ custom_form.item.product.name }}</h4>
+      </section>
+    {%- endunless %}
+
+    {% render "custom_forms/questions", questions: custom_form.questions, form: form, item: custom_form.item %}
+  {%- endif %}
+{%- endfor %}

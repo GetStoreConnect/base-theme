@@ -1,0 +1,196 @@
+.SC-Button, .Button {
+  @include reset-button-styles;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-around;
+  text-align: center;
+  padding: spacing('medium');
+  border-radius: var(--sc-border-radius);
+  background-color: transparent;
+  color: color('primary');
+  font-size: var(--sc-font-base);
+  font-weight: var(--sc-font-bold);
+  line-height: 1;
+  transition: 100ms background-color ease,
+              100ms color ease;
+
+
+  /**
+   * States
+   */
+
+  &:hover:not(:disabled) {
+    color: color('primary', $lighten: 10%);
+  }
+
+  &:disabled, &.disabled {
+    background-color: shade('lightest');
+    color: shade($a: 0.3);
+  }
+
+
+  /**
+   * Variant: Primary
+   */
+
+  &-primary {
+    padding: spacing('medium') spacing('large');
+    min-width: 150px;
+    color: white;
+    background-color: color('primary');
+    font-size: var(--sc-font-medium);
+
+    &:hover:not(:disabled) {
+      background-color: color('primary', $darken: 5%);
+      color: white;
+    }
+  }
+
+
+  /**
+   * Variant: Secondary
+   */
+
+  &-secondary {
+    padding: spacing('medium') spacing('large');
+    background-color: color('secondary');
+    font-size: var(--sc-font-medium);
+    color: white;
+
+    &:hover:not(:disabled) {
+      background-color: color('secondary', $darken: 5%);
+      color: white;
+    }
+  }
+
+
+  /**
+   * Variant: Subtle
+   */
+
+  &-subtle {
+    color: shade('darkest');
+    padding: spacing('small') spacing('medium');
+
+    &:hover:not(:disabled) {color: currentColor;}
+
+    @include medium-and-up {
+      &:hover:not(:disabled) {
+        background-color: color('primary', $l: 97%);
+        color: color('primary');
+      }
+    }
+  }
+
+
+  /**
+   * Variant: Buy
+   */
+
+  &-buy {
+    padding: spacing('medium') spacing('large');
+    background-color: color('secondary');
+    font-size: var(--sc-font-medium);
+    color: white;
+    margin-top: spacing('small');
+    @include large-and-up {
+      margin-top: 0;
+      margin-left: spacing('small');
+    }
+
+    &:hover:not(:disabled) {
+      background-color: color('secondary', $darken: 5%);
+      color: white;
+    }
+  }
+
+   &-add {
+     width: auto;
+     background-color: color('primary');
+     color: white;
+     font-size: var(--sc-font-medium);
+     padding: spacing('medium') spacing('base');
+     @include large-and-up {
+      width: 100%;
+    }
+
+     &:hover:not(:disabled) {
+       background-color: color('primary', $darken: 5%);
+       color: white;
+     }
+   }
+
+
+  /**
+   * Size variants
+   */
+
+  &-small {
+    font-size: var(--sc-font-small);
+    padding: spacing('small');
+  }
+
+  &-expanded {
+    width: 100%;
+  }
+
+  &-expanded-up-to-small {
+    @include up-to-small {
+      width: 100%;
+    }
+  }
+
+  &-expanded-up-to-large {
+    @include up-to-large {
+      width: 100%;
+    }
+  }
+
+  &[data-loading]:before {
+    content: '';
+    background-image: url('theme/icons/loader.svg');
+    background-size: 100%;
+    border-radius: 100%;
+    width: 18px;
+    height: 18px;
+    margin-right: spacing('small');
+    animation: 1s rotate linear infinite;
+    stroke: currentColor;
+  }
+}
+
+@keyframes rotate {
+  from {transform: rotate(0deg);}
+  to {transform: rotate(360deg);}
+}
+
+
+/**
+ * Deprecated
+ */
+
+.SC-OverlayButton, .OverlayButton {
+  @include reset-button-styles;
+  position: absolute;
+  z-index: var(--sc-depth-foreground);
+  top: 0;
+  left: 0;
+  font-size: 0;
+  border-radius: 100%;
+  width: 40px;
+  height: 40px;
+  background-color: white;
+  box-shadow: 0 1px 8px shade($a: 0.1);
+  color: shade('darkest');
+
+  &:hover:not(:disabled) {
+    background-color: color('primary', $lighten: 25%);
+    color: shade('dark');
+  }
+
+  svg {
+      width: 15px;
+      height: 15px;
+      fill: currentColor;
+  }
+}

@@ -1,0 +1,61 @@
+.SC-Overlay, .Overlay {
+  @include up-to-medium {
+    @include pin-all-sides(fixed);
+    z-index: depth('overlay');
+    display: flex;
+    flex-direction: column;
+    background: white;
+    pointer-events: none;
+    opacity: 0;
+    transform: scale(0.7);
+    transition: .1s transform ease,
+                .1s opacity ease;
+
+    &.is-active {
+      opacity: 1;
+      transform: scale(1);
+      pointer-events: inherit;
+    }
+  }
+
+  /**
+   * Close
+   */
+
+  &_close {
+    @include reset-button-styles;
+    font-size: var(--sc-font-large);
+    padding: spacing('base');
+    text-align: left;
+    color: color('primary');
+    @include medium-and-up {
+      display: none;
+    }
+  }
+
+
+  /**
+   * Body
+   */
+
+  &_body {
+    @include up-to-medium {
+      flex-grow: 1;
+      overflow-y: auto;
+      padding: spacing('base');
+    }
+  }
+
+
+  /**
+   * Footer
+   */
+
+  &_footer {
+    border-top: 1px solid shade('light');
+    padding: spacing('base');
+    @include medium-and-up {
+      display: none;
+    }
+  }
+}

@@ -1,0 +1,45 @@
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport"
+              content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Slider Example</title>
+        <link rel="stylesheet" href="css/rangeslider.css">
+        <style>
+            body {
+                padding: 44px;
+            }
+
+            .irs:not(:first-of-type){
+                margin-top: 44px;
+            }
+        </style>
+    </head>
+    <body>
+        <main>
+            <input type="text" class="single-slider" name="age" value="" data-from="40" />
+
+            <input type="text" class="slider" name="cash_start" value="" data-from="1200"  />
+            <input type="text" class="slider" name="cash_end" value="" data-from="2400" />
+        </main>
+
+        <script src="js/rangeslider.min.js"></script>
+        <script>
+            // Single
+            ionRangeSlider('.single-slider');
+
+            // Multiple Sliders
+            document.querySelectorAll('.slider').forEach(function (slider) {
+                ionRangeSlider(slider, {
+                    min: 0,
+                    max: 5000,
+                    prefix: "$",
+                    grid: true,
+                    grid_num: 5,
+                    step: 100,
+                });
+            });
+        </script>
+    </body>
+</html>

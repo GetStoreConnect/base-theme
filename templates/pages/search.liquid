@@ -19,11 +19,11 @@
 
       <div class="sc-mb">
         {% if current_search.type == "products" %}
-          {%- render "products/wrapper" %}
+          {%- render "products/results", allow_comparisons: true %}
         {% elsif current_search.type == "articles" %}
-          {%- render "articles/wrapper" %}
+          {%- render "articles/results" %}
         {% elsif current_search.type == "pages" %}
-          {%- render "pages/wrapper" %}
+          {%- render "pages/results" %}
         {% endif %}
       </div>
     </div>

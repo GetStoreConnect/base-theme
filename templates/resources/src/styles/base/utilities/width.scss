@@ -1,0 +1,60 @@
+.sc-expand {
+  width: 100%;
+}
+
+.sc-mw-100 {
+  max-width: 100%;
+}
+
+@each $width, $value in $widths {
+  .sc-#{$width} {
+    width: $value;
+  }
+
+  @include small-and-up {
+    .sc-#{$width}-small-and-up {
+      width: $value;
+    }
+  }
+
+  @include medium-and-up {
+    .sc-#{$width}-medium-and-up {
+      width: $value;
+    }
+  }
+
+  @include up-to-medium {
+    .sc-#{$width}-up-to-medium {
+      width: $value;
+    }
+  }
+}
+
+
+/**
+ * DEPRECATED
+ */
+
+@each $width, $value in $widths {
+  .u-#{$width} {
+    width: $value !important;
+  }
+
+  @include small-and-up {
+    .u-#{$width}-small-and-up {
+      width: $value !important;
+    }
+    .u-#{$width}-from-mobile {
+      width: $value !important;
+    }
+  }
+
+  @include medium-and-up {
+    .u-#{$width}-medium-and-up {
+      width: $value !important;
+    }
+    .u-#{$width}-from-tablet {
+      width: $value !important;
+    }
+  }
+}

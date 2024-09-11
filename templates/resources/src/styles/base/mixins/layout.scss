@@ -1,0 +1,40 @@
+@mixin pin-all-sides($position: absolute) {
+  position: $position;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+@mixin pin-top($position) {
+  position: $position;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+@mixin pin-bottom($position) {
+  position: $position;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+@mixin center-absolutely {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+}
+
+@mixin center-v-absolute {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+@mixin aspect-ratio($width, $height) {
+  position: relative;
+  width: 100%;
+  padding-top: calc($height / $width) * 100%;
+}

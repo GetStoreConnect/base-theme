@@ -1,0 +1,90 @@
+/**
+ * StoreConnect: Core
+ */
+
+
+$core_override: () !default;
+
+
+// Functions
+
+@import "base/functions/color";
+@import "base/functions/deep-map-get";
+@import "base/functions/map-extend";
+@import "base/functions/return-props";
+
+
+// Mixins
+
+@import "base/mixins/breakpoints";
+@import "base/mixins/container";
+@import "base/mixins/layout";
+@import "base/mixins/overlay";
+@import "base/mixins/placeholder";
+@import "base/mixins/resets";
+@import "base/mixins/settings";
+@import "base/mixins/typography";
+@import "base/mixins/visibility";
+
+
+// Settings
+
+@import "base/settings/border";
+@import "base/settings/breakpoints";
+@import "base/settings/color";
+@import "base/settings/depth";
+@import "base/settings/edges";
+@import "base/settings/font";
+@import "base/settings/spacing";
+@import "base/settings/shades";
+@import "base/settings/shadow";
+@import "base/settings/image";
+@import "base/settings/widths";
+@import "base/settings/vertical-rhythm";
+
+
+// Elements
+
+@import "base/elements/address";
+@import "base/elements/all";
+@import "base/elements/anchor";
+@import "base/elements/body";
+@import "base/elements/button";
+@import "base/elements/code";
+@import "base/elements/dl";
+@import "base/elements/form";
+@import "base/elements/hr";
+@import "base/elements/img";
+@import "base/elements/label";
+@import "base/elements/menu";
+@import "base/elements/paragraph";
+@import "base/elements/svg";
+@import "base/elements/typography";
+
+
+// Structural
+
+@import "base/structural/card-carousel";
+@import "base/structural/card-grid";
+@import "base/structural/container";
+@import "base/structural/grid";
+@import "base/structural/responsive-iframe";
+@import "base/structural/scroll";
+
+
+// CMS
+
+@import "base/cms/alignment";
+@import "base/cms/container";
+@import "base/cms/content-block";
+@import "base/cms/layout";
+@import "base/cms/slideshow";
+@import "base/cms/page";
+
+
+// Components
+
+@import "base/components/placeholder";
+@import "base/components/banner";
+@import "base/components/image-beside-text";
+@import "base/components/menu";

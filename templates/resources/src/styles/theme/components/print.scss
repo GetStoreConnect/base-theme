@@ -1,0 +1,29 @@
+@media print {
+  .Navbar,
+  .SC-Navbar,
+  .Header_cart,
+  .SC-Header_cart,
+  .Header_search,
+  .SC-Header_search,
+  .Header_secondary-nav,
+  .SC-Header_secondary-nav,
+  .Hamburger,
+  .SC-Hamburger,
+  .Link,
+  .SC-Link,
+  .Breadcrumb,
+  .SC-Breadcrumb {
+    display: none !important;
+  }
+
+  .SC-Header,
+  .Header {box-shadow: none !important;}
+
+  .SC-Panel_section,
+  .SC-Panel_header,
+  .Panel_section,
+  .Panel_header {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+}

@@ -9,8 +9,14 @@
   {%- liquid
     assign canonical_url = current_product.url
     assign image = current_product.social_image | default: current_product.image
+
+    if current_product.pricing.hide_price?
+      assign price = current_product.pricing.hide_price_text
+    else
+      assign price = current_product.pricing.price
+    endif
   -%}
-  <meta property="og:price:amount" content="{{ current_product.pricing.price }}" />
+  <meta property="og:price:amount" content="{{ price }}" />
   <meta property="og:price:currency" content="{{ current_store.currency_code }}" />
 {%- elsif current_product_category != blank %}
   {%- comment -%} Product Category {%- endcomment -%}
@@ -35,7 +41,7 @@
     assign canonical_url = current_article_category.url
     assign image = current_article_category.social_image
   -%}
-{%- elsif current_page != blank and current_page.home_page? == false  %}
+{%- elsif current_page != blank and current_page.home_page? == false %}
   {%- comment -%} Page {%- endcomment -%}
   {%- liquid
     assign type = "page"

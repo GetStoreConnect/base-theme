@@ -1,0 +1,74 @@
+{%- default products: blank %}
+{%- default trait_groups: blank %}
+
+<section class="SC-Table sc-font-small">
+  <header class="SC-Table_header">
+    <div class="SC-Table_row">
+      <div class="SC-Table_cell SC-Table_cell-header SC-Table_cell-skinny sc-hide-up-to-small"></div>
+      {%- for product in products %}
+        <div class="SC-Table_cell SC-Table_cell-header">
+          <div class="sc-flex-row sc-align-items-start">
+            <a href="{{ product.path }}" class="sc-mr-small sc-no-shrink">
+              {% if product.image %}
+                <img src="{{ product.image.thumb_url }}" alt="{{ product.name }}" width="80px" />
+              {% else %}
+                {% render "shared/placeholder_image", width: "80px" %}
+              {% endif %}
+            </a>
+            <div>
+              <a href="{{ product.path }}" class="SC-ProductItem_heading">{{ product.name }}</a>
+              {% if product.product_code %}
+                <div class="sc-shade-neutral">
+                  {{ product.product_code }}
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      {%- endfor %}
+    </div>
+  </header>
+
+  {%- if trait_groups %}
+    {% assign groups = trait_groups | keys %}
+    {%- if groups.size > 0 %}
+      <div class="SC-Table_section">
+        {%- for group in groups %}
+          {%# Group name %}
+          <div class="SC-Table_row">
+            <strong class="SC-Table_cell">
+              {{ group }}
+            </strong>
+          </div>
+
+          {%- assign types = trait_groups[group] | keys %}
+          {%- if types.size > 0 %}
+            {%- for type in types %}
+              {%# Type name %}
+              <div class="SC-Table_row">
+                <div class="SC-Table_cell SC-Table_cell-skinny SC-Table_cell-sticky sc-hide-up-to-small">
+                  <div class="SC-Table_label">
+                    {{ type }}
+                  </div>
+                </div>
+                {%# Trait value for each product %}
+                {%- for product in products %}
+                  <div class="SC-Table_cell">
+                    <div class="SC-Table_value">
+                      {% assign match = trait_groups[group][type]["products"] | try: product.id %}
+                      {%- if match %}
+                        {{ match }}
+                      {%- else %}
+                        &mdash;
+                      {%- endif %}
+                    </div>
+                  </div>
+                {%- endfor %}
+              </div>
+            {%- endfor %}
+          {%- endif %}
+        {%- endfor %}
+      </div>
+    {%- endif %}
+  {%- endif %}
+</section>

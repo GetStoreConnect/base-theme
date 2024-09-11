@@ -1,0 +1,175 @@
+.SC-Banner, .Banner {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  background-color: shade($a: 0.1);
+  background-size: cover;
+
+
+  /**
+   * Container
+   */
+
+  &_container {
+    min-height: 400px;
+    height: 100%;
+    margin: 0 auto;
+    display: flex;
+    padding-left: var(--sc-spacing-large);
+    padding-right: var(--sc-spacing-large);
+    position: relative;
+    justify-content: center;
+    z-index: var(--sc-depth-neutral);
+
+    @include medium-and-up {
+      min-height: 65vh;
+
+      .sc-one-to-three-column &,
+      .CB-one-to-three-column & {
+        min-height: 35vh;
+        @include xlarge-and-up {
+          min-height: 45vh;
+        }
+      }
+    }
+
+
+    // Alignments
+
+    &.sc-left {
+      @include medium-and-up {
+        justify-content: flex-start;
+        transform: translateX(5%);
+      }
+      @include xlarge-and-up {
+        transform: translateX(10%);
+      }
+
+      .sc-one-to-two-column &,
+      .sc-one-to-three-column &,
+      .CB-one-to-two-column &,
+      .CB-one-to-three-column & {
+        transform: translate(0);
+        justify-content: center;
+      }
+    }
+
+    &.sc-right  {
+      @include medium-and-up {
+        justify-content: flex-end;
+        transform: translateX(-5%);
+        text-align: right;
+      }
+      @include xlarge-and-up {
+        transform: translateX(-10%);
+      }
+
+      .sc-one-to-two-column &,
+      .sc-one-to-three-column &,
+      .CB-one-to-two-column &,
+      .CB-one-to-three-column & {
+        transform: translate(0);
+        justify-content: center;
+      }
+    }
+
+    &-center-text {text-align: center;}
+  }
+
+
+  /**
+   * Content
+   */
+
+  &_content {
+    position: relative;
+    z-index: var(--sc-depth-neutral);
+    max-width: 90%;
+    align-self: center;
+    @include medium-and-up {max-width: 70%;}
+    @include huge-and-up {max-width: 50%;}
+
+    .sc-one-to-two-column &,
+    .CB-one-to-two-column & {
+      @include medium-and-up {max-width: 85%;}
+    }
+
+    .sc-one-to-three-column &,
+    .CB-one-to-three-column & {
+      @include medium-and-up {max-width: 90%;}
+    }
+  }
+
+
+  /**
+   * Heading
+   */
+
+  &_heading {
+    font-weight: var(--sc-font-bold);
+    font-size: var(--sc-font-xxlarge);
+    @include medium-and-up {
+      font-size: var(--sc-font-huge);
+    }
+    @include xlarge-and-up {
+      font-size: var(--sc-font-gigantic);
+    }
+
+    .sc-one-to-two-column &,
+    .CB-one-to-two-column & {
+      @include medium-and-up {
+        font-size: var(--sc-font-xxlarge);
+      }
+      @include xlarge-and-up {
+        font-size: var(--sc-font-huge);
+      }
+    }
+
+    .sc-one-to-three-column &,
+    .CB-one-to-three-column & {
+      @include medium-and-up {
+        font-size: var(--sc-font-xlarge);
+      }
+      @include xlarge-and-up {
+        font-size: var(--sc-font-xxlarge);
+      }
+    }
+  }
+
+
+  /**
+   * Subheading
+   */
+
+  &_subheading {
+    font-size: var(--sc-font-large);
+    color: shade($a: 0.8);
+    margin-top: spacing('base');
+
+    .sc-one-to-three-column &,
+    .CB-one-to-three-column & {
+      font-size: var(--sc-font-base);
+      margin-top: spacing('small');
+      @include xlarge-and-up {
+        font-size: var(--sc-font-medium);
+        margin-top: spacing('medium');
+      }
+    }
+  }
+
+
+  /**
+   * Call to action
+   */
+
+  &_cta {
+    display: inline-block;
+    background-color: color('primary');
+    color: white;
+    border-radius: var(--sc-border-radius);
+    font-size: var(--sc-font-medium);
+    font-weight: var(--sc-font-bold);
+    padding: spacing('medium') spacing('large');
+    margin-top: spacing('base');
+  }
+}

@@ -1,0 +1,20 @@
+{% assign valid_providers = current_store.payment_providers | where: "valid_payment_method?" %}
+{% assign first_provider = valid_providers | first %}
+{% assign multiple_providers = valid_providers.size > 1 %}
+
+<section class="SC-ExpressCheckoutForProduct sc-mt">
+  {%- for payment_provider in valid_providers %}
+    {% if payment_provider.supports_express_checkout? %}
+      <div>
+        {% case payment_provider.code %}
+        {% when "Stripe" %}
+          {% render "checkout/payment_information/payment_providers/stripe_form",
+                payment_provider: payment_provider,
+                only_express_checkout: true,
+                dedicated_cart_product_id: product.id
+          %}
+        {% endcase %}
+      </div>
+    {% endif %}
+  {%- endfor %}
+</section>

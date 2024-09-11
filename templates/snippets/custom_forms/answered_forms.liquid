@@ -1,0 +1,15 @@
+{% default custom_forms: blank %}
+
+{% for custom_form in custom_forms %}
+  {% for answer in custom_form.answers %}
+    {%- require "scripts/custom-form-answers.js" -%}
+
+    <div class="sc-mt-base sc-mb-base">
+      {{ answer.question_content }}
+
+      <div data-custom-form-answer>
+        {%- render "custom_forms/answers/show", answer: answer %}
+      </div>
+    </div>
+  {% endfor %}
+{% endfor %}

@@ -1,0 +1,20 @@
+$vertical-rhythm: (
+  'compact': (
+    'mobile': spacing('small'),
+    'desktop': spacing('small')
+  ),
+  'default': (
+    'mobile': spacing('medium'),
+    'desktop': spacing('base')
+  ),
+  'spacious': (
+    'mobile': spacing('base'),
+    'desktop': spacing('xlarge')
+  )
+) !default;
+
+@if (map-has-key($core_override, 'vertical-rhythm') == true) {
+  $vertical-rhythm: map-extend($vertical-rhythm, map-get($core_override, 'vertical-rhythm'), true);
+}
+
+@function vertical-rhythm($keys...) { @return deep-map-get($vertical-rhythm, $keys...) }

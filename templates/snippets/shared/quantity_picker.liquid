@@ -21,8 +21,13 @@ else
   assign count = limit
 endif
 %}
+{%- require "scripts/quantity-picker.js" -%}
 
-<div data-qty-picker class="SC-QuantityPicker {{ style_class }}">
+<div data-qty-picker class="SC-QuantityPicker {{ style_class }}"
+  data-i18n-remove="{{ "shared.quantity_picker.remove_label" | t }}"
+  data-i18n-max="{{ "shared.quantity_picker.max_label" | t }}"
+  data-i18n-min="{{ "shared.quantity_picker.min_label" | t }}"
+  >
   <button
     class="SC-QuantityPicker_trigger"
     data-qty-picker-trigger
@@ -53,8 +58,8 @@ endif
       data-qty-picker-update
       type="submit"
       value="{{ "shared.quantity_picker.update_label" | t }}"
-      class="QuantityPicker_update"
-      style="display: none"
+      class="SC-QuantityPicker_update"
+      style="display: none;"
     />
   {%- endif %}
   <ul></ul>

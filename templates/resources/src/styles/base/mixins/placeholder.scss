@@ -1,0 +1,14 @@
+@mixin placeholder($icon-size: 20%) {
+  position: relative;
+  fill: rgba(black, .05);
+  width: 100%;
+
+  &_icon {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: $icon-size;
+    height: $icon-size;
+    fill: rgba(black, .1);
+  }
+}

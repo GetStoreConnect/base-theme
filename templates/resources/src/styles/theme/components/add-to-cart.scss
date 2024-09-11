@@ -1,0 +1,8 @@
+.SC-AddToCart, .AddToCart {
+  display: flex;
+  flex-wrap: wrap;
+  @include large-and-up {
+    align-items: center;
+    flex-wrap: nowrap;
+  }
+}

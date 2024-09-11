@@ -1,5 +1,7 @@
 {%- default range: blank %}
 
+{%- require "scripts/price-slider.js" -%}
+
 {%- unless range == blank %}
   {% if current_store.display_currency? %}
     <div id="price-range" class="sc-pt-small sc-pb-small">

@@ -2,11 +2,11 @@
   {%- form "cart", data-submit-on-change: true, data-sc-cart: blank, remote: true %}
 
     {%- comment %} Products {% endcomment %}
-    {%- render "shared/cart/items", source: current_cart, extended: true, width: "80px" %}
+    {%- render "shared/cart/items", source: current_cart, extended: true, width: "80px", toggle_answers: true %}
 
     <section class="SC-Grid">
       <div class="SC-Grid_main">
-        <div class="u-text-align-center-up-to-medium">
+        <div class="sc-text-center-up-to-medium">
           <a href="{{ current_store.cart_path }}" data-method="delete" rel="nofollow" class="SC-Link">{{ "cart.links.clear_cart" | t }}</a>
         </div>
       </div>
@@ -21,6 +21,21 @@
     </section>
 
   {%- endform %}
+
+  {%# A separate grid for Express Checkout Wallets that is outside the <form> above %}
+  {%- if current_cart.total_subscriptions == 0 %}
+    <section class="SC-Grid sc-mt">
+      <div class="SC-Grid_main">
+      </div>
+
+      <aside class="SC-Grid_summary">
+        {%- if current_cart.currency_payment_required? %}
+          {% render "checkout/payment_information/show_wallets_only" %}
+        {%- endif %}
+      </aside>
+    </section>
+  {%- endif %}
+
 {%- else %}
   <p>{{ "cart.empty_msg" | t }}</p>
   <p>

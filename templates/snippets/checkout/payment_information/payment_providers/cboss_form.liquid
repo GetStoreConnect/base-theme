@@ -10,6 +10,7 @@
          class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small" />
 {% endform -%}
 
+{%- require 'scripts/gateways/cboss.js' %}
 <script>
   StoreConnect.Gateways.Cboss({ providerId: "{{ provider_id }}", providerName: "{{ provider }}" });
 </script>

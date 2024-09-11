@@ -1,0 +1,65 @@
+/**
+ * To maintain consistency we do not encourage using
+ * grey shades outside of this named set. Rather,
+ * the values of these named shades should be adjusted
+ * as desired for a theme and used consistently.
+ */
+
+$shades: (
+  'darkest':      hsl(0, 0%, 10%), // Body text
+  'dark':         hsl(0, 0%, 30%), // Secondary text
+  'neutral':      hsl(0, 0%, 45%), // Subtle text
+  'light':        hsl(0, 0%, 70%),
+  'lighter':      hsl(0, 0%, 87%), // Subtle borders
+  'lightest':     hsl(0, 0%, 95%), // Offset background colour
+) !default;
+
+@if (map-has-key($core_override, 'shades') == true) {
+  $shades: map-extend($shades, map-get($core_override, 'shades'), true);
+}
+
+
+/**
+ * Global CSS custom properties:
+ *
+ * --shade-lightest
+ * --shade-lighter
+ * --shade-light
+ * --shade-neutral
+ * --shade-dark
+ * --shade-darker
+ * --shade-darkest
+ */
+
+:root {
+  @each $shade, $value in $shades {
+    --sc-shade-#{$shade}: #{$value};
+  }
+}
+
+
+/**
+ * Usage:
+ * shade('dark')
+ * shade($a: 0.5)
+ */
+
+ @function shade($shade: false, $a: 1, $l: 0%) {
+
+  // If a named shade is passed into the function
+  // we return its value directly from the CSS
+  // variable in salesforce_settings.scss
+  @if $shade {
+    $shade_identifier: unquote($shade);
+    @return var(#{'--sc-shade-' + $shade_identifier});
+  }
+
+  // Ensure $l is treated as a percentage
+  @if type-of($l) == 'number' and unitless($l) {
+    $l: calc($l * 1%);
+  }
+
+  // Otherwise we use the lightness and opacity
+  // params to control the color value
+  @return hsla(0, 0%, $l, $a);
+}

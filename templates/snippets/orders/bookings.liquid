@@ -1,6 +1,8 @@
 {%- default order: blank %}
 
 {%- if order.collect_booking_attendees? %}
+  {%- require "scripts/booking-attendee.js" -%}
+
   <section class="SC-Panel sc-mb-xlarge">
     <header class="SC-Panel_header SC-Panel_header-border">
       <h2 class="SC-Panel_header_heading">

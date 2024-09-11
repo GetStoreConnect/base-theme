@@ -1,0 +1,66 @@
+:root {
+  --sc-header-bg: white;
+  --sc-header-color: var(--sc-shade-darkest);
+}
+
+.SC-Header, .Header {
+  z-index: depth('floating');
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: var(--sc-header-bg);
+  color: var(--sc-header-color);
+  box-shadow: 0 4px 10px shade($a: 0.05);
+
+
+  /**
+   * Inner
+   */
+
+   &_inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 70px;
+    @include container($max-width: false);
+
+
+    // Sides
+
+    &_left, &_right {
+      height: 100%;
+      flex-basis: 0;
+      flex-grow: 1;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+
+    // Right side
+
+    &_right {
+      justify-content: flex-end;
+      @include medium-and-up {
+        align-items: center;
+      }
+    }
+
+
+    // Center section
+
+    &_center {
+      max-width: 70%;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 spacing('base');
+      @include medium-and-up {
+        max-width: 500px;
+        width: 100%;
+      }
+    }
+  }
+}

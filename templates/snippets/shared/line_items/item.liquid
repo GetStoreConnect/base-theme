@@ -3,9 +3,11 @@
 {%- default compact: false -%}
 {%- default width: blank -%}
 {%- default extended: false -%}
+{%- default toggle_answers: false -%}
 
 {%- unless line_item == blank or line_item.product == blank %}
-  <div{% if line_item.bookable? %} data-sc-cart-booking{% endif %} class="SC-LineItem sc-flex sc-align-items-center sc-gap-base sc-expand" data-line-item-id="{{ line_item.id }}">
+  <div>
+    <div{% if line_item.bookable? %} data-sc-cart-booking{% endif %} class="SC-LineItem sc-flex sc-align-items-center sc-gap-base sc-expand" data-line-item-id="{{ line_item.id }}">
     {%- comment %} Image {% endcomment %}
     {%- unless hide_image %}
       <a href="{{ line_item.product.path }}" class="sc-no-shrink">
@@ -20,9 +22,17 @@
     <div class="sc-flex sc-wrap-up-to-medium sc-align-items-center sc-gap-small-medium-and-up sc-expand">
 
       <div class="sc-flex-col sc-gap-tiny sc-expand" style="max-width: var(--sc-product-info-max-width)">
-        <a href="{{ line_item.product.path }}">
-          {{ line_item.product.name }}
-        </a>
+        <span>
+          <a href="{{ line_item.product.path }}">
+            {{ line_item.product.name }}
+          </a>
+          {% if line_item.custom_forms.size > 0 and toggle_answers %}
+            <span class="sc-cursor-pointer target-hidden" data-toggle-visibility="line-item-answers-{{ line_item.id }}">
+              {%- render "icons/info", width: 12 %}
+            </span>
+          {% endif %}
+        </span>
+
         {%- comment %} Booking {% endcomment %}
         {%- if line_item.bookable_event != blank %}
           <span class="sc-shade-neutral sc-font-small">
@@ -122,6 +132,10 @@
       <div class="sc-expand sc-text-right" data-line-item-pricing="{{ line_item.id }}" data-product-id="{{ line_item.product.id }}">
         {%- render "shared/line_items/pricing", pricing: line_item.pricing, compact: compact %}
       </div>
+    </div>
+    </div>
+    <div class="sc-font-tiny {% if toggle_answers %}is-hidden{% endif %}" data-toggle-visibility-target="line-item-answers-{{ line_item.id }}">
+      {% render "custom_forms/answered_forms", custom_forms: line_item.custom_forms %}
     </div>
   </div>
 {%- endunless %}

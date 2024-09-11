@@ -1,0 +1,9 @@
+{%- default question: blank %}
+{%- default answer: blank %}
+
+<section class="SC-Field sc-m-none">
+  <label class="SC-Checkbox">
+    <input type="hidden" name="answer" type="checkbox" value="false" />
+    <input class="SC-Checkbox_input sc-mb-base" name="answer" type="checkbox" value="true" {% if answer.answer == 'true' %}checked{% endif %} />
+  </label>
+</section>

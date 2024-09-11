@@ -1,4 +1,6 @@
 {%- if current_privacy.in_use? and current_privacy.groups.size > 0 %}
+  {%- require "scripts/privacy.js" -%}
+
   {%- unless current_privacy.accepted? %}
     <div class="SC-PrivacyBanner" data-privacy-settings-banner>
       <div class="SC-PrivacyBanner_markdown sc-rich-text">

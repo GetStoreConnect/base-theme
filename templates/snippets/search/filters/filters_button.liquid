@@ -1,6 +1,8 @@
 {%- default width: 16 %}
 {%- default stroke: 12 %}
 
+{%- require "scripts/filters.js" -%}
+
 <button
   onclick="window.StoreConnectUI.Filters.toggle()"
   class="SC-Button SC-Button-subtle" type="button"
@@ -13,7 +15,7 @@
     <ellipse cx="65%" cy="73" rx="14" ry="14" stroke-width="{{ stroke }}" fill="white" stroke="currentColor"></ellipse>
   </svg>
   <span>
-    {{ 'shared.filters_button.show' | t }}
-    {{ 'shared.filters_button.filter' | t }}
+    <span data-filters-button-show class="is-hidden">{{ 'shared.filters_button.show' | t }}</span>
+    <span data-filters-button-hide class="is-hidden">{{ 'shared.filters_button.hide' | t }}</span>
   </span>
 </button>

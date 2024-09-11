@@ -1,0 +1,23 @@
+{%- default question: blank %}
+{%- default answer: blank %}
+
+<form data-custom-form-answer-id="{{ answer.id }}">
+  {%- case question.data_type %}
+  {%- when "Boolean" %}
+    {% render "custom_forms/answers/edit_boolean", question: question, answer: answer %}
+  {%- when "Text" %}
+    {% render "custom_forms/answers/edit_text", question: question, answer: answer %}
+  {%- when "Integer" %}
+    {% render "custom_forms/answers/edit_integer", question: question, answer: answer %}
+  {%- when "Decimal" %}
+    {% render "custom_forms/answers/edit_decimal", question: question, answer: answer %}
+  {%- when "Date" %}
+    {% render "custom_forms/answers/edit_date", question: question, answer: answer %}
+  {%- when "Datetime" %}
+    {% render "custom_forms/answers/edit_datetime", question: question, answer: answer %}
+  {%- when "Picklist" %}
+    {% render "custom_forms/answers/edit_picklist", question: question, answer: answer %}
+  {%- when "Multi-Picklist" %}
+    {% render "custom_forms/answers/edit_multi_picklist", question: question, answer: answer %}
+  {%- endcase %}
+</form>

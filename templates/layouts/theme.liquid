@@ -5,11 +5,7 @@
 {%- default csrf_meta_tags: blank -%}
 {%- default data: blank -%}
 {%- default id: blank -%}
-{%- default sc_javascript: blank -%}
-{%- default sc_stylesheet: blank -%}
 {%- default sc_support: blank -%}
-{%- default theme_javascript: blank -%}
-{%- default theme_stylesheet: blank -%}
 {%- default theme_supplement_javascript: blank -%}
 {%- default theme_supplement_stylesheet: blank -%}
 {%- default title: blank -%}
@@ -26,15 +22,15 @@
     {%- render "meta_data", title: title, meta_keywords: meta_keywords, meta_description: meta_description %}
 
     {%- comment -%} Styles {%- endcomment -%}
-    {{ sc_stylesheet }}
-    {{ theme_stylesheet }}
+    {%- require "styles/theme.css" %}
     {{ theme_supplement_stylesheet }}
     {% if current_store.global_css != blank %}<style>{{ current_store.global_css }}</style>{% endif %}
     {%- render "styles" %}
 
     {%- comment -%} Scripts {%- endcomment -%}
-    {{ sc_javascript }}
-    {{ theme_javascript }}
+    {%- require "scripts/configure.js" %}
+    {%- require "scripts/metadata.js" %}
+    {%- require "scripts/theme.js" %}
     {{ theme_supplement_javascript }}
     {% if current_store.global_javascript != blank %}<script>{{ current_store.global_javascript }}</script>{% endif %}
     {%- render "scripts" %}

@@ -1,0 +1,21 @@
+@mixin outline {
+  --sc-border-width: 2px;
+
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  top: calc(var(--sc-border-width) * -1);
+  right: calc(var(--sc-border-width) * -1);
+  bottom: calc(var(--sc-border-width) * -1);
+  left: calc(var(--sc-border-width) * -1);
+  border-radius: var(--sc-border-radius);
+  border: var(--sc-border-width) solid var(--sc-color-primary);
+}
+
+.sc-outline:after {
+  @include outline;
+}
+
+input:checked + .sc-checked-outline:after {
+  @include outline;
+}

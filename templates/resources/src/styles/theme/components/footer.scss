@@ -1,0 +1,28 @@
+:root {
+  --sc-footer-bg: #{color('primary', $l: 40%)};
+  --sc-footer-color: white;
+}
+
+.SC-Footer, .Footer {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-row-gap: spacing('large');
+  justify-content: space-around;
+  background-color: var(--sc-footer-bg);
+  color: var(--sc-footer-color);
+  padding: spacing('large')
+           spacing('large')
+           spacing('base')
+           spacing('large');
+
+  @include medium-and-up {
+    justify-content: flex-start;
+    padding-top: spacing('xlarge');
+    padding-bottom: spacing('medium');
+  }
+  @include large-and-up {
+    padding-bottom: spacing('base');
+  }
+
+  a:hover {color: currentColor;}
+}

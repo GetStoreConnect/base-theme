@@ -1,0 +1,37 @@
+$Count: (
+  'bg': color('primary'),
+  'color': white,
+  'size': 22px
+) !default;
+
+@if (map-has-key($override, 'Count') == true) {
+  $Count: map-extend($Count, map-get($override, 'Count'), true);
+}
+
+@function Count($key) { @return map-get($Count, $key); }
+
+
+.SC-Count, .Count {
+  text-align: center;
+  border-radius: 100%;
+  flex-shrink: 0;
+  width: Count('size');
+  height: Count('size');
+  line-height: Count('size') - 1px;
+  background: Count('bg');
+  color: Count('color');
+  font-size: var(--sc-font-tiny);
+  font-weight: var(--sc-font-bold);
+  pointer-events: none;
+
+  @include up-to-large {
+    position: absolute;
+    top: spacing('micro');
+    right: spacing('micro');
+  }
+
+  @include large-and-up {
+    position: static;
+    align-self: center;
+  }
+}

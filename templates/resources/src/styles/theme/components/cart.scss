@@ -1,0 +1,26 @@
+.SC-CartTimer {
+  display: inline-flex;
+  margin-bottom: spacing('small');
+  padding: 2px spacing('tiny');
+  font-size: var(--sc-font-tiny);
+  background: shade('lightest');
+  border-radius: var(--sc-border-radius);
+  background-color: color('primary', $l: 95%);
+  color: color('primary', $l: 50%);
+  transition: 200ms background-color ease,
+              200ms color ease;
+
+  &_time {margin-left: spacing('tiny');}
+
+  &.warning {
+    background-color: color('error', $lighten: 50%);
+    color: color('error');
+  }
+
+  &.expired {
+    background-color: shade('lightest');
+    color: shade('neutral');
+
+    .SC-CartTimer_time {display: none;}
+  }
+}

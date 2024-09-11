@@ -1,5 +1,7 @@
 <li class="SC-Menu_item dropdown sc-hide-up-to-medium">
   {%- if current_customer != blank %}
+    {%- require "scripts/nav.js" -%}
+
     <a href="{{ current_store.account_path }}" class="SC-Menu_link" data-nav-trigger="account">
       {{ "header.dropdowns.account.heading" | t }}
     </a>

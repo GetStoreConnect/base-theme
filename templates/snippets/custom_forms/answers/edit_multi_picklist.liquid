@@ -1,0 +1,17 @@
+{%- default question: blank %}
+{%- default answer: blank %}
+
+{%- for option in question.picklist_options %}
+  <section class="SC-Field sc-m-none">
+    <label class="SC-Checkbox">
+      <input class="SC-Checkbox_input sc-mb-base" name="answer[]" type="checkbox" value="{{ option.value }}" />
+      <div class="SC-Checkbox_label sc-p-none sc-m-none">
+        <p>{{ option.label }}</p>
+      </div>
+    </label>
+  </section>
+{%- endfor %}
+
+<section class="SC-Field SC-Field-expand">
+  <input type="submit" value="Submit" class="SC-Button SC-Button-add sc-grow" />
+</section>

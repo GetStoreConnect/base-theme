@@ -1,0 +1,12 @@
+{%- default field_name: blank %}
+{%- default field: blank %}
+
+<section class="SC-Field sc-m-none">
+  <label class="SC-Checkbox">
+    <input type="hidden" name="{{ field_name }}" type="checkbox" value="false" />
+    <input class="SC-Checkbox_input sc-mb-base" name="{{ field_name }}" type="checkbox" value="true" {% if field.value == 'true' %}checked{% endif %} />
+    <div class="SC-Checkbox_label sc-p-none sc-m-none">
+      {{ question.question_content }}
+    </div>
+  </label>
+</section>

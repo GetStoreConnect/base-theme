@@ -1,7 +1,9 @@
 {%- comment %} Source is either a Cart or an Order {% endcomment %}
 {% capture source_type %}{{ source | downcase }}{% endcapture %}
 {%- if source != blank and source.bookable? and source_type == "cart" %}
-   <span
+  {%- require "scripts/cart-timer.js" -%}
+
+  <span
     id="SC-CartTimer"
     class="SC-CartTimer"
     data-sc-cart-timer data-sc-expiry="{{ source.bookable_line_items_valid_until }}">

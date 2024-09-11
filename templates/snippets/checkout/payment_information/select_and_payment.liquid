@@ -2,6 +2,8 @@
 {% assign first_provider = valid_providers | first %}
 {% assign multiple_providers = valid_providers.size > 1 %}
 
+{%- require "scripts/payments.js" %}
+
 <section id="select-and-payment" data-tabs="payment" class="sc-mb" style="max-width: 600px" data-currency-payment>
   {%# if current_store.payment_providers has 2+ items then show a menu %}
   {% if multiple_providers %}
@@ -26,6 +28,8 @@
           {% render "checkout/payment_information/payment_providers/authorize_net_form", payment_provider: payment_provider %}
         {% when "Bambora" %}
           {% render "checkout/payment_information/payment_providers/bambora_form", payment_provider: payment_provider %}
+        {% when "Bosch" %}
+          {% render "checkout/payment_information/payment_providers/bosch_form", payment_provider: payment_provider %}
         {% when "Braintree" %}
           {% render "checkout/payment_information/payment_providers/braintree_form", payment_provider: payment_provider %}
         {% when "Cboss" %}

@@ -1,0 +1,28 @@
+declare const CURRENCY_DECIMALS: {
+    IDR: number;
+    JPY: number;
+    KRW: number;
+    VND: number;
+    BYR: number;
+    CVE: number;
+    DJF: number;
+    GHC: number;
+    GNF: number;
+    KMF: number;
+    PYG: number;
+    RWF: number;
+    UGX: number;
+    VUV: number;
+    XAF: number;
+    XOF: number;
+    XPF: number;
+    MRO: number;
+    BHD: number;
+    IQD: number;
+    JOD: number;
+    KWD: number;
+    OMR: number;
+    LYD: number;
+    TND: number;
+};
+export default CURRENCY_DECIMALS;

@@ -1,0 +1,36 @@
+$Notice: (
+  'bg': color('primary', $l: 95%),
+  'color': color('primary', $l: 50%)
+) !default;
+
+@if (map-has-key($override, 'Notice') == true) {
+  $Notice: map-extend($Notice, map-get($override, 'Notice'), true);
+}
+
+@function Notice($keys...) { @return deep-map-get($Notice, $keys...); }
+
+
+.SC-Notice, .Notice {
+  background: Notice('bg');
+  color: Notice('color');
+  padding: spacing('base') spacing('large');
+  border-radius: var(--sc-border-radius);
+  font-weight: var(--sc-font-normal);
+  font-size: var(--sc-font-base);
+  line-height: 1.4;
+
+
+  /**
+   * Variants
+   */
+
+  &-alert {
+    background-color: color('error', $lighten: 50%);
+    color: color('error');
+  }
+
+  &-compact {
+    display: inline-block;
+    padding: spacing('micro') spacing('small');
+  }
+}

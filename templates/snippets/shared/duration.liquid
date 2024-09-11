@@ -3,6 +3,8 @@
   {{ "sc.locale.datetime.distance_in_words.x_seconds" | t, count: duration }}
 {%- when "minutes" %}
   {{ "sc.locale.datetime.distance_in_words.x_minutes" | t, count: duration }}
+{%- when "hours" %}
+  {{ "sc.locale.datetime.distance_in_words.x_hours" | t, count: duration }}
 {%- when "days" %}
   {{ "sc.locale.datetime.distance_in_words.x_days" | t, count: duration }}
 {%- when "weeks" %}

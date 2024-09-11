@@ -1,0 +1,159 @@
+/**
+ * Create CSS custom properties
+ */
+
+@mixin create-custom-props(
+  $map_of_settings,
+  $prefix,
+  $settings: false,
+  $separate_hsla: false) {
+
+
+  // If specific settings are provided we create public
+  // settings from that list. Otherwise, we create public
+  // settings for every item in the map_of_settings.
+
+  $list_of_settings: if($settings, $settings, $map_of_settings);
+
+
+  :root {
+    @each $setting, $value in $list_of_settings {
+
+
+      // If specific setting identifiers are provided
+      // we need to retrieve their values from the map
+      // of settings.
+
+      @if $settings {
+        $value: map-get($map_of_settings, $setting)
+      }
+
+
+      // Else we return the value directly from the map
+
+      @else { $value: $value; }
+
+
+      // When settings are nested we under a group we
+      // prefix the CSS variable with the group name.
+
+      @if type-of($value) == map {
+        $nested_settings: $value;
+
+        @each $nested_setting, $nested_value in $nested_settings {
+          --sc-#{$prefix}-#{$setting}-#{$nested_setting}: #{$nested_value};
+        }
+      }
+
+      @else {
+        --sc-#{$prefix}-#{$setting}: #{$value};
+      }
+
+
+      // Create public settings to represent the hue,
+      // value, saturdation, and alpha values of each
+      // colour setting.
+
+      @if $separate_hsla {
+        --sc-#{$prefix}-#{$setting}-h: #{hue($value)};
+        --sc-#{$prefix}-#{$setting}-s: #{saturation($value)};
+        --sc-#{$prefix}-#{$setting}-l: #{lightness($value)};
+        --sc-#{$prefix}-#{$setting}-a: #{alpha($value)};
+      }
+    }
+  }
+}
+
+
+/**
+ * Set an optional prop
+ */
+
+@mixin set($prop, $setting) {
+  @if ($setting != unset) {#{$prop}: $setting;}
+}
+
+
+/**
+ * Set a prop that changes based on a breakpoint
+ */
+
+@mixin set-adaptive-prop($prop, $props) {
+  @if $props != unset {
+
+    // Expects a map of breakpoints
+    @if type-of($props) == 'map' {
+
+      // Set mobile
+      @if map-has-key($props,'mobile') {
+        #{$prop}: map-get($props,'mobile');
+      }
+
+      // Set tablet
+      @if map-has-key($props,'tablet') {
+        @include medium-and-up {
+          #{$prop}: map-get($props,'tablet');
+        }
+      }
+
+      // Set desktop
+      @if map-has-key($props,'desktop') {
+        @include small-and-up {
+          #{$prop}: map-get($props,'desktop');
+        }
+      }
+    }
+
+    // Set prop for all breakpoints
+    @else {#{$prop}: $props;}
+  }
+}
+
+/**
+ * Set a prop that changes based on a state
+ */
+
+@mixin set-state-prop($prop, $map_of_states) {
+  @if $map_of_states != unset {
+
+    // Expects a map of states
+    @if type-of($map_of_states) == 'map' {
+
+      // Resting state
+      @if map-has-key($map_of_states,'resting') {
+        #{$prop}: map-get($map_of_states,'resting');
+      }
+
+      // Focus state
+      @if map-has-key($map_of_states,'focus') {
+        &:focus {#{$prop}: map-get($map_of_states,'focus');}
+      }
+
+      // Hover state
+      @if map-has-key($map_of_states,'hover') {
+        &:hover {#{$prop}: map-get($map_of_states,'hover');}
+      } @else if map-has-key($map_of_states,'resting') {
+        // Use resting state for hover as fallback
+        &:hover {#{$prop}: map-get($map_of_states,'resting');}
+      }
+
+      // Active state
+      @if map-has-key($map_of_states,'active') {
+        &.is-active, .is-active & {#{$prop}: map-get($map_of_states,'active');}
+      }
+
+      // Checked state
+      @if map-has-key($map_of_states, 'checked') {
+        &:checked {#{$prop}: map-get($map_of_states,'checked');}
+      }
+    }
+
+    // Not a map
+    @else {
+      #{$prop}: $map_of_states;
+
+      // Use resting state for hover if single value is set
+      &:hover, &:focus {#{$prop}: $map_of_states;}
+    }
+  }
+}

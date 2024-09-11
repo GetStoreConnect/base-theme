@@ -149,4 +149,18 @@
       </div>
     </section>
   {%- endif %}
+
+  {%- comment %} Custom Form Answers {% endcomment %}
+  {%- if order.custom_forms.size > 0 %}
+    <section class="Panel">
+      <header class="SC-Panel_header SC-Panel_header-border">
+        <h3 class="SC-Panel_header_heading">
+          {{ "accounts.orders.show.custom_forms" | t }}
+        </h3>
+      </header>
+      <div>
+        {% render "custom_forms/answered_forms", custom_forms: order.custom_forms %}
+      </div>
+    </section>
+  {%- endif %}
 {%- endunless %}

@@ -14,18 +14,22 @@
   {%- assign show_picker = false %}
   {%- if pricing.variable_pricing? and pricing.variable_pricing_amounts.size > 0 %}
     {%- assign show_picker = true %}
-  {%- endif %
-  {%- assign default = pricing.variable_pricing_amounts.first | default: pricing.sale_price | default: pricing.original_price %}
+  {%- endif %}
+  {%- assign defaultPrice = pricing.variable_pricing_amounts.first %}
+  {%- if defaultPrice == blank -%}
+    {%- assign defaultPrice = pricing.sale_price | default: pricing.original_price -%}
+  {%- endif -%}
+
+  {%- require "scripts/price-picker.js" -%}
 
   <div class="SC-PricePicker {{ style_class }}" data-price-picker>
     <button
-      onclick="window.StoreConnectUI.PricePicker.init(event)"
       class="SC-PricePicker_trigger{% if show_picker == false %} is-hidden{% endif %}"
       data-price-picker-trigger type="button">
       <span class="SC-PricePicker_trigger_label">
       {{ "shared.variable_pricing_picker.label" | t }}
         <span data-price-picker-value>
-          {{ default | money }}
+          {{ defaultPrice | money }}
         </span>
       </span>
       {%- render "icons/chevron" %}
@@ -35,11 +39,12 @@
       name="{{ field_name }}"
       id="{{ field.id }}"
       min="{{ pricing.price }}"
-      value="{{ default }}"
+      value="{{ defaultPrice }}"
       class="SC-PricePicker_input{% if show_picker == false %} is-active{% endif %}"
       placeholder="{{ "shared.variable_pricing_picker.placeholder" | t }}"
       data-price-picker-input
       {{ data }}
+      step=".01"
     />
 
     <ul class="SC-PricePicker_list" data-price-picker-list aria-hidden="true">
@@ -58,6 +63,7 @@
         <li class="SC-PricePicker_list_item">
           <button class="SC-PricePicker_list_button"
                   data-price-picker-btn
+                  data-price-picker-btn-other
                   value="max"
                   onClick="window.StoreConnectUI.PricePicker.manualEntry()"
                   type="button">

@@ -5,15 +5,17 @@
   {%- endfor %}
 {%- endcapture %}
 
-<section class="CB-Slideshow" data-cb="{{ content_block.identifier }}">
+<section class="SC-Slideshow" data-cb="{{ content_block.identifier }}">
   {%- if children_content != blank %}
+    {%- require "scripts/slider.js" -%}
+
     <div class="Slider" data-slideshow="{{ content_block.identifier }}">
       {{ children_content }}
     </div>
   {%- else %}
-    <div class="Fallback">
-      <div class="u-text-align-center">
-        <div class="u-s-mb-base"><strong>Slideshow</strong></div>
+    <div class="SC-Fallback">
+      <div class="sc-text-center">
+        <div class="sc-mb-base"><strong>Slideshow</strong></div>
         <div>No content blocks have been selected to be present in this slideshow</div>
       </div>
     </div>

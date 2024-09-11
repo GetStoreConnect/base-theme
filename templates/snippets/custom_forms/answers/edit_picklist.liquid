@@ -1,0 +1,12 @@
+{%- default question: blank %}
+{%- default answer: blank %}
+
+<section class="SC-Field SC-Field-expand">
+  <label class="SC-Field_label">
+    <select name="answer" class="SC-Field_select" {% if question.required? %} required{% endif %} onfocus="this.selectedIndex = -1;">
+      {%- for option in question.picklist_options %}
+        <option value="{{ option.value }}" {% if option.value == answer.answer %}selected{% endif %}>{{ option.label }}</option>
+      {%- endfor %}
+    </select>
+  </label>
+</section>

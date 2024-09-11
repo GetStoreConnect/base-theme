@@ -29,8 +29,9 @@
  {% endif %}
 {%- endform %}
 
+{%- require 'scripts/gateways/pay-way.js' %}
 <script type="text/javascript">
-  StoreConnect.Gateways.PayWay({ 
+  StoreConnect.Gateways.PayWay({
     providerId: '{{ provider_id }}',
     buttonId: '{{ button_id }}'
   });

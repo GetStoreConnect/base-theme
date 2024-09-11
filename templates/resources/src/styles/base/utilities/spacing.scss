@@ -1,0 +1,422 @@
+.sc-m-none {
+  margin: 0;
+}
+
+.sc-p-none {
+  padding: 0;
+}
+
+@each $s, $px in $spacing {
+
+
+  // Margin
+
+  .sc-m-#{$s} {
+    margin: $px;
+  }
+  @include create-bp-classes('m-#{$s}') {
+    margin: $px;
+  }
+
+  .sc-mt-#{$s} {
+    margin-top: $px;
+  }
+  @include create-bp-classes('mt-#{$s}') {
+    margin-top: $px;
+  }
+
+  .sc-mr-#{$s} {
+    margin-right: $px;
+  }
+  @include create-bp-classes('mr-#{$s}') {
+    margin-right: $px;
+  }
+
+  .sc-mb-#{$s} {
+    margin-bottom: $px;
+  }
+  @include create-bp-classes('mb-#{$s}') {
+    margin-bottom: $px;
+  }
+
+  .sc-ml-#{$s} {
+    margin-left: $px;
+  }
+  @include create-bp-classes('ml-#{$s}') {
+    margin-left: $px;
+  }
+
+  .sc-me-#{$s} {
+    margin-top: $px;
+    margin-bottom: $px;
+  }
+  @include create-bp-classes('me-#{$s}') {
+    margin-top: $px;
+    margin-bottom: $px;
+  }
+
+  .sc-ms-#{$s} {
+    margin-left: $px;
+    margin-right: $px;
+  }
+  @include create-bp-classes('ms-#{$s}') {
+    margin-left: $px;
+    margin-right: $px;
+  }
+
+
+  // Padding
+
+  .sc-p-#{$s} {
+    padding: $px;
+  }
+  @include create-bp-classes('p-#{$s}') {
+    padding: $px;
+  }
+
+  .sc-pt-#{$s} {
+    padding-top: $px;
+  }
+  @include create-bp-classes('pt-#{$s}') {
+    padding-top: $px;
+  }
+
+  .sc-pr-#{$s} {
+    padding-right: $px;
+  }
+  @include create-bp-classes('pr-#{$s}') {
+    padding-right: $px;
+  }
+
+  .sc-pb-#{$s} {
+    padding-bottom: $px;
+  }
+  @include create-bp-classes('pb-#{$s}') {
+    padding-bottom: $px;
+  }
+
+  .sc-pl-#{$s} {
+    padding-left: $px;
+  }
+  @include create-bp-classes('pl-#{$s}') {
+    padding-left: $px;
+  }
+
+  .sc-pe-#{$s} {
+    padding-top: $px;
+    padding-bottom: $px;
+  }
+  @include create-bp-classes('pe-#{$s}') {
+    padding-top: $px;
+    padding-bottom: $px;
+  }
+
+  .sc-ps-#{$s} {
+    padding-left: $px;
+    padding-right: $px;
+  }
+  @include create-bp-classes('ps-#{$s}') {
+    padding-left: $px;
+    padding-right: $px;
+  }
+}
+
+
+/**
+ * DEPRECATED
+ */
+
+.sc-mt {
+  margin-top: spacing('small');
+  @include medium-and-up {
+    margin-top: spacing('base');
+  }
+}
+
+.sc-mr {
+  margin-right: spacing('small');
+  @include medium-and-up {
+    margin-right: spacing('base');
+  }
+}
+
+.sc-mb {
+  margin-bottom: spacing('small');
+  @include medium-and-up {
+    margin-bottom: spacing('base');
+  }
+}
+
+.sc-ml {
+  margin-left: spacing('small');
+  @include medium-and-up {
+    margin-left: spacing('base');
+  }
+}
+
+.sc-me {
+  margin-top: spacing('small');
+  margin-bottom: spacing('small');
+  @include medium-and-up {
+    margin-top: spacing('base');
+    margin-bottom: spacing('base');
+  }
+}
+
+.sc-ms {
+  margin-left: spacing('small');
+  margin-right: spacing('small');
+  @include medium-and-up {
+    margin-left: spacing('base');
+    margin-right: spacing('base');
+  }
+}
+
+.sc-pt {
+  padding-top: spacing('small');
+  @include medium-and-up {
+    padding-top: spacing('base');
+  }
+}
+
+.sc-pr {
+  padding-right: spacing('small');
+  @include medium-and-up {
+    padding-right: spacing('base');
+  }
+}
+
+.sc-pb {
+  padding-bottom: spacing('small');
+  @include medium-and-up {
+    padding-bottom: spacing('base');
+  }
+}
+
+.sc-pl {
+  padding-left: spacing('small');
+  @include medium-and-up {
+    padding-left: spacing('base');
+  }
+}
+
+.sc-pe {
+  padding-top: spacing('small');
+  padding-bottom: spacing('small');
+  @include medium-and-up {
+    padding-top: spacing('base');
+    padding-bottom: spacing('base');
+  }
+}
+
+.sc-ps {
+  padding-left: spacing('small');
+  padding-right: spacing('small');
+  @include medium-and-up {
+    padding-left: spacing('base');
+    padding-right: spacing('base');
+  }
+}
+
+.sc-mt-spacious {
+  margin-top: spacing('base');
+  @include medium-and-up {
+    margin-top: spacing('xlarge');
+  }
+}
+
+.sc-mr-spacious {
+  margin-right: spacing('base');
+  @include medium-and-up {
+    margin-right: spacing('xlarge');
+  }
+}
+
+.sc-mb-spacious {
+  margin-bottom: spacing('base');
+  @include medium-and-up {
+    margin-bottom: spacing('xlarge');
+  }
+}
+
+.sc-ml-spacious {
+  margin-left: spacing('base');
+  @include medium-and-up {
+    margin-left: spacing('xlarge');
+  }
+}
+
+.sc-me-spacious {
+  margin-top: spacing('base');
+  margin-bottom: spacing('base');
+  @include medium-and-up {
+    margin-top: spacing('xlarge');
+    margin-bottom: spacing('xlarge');
+  }
+}
+
+.sc-ms-spacious {
+  margin-left: spacing('base');
+  margin-right: spacing('base');
+  @include medium-and-up {
+    margin-left: spacing('xlarge');
+    margin-right: spacing('xlarge');
+  }
+}
+
+.sc-ms-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.sc-pt-spacious {
+  padding-top: spacing('base');
+  @include medium-and-up {
+    padding-top: spacing('xlarge');
+  }
+}
+
+.sc-pr-spacious {
+  padding-right: spacing('base');
+  @include medium-and-up {
+    padding-right: spacing('xlarge');
+  }
+}
+
+.sc-pb-spacious {
+  padding-bottom: spacing('base');
+  @include medium-and-up {
+    padding-bottom: spacing('xlarge');
+  }
+}
+
+.sc-pl-spacious {
+  padding-left: spacing('base');
+  @include medium-and-up {
+    padding-left: spacing('xlarge');
+  }
+}
+
+.sc-pe-spacious {
+  padding-top: spacing('base');
+  padding-bottom: spacing('base');
+  @include medium-and-up {
+    padding-top: spacing('xlarge');
+    padding-bottom: spacing('xlarge');
+  }
+}
+
+.sc-ps-spacious {
+  padding-left: spacing('base');
+  padding-right: spacing('base');
+  @include medium-and-up {
+    padding-left: spacing('xlarge');
+    padding-right: spacing('xlarge');
+  }
+}
+
+@each $s, $px in $spacing {
+  .u-s-mt-#{$s} {
+    margin-top: $px;
+  }
+
+  .u-s-mr-#{$s} {
+    margin-right: $px;
+  }
+
+  .u-s-mb-#{$s} {
+    margin-bottom: $px;
+  }
+
+  .u-s-ml-#{$s} {
+    margin-left: $px;
+  }
+
+  .u-s-me-#{$s} {
+    margin-top: $px;
+    margin-bottom: $px;
+  }
+
+  .u-s-ms-#{$s} {
+    margin-left: $px;
+    margin-right: $px;
+  }
+
+  .u-s-pt-#{$s} {
+    padding-top: $px;
+  }
+
+  .u-s-pr-#{$s} {
+    padding-right: $px;
+  }
+
+  .u-s-pb-#{$s} {
+    padding-bottom: $px;
+  }
+
+  .u-s-pl-#{$s} {
+    padding-left: $px;
+  }
+
+  .u-s-pe-#{$s} {
+    padding-top: $px;
+    padding-bottom: $px;
+  }
+
+  .u-s-ps-#{$s} {
+    padding-left: $px;
+    padding-right: $px;
+  }
+}
+
+.u-s-me-spacious {
+  @include set-adaptive-prop('margin-top', vertical-rhythm('spacious'));
+  @include set-adaptive-prop('margin-bottom', vertical-rhythm('spacious'));
+}
+
+.u-s-mt-spacious {
+  @include set-adaptive-prop('margin-top', vertical-rhythm('spacious'));
+}
+
+.u-s-mb-spacious {
+  @include set-adaptive-prop('margin-bottom', vertical-rhythm('spacious'));
+}
+
+.u-s-pe-spacious {
+  @include set-adaptive-prop('padding-top', vertical-rhythm('spacious'));
+  @include set-adaptive-prop('padding-bottom', vertical-rhythm('spacious'));
+}
+
+.u-s-pt-spacious {
+  @include set-adaptive-prop('padding-top', vertical-rhythm('spacious'));
+}
+
+.u-s-pb-spacious {
+  @include set-adaptive-prop('padding-bottom', vertical-rhythm('spacious'));
+}
+
+.u-s-me {
+  @include set-adaptive-prop('margin-top', vertical-rhythm('default'));
+  @include set-adaptive-prop('margin-bottom', vertical-rhythm('default'));
+}
+
+.u-s-mt {
+  @include set-adaptive-prop('margin-top', vertical-rhythm('default'));
+}
+
+.u-s-mb {
+  @include set-adaptive-prop('margin-bottom', vertical-rhythm('default'));
+}
+
+.u-s-pe {
+  @include set-adaptive-prop('padding-top', vertical-rhythm('default'));
+  @include set-adaptive-prop('padding-bottom', vertical-rhythm('default'));
+}
+
+.u-s-pt {
+  @include set-adaptive-prop('padding-top', vertical-rhythm('default'));
+}
+
+.u-s-pb {
+  @include set-adaptive-prop('padding-bottom', vertical-rhythm('default'));
+}

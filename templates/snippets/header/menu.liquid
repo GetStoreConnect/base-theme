@@ -4,6 +4,8 @@
   {{ "header.menu.close" |t }}
 </button>
 
+{%- require "scripts/nav.js" -%}
+
 {%- for category in current_store.navigation_categories %}
   {%- comment %} Stand-alone category {% endcomment %}
   {%- if category.navigation_children.size == 0 %}

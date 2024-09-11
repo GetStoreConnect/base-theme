@@ -1,0 +1,18 @@
+{%- default field_name: blank %}
+{%- default field: blank %}
+
+<section class="SC-Field SC-Field-expand{% if field.errors != blank %} has-error{% endif %}">
+  <label class="SC-Field_label">
+    {{ question.question_content }}
+  </label>
+</section>
+{%- for option in question.picklist_options %}
+  <section class="SC-Field sc-m-none">
+    <label class="SC-Checkbox">
+      <input class="SC-Checkbox_input sc-mb-base" name="{{ field_name }}[]" type="checkbox" value="{{ option.value }}" />
+      <div class="SC-Checkbox_label sc-p-none sc-m-none">
+        <p>{{ option.label }}</p>
+      </div>
+    </label>
+  </section>
+{%- endfor %}

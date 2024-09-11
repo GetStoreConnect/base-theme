@@ -1,0 +1,29 @@
+{
+  "name": "hoverintent",
+  "version": "2.2.1",
+  "repository": "git@github.com:tristen/hoverintent.git",
+  "description": "Fire mouse events when the user intends it",
+  "main": "index.js",
+  "scripts": {
+    "build": "babel index.js | uglifyjs -mc > dist/hoverintent.min.js"
+  },
+  "author": "tristen",
+  "ender": "./ender.js",
+  "homepage": "http://tristen.ca/hoverintent",
+  "licenses": [
+    {
+      "type": "MIT"
+    }
+  ],
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-plugin-transform-es2015-modules-umd": "^6.24.1",
+    "babel-plugin-transform-object-assign": "^6.22.0",
+    "uglify-js": "^2.6.1"
+  },
+  "files": [
+    "dist",
+    "ender.js",
+    "index.js"
+  ]
+}

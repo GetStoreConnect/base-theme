@@ -14,13 +14,15 @@
   line_items_{{ line_item.id }}_use_points
 {%- endcapture %}
 
+{%- require "scripts/points-toggle.js" -%}
+
 <div class="SC-PointsToggle {{ style_class }}" data-pts-toggle>
   <div class="SC-Checkbox">
     <input
       name="{{ field_name | strip }}"
       style="display: none"
       value="false"
-    /> 
+    />
     <input
       id="{{ field_id | strip }}"
       name="{{ field_name | strip }}"

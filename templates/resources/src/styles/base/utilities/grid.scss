@@ -1,0 +1,98 @@
+:root {
+  --sc-grid-gap: var(--sc-spacing-base);
+}
+
+@mixin common-grid {
+  display: grid;
+  gap: var(--sc-grid-gap);
+}
+
+
+/**
+ * Responsive columns
+ */
+
+.sc-one-to-two-column {
+  @include common-grid;
+  grid-template-columns: 1;
+  @include medium-and-up {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.sc-one-to-three-column {
+  @include common-grid;
+  grid-template-columns: 1;
+  @include medium-and-up {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.sc-one-to-four-column {
+  @include common-grid;
+  grid-template-columns: 1;
+  @include medium-and-up {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.sc-two-to-four-column {
+  @include common-grid;
+  grid-template-columns: repeat(2, 1fr);
+  @include medium-and-up {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+
+/**
+ * Fixed columns
+ */
+
+.sc-one-third-two-thirds {
+  @include common-grid;
+  grid-template-columns: 1fr 2fr;
+}
+
+.sc-two-thirds-one-third {
+  @include common-grid;
+  grid-template-columns: 2fr 1fr;
+}
+
+.sc-two-column {
+  @include common-grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.sc-three-column {
+  @include common-grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.sc-four-column {
+  @include common-grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+
+
+
+/**
+ * Misc
+ */
+
+.sc-grid-half-and-half {
+  @include common-grid;
+  grid-template-columns: 2fr 340px;
+
+  @include up-to-large {
+    grid-template-columns: 1fr;
+    .sc-grid-item:nth-child(2) {
+      grid-row-start: 1;
+    }
+  }
+}
+
+.sc-even-distribution {
+  gap: spacing('base');
+  display: flex;
+}

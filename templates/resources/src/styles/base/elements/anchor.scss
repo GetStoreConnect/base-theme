@@ -1,0 +1,9 @@
+a {
+  color: currentColor;
+  text-decoration: none;
+  transition: 0.2s color ease;
+
+  &:hover:not([class]), &:focus:not([class]) {
+    color: color('primary');
+  }
+}

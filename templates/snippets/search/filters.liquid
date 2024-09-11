@@ -1,5 +1,7 @@
 {%- default fields: current_search.fields %}
 
+{%- require "scripts/sort.js" -%}
+
 <form url="{{ current_search.path }}" method="get" class="SC-Overlay" local="true" data-filters scope>
   <div class="SC-Overlay_close" onclick="window.StoreConnectUI.Filters.toggle()">
     {{ "search.filters.close" | t }}

@@ -1,0 +1,72 @@
+$Screen: (
+  'bg': white,
+  'color': currentColor,
+  'header': (
+    'height': 50px,
+    'border': unset
+  )
+) !default;
+
+@if (map-has-key($override, 'Screen') == true) {
+  $Screen: map-extend($Screen, map-get($override, 'Screen'), true);
+}
+
+@function Screen($keys...) { @return deep-map-get($Screen, $keys...); }
+
+
+.SC-Screen, .Screen {
+  @include pin-all-sides(fixed);
+  z-index: depth('overlay');
+  display: flex;
+  flex-direction: column;
+  background: Screen('bg');
+  color: Screen('color');
+  transition: 0.2s transform ease, 0.2s visibility ease;
+
+
+  /**
+   * State
+   */
+
+  &.is-hidden {
+    visibility: hidden;
+    transform: translateY(100%);
+  }
+
+
+  /**
+   * Header
+   */
+
+  &_header {
+    @include pin-top(absolute);
+    height: Screen('header','height');
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 spacing('small');
+    @include small-and-up {
+      padding: 0 spacing('base')
+    }
+
+
+    // Heading
+
+    &_heading {margin: 0;}
+  }
+
+
+  /**
+   * Body
+   */
+
+  &_body {
+    height: 100vh;
+    padding-top: Screen('header','height');
+
+
+    // Scroll
+
+    &-scroll {overflow-y: auto;}
+  }
+}

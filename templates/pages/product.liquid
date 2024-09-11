@@ -1,5 +1,6 @@
 {%- cache "product", items: [current_product, current_store, current_customer, current_cart] %}
-  <div data-remote-target="product">
+  <div data-remote-target="product" class="sc-pos-relative">
+    {%- render "shared/loader" %}
     {%- assign is_bundle = current_product.bundle_lead? %}
 
     <div>
@@ -75,6 +76,9 @@
 
             {%# Bundle configuration %}
             {%- if is_bundle %}
+              {%- require "scripts/bundle.js" -%}
+              {%- require "scripts/quantity-picker.js" -%}
+
               {%# Price %}
               {% if current_product.pricing.has_price? %}
                 <div data-bundle-price></div>

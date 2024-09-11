@@ -38,7 +38,7 @@
       </div>
     {%- endunless %}
 
-    {%- unless content_block.link_label == blank and content_block.link_target == blank %}
+    {%- unless content_block.link_label == blank or content_block.link_target == blank %}
       <a href="{{ content_block.link_target }}" class="SC-ImageBesideText_cta">
         {{ content_block.link_label | escape }}
       </a>

@@ -1,5 +1,7 @@
 {%- default product: blank %}
 
+{%- require "scripts/booking.js" -%}
+
 <input type="hidden" name="{{ form.fields["product_bookable_location_id"].name }}">
 <input type="hidden" name="{{ form.fields["booking_start"].name }}">
 <input type="hidden" name="{{ form.fields["booking_end"].name }}">
@@ -10,7 +12,7 @@
       <button type="button" data-booking-dates>
         <label>{{ "products.booking.dates" | t }}</label>
         <span></span>
-        <span class="u-pointer-events-inherit">
+        <span class="sc-pointer-events-inherit">
           {%- render "icons/chevron", width: 11 %}
         </span>
       </button>
@@ -20,7 +22,7 @@
       <button type="button" data-bookable-locations data-dropdown-trigger>
         <label>{{ "products.booking.location" | t }}</label>
         <span>{{ "products.booking.all_locations" | t }}</span>
-        <span class="u-pointer-events-inherit ">
+        <span class="sc-pointer-events-inherit ">
           {%- render "icons/chevron", width: 11 %}
         </span>
       </button>

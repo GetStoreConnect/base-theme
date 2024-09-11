@@ -1,0 +1,28 @@
+$Navbar: (
+  'bg': transparent,
+) !default;
+
+@function Navbar($key) { @return deep-map-get($Navbar, $key); }
+
+@if (map-has-key($override, 'Navbar') == true) {
+  $Navbar: map-extend($Navbar, map-get($override, 'Navbar'), true);
+}
+
+.SC-Navbar, .Navbar {
+  background-color: transparent;
+  @include medium-and-up {
+    background-color: Navbar('bg');
+  }
+
+  &_inner {
+    @include container($max-width: false);
+    padding-bottom: spacing('small');
+
+    @include small-and-up {
+      padding-bottom: spacing('medium');
+    }
+    @include medium-and-up {
+      padding-bottom: 0;
+    }
+  }
+}

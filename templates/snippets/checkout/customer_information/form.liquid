@@ -88,7 +88,7 @@
     {% if store_variables["enable_company_name"] %}
       {%- assign field = form.fields["company_name"] %}
       <div class="SC-Field SC-Field-expand{% if field.errors != blank %} has-error{% endif %}{% if field.required? %} required{% endif %}">
-        <label for="{{ field.id }}" class="Field_label">
+        <label for="{{ field.id }}" class="SC-Field_label">
           {{ "checkout.customer_information.form.company_name" | t }}
         </label>
         <input id="{{ field.id }}" name="{{ field.name }}" value="{{ field.value }}" autocomplete="account" class="Field_input">
@@ -102,6 +102,11 @@
   {% render "checkout/customer_information/billing_address", form: form %}
 
   {% render "captcha", action: "checkout" %}
+
+  {%# Questions %}
+  {%- if current_cart.custom_forms.size > 0 %}
+    {% render "custom_forms/forms", custom_forms: current_cart.custom_forms, form: form, display_mode: "in_checkout" %}
+  {%- endif %}
 
   <div class="Field">
     {% capture button_text %}

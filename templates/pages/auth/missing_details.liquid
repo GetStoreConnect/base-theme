@@ -1,0 +1,24 @@
+
+
+<div class="sc-container sc-container-capsule sc-container-spacious">
+  <div class="sc-expand">
+    <h1>Contact Details</h1>
+    <div class="SC-Grid">
+      <div class="SC-Grid_main">
+         {%- form "account-missing-details" %}
+         
+         {% assign fields = form.fields %}
+         {% for field in fields %}
+            <div class="SC-Field SC-Field-expand{% if field["errors"] != blank %} has-error{% endif %}{% if field.required? %} required{% endif %}">
+              <label for="{{ field["id"] }}" class="SC-Field_label">{{ "accounts.contact." | append: field["name"] | t }}</label>
+              <input type="text" name="{{ field["name"] }}" id="{{ field["id"] }}" value="{{ field["value"] }}" placeholder="{{ 'accounts.contact.' | append: field["name"] | t }}" class="SC-Field_input" class="SC-Field_input">
+              <span class="SC-Field_error">{{ field["errors"] | try: "messages" }}</span>
+            </div>
+          {% endfor %}
+
+          <input type="submit" name="commit" value="{{ "accounts.contact.update" | t }}" class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small" data-disable-with="{{ "accounts.contact.update" | t }}">
+         {%- endform %}
+      </div>
+    </div>
+  </div>
+</div>

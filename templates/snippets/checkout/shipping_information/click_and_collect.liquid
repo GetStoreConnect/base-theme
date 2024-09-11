@@ -1,6 +1,8 @@
 <section>
   <div class="sc-mb">
     {%- if click_and_collect_active %}
+      {%- require "scripts/fulfilment.js" -%}
+
       {% assign method_field = form.fields["method"] %}
       {% assign field = form.fields["click_and_collect_option"] %}
       {% for option in current_cart.pickup_options %}

@@ -3,6 +3,7 @@
 {%- default extended: false -%}
 {%- default width: blank -%}
 {%- default hide_image: false -%}
+{%- default toggle_answers: false -%}
 
 <div class="sc-flex-col sc-gap-small sc-mb-base" id="SC-CartItems" data-line-items>
   <div>
@@ -13,7 +14,7 @@
       {%- continue %}
     {%- endif %}
     {%- unless item.reserved_product? %}
-      {%- render "shared/line_items/item", line_item: item, compact: compact, extended: extended, width: width, hide_image: hide_image %}
+      {%- render "shared/line_items/item", line_item: item, compact: compact, extended: extended, width: width, hide_image: hide_image, toggle_answers: toggle_answers %}
     {%- endunless %}
   {%- endfor %}
 </div>

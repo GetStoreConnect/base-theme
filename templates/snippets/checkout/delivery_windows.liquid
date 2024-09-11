@@ -1,6 +1,8 @@
 {%- if current_cart.schedulable_items.size > 0 %}
   {%- assign use_days = theme_variables["checkout.delivery_windows.use_days"] == true %}
 
+  {%- require "scripts/delivery-options.js" -%}
+
   <section class="sc-mb-large">
     <div class="sc-mb-large" style="max-width: 600px">
       <h4>{{ "checkout.delivery_options.header" | t }}</h4>

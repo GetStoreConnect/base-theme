@@ -1,0 +1,41 @@
+{
+    "name": "vanilla-rangeslider",
+    "version": "1.0.0",
+    "description": "Ion-RangeSlider without out jQuery",
+    "homepage": "https://github.com/keisto/vanilla-rangeslider",
+    "author": {
+        "name": "Tony Keiser",
+        "email": "keisertony@gmail.com",
+        "url": "https://github.com/keisto"
+    },
+    "keywords": [
+        "javascript-plugin",
+        "ecosystem:javascript",
+        "javascript",
+        "form",
+        "input",
+        "range",
+        "slider",
+        "rangeslider",
+        "interface",
+        "diapason",
+        "ui",
+        "noui",
+        "skins"
+    ],
+    "main": "./js/rangeslider.js",
+    "directories": {
+        "lib": "js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/keisto/vanilla-rangeslider.git"
+    },
+    "bugs": {
+        "url": "https://github.com/IonDen/ion.rangeSlider/issues"
+    },
+    "license": "MIT",
+    "ignore": [
+        "_tmp"
+    ]
+}

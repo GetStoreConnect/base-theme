@@ -44,10 +44,14 @@
       {%- else %}
         "availability": "http://schema.org/InStock",
       {%- endif %}
-      {%- if product.pricing.on_sale? and product.pricing.sale_price > 0 %}
-        "price": "{{ product.pricing.sale_price }}",
-      {%- else %}
-        "price": "{{ product.pricing.original_price }}",
+      {%- if product.pricing.hide_price? %}
+        "price": "{{ product.pricing.hide_price_text }}",
+      {% else %}
+        {%- if product.pricing.on_sale? and product.pricing.sale_price > 0 %}
+          "price": "{{ product.pricing.sale_price }}",
+        {%- else %}
+          "price": "{{ product.pricing.original_price }}",
+        {%- endif %}
       {%- endif %}
       "priceCurrency": "{{ current_store.currency_code }}",
       "url": "{{ product.url }}"

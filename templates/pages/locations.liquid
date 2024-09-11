@@ -2,7 +2,6 @@
 {%- default filter_product: blank -%}
 {%- default found_locations: "no-search" -%}
 {%- assign google_maps_api_key = store_variables['google_maps_api_key'] %}
-{%- assign initial_location = current_store.location_finder.fallback_initial_location %}
 
 {%- render "locations/forms/exact",
     location_group: location_group,
@@ -49,7 +48,7 @@
       v: "weekly"
     });
   </script>
-  <script src="{{ 'locations.js' | asset_url }}"></script>
+  {%- require "scripts/locations.js" %}
 
 {% comment %} Without google API {% endcomment %}
 {%- else %}
@@ -70,5 +69,5 @@
       {%- endunless %}
     </section>
   </article>
-   <script src="{{ 'locations.js' | asset_url }}"></script>
+  {%- require "scripts/locations.js" %}
 {%- endunless %}

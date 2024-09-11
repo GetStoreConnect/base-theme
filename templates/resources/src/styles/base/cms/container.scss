@@ -1,0 +1,61 @@
+.SC-ContentBlockContainer {
+  padding: spacing('base') 0;
+
+
+  /**
+   * Header
+   */
+
+  &_header {
+    @include container;
+    margin-bottom: var(--sc-spacing-base);
+  }
+
+    &_title {
+      margin-bottom: 0;
+    }
+
+    &_subtitle {
+      color: var(--sc-shade-dark);
+      font-size: var(--sc-font-large);
+      margin-top: var(--sc-spacing-small);
+    }
+
+
+  /**
+   * Body
+   */
+
+  &_body:not(.sc-expand) {
+    @include container;
+  }
+
+
+  /**
+   * Footer
+   */
+
+  &_footer {
+    @include container;
+    margin-top: spacing('large');
+  }
+}
+
+
+/**
+ * DEPRECATED
+ */
+
+.CB-Container {
+  @include container-padding;
+  display: flex;
+  flex-wrap: wrap;
+
+  & > .SC-ContentBlock,
+  & > .SC-Slideshow,
+  & > .CB-Component,
+  & > .CB-Slideshow {
+    flex-basis: 0;
+    flex-grow: 1;
+  }
+}

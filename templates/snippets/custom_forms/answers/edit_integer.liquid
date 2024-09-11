@@ -1,0 +1,8 @@
+{%- default question: blank %}
+{%- default answer: blank %}
+
+<section class="SC-Field SC-Field-expand">
+  <label class="SC-Field_label">
+    <input type="number" class="SC-Field_input sc-one-whole" name="answer" value="{{ answer.answer }}" step="1" {% if question.required? %} required{% endif %} />
+  </label>
+</section>

@@ -1,3 +1,5 @@
+{%- require "scripts/date-picker.js" -%}
+
 <div id="SC-CollectionTime">
   <h4>{{ "checkout.shipping.collection_time.header" | t }}</h4>
   <label class="SC-Field">
@@ -7,7 +9,7 @@
           class="SC-Field_input"
           data-date-picker
           placeholder="{{ "checkout.shipping.collection_time.placeholder" | t }}"
-          onchange="window.StoreConnect.formatDateTime(event.target.value, '{{ field.id }}')"
+          onchange="window.StoreConnect.formatDateTime(event.target.value, '{{ field.id }}');"
     >
   </label>
 </div>

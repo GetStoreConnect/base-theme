@@ -9,6 +9,7 @@
 <input id="{{ button_id }}" type="submit" class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small" data-payment-info-submit
   value="{{ "accounts.subscriptions.show.submit_update_button_label" | t }}" />
 
+{%- require 'scripts/gateways/authorize-net.js' %}
 <script type="text/javascript">
   StoreConnect.Gateways.AuthorizeNet({
     providerId: '{{ payment_provider.id }}',

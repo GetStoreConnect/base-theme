@@ -1,0 +1,115 @@
+.SC-Panel, .Panel {
+
+
+  /**
+   * Header
+   */
+
+  &_header {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    padding: spacing('medium') 0;
+    font-weight: var(--sc-font-bold);
+    @include small-and-up {
+      flex-direction: row;
+    }
+    @include medium-and-up {
+      flex-direction: column;
+    }
+    @include xlarge-and-up {
+      flex-direction: row;
+    }
+
+    &.is-filled {
+      color: shade($a: 0.3);
+      border-bottom: 1px solid shade('lightest');
+      font-weight: var(--sc-font-normal);
+
+      .SC-Panel_header_heading:before,
+      .Panel_header_heading:before {
+        color: transparent;
+        opacity: 0.5;
+        width: 20px;
+        height: 20px;
+        border-radius: 100%;
+        background-color: color('primary');
+        background-image: url('theme/icons/check.svg');
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: 12px;
+      }
+    }
+
+    &.is-disabled {
+      font-weight: var(--sc-font-normal);
+      color: shade('light');
+      border-top: 1px solid shade('lightest');
+    }
+
+    &-border {
+      border-bottom: var(--sc-border-width) solid var(--sc-border-color);
+      margin-bottom: spacing('base');
+    }
+
+
+    // Heading
+
+    &_heading {
+      margin: 0;
+      flex-grow: 1;
+      display: flex;
+      align-items: center;
+      font-size: var(--sc-font-large);
+      color: currentColor;
+    }
+
+
+    // Desc
+
+    &_summary {
+      width: 40%;
+      margin: spacing('small') 0 0;
+      @include small-and-up {
+        margin: 0 0 0 spacing('small');
+        flex-direction: row;
+      }
+      @include medium-and-up {
+        margin: spacing('small') 0 0;
+        flex-direction: column;
+      }
+      @include large-and-up {
+        flex-direction: row;
+        margin: 0 0 0 spacing('small');
+      }
+
+    }
+  }
+
+
+  /**
+   * Section
+   */
+
+  &_section {
+    margin: 0 0 spacing('large');
+  }
+
+
+  /**
+   * Variants
+   */
+
+  &-numbered {
+    counter-reset: panel-count;
+
+    .SC-Panel_header_heading:before,
+    .Panel_header_heading:before {
+      display: inline-block;
+      margin-right: spacing('tiny');
+      font-size: var(--sc-font-large);
+      counter-increment: panel-count;
+      content: counter(panel-count) ".";
+    }
+  }
+}

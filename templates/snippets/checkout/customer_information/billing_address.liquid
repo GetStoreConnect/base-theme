@@ -10,8 +10,8 @@
   {% assign billing_same_as_shipping_field = form.fields["billing_same_as_shipping"] %}
   <div class="SC-Checkbox" data-billing-checkbox>
     <input type="hidden" name="{{ billing_same_as_shipping_field.name }}" value="0" />
-    <input type="checkbox" id="{{ billing_same_as_shipping_field.id }}" name="{{ billing_same_as_shipping_field.name }}" value="1" class="Checkbox_input"{% if billing_same_as_shipping_field.value %} checked{% endif %} />
-    <label for="{{ billing_same_as_shipping_field.id }}" class="Checkbox_label">
+    <input type="checkbox" id="{{ billing_same_as_shipping_field.id }}" name="{{ billing_same_as_shipping_field.name }}" value="1" class="SC-Checkbox_input"{% if billing_same_as_shipping_field.value %} checked{% endif %} />
+    <label for="{{ billing_same_as_shipping_field.id }}" class="SC-Checkbox_label">
       {{ "checkout.customer_information.billing_address.billing_address_same_as_shipping_address" | t }}
     </label>
   </div>

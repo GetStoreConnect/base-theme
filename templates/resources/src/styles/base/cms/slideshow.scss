@@ -1,0 +1,13 @@
+.SC-Slideshow,
+.CB-Slideshow {
+  width: 100%;
+  margin-bottom: spacing('medium');
+  @include medium-and-up {
+    margin-bottom: spacing('base');
+  }
+
+  .SC-ContentBlock,
+  .CB-Component {
+    margin: 0;
+  }
+}

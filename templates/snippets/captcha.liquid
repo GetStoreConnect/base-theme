@@ -7,10 +7,22 @@
   {% capture captcha_token %}captcha_{{ "now" | date: "%N" }}{% endcapture %}
   <input name="{{ name }}" id="{{ captcha_token }}" type="hidden" />
   <script>
-    grecaptcha.ready(function() {
-      grecaptcha.execute("{{ captcha_site_key }}", {action: "{{ action }}"}).then(function(token) {
-        document.getElementById("{{ captcha_token }}").value = token;
-      });
+    document.addEventListener("DOMContentLoaded", function() {
+      const captchaInput = document.getElementById("{{ captcha_token }}");
+      captchaInput.form.onsubmit = function(event) {
+        // Prevent form from submitting immediately until
+        // we have the captcha token
+        event.preventDefault();
+
+        grecaptcha.ready(function() {
+          grecaptcha.execute("{{ captcha_site_key }}", {action: "{{ action }}"}).then(function(token) {
+            captchaInput.value = token;
+
+            // Now resume submitting the form
+            captchaInput.form.submit();
+          });
+        });
+      };
     });
   </script>
 {% endif %}

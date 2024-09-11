@@ -1,0 +1,25 @@
+$Tag: (
+  'padding': spacing('tiny') spacing('medium'),
+  'color': white,
+  'bg': (
+    'resting': color('primary'),
+    'hover': darken-color('primary', 15%)
+  )
+) !default;
+
+@if (map-has-key($override, 'Tag') == true) {
+  $Tag: map-extend($Tag, map-get($override, 'Tag'), true);
+}
+
+@function Tag($keys...) { @return deep-map-get($Tag, $keys...); }
+
+
+.SC-Tag, .Tag {
+  display: inline-block;
+  margin-bottom: spacing('tiny');
+  border-radius: var(--sc-border-rounded);
+  transition: 0.1s background-color ease;
+  @include set-state-prop('background-color', Tag('bg'));
+  @include set-state-prop('color', Tag('color'));
+  @include set('padding', Tag('padding'));
+}

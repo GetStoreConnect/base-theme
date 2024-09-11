@@ -17,6 +17,8 @@ This form uses Adyen's client-side encryption to ensure PCI compliance.
     class="SC-Field SC-Alert sc-hide"
     data-placeholder="{{ "checkout.gateways.form.errors.invalid" | t }}"></div>
 
+{%- require 'scripts/gateways/adyen.js' %}
+{%- require 'styles/gateways/adyen.css' %}
 <script>
   StoreConnect.Gateways.Adyen({
     providerId: "{{ provider_id }}"

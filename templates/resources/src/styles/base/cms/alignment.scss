@@ -1,0 +1,28 @@
+/**
+ * Alignment
+ */
+
+.sc-align-center,
+.CB-align-center {
+  align-items: center;
+}
+
+.sc-align-start,
+.CB-align-top {
+  align-items: flex-start;
+}
+
+.sc-align-end,
+.CB-align-end {
+  align-items: flex-end;
+}
+
+.sc-justify-center,
+.CB-justify-center {
+  justify-content: center;
+}
+
+.sc-justify-space-between,
+.CB-justify-space-between {
+  justify-content: space-between;
+}

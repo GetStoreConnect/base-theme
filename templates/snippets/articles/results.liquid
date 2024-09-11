@@ -1,0 +1,13 @@
+{% default articles: current_search.results.articles %}
+{%- if current_search.count > 0 %}
+  {% paginate articles by current_search.per_page %}
+    {% for article in articles %}
+      {% render "articles/card", article: article %}
+    {% endfor %}
+    {% render 'shared/pagination-nav', paginate: paginate %}
+  {% endpaginate %}
+{% else %}
+  <div class="SC-Fallback">
+    {{ "search.articles.index.no_results" | t  }}
+  </div>
+{% endif %}

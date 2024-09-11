@@ -1,0 +1,6 @@
+// Explicit ID to add a hidden breadcrumb to content_page#show
+// This is for the breadcrumb to not be present by default on a content page
+// but can be added by the clients
+#SC-pages-breadcrumb {
+  display: none;
+}

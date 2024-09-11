@@ -1,0 +1,35 @@
+{%- default questions: blank %}
+{%- default form: blank %}
+
+{%- for question in questions %}
+  {%- capture field_prefix %}answers[{{ question.id }}]{%- endcapture %}
+  {%- capture field_name %}{{ field_prefix }}[answer]{%- endcapture %}
+  {%- assign field = form.fields[field_name] %}
+
+  {%- unless item == blank %}
+    <input type="hidden" name="{{ field_prefix }}[item_id]" value="{{ item.id }}" />
+  {%- endunless %}
+
+  {%- if question.hidden? %}
+    {% render "custom_forms/questions/hidden", question: question, field_name: field_name, field: field %}
+  {%- else %}
+    {%- case question.data_type %}
+    {%- when "Boolean" %}
+      {% render "custom_forms/questions/boolean", question: question, field_name: field_name, field: field %}
+    {%- when "Text" %}
+      {% render "custom_forms/questions/text", question: question, field_name: field_name, field: field %}
+    {%- when "Integer" %}
+      {% render "custom_forms/questions/integer", question: question, field_name: field_name, field: field %}
+    {%- when "Decimal" %}
+      {% render "custom_forms/questions/decimal", question: question, field_name: field_name, field: field %}
+    {%- when "Date" %}
+      {% render "custom_forms/questions/date", question: question, field_name: field_name, field: field %}
+    {%- when "Datetime" %}
+      {% render "custom_forms/questions/datetime", question: question, field_name: field_name, field: field %}
+    {%- when "Picklist" %}
+      {% render "custom_forms/questions/picklist", question: question, field_name: field_name, field: field %}
+    {%- when "Multi-Picklist" %}
+      {% render "custom_forms/questions/multi_picklist", question: question, field_name: field_name, field: field %}
+    {%- endcase %}
+  {%- endif %}
+{%- endfor %}

@@ -1,0 +1,11 @@
+{%- default src: blank -%}
+{%- default options: blank -%}
+{%- liquid
+  assign attributes = ''
+  for option in options
+    assign key = option[0]
+    assign value = option[1] | escape
+    assign attributes = attributes | append: ' ' | append: key | append: '="' | append: value | append: '"'
+  endfor
+-%}
+<link rel="stylesheet" href="{{ src }}"{{ attributes }}>

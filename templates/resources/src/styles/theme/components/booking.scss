@@ -1,0 +1,236 @@
+.SC-Booking {
+  position: relative;
+  margin-bottom: spacing('base');
+
+
+  // Dates and Location dropdowns
+
+  &_filters {
+    z-index: depth('foreground');
+    position: relative;
+    border-radius: var(--sc-border-radius);
+    box-sizing: border-box;
+  }
+
+
+  // List of dates and time slots
+
+  &_availabilities {
+    position: relative;
+    height: 300px;
+    overflow-y: scroll;
+    border-bottom: 1px solid shade($l: 85%);
+
+    .sc-notice {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: shade('neutral');
+    }
+  }
+}
+
+
+/**
+ * Date group
+ */
+
+.SC-BookingDate {
+
+  header {
+    z-index: var(--sc-depth-neutral);
+    position: sticky;
+    top: 0;
+    border-bottom: 1px solid shade($l: 85);
+    margin: 0;
+    padding-top: spacing('base');
+    padding-bottom: spacing('small');
+    background-color: white;
+  }
+
+
+  // List of time slots
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: spacing('small') 0;
+  }
+}
+
+
+/**
+ * Time slot
+ */
+
+.SC-BookingTimeSlot {
+  cursor: pointer;
+  border: 0;
+  width: 100%;
+  display: flex;
+  margin-bottom: spacing('tiny');
+
+  input {display: none;}
+
+  button {
+    @include reset-button-styles;
+    pointer-events: none;
+    display: flex;
+    justify-content: space-between;
+    flex-grow: 1;
+    text-align: left;
+    padding: spacing('medium') spacing('base');
+    background-color: shade($l: 97%);
+    border-radius: var(--sc-border-radius);
+    transition: 100ms box-shadow ease,
+                100ms background-color ease,
+                100ms color ease;
+  }
+
+  input:checked ~ button {
+    background-color: color('primary', $l: 90%);
+    border-color: transparent;
+    color: color('primary');
+  }
+
+  input:disabled ~ button {
+    background-color: shade($l: 97%);
+    border: 1px solid shade($l: 97%);
+    color: shade($l: 65%);
+  }
+}
+
+
+/**
+ * Lite Picker (npm package used for date range picker)
+ */
+
+.litepicker {
+  --litepicker-month-width: 100%;
+  --litepicker-day-width: calc(100% / 7);
+  --litepicker-is-in-range-color: #{color('primary', $l: 97%)};
+  --litepicker-is-start-color-bg: #{color('primary', $l: 90%)};
+  --litepicker-is-start-color: #{shade('darkest')};
+  --litepicker-is-end-color-bg: #{color('primary', $l: 90%)};
+  --litepicker-is-end-color: #{shade('darkest')};
+  --litepicker-is-today-color: #{shade('darkest')};
+  --litepicker-day-color-hover: #{color('primary')};
+  --litepicker-button-prev-month-color: #{shade('light')};
+  --litepicker-button-prev-month-color-hover: #{color('primary')};
+  --litepicker-button-next-month-color: #{shade('light')};
+  --litepicker-button-next-month-color-hover: #{color('primary')};
+
+  font-family: inherit;
+  font-size: var(--sc-font-base);
+  color: currentColor;
+  margin-top: 1px;
+  margin-left: -1px;
+
+  .container__months {
+    border: none;
+    width: 100%;
+    padding-bottom: spacing('base');
+    border-radius: var(--sc-border-radius);
+    border-color: shade('lighter');
+    border-width: 0 1px 1px;
+    border-style: solid;
+  }
+
+
+  // Month
+
+  .month-item {width: 100%;}
+
+
+  // Day
+
+  .container__days {
+    .day-item {
+      cursor: pointer;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &.is-today {
+        font-weight: var(--sc-font-bold);
+        color: shade('darkest');
+      }
+
+      &.is-disabled {
+        color: shade('light');
+        pointer-events: none;
+      }
+
+      &:hover {
+        box-shadow: inset 0 0 0 2px var(--litepicker-day-color-hover) !important;
+      }
+
+      &.is-in-range {
+        background-color: var(--litepicker-is-in-range-color) !important;
+      }
+
+      &.is-start-date {
+        color: var(--litepicker-is-start-color) !important;
+        background-color: var(--litepicker-is-start-color-bg) !important;
+      }
+
+      &.is-end-date {
+        color: var(--litepicker-is-end-color) !important;
+        background-color: var(--litepicker-is-end-color-bg) !important;
+      }
+
+      &.is-highlighted {
+        color: var(--litepicker-day-color);
+        background-color: var(--litepicker-day-color-bg);
+        position: relative;
+
+        &::after {
+          content: " ";
+          height: 4px;
+          width: 4px;
+          margin: 0 2px;
+          border-radius: 4px;
+          background-color: color('primary', $l: 70%);
+          position: absolute;
+          bottom: 0.25em;
+          left: auto;
+        }
+      }
+    }
+  }
+
+
+  // Month header
+
+  .month-item-header {
+    font-weight: var(--sc-font-bold);
+
+    button {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+    }
+  }
+
+
+  // Days of week
+
+  .month-item-weekdays-row {
+    text-transform: uppercase;
+    font-size: var(--sc-font-tiny);
+  }
+
+
+  // Icons
+
+  .button-previous-month {transform: rotate(90deg);}
+
+  .button-next-month {transform: rotate(-90deg);}
+
+  svg {width: 12px;}
+}

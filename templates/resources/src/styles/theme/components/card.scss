@@ -1,0 +1,73 @@
+.SC-Card, .Card {
+  display: grid;
+  grid-template-columns: auto;
+
+
+  /**
+   * Image
+   */
+
+  &_image {
+    @include overlay;
+    font-size: 0;
+  }
+
+
+  /**
+   * Headline
+   */
+
+  &_headline {
+    font-size: var(--sc-font-medium);
+  }
+
+
+  /**
+   * Subheadline
+   */
+
+   &_subheadline {
+    font-size: var(--sc-font-small);
+    opacity: 0.7;
+  }
+
+  /**
+   * Menu
+   */
+
+  &_menu {
+    float: right;
+  }
+
+
+  /**
+   * Variants
+   */
+
+  &-featured {
+    padding: spacing('base');
+    border-radius: var(--sc-border-radius);
+    border: var(--sc-border-width) var(--sc-border-color);
+    box-shadow: 0 2px 2px hsla(0, 0%, 0%, 0.05);
+  }
+
+  &-floating {
+    padding: spacing('base');
+    border-radius: var(--sc-border-rounded);
+    padding: spacing('large');
+    border-color: transparent;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15),
+                0 1px 1px rgba(0, 0, 0, 0.05);
+  }
+
+
+  /**
+   * State: Active
+   */
+
+  &.is-active {
+    display: block;
+    opacity: 1;
+    color: currentColor;
+  }
+}

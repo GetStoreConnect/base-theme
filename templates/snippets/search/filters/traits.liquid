@@ -2,10 +2,11 @@
 {%- default fields: current_search.fields %}
 
 {%- assign traits = fields.filters.traits %}
+{%- assign trait_keys = fields.filters.traits | keys %}
 
 {%- unless traits == blank %}
 <section class="SC-Filters_traits">
-  {%- for trait in traits.keys %}
+  {%- for trait in trait_keys %}
     {%- assign field = traits[trait] %}
 
     {%- unless field == blank or field.options.size == 0 %}

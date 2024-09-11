@@ -2,4 +2,6 @@
 {%- default: date_style: "medium" %}
 {%- default: time_style: "short" %}
 
+{%- require "scripts/date-localizer.js" -%}
+
 <time data-timestamp="{{ timestamp }}" data-date-style="{{ date_style }}" data-time-style="{{ time_style }}">{{ timestamp }}</time>

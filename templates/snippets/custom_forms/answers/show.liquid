@@ -1,0 +1,22 @@
+{%- default answer: blank %}
+
+{% if answer.editable? %}<a data-custom-form-answer-id="{{ answer.id }}" class="SC-Link">{% endif %}
+
+{% if answer.editable? and answer.answer == blank %}
+  {{ "custom_forms.click_to_enter_your_answer" | t }}
+{% elsif answer.question.data_type == 'Picklist' %}
+  {% assign picklist_option = answer.question.picklist_options[answer.answer] %}
+  {{ picklist_option.label }}
+{% elsif answer.question.data_type == 'Multi-Picklist' %}
+  {% assign values = answer.answer | split: ';' %}
+  {% if values.size > 0 %}
+    {% for value in values %}
+      {{ answer.question.picklist_options[value].label }}
+    {% endfor %}
+  {% else %}
+    {{ "custom_forms.no_option_selected" | t }}
+  {% endif %}
+{% else %}
+  {{ answer.answer }}
+{% endif %}
+{% if answer.editable? %}</a>{% endif %}
