@@ -59,7 +59,8 @@
                     <span>{{ date_range }}</span>
                     {%- unless time.unlimited? %}
                       {%- if time.available > 0 %}
-                        {{ "products.availability.available" | t: count: time.available }}
+                        {%- assign rounded_available = time.available | floor %}
+                        {{ "products.availability.available" | t: count: rounded_available }}
                       {%- else %}
                         {{ "products.availability.sold_out" | t }}
                       {%- endif %}
