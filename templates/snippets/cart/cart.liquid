@@ -1,4 +1,4 @@
-{%- if current_cart != blank and current_cart.items.size > 0 %}
+{%- if current_cart.items.size > 0 %}
   {%- form "cart", data-submit-on-change: true, data-sc-cart: blank, remote: true %}
 
     {%- comment %} Products {% endcomment %}

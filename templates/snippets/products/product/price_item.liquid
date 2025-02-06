@@ -25,12 +25,23 @@
             {%- if pricing.use_points? and pricing.checkout_points > 0 %}
               <span data-points>{{ pricing.checkout_points | points }}</span>
             {%- endif %}
+
+            {%# Deposit Full Price %}
+            <div class="sc-shade-neutral sc-font-{% if large %}base{% else %}tiny{% endif %}" data-deposit-full-price>
+              {{ "pricing.total_due" | t }}
+
+              {%# Currency Price %}
+              {%- if pricing.use_currency? %}
+                <span data-currency>{{ pricing.price | money }}</span>
+              {%- endif %}
+
+              {%# Points Price %}
+              {%- if pricing.use_points? %}
+                <span data-points>{{ pricing.points | points }}</span>
+              {%- endif %}
+            </div>
           </div>
         {%- else %}
-
-
-
-
           {%# Current Price %}
           {%- if current_store.display_currency? and pricing.can_purchase_with_currency? %}
             {%# Currency %}
@@ -66,62 +77,43 @@
               </span>
             {%- endif %}
           {%- endif %}
+        {%- endif %}
 
-          {%# Original Price %}
-          <div>
-            {%- if pricing.on_sale? and current_store.display_currency? and pricing.can_purchase_with_currency? %}
-              {%# Currency %}
-              <span class="sc-color-sale sc-font-{% if large %}base{% else %}tiny{% endif %}" data-original-price>
-                {%- capture price %}{{ pricing.original_price | money }}{%- endcapture %}
-                {{ "products.pricing.original_price" | t: amount: price }}
-              </span>
-            {%- endif %}
+        {%# Original Price %}
+        <div>
+          {%- if pricing.on_sale? and current_store.display_currency? and pricing.can_purchase_with_currency? %}
+            {%# Currency %}
+            <span class="sc-color-sale sc-font-{% if large %}base{% else %}tiny{% endif %}" data-original-price>
+              {%- capture price %}{{ pricing.original_price | money }}{%- endcapture %}
+              {{ "products.pricing.original_price" | t: amount: price }}
+            </span>
+          {%- endif %}
 
-            {%- if pricing.points_sale? and current_store.display_points? and pricing.can_purchase_with_points? %}
-              {%- if current_store.display_points? and pricing.can_purchase_with_points? %}
-                {% default both_on_sale: blank %}
+          {%- if pricing.points_sale? and current_store.display_points? and pricing.can_purchase_with_points? %}
+            {%- if current_store.display_points? and pricing.can_purchase_with_points? %}
+              {% default both_on_sale: blank %}
 
-                {%# Or %}
-                {%- if pricing.on_sale? and current_store.display_currency? and pricing.can_purchase_with_currency? %}
-                  {% assign both_on_sale = true %}
-                  {{ "pricing.currency_or_points_connector" | t }}
-                {%- elsif pricing.variable_pricing? %}
-                  {%# From %}
-                  {{ "pricing.points.purchase.variable" | t }}
-                {%- endif %}
+              {%# Or %}
+              {%- if pricing.on_sale? and current_store.display_currency? and pricing.can_purchase_with_currency? %}
+                {% assign both_on_sale = true %}
+                {{ "pricing.currency_or_points_connector" | t }}
+              {%- elsif pricing.variable_pricing? %}
+                {%# From %}
+                {{ "pricing.points.purchase.variable" | t }}
               {%- endif %}
-
-              {%# Points %}
-              <span class="sc-color-sale sc-font-{% if large %}base{% else %}tiny{% endif %}" data-original-points-price>
-                {%- if both_on_sale == true %}
-                  {{ pricing.original_points | points }}
-                {%- else %}
-                  {%- capture points %}{{ pricing.original_points | points }}{%- endcapture %}
-                  {{ "products.pricing.original_price" | t: amount: points }}
-                {%- endif %}
-              </span>
-            {%- endif %}
-          </div>
-        {%- endif %}
-
-
-
-        {%# Full Price %}
-        {%- if pricing.deposit_required? %}
-          <div class="sc-shade-neutral sc-font-{% if large %}base{% else %}tiny{% endif %}" data-deposit-full-price>
-            {{ "pricing.total_due" | t }}
-
-            {%# Currency Price %}
-            {%- if pricing.use_currency? %}
-              <span data-currency>{{ pricing.price | money }}</span>
             {%- endif %}
 
-            {%# Points Price %}
-            {%- if pricing.use_points? %}
-              <span data-points>{{ pricing.points | points }}</span>
-            {%- endif %}
-          </div>
-        {%- endif %}
+            {%# Points %}
+            <span class="sc-color-sale sc-font-{% if large %}base{% else %}tiny{% endif %}" data-original-points-price>
+              {%- if both_on_sale == true %}
+                {{ pricing.original_points | points }}
+              {%- else %}
+                {%- capture points %}{{ pricing.original_points | points }}{%- endcapture %}
+                {{ "products.pricing.original_price" | t: amount: points }}
+              {%- endif %}
+            </span>
+          {%- endif %}
+        </div>
 
         {%# Subscriptions %}
         {%- if product.subscription? %}
