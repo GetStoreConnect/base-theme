@@ -61,12 +61,6 @@
         </section>
       {% endif %}
     </div>
-
-    {%# Questions %}
-    {%- if current_cart.custom_forms.size > 0 %}
-      {% render "custom_forms/forms", custom_forms: current_cart.custom_forms, form: form %}
-    {%- endif %}
-
     <input type="submit"
       value="{{ "checkout.shipping.form.next" | t }}"
       class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small"

@@ -25,11 +25,6 @@
   {% if current_store.staff.size > 0 %}
     {% render "checkout/assisted_by_user", form: form %}
   {% endif %}
-
-  {%# Questions %}
-  {%- if current_cart != blank and current_cart.custom_forms.size > 0 %}
-    {% render "custom_forms/forms", custom_forms: current_cart.custom_forms, form: form %}
-  {%- endif %}
 {%- endform %}
 
 {%# This should be placed at the bottom so that it executes after all the html loads %}

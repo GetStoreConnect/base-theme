@@ -1,5 +1,5 @@
 {%- capture item_count %}
-  {%- if current_cart.item_count > 0 %}
+  {%- if current_cart != blank and current_cart.item_count > 0 %}
     <div class="SC-Count sc-ml-tiny" data-cart-nav-count>
       {{ current_cart.item_count }}
     </div>
@@ -20,7 +20,7 @@
   </a>
 
   {%- comment %} Dropdown {% endcomment %}
-  {%- if current_cart.items.size > 0 %}
+  {%- if current_cart != blank and current_cart.items.size > 0 %}
     <div class="SC-Cart SC-Menu dropdown" data-nav="cart" data-sc-cart>
       <button class="SC-Menu_button sc-hide-medium-and-up" data-nav-close="root" type="button">
         {{ "header.dropdowns.cart.close" | t }}

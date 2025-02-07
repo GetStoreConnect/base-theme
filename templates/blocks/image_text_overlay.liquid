@@ -24,7 +24,7 @@
           </div>
         {%- endunless %}
 
-        {%- unless content_block.link_label == blank or content_block.link_target == blank %}
+        {%- unless content_block.link_label == blank and content_block.link_target == blank %}
           <a class="SC-Banner_cta" href="{{ content_block.link_target }}">
             {{ content_block.link_label }}
           </a>
