@@ -1,0 +1,9 @@
+{%- default field_name: blank %}
+{%- default field: blank %}
+
+<section class="SC-Field SC-Field-expand{% if field.errors != blank %} has-error{% endif %}">
+  <label class="SC-Field_label">
+    {{ question.question_content }}
+    <input type="datetime-local" class="SC-Field_input sc-one-whole" name="{{ field_name }}" value="{{ field.value }}" {% if field.required? %} required{% endif %} />
+  </label>
+</section>

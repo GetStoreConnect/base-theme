@@ -275,8 +275,10 @@ auth.login.form.username,Username
 auth.login.form.via,Or via one of these:
 auth.login.heading,Sign in to your account
 auth.login.sso.enum.azure,via Azure
+auth.login.sso.enum.entra_id,via Entra
 auth.login.sso.enum.experience_cloud,via our Portal
 auth.login.sso.enum.google,via Google
+auth.login.sso.enum.singlekey_id,via SingleKey ID
 auth.login.sso.reset_password,Reset
 auth.login.sso.sign_in,Sign in
 auth.login.sso.sign_in_or_register,Sign in or up
@@ -668,9 +670,15 @@ sc.auth.registrations.updated_but_not_signed_in,"Your account has been updated s
 sc.auth.sessions.already_signed_out,""
 sc.auth.sessions.signed_in,""
 sc.auth.sessions.signed_out,Signed out successfully.
+sc.auth.sso.singlekey_id.fail,Could not authenticate you from SingleKey ID because: %{reason}
+sc.auth.sso.singlekey_id.success,Successfully authenticated from your SingleKey ID account.
+sc.auth.sso.singlekey_id.support,"There was a problem processing your registration, please contact support."
 sc.auth.sso.azure.fail,Could not authenticate you from Azure because: %{reason}
 sc.auth.sso.azure.success,Successfully authenticated from your Azure account.
 sc.auth.sso.azure.support,"There was a problem processing your registration, please contact support."
+sc.auth.sso.entra_id.fail,Could not authenticate you from Entra because: %{reason}
+sc.auth.sso.entra_id.success,Successfully authenticated from your Entra account.
+sc.auth.sso.entra_id.support,"There was a problem processing your registration, please contact support."
 sc.auth.sso.error,"Could not authenticate, please contact support."
 sc.auth.sso.experience_cloud.fail,Could not authenticate you from the portal because: %{reason}
 sc.auth.sso.experience_cloud.success,Successfully authenticated from your account.
@@ -683,7 +691,6 @@ sc.bundles.add.errors.could_not_add_product,Could not add %{name} to cart: %{mes
 sc.bundles.add.notices.success,Bundle added to your cart!
 sc.cart.add.errors.out_of_stock,%{name} is out of stock
 sc.cart.add.errors.product_is_restricted,Prior approval is required before you can purchase %{name}
-sc.cart.create.errors.fail,Could not create cart
 sc.cart.update.errors.booking_hold_expired,The reservation period has expired for some items in your cart: %{names}.
 sc.cart.update.errors.booking_started,Some items in your cart have passed the starting time and can no longer be booked: %{names}.
 sc.cart.update.errors.insufficient_product_stock,The following items do not have enough stock and have been removed from your cart: %{names}.

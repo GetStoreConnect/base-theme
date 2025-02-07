@@ -1,0 +1,6 @@
+{%- default custom_forms: blank %}
+{%- default form: blank %}
+
+{%- for custom_form in custom_forms %}
+  {% render "custom_forms/questions", questions: custom_form.questions, form: form %}
+{%- endfor %}
