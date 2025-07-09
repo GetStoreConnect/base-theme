@@ -38,15 +38,4 @@
   </div>
 </div>
 
-<script>
-  (function() {
-    document.addEventListener('DOMContentLoaded', function() {
-      const billingForm = document.querySelector('[data-billing-form]');
-      const billingCheckbox = document.querySelector('[data-billing-checkbox] input[type=checkbox]');
-
-      billingCheckbox.addEventListener('change', function() {
-        billingForm.classList.toggle('is-hidden');
-      });
-    });
-  })();
-</script>
+{% require "scripts/checkout-helpers.js" %}

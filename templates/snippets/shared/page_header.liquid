@@ -1,8 +1,8 @@
-{%- default heading: blank -%}
-{%- default sub_heading: blank -%}
-{%- default summary: blank -%}
-{%- default modifier: blank -%}
-{%- default image: blank -%}
+{%- default heading: nil -%}
+{%- default sub_heading: nil -%}
+{%- default summary: nil -%}
+{%- default modifier: nil -%}
+{%- default image: nil -%}
 
  <header class="SC-PageHeader {{ modifier }}" {% if image != blank %}style="background-image: url({{ image.huge_url }})"{% endif %}>
   {%- if heading != blank %}

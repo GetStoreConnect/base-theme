@@ -1,5 +1,5 @@
-{%- default product: blank %}
-{%- default choices: blank %}
+{%- default product: nil %}
+{%- default choices: nil %}
 
 {% if product %}
   {% if product.variant_types.size > 0 %}
@@ -19,7 +19,7 @@
                   {%- if variant_type.variant_choices.size == 0 %}
                     <option disabled selected>{{ "products.variant_options.no_stock" }}</option>
                   {%- else %}
-                    <option disabled selected>{{ "products.variant_options.select" | t, variant_type: variant_type.label }}</option>
+                    <option disabled selected>{{ "products.variant_options.select" | t, variant_type: variant_type.name }}</option>
                   {%- endif %}
                   {% for variant_choice in variant_type.variant_choices %}
                     {% assign selected = choices | contains: variant_choice.form_value %}

@@ -6,20 +6,20 @@
   <section class="sc-mb-large">
     <div class="sc-mb-large" style="max-width: 600px">
       <h4>{{ "checkout.delivery_options.header" | t }}</h4>
-      {%- for line_item in current_cart.schedulable_items %}
-        <div data-delivery-options="{{ line_item.id }}">
-          <strong>{{ line_item.product.name }}</strong>
+      {%- for cart_item in current_cart.schedulable_items %}
+        <div data-delivery-options="{{ cart_item.id }}">
+          <strong>{{ cart_item.product.name }}</strong>
           {%- if use_days %}
             <div class="sc-mt-medium sc-mb-medium">
               <strong>{{ "checkout.delivery_options.day_prompt" | t }}</strong>
             </div>
-            {%- if line_item.available_delivery_days.size > 0 %}
+            {%- if cart_item.available_delivery_days.size > 0 %}
               <div class="SC-OptionCard" data-delivery-days>
-                {%- for day in line_item.available_delivery_days %}
+                {%- for day in cart_item.available_delivery_days %}
                   <label class="SC-OptionCard_label">
                     <div class="SC-OptionCard_radio">
                       <div class="SC-RadioInput">
-                        <input type="radio" name="delivery_options[{{ line_item.id }}][delivery_day]" value="{{ day }}" class="SC-Radio_input" required>
+                        <input type="radio" name="delivery_options[{{ cart_item.id }}][delivery_day]" value="{{ day }}" class="SC-Radio_input" required>
                         <svg viewBox="0 0 100 100">
                           <ellipse cx="50" cy="50" rx="45" ry="45"></ellipse>
                           <ellipse cx="50"  cy="50" rx="28" ry="28"></ellipse>
@@ -38,7 +38,7 @@
                 {%- endfor %}
               </div>
             {%- else %}
-              <input type="hidden" name="delivery_options[{{ line_item.id }}][delivery_window_debug]" />
+              <input type="hidden" name="delivery_options[{{ cart_item.id }}][delivery_window_debug]" />
               <div class="SC-Notice SC-Notice-alert sc-mb-small">
                 <h4>{{ "checkout.delivery_options.no_available_delivery_days" | t }}</h4>
               </div>
@@ -47,8 +47,8 @@
             <div class="sc-mt-medium sc-mb-medium">
               <strong>{{ "checkout.delivery_options.date_prompt" | t }}</strong>
             </div>
-            {%- if line_item.available_delivery_dates.size > 0 %}
-              {%- capture field_key %}delivery_options[line_item][{{ line_item.id }}][delivery_window_timeslot]{% endcapture %}
+            {%- if cart_item.available_delivery_dates.size > 0 %}
+              {%- capture field_key %}delivery_options[cart_item][{{ cart_item.id }}][delivery_window_timeslot]{% endcapture %}
               {%- assign field = form.fields[field_key] %}
               {%- assign error = form.errors | where: 'field', field_key | first %}
               {%- if error %}
@@ -59,8 +59,8 @@
 
               <menu class="sc-shadow sc-border-light sc-mb-small">
                 <div class="SC-DropdownPicker">
-                  <input type="text" name="delivery_options[{{ line_item.id }}][delivery_start_date]" data-delivery-date-input="{{ line_item.id }}" required class="sc-hide">
-                  <button type="button" data-available-delivery-dates="{{ line_item.available_delivery_dates | join: ',' }}" data-delivery-date-button="{{ line_item.id }}">
+                  <input type="text" name="delivery_options[{{ cart_item.id }}][delivery_start_date]" data-delivery-date-input="{{ cart_item.id }}" required class="sc-hide">
+                  <button type="button" data-available-delivery-dates="{{ cart_item.available_delivery_dates | join: ',' }}" data-delivery-date-button="{{ cart_item.id }}">
                     <label>{{ "checkout.delivery_options.delivery_date" | t }}</label>
                     <span class="u-pointer-events-inherit">
                       {% render "icons/chevron", width: 11 %}
@@ -70,7 +70,7 @@
               </menu>
 
             {%- else %}
-              <input type="hidden" name="delivery_options[{{ line_item.id }}][delivery_window_debug]" />
+              <input type="hidden" name="delivery_options[{{ cart_item.id }}][delivery_window_debug]" />
               <div class="SC-Notice SC-Notice-alert sc-mb-small">
                 <h4>{{ "checkout.delivery_options.no_available_delivery_dates" | t }}</h4>
               </div>

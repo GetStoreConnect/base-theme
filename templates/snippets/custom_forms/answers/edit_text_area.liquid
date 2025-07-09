@@ -1,0 +1,13 @@
+{%- default question: blank %}
+{%- default answer: blank %}
+
+<section class="SC-Field SC-Field-expand">
+  <label class="SC-Field_label">
+    {{ question.question_content }}
+    <textarea class="SC-Field_textarea sc-one-whole" name="answer" {% if question.required? %} required{% endif %} rows=3>{{ answer.answer }}</textarea>
+  </label>
+</section>
+
+<section class="SC-Field SC-Field-expand">
+  <input type="submit" value="Submit" class="SC-Button SC-Button-add sc-grow" />
+</section>

@@ -1,0 +1,18 @@
+{%- default fulfillment: nil %}
+
+{%- unless fulfillment == blank %}
+  {%- assign order = fulfillment.order %}
+  {%- assign heading = "accounts.fulfillments.show.heading" | t, tracking_code: fulfillment.reference %}
+  {%- assign subheading = "" %}
+  {%- render "shared/page_header", heading: heading, sub_heading: subheading %}
+
+  <div id="SC-fulfillment" data-reset-cookie-checkout class="sc-grid-half-and-half sc-gap-xlarge-medium-and-up">
+    <div class="sc-grid-item">
+      {% render "account/fulfillments/fulfillment", fulfillment: fulfillment %}
+    </div>
+    <div class="sc-grid-item sc-mb-base">
+      {% render "orders/order_summary", source: order %}
+    </div>
+
+  </div>
+{%- endunless %}

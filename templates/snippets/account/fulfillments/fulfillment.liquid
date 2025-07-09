@@ -1,0 +1,10 @@
+{%- default fulfillment: nil %}
+
+{%- unless fulfillment == blank %}
+  {% if fulfillment.tracking_code != blank %}
+    {% render "account/fulfillments/tracking", fulfillment: fulfillment %}
+  {% endif %}
+  {% render "account/fulfillments/items", fulfillment: fulfillment %}
+  {% render "account/fulfillments/order", fulfillment: fulfillment %}
+  {% render "orders/shipping_address", order: fulfillment.order %}
+{%- endunless %}

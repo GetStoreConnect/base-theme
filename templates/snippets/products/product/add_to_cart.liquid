@@ -1,7 +1,7 @@
-{%- default product: blank %}
+{%- default product: nil %}
 
 {%- if product.pricing.has_price? %}
-  {%- form "add-to-cart", product_id: product.id, data-cart-form: true %}
+  {%- form "add-to-cart", product: product, data-cart-form: true %}
     {%# Booking %}
     {%- if product.bookable? && ! product.variants.size > 0 %}
       {% render "products/product/booking", product: product, form: form %}

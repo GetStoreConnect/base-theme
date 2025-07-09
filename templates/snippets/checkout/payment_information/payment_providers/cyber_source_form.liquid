@@ -1,0 +1,120 @@
+{%- assign provider_id = payment_provider.id %}
+{%- assign provider = payment_provider.code %}
+{%- assign form_id = provider | append: "PaymentForm" | append: provider_id %}
+{%- assign button_id = provider | append: "PaymentButton" | append: provider_id %}
+{%- assign wallets_container_id = provider | append: "WalletsContainer" | append: provider_id %}
+{%- assign script_block_id = provider | append: "ScriptBlock" | append: provider_id %}
+{%- assign payment_error_id = provider | append: "PaymentError" | append: provider_id %}
+
+{%- default only_express_checkout: false %}
+{%- default dedicated_cart_product_id: nil %}
+{%# Need unique IDs for per-product Wallets; since Cart dropdown is on same page %}
+{%- if dedicated_cart_product_id != blank %}
+  {%- assign form_id = form_id | append: "Product" | append: dedicated_cart_product_id %}
+  {%- assign button_id = button_id | append: "Product" | append: dedicated_cart_product_id %}
+  {%- assign wallets_container_id = wallets_container_id | append: "Product" | append: dedicated_cart_product_id %}
+  {%- assign script_block_id = script_block_id | append: "Product" | append: dedicated_cart_product_id %}
+  {%- assign payment_error_id = payment_error_id | append: "Product" | append: dedicated_cart_product_id %}
+{% endif %}
+
+{%- assign total_subscriptions = current_cart.total_subscriptions %}
+{%- if current_order %}
+  {%- assign total_subscriptions = current_order.total_subscriptions %}
+{%- endif %}
+
+<div id="{{ script_block_id }}"></div>
+
+{%- if total_subscriptions == 0 %}
+  <div id="{{ wallets_container_id }}" class="SC-Fieldset">
+    <div data-ref="wallet-buttons" class="SC-Field sc-flex-col-unless-wide sc-flex-equal-width"></div>
+    <div data-ref="wallet-error" class="SC-Field SC-Alert sc-hide"></div>
+  </div>
+{%- endif %}
+
+{%- form "payment", provider: payment_provider, class: "SC-Panel",
+            id: form_id,
+            only-express-checkout: only_express_checkout,
+            dedicated-cart-product-id: dedicated_cart_product_id,
+            data-cart-product-id: dedicated_cart_product_id
+           %}
+  {% unless only_express_checkout %}
+    {{ payment_provider.description_content }}
+
+    <fieldset class="SC-Fieldset">
+      <div class="SC-Field">
+        {% assign field = form.fields["card_number"] %}
+        <label class="Field_label" for="{{ field.id }}">
+          {{ "checkout.gateways.form.card_number" | t }}
+        </label>
+        <div id="number-container" class="SC-Field_input sc-expand"></div>
+      </div>
+
+      <div class="SC-Field">
+        {% assign field = form.fields["card_name"] %}
+        <label for="{{ field.id }}" class="SC-Field_label">
+          {{ 'checkout.gateways.form.card_name' | t }}
+        </label>
+        <input type="text" name="{{ field.name }}" id="{{ field.id }}"
+          autocomplete="cc-name"
+          required
+          class="SC-Field_input sc-expand"
+          value="{{ field.value }}">
+      </div>
+
+      <div class="SC-Fieldset_row">
+        <div class="SC-Field SC-Field-small">
+          {% assign field = form.fields["card_month"] %}
+          <label for="{{ field.id }}" class="SC-Field_label">
+            {{ 'checkout.gateways.form.expiry_month' | t }}
+          </label>
+          <input type="text" name="{{ field.name }}" id="{{ field.id }}"
+            autocomplete="cc-exp-month"
+            required
+            maxlength="2"
+            size="8"
+            placeholder="{{ 'checkout.gateways.form.expiry_month_placeholder' | t }}"
+            class="SC-Field_input"
+            value="{{ field.value }}">
+        </div>
+
+        <div class="SC-Field SC-Field-small">
+          {% assign field = form.fields["card_year"] %}
+          <label for="{{ field.id }}" class="SC-Field_label">
+            {{ 'checkout.gateways.form.expiry_year' | t }}
+          </label>
+          <input type="text" name="{{ field.name }}" id="{{ field.id }}"
+            autocomplete="cc-exp-year"
+            required
+            maxlength="4"
+            size="8"
+            placeholder="{{ 'checkout.gateways.form.expiry_year_placeholder' | t }}"
+            class="SC-Field_input"
+            value="{{ field.value }}">
+        </div>
+
+        <div class="SC-Field SC-Field-small">
+          {% assign field = form.fields["card_verification"] %}
+          <label for="{{ field.id }}" class="SC-Field_label">
+            {{ 'checkout.gateways.form.verification' | t }}
+          </label>
+          <div id="securityCode-container" class="SC-Field_input" style="width: 75px;"></div>
+        </div>
+      </div>
+    </fieldset>
+
+    {% render "checkout/payment_information/additional_info", form: form %}
+
+    <input type="submit"
+      value="{{ 'checkout.gateways.form.pay_now' | t }}"
+      id="{{ button_id }}"
+      class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small"
+      data-disable-with="{{ 'checkout.payment.processing' | t }}"
+      data-payment-info-submit />
+  {% endunless %}
+
+  <div id="{{ payment_error_id }}"
+    class="SC-Field SC-Alert sc-mt-small sc-hide"
+    data-placeholder="{{ "checkout.gateways.form.errors.invalid" | t }}"></div>
+{% endform -%}
+
+{%- require 'scripts/gateways/cyber-source.js' %}

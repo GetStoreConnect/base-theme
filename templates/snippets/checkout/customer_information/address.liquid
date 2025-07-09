@@ -30,12 +30,6 @@ elsif address_type == "recipient"
   assign country = form.fields["recipient_country"]
   assign allowed_countries = form.fields["allowed_shipping_countries"]
 endif
-
-assign billing_same_as_shipping = form.fields["billing_same_as_shipping"].value
-assign address_required = false
-if address_type == "shipping" or (address_type == "billing" and !billing_same_as_shipping)
-  assign address_required = true
-endif
 %}
 
 {%- require "scripts/customer-address.js" -%}
@@ -49,35 +43,42 @@ endif
 >
   {% assign field_name = address_type | append: '_address_lines[]' %}
   {% for line in address_lines.value %}
-    <div class="SC-Field sc-one-whole">
+    <div class="SC-Field sc-one-whole{% if forloop.first %}{% if address_lines.errors != blank %} has-error{% endif %} required{% endif %}">
       {% assign field_id = address_type | append: '_address_line_' | append: forloop.index %}
       <label for="{{ field_id }}" class="SC-Field_label">{{ "accounts.shared.address_form.address_lines.count" | t, count: forloop.index }}</label>
       <input type="text" id="{{ field_id }}" name="{{ field_name }}"
               value="{{ line }}"
               class="SC-Field_input sc-one-whole"
-              autocomplete="{{ address_type }} address-line{{ forloop.index }}">
+              autocomplete="{{ address_type }} address-line{{ forloop.index }}"
+              {% if forloop.first %} required{% endif %}
+            >
+      {%- if forloop.first %}
+        <span class="SC-Field_error">{{ address_lines.errors | try: "messages" }}</span>
+      {%- endif %}
     </div>
   {% endfor %}
   <div class="SC-Fieldset_row">
-    <div class="SC-Field SC-Field-small{% if postal_code.errors != blank %} has-error{% endif %}">
+    <div class="SC-Field SC-Field-small{% if postal_code.errors != blank %} has-error{% endif %} required">
       <label for="{{ postal_code.id }}" class="SC-Field_label">{{ "accounts.shared.address_form.zip_code" | t }}</label>
-      <input type="text" id="{{ postal_code.id }}" name="{{ postal_code.name }}" value="{{ postal_code.value }}" class="Field_input sc-one-whole" autocomplete="{{ address_type }} postal-code">
+      <input type="text" id="{{ postal_code.id }}" name="{{ postal_code.name }}" value="{{ postal_code.value }}" class="Field_input sc-one-whole" autocomplete="{{ address_type }} postal-code" maxlength="20" required>
       <span class="SC-Field_error">{{ postal_code.errors | try: "messages" }}</span>
     </div>
-    <div class="SC-Field{% if city.errors != blank %} has-error{% endif %}">
+    <div class="SC-Field{% if city.errors != blank %} has-error{% endif %} required">
       <label for="{{ city.id }}" class="SC-Field_label">{{ "accounts.shared.address_form.city" | t }}</label>
       <input type="text" id="{{ city.id }}" name="{{ city.name }}" value="{{ city.value }}" class="Field_input"
-            autocomplete="{{ address_type }} address-level2">
+            autocomplete="{{ address_type }} address-level2" required>
       <span class="SC-Field_error">{{ city.errors | try: "messages" }}</span>
     </div>
   </div>
   <div class="SC-Fieldset_row">
-    <div class="SC-Field{% if country.errors != blank %} has-error{% endif %}">
+    <div class="SC-Field{% if country.errors != blank %} has-error{% endif %} required">
       <label for="{{ country.id }}" class="SC-Field_label">{{ "accounts.shared.address_form.country" | t }}</label>
       <select id="{{ country.id }}" name="{{ country.name }}" class="SC-Field_select"
             autocomplete="{{ address_type }} country"
             data-selected="{{ country.value }}"
-            placeholder="{{ "accounts.shared.address_form.country" | t }}">
+            placeholder="{{ "accounts.shared.address_form.country" | t }}"
+            required
+          >
         <option disabled{% if country.value == blank %} selected{% endif %}></option>
         {% for allowed_country in allowed_countries.value %}
           {% assign label = allowed_country[0] %}
@@ -85,11 +86,14 @@ endif
           <option value="{{ code }}" {% if country.value == code %}selected{% endif %}>{{ label }}</option>
         {% endfor %}
       </select>
+      <span class="SC-Field_error">{{ country.errors | try: "messages" }}</span>
     </div>
-    <div class="SC-Field{% if country.errors != blank %} has-error{% endif %}">
+    <div class="SC-Field{% if state.errors != blank %} has-error{% endif %} required">
       <label for="{{ state.id }}" class="SC-Field_label">{{ "accounts.shared.address_form.state" | t }}</label>
-      <select id="{{ state.id }}" name="{{ state.name }}" class="SC-Field_select" autocomplete="{{ address_type }} address-level1" data-selected="{{ state.value }}" placeholder="{{ "accounts.shared.address_form.state" | t }}">
+      <select id="{{ state.id }}" name="{{ state.name }}" class="SC-Field_select" autocomplete="{{ address_type }} address-level1" data-selected="{{ state.value }}" placeholder="{{ "accounts.shared.address_form.state" | t }}" required>
+        <option disabled{% if state.value == blank %} selected{% endif %}></option>
       </select>
+      <span class="SC-Field_error">{{ state.errors | try: "messages" }}</span>
     </div>
   </div>
 </div>

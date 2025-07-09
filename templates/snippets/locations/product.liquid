@@ -1,5 +1,5 @@
-{%- default location_group: blank -%}
-{%- default product: blank -%}
+{%- default location_group: nil -%}
+{%- default product: nil -%}
 
 {%- if theme_variables["locations.search.allow_product_filtering"] == true and current_request.params.ref != blank %}
   <input type="hidden" name="ref" value="{{ current_request.params.ref }}">

@@ -1,0 +1,23 @@
+<script src="https://secure.ewaypayments.com/scripts/eCrypt.min.js"></script>
+
+{%- assign provider_id = payment_provider.id %}
+{%- assign provider = payment_provider.code %}
+{%- assign button_id = provider | append: "PaymentButton" | append: provider_id %}
+
+{%- form "payment", provider: payment_provider, class: "SC-Panel" %}
+
+  {{ payment_provider.description_content }}
+
+  <div id="{{ payment_provider.code }}PaymentError{{ payment_provider.id }}" class="SC-Field SC-Alert sc-hide"></div>
+
+  <input type="submit"
+    value="{{ 'checkout.gateways.form.pay_now' | t }}"
+    id="{{ button_id }}"
+    class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small"
+    data-disable-with="{{ 'checkout.gateways.form.pay_now' | t }}"
+    data-payment-info-submit />
+
+  {% render "checkout/payment_information/additional_info", form: form %}
+{%- endform %}
+
+{%- require 'scripts/gateways/eway-v2.js' %}

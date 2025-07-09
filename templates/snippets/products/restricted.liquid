@@ -1,5 +1,5 @@
 {% default compact: false %}
-{% default product: blank %}
+{% default product: nil %}
 
 {% if product != blank and product.restricted? %}
   {% if compact == false or product.current_approved_quantity <= 0 %}

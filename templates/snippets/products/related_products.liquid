@@ -1,6 +1,6 @@
 {%- default columns: 4 %}
 {%- default how_many_to_show: 4 %}
-{%- default related_products: blank %}
+{%- default related_products: nil %}
 
 {%- if related_products == blank and current_product.related_products.size > 0 %}
   {% capture related_products %}

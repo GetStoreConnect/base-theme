@@ -1,0 +1,24 @@
+<section id="SC-OrderShippingConfirmation" class="SC-Panel sc-mb-large">
+  <header class="SC-Panel_header SC-Panel_header-border">
+    <h4 class="SC-Panel_header_heading">
+      {{ "accounts.orders.show.shipping_details" | t }}
+    </h4>
+  </header>
+  <div class="sc-mb-tiny">
+    <strong>{{ order.ship_to_contact.name }}</strong>
+  </div>
+  {%- render "shared/address_multi_line",
+          lines: order.shipping_address_lines,
+          city: order.shipping_city,
+          state: order.shipping_state,
+          country: order.shipping_country,
+          postal_code: order.shipping_postal_code,
+          style: "sc-mb-tiny" %}
+
+  {%- render "shared/address_map",
+          lines: order.shipping_address_lines,
+          city: order.shipping_city,
+          state: order.shipping_state,
+          country: order.shipping_country,
+          postal_code: order.shipping_postal_code %}
+</section>

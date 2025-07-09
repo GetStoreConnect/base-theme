@@ -1,24 +1,24 @@
-{%- default source: blank -%}
+{%- default source: nil -%}
 {%- default compact: false -%}
 
 {%- comment %} Source is either a Cart or an Order {% endcomment %}
 {%- if source != blank %}
   {% capture source_type %}{{ source | downcase }}{% endcapture %}
   <div class="SC-OrderTotal SC-OrderTotal-{{ source }}">
-    {%- comment %} Adjustment line items {% endcomment %}
-    {%- for line_item in source.adjustment_items %}
+    {%- comment %} Adjustment cart items {% endcomment %}
+    {%- for cart_item in source.adjustment_items %}
       <div class="SC-OrderTotal_line SC-AdjustmentItem">
         <div class="SC-OrderTotal_line_label">
-          {{ line_item.name }}
+          {{ cart_item.name }}
         </div>
-        <div class="SC-OrderTotal_line_total" data-line-item-pricing="{{ line_item.id }}">
-          {%- render "shared/line_items/pricing", pricing: line_item.pricing, compact: compact %}
+        <div class="SC-OrderTotal_line_total" data-line-item-pricing="{{ cart_item.id }}">
+          {%- render "shared/cart_items/pricing", pricing: cart_item.pricing, compact: compact %}
         </div>
       </div>
     {%- endfor %}
 
     {%- unless source.quotable? %}
-      {%- comment %} Surcharge line items {% endcomment %}
+      {%- comment %} Surcharge cart items {% endcomment %}
       {%- if source_type == "order" %}
         {%- for surcharge in source.surcharge_items %}
           <div class="SC-OrderTotal_line">
@@ -197,13 +197,15 @@
 
       {%- comment %} Pay Balance Button {% endcomment %}
       {%- if compact == false and source_type == "order" and current_request.path != source.additional_payment_path %}
-        {%- assign amount = source.total_payable | minus: source.total_remaining_subscriptions %}
-        {%- if amount > 0 %}
-          {%- assign amount = amount | money %}
-          <div class="SC-OrderTotal_pay_balance sc-mt-large sc-flex-row sc-justify-center">
-            <a href="{{ source.additional_payment_path }}" class="SC-Button SC-Button-secondary" rel="nofollow">{{ "order_summary.order.pay_balance" | t: amount: amount }}</a>
-          </div>
-        {%- endif %}
+        {% unless source.checkout_step contains "pending_renewal" %}
+          {%- assign amount = source.total_payable | minus: source.total_remaining_subscriptions %}
+          {%- if amount > 0 %}
+            {%- assign amount = amount | money %}
+            <div class="SC-OrderTotal_pay_balance sc-mt-large sc-flex-row sc-justify-center">
+              <a href="{{ source.additional_payment_path }}" class="SC-Button SC-Button-secondary" rel="nofollow">{{ "order_summary.order.pay_balance" | t: amount: amount }}</a>
+            </div>
+          {%- endif %}
+        {%- endunless %}
       {%- endif %}
     {%- endunless %}
   </div>

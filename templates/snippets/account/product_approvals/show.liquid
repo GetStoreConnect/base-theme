@@ -1,4 +1,4 @@
-{%- default approval: blank %}
+{%- default approval: nil %}
 
 {%- unless approval == blank %}
   {%- render "shared/page_header", heading: "t.accounts.product_approvals.show.heading", sub_heading: approval.product.name %}

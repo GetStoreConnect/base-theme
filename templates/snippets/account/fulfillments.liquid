@@ -1,0 +1,7 @@
+{%- default identifier: nil %}
+
+{%- if identifier != blank %}
+  {% render "account/fulfillments/show", fulfillment: current_customer.fulfillments[identifier] %}
+{%- else %}
+  {% render "account/fulfillments/index" %}
+{%- endif %}

@@ -1,11 +1,11 @@
-{%- default lines: blank -%}
-{%- default street1: blank -%}
-{%- default street2: blank -%}
-{%- default city: blank -%}
-{%- default state: blank -%}
-{%- default country: blank -%}
-{%- default postal_code: blank -%}
-{%- default style: blank -%}
+{%- default lines: nil -%}
+{%- default street1: nil -%}
+{%- default street2: nil -%}
+{%- default city: nil -%}
+{%- default state: nil -%}
+{%- default country: nil -%}
+{%- default postal_code: nil -%}
+{%- default style: nil -%}
 
 <address itemprop="address" itemscope itemtype="https://schema.org/PostalAddress"{% if style != blank %} class="{{ style }}"{% endif %}>
   {%- unless street1 == blank and street2 == blank %}
@@ -23,7 +23,7 @@
         <span itemprop="addressLocality">{{ city }},</span>
       {%- endunless %}
       {%- unless state == blank %}
-        {%- if country == blank or all_countries[country] == blank %}
+        {%- if country == blank or all_countries[country] == blank or all_countries[country].states[state] == blank %}
           <span itemprop="addressRegion">{{ state }},</span>
         {%- else %}
           <span itemprop="addressRegion">{{ all_countries[country].states[state].name }},</span>

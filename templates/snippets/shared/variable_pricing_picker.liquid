@@ -1,9 +1,9 @@
-{%- default pricing: blank %}
-{%- default data: blank %}
-{%- default style_class: blank -%}
+{%- default pricing: nil %}
+{%- default data: nil %}
+{%- default style_class: nil -%}
 {%- default field_name: "quantity" -%}
 {%- default field_id: "quantity" -%}
-{%- default field: blank -%}
+{%- default field: nil -%}
 
 {% if field != blank %}
   {% assign field_name = field.name %}
@@ -16,7 +16,7 @@
     {%- assign show_picker = true %}
   {%- endif %}
   {%- assign defaultPrice = pricing.variable_pricing_amounts.first %}
-  {%- if defaultPrice == blank -%}
+  {%- if defaultPrice == nil -%}
     {%- assign defaultPrice = pricing.sale_price | default: pricing.original_price -%}
   {%- endif -%}
 
@@ -65,7 +65,6 @@
                   data-price-picker-btn
                   data-price-picker-btn-other
                   value="max"
-                  onClick="window.StoreConnectUI.PricePicker.manualEntry()"
                   type="button">
             {{ "shared.variable_pricing_picker.other_amount" | t }}
           </button>

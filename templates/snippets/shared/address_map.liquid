@@ -1,11 +1,11 @@
-{%- default lines: blank -%}
-{%- default street1: blank -%}
-{%- default street2: blank -%}
-{%- default city: blank -%}
-{%- default state: blank -%}
-{%- default country: blank -%}
-{%- default postal_code: blank -%}
-{%- default style: blank -%}
+{%- default lines: nil -%}
+{%- default street1: nil -%}
+{%- default street2: nil -%}
+{%- default city: nil -%}
+{%- default state: nil -%}
+{%- default country: nil -%}
+{%- default postal_code: nil -%}
+{%- default style: nil -%}
 
 {%- assign google_maps_api_key = store_variables['google_maps_api_key'] %}
 {%- if google_maps_api_key != blank %}
@@ -19,9 +19,9 @@
     {%- if postal_code != blank %}{{ postal_code| prepend: ", " }}{% endif %}
   {%- endcapture %}
 
-  <div id="shipping-map" class="SC-expand" style="height:300px;"></div>
+  <div id="shipping-map" class="sc-expand" style="height:300px;"></div>
 
-  <script type="text/javascript" src="http://maps.google.com/maps/api/js?key={{google_maps_api_key}}"></script>
+  <script type="text/javascript" src="https://maps.google.com/maps/api/js?key={{google_maps_api_key}}"></script>
   <script>
     var geocoder = new google.maps.Geocoder();
     var address = "{{ address }}";

@@ -1,11 +1,7 @@
 <section class="sc-mb-large">
   {%- if shipping_active -%}
     {%- for shipping_rate in current_cart.shipping_rates %}
-      {% if shipping_rate.product_type == blank %}
-        {% render "checkout/shipping_information/custom_shipping_rate", form: form, shipping_rate: shipping_rate %}
-      {% else %}
-        {% render "checkout/shipping_information/provider_shipping_rate", form: form, shipping_rate: shipping_rate %}
-      {% endif %}
+      {% render "checkout/shipping_information/shipping_rate", form: form, shipping_rate: shipping_rate %}
     {% endfor %}
 
     {%- assign field = form.fields["notes"] %}

@@ -1,17 +1,25 @@
-{%- default style_class: blank -%}
+{%- default line_item: nil -%}
+{%- default cart_item: nil -%}
+{%- default style_class: nil -%}
 {%- default default: false -%}
-{%- default checked: blank -%}
+{%- default checked: nil -%}
+
+{%- comment %} Fallback to deprecated `line_item` for backwards compatibility {% endcomment %}
+{%- if cart_item == blank -%}
+  {%- assign cart_item = line_item -%}
+{%- endif -%}
+
 {%- if default %}
   {%- assign checked = 'checked="checked"' -%}
 {%- endif %}
 {%- capture data %}
-  data-input-line-item-id="{{ line_item.id }}"
+  data-input-line-item-id="{{ cart_item.id }}"
 {%- endcapture %}
 {%- capture field_name %}
-  line_items[{{ line_item.id }}][use_points]
+  cart_items[{{ cart_item.id }}][use_points]
 {%- endcapture %}
 {%- capture field_id %}
-  line_items_{{ line_item.id }}_use_points
+  cart_items_{{ cart_item.id }}_use_points
 {%- endcapture %}
 
 {%- require "scripts/points-toggle.js" -%}

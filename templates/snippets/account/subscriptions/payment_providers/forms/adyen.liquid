@@ -2,6 +2,7 @@
 {%- assign provider_id = payment_provider.id %}
 {%- assign provider = payment_provider.code %}
 {%- assign button_id = provider | append: "PaymentButton" | append: provider_id %}
+{%- assign payment_error_id = provider | append: "PaymentError" | append: provider_id %}
 
 {%- comment %}
 This form uses Adyen's client-side encryption to ensure PCI compliance.
@@ -10,17 +11,14 @@ This form uses Adyen's client-side encryption to ensure PCI compliance.
 <fieldset id="{{ provider }}Fieldset{{ provider_id }}" class="SC-Fieldset sc-mb">
 </fieldset>
 
-<input id="{{ button_id }}" type="submit" class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small" data-payment-info-submit
+<input id="{{ button_id }}" type="submit" class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small"
+  data-disable-with="{{ 'checkout.payment.processing' | t }}"
+  data-payment-info-submit
   value="{{ "accounts.subscriptions.show.submit_update_button_label" | t }}" />
 
-<div id="{{ provider }}PaymentError{{ provider_id }}"
+<div id="{{ payment_error_id }}"
     class="SC-Field SC-Alert sc-hide"
     data-placeholder="{{ "checkout.gateways.form.errors.invalid" | t }}"></div>
 
 {%- require 'scripts/gateways/adyen.js' %}
 {%- require 'styles/gateways/adyen.css' %}
-<script>
-  StoreConnect.Gateways.Adyen({
-    providerId: "{{ provider_id }}"
-  });
-</script>

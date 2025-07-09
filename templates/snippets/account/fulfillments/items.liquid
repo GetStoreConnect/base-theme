@@ -1,0 +1,10 @@
+<section class="SC-Panel sc-mb-large">
+  <header class="SC-Panel_header SC-Panel_header-border">
+    <h2 class="SC-Panel_header_heading">{{ "accounts.fulfillments.show.items.heading" | t }}</h2>
+  </header>
+  <ul>
+    {% for item in fulfillment.fulfillment_items %}
+      <li>{{ item.quantity }} x {{ item.order_item.name }}</li>
+    {% endfor %}
+  </ul>
+</section>

@@ -7,8 +7,26 @@
     {% if payment_provider.supports_express_checkout? %}
       <div>
         {% case payment_provider.code %}
+        {% when "Adyen" %}
+          {% render "checkout/payment_information/payment_providers/adyen_form",
+                payment_provider: payment_provider,
+                only_express_checkout: true,
+                dedicated_cart_product_id: product.id
+          %}
+        {% when "CyberSource" %}
+          {% render "checkout/payment_information/payment_providers/cyber_source_form",
+                payment_provider: payment_provider,
+                only_express_checkout: true,
+                dedicated_cart_product_id: product.id
+          %}
         {% when "Stripe" %}
           {% render "checkout/payment_information/payment_providers/stripe_form",
+                payment_provider: payment_provider,
+                only_express_checkout: true,
+                dedicated_cart_product_id: product.id
+          %}
+        {% when "WestpacOnlinePay" %}
+          {% render "checkout/payment_information/payment_providers/westpac_online_pay_form",
                 payment_provider: payment_provider,
                 only_express_checkout: true,
                 dedicated_cart_product_id: product.id

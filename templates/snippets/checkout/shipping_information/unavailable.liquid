@@ -16,25 +16,25 @@
   {%- endcase -%}
 </div>
 
-{% for line_item in current_cart.items %}
-  <div id="unavailable-product-{{ line_item.product.id }}" class="SC-Callout sc-flex-row sc-mb-small">
+{% for cart_item in current_cart.items %}
+  <div id="unavailable-product-{{ cart_item.product.id }}" class="SC-Callout sc-flex-row sc-mb-small">
     <div class="sc-grow">
       <div class="sc-mb-small">
-        <strong>{{ line_item.name }}</strong>
+        <strong>{{ cart_item.name }}</strong>
       </div>
       <div class="sc-shade-dark">
-        {%- if line_item.shipping_methods.size > 0 %}
+        {%- if cart_item.shipping_methods.size > 0 %}
           <p class="sc-mb-tiny">{{ "checkout.shipping.unavailable.we_can_deliver_via" | t }}</p>
           <ul class="sc-m-none">
 
-          {%- for method_name in line_item.shipping_methods %}
-            {%- if method_name == 'pick_up' and line_item.pickup_options.size > 0 %}
-              {%- for cc_location in line_item.pickup_options %}
+          {%- for method_name in cart_item.shipping_methods %}
+            {%- if method_name == 'pick_up' and cart_item.pickup_options.size > 0 %}
+              {%- for cc_location in cart_item.pickup_options %}
                 <li>{{ cc_location.stock_location.name }}</li>
               {%- endfor %}
             {%- else %}
               {% liquid
-                assign shipping_method_rate = blank
+                assign shipping_method_rate = nil
                 for shipping_rate in current_cart.shipping_rates
                   if shipping_rate.shipping_method == method_name
                     assign shipping_method_rate = shipping_rate
@@ -55,7 +55,7 @@
       </div>
     </div>
     <div>
-      <a href="{{ line_item.delete_path }}?redirect_to=/checkout/shipping_information/edit"
+      <a href="{{ cart_item.delete_path }}?redirect_to=/checkout/shipping_information/edit"
           rel="nofollow" data-method="delete" class="SC-Link sc-ml-base">Remove</a>
     </div>
   </div>

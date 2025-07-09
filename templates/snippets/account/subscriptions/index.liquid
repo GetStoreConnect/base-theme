@@ -9,6 +9,7 @@
         <th>{{ "accounts.subscriptions.index.next_due" | t }}</th>
         <th>{{ "accounts.subscriptions.index.status" | t }}</th>
         <th>{{ "accounts.subscriptions.index.price" | t }}</th>
+        <th>{{ "accounts.subscriptions.index.renewal_order" | t }}</th>
         <th>&nbsp;</th>
       </tr>
       {% for subscription in current_customer.subscriptions %}
@@ -19,6 +20,13 @@
           <td data-th="{{ "accounts.subscriptions.index.next_due" | t }}">{% render "shared/date", timestamp: subscription.next_due_date, time_style: "none" %}</td>
           <td data-th="{{ "accounts.subscriptions.index.status" | t }}">{{ "accounts.subscriptions.status.enum." | append: subscription.status | t }}</td>
           <td data-th="{{ "accounts.subscriptions.index.price" | t }}">{{ subscription.price | money }}</td>
+          <td data-th="{{ "accounts.subscriptions.index.renewal_order" | t }}">
+          {%- if subscription.renewal_order != nil %}
+            <a href="{{ subscription.renewal_order.path }}">{{ subscription.renewal_order.reference }}</a>
+          {%- else %}
+            {{ "accounts.subscriptions.index.no_renewal_order" | t }}
+          {%- endif %}
+          </td>
           <td>
             <a href="{{ subscription.path }}">{{ "accounts.subscriptions.index.view" | t }}</a>
           </td>

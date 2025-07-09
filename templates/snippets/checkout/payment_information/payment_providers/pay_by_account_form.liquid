@@ -4,11 +4,7 @@
 {%- assign button_id = provider | append: "PaymentButton" %}
 
 {%- unless current_account.credit_hold? %}
-  {%- form "payment", provider: payment_provider,
-              id: form_id,
-              class: "SC-Panel SC-Panel-default",
-              data-provider: provider,
-              data-provider-id: provider_id %}
+  {%- form "payment", provider: payment_provider, class: "SC-Panel" %}
     <div id="{{ provider }}ScriptBlock"></div>
     <div id="{{ provider }}PaymentBlock"></div>
 
@@ -29,18 +25,11 @@
     <input type="submit"
       value="{{ 'checkout.gateways.pay_by_account_form.pay_now' | t }}"
       id="{{ button_id }}"
-      class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small" />
+      class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small"
+      data-disable-with="{{ 'checkout.payment.processing' | t }}"
+      data-payment-info-submit />
 
-    {% render "checkout/customer_notes", form: form %}
-
-    {% if current_store.staff.size > 0 %}
-      {% render "checkout/assisted_by_user", form: form %}
-    {% endif %}
-
-    {%# Questions %}
-    {%- if current_cart != blank and current_cart.custom_forms.size > 0 %}
-      {% render "custom_forms/forms", custom_forms: current_cart.custom_forms, form: form, display_mode: "in_checkout" %}
-    {%- endif %}
+    {% render "checkout/payment_information/additional_info", form: form %}
   {%- endform %}
 
 {%- else %}

@@ -1,0 +1,18 @@
+{%- assign provider_id = payment_provider.id %}
+{%- assign provider = payment_provider.code %}
+{%- assign button_id = provider | append: "PaymentButton" | append: provider_id %}
+{%- assign script_block_id = provider | append: "ScriptBlock" | append: provider_id %}
+{%- assign payment_error_id = provider | append: "PaymentError" | append: provider_id %}
+
+<div id="{{ script_block_id }}"></div>
+
+{% render "checkout/payment_information/payment_providers/westpac_online_pay/form", form: form, provider_id: provider_id  %}
+
+<input id="{{ button_id }}" type="submit" class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small"
+  data-disable-with="{{ 'checkout.payment.processing' | t }}"
+  data-payment-info-submit
+  value="{{ "accounts.subscriptions.show.submit_update_button_label" | t }}" />
+
+<div id="{{ payment_error_id }}" class="SC-Field SC-Alert sc-hide"></div>
+
+{%- require 'scripts/gateways/westpac-online-pay.js' %}

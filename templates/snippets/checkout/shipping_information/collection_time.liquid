@@ -6,10 +6,10 @@
     {% assign field = form.fields["collection_time"] %}
     <input type="hidden" name="{{ field.name }}" id="{{ field.id }}" value="{{ field.value }}">
     <input type="text" id="collection_time_picker"
-          class="SC-Field_input"
-          data-date-picker
-          placeholder="{{ "checkout.shipping.collection_time.placeholder" | t }}"
-          onchange="window.StoreConnect.formatDateTime(event.target.value, '{{ field.id }}');"
+           class="SC-Field_input"
+           data-date-picker
+           placeholder="{{ "checkout.shipping.collection_time.placeholder" | t }}"
+           onchange="window.StoreConnect.formatDateTime(event.target.value, '{{ field.id }}')"
     >
   </label>
 </div>

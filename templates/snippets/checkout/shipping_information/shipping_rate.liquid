@@ -1,6 +1,6 @@
 {%- require "scripts/fulfilment.js" -%}
 
-<div class="SC-OptionCard custom-shipping-rate" data-fulfilment-option>
+<div class="SC-OptionCard" data-fulfilment-option>
   <label class="SC-OptionCard_label" data-fulfilment-option-trigger>
     <div class="SC-OptionCard_radio">
       <div class="SC-RadioInput">
@@ -17,7 +17,7 @@
         <div>
           <strong>{{ shipping_rate.name }}</strong>
         </div>
-        {%- if shipping_rate.instructions_content %}
+        {%- if shipping_rate.instructions_content != blank %}
           <div class="sc-shade-neutral sc-mt-tiny">
             {{ shipping_rate.instructions_content }}
           </div>

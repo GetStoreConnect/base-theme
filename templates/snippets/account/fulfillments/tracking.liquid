@@ -1,0 +1,31 @@
+<section class="SC-Panel sc-mb-large">
+  <header class="SC-Panel_header SC-Panel_header-border">
+    <h2 class="SC-Panel_header_heading">{{ "accounts.orders.fulfillments.heading" | t }}</h2>
+  </header>
+  <p>
+    {% capture tracking_code %}
+      {% if fulfillment.tracking_public_url %}
+        <a href="{{ fulfillment.tracking_public_url }}" target="_blank">{{ fulfillment.tracking_code }}</a>
+      {% else %}
+        {{ fulfillment.tracking_code }}
+      {% endif %}
+    {% endcapture %}
+    {{ "accounts.fulfillments.show.tracking_code" | t: tracking_code: tracking_code }}
+  </p>
+
+  <p>
+    {% capture tracking_status %}
+      {%- assign tracking_status = fulfillment.tracking_status | default: "unknown" %}
+      {{ "accounts.orders.fulfillments.status.enum." | append: tracking_status | t }}
+    {% endcapture %}
+    {{ "accounts.fulfillments.show.tracking_status" | t: tracking_status: tracking_status }}
+  </p>
+
+  {%- assign last_updated_at = fulfillment.tracking_updated_at | date: "%B %-d, %Y" %}
+  {%- if last_updated_at != blank %}
+  <p>
+      {{ "accounts.fulfillments.show.tracking_last_updated_at" | t: last_updated_at: last_updated_at }}
+    </p>
+  {%- endif %}
+</section>
+

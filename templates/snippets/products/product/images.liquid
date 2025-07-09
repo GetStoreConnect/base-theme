@@ -64,17 +64,15 @@ assign main_medium = media.first
     {%- require "scripts/product-gallery.js" -%}
 
     <div class="SC-ProductGallery" data-product-gallery>
-      <div class="SC-ProductGallery_body">
-        <button class="SC-ProductGallery_close" data-product-gallery-close type="button">
-          {% render "/shared/icons/close" %}
-        </button>
-        <img src
-            loading="lazy"
-            class="SC-ProductGallery_image"
-            draggable="false"
-            width="640"
-            data-product-gallery-image>
-      </div>
+      <button class="SC-ProductGallery_close" data-product-gallery-close type="button">
+        {% render "/shared/icons/close" %}
+      </button>
+      <img src
+          loading="lazy"
+          class="SC-ProductGallery_image"
+          draggable="false"
+          width="640"
+          data-product-gallery-image>
     </div>
   {%- endif %}
 </section>

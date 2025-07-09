@@ -1,8 +1,8 @@
-{%- default button_label: blank -%}
-{%- default button_data_attr: blank -%}
+{%- default button_label: nil -%}
+{%- default button_data_attr: nil -%}
 {%- default button_disabled: false -%}
 {%- default submit: false -%}
-{%- default max_width: blank -%}
+{%- default max_width: nil -%}
 
 <div class="SC-Modal" data-modal="{{ id }}">
   <section class="SC-Modal_inner"{% if max_width != blank %} style="max-width: {{ max_width }}px"{% endif %}>

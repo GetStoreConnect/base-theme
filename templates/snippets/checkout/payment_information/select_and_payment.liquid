@@ -1,6 +1,10 @@
 {% assign valid_providers = current_store.payment_providers | where: "valid_payment_method?" %}
 {% assign first_provider = valid_providers | first %}
-{% assign multiple_providers = valid_providers.size > 1 %}
+{% assign multiple_providers = false %}
+
+{%- if valid_providers.size > 1 %}
+  {%- assign multiple_providers = true %}
+{%- endif %}
 
 {%- require "scripts/payments.js" %}
 
@@ -17,15 +21,19 @@
   {% endif %}
 
   {%- for payment_provider in valid_providers %}
-    <div data-tab="{{ payment_provider.id  }}" class="{% unless multiple_providers %}sc-hide{% endunless %}">
+    <div data-tab="{{ payment_provider.id }}" class="{% unless multiple_providers %}sc-hide{% endunless %}">
       {%- if payment_provider.validation_errors == blank %}
         {% case payment_provider.code %}
+        {% when "Aci" %}
+          {% render "checkout/payment_information/payment_providers/aci_form", payment_provider: payment_provider %}
         {% when "Adyen" %}
           {% render "checkout/payment_information/payment_providers/adyen_form", payment_provider: payment_provider %}
         {% when "AdyenAch" %}
           {% render "checkout/payment_information/payment_providers/adyen_ach_form", payment_provider: payment_provider %}
         {% when "AuthorizeNet" %}
           {% render "checkout/payment_information/payment_providers/authorize_net_form", payment_provider: payment_provider %}
+        {% when "AuthorizeNetAch" %}
+          {% render "checkout/payment_information/payment_providers/authorize_net_ach_form", payment_provider: payment_provider %}
         {% when "Bambora" %}
           {% render "checkout/payment_information/payment_providers/bambora_form", payment_provider: payment_provider %}
         {% when "Bosch" %}
@@ -34,8 +42,12 @@
           {% render "checkout/payment_information/payment_providers/braintree_form", payment_provider: payment_provider %}
         {% when "Cboss" %}
           {% render "checkout/payment_information/payment_providers/cboss_form", payment_provider: payment_provider %}
+        {% when "CyberSource" %}
+          {% render "checkout/payment_information/payment_providers/cyber_source_form", payment_provider: payment_provider %}
         {% when "Eway" %}
           {% render "checkout/payment_information/payment_providers/eway_form", payment_provider: payment_provider %}
+        {% when "EwayV2" %}
+          {% render "checkout/payment_information/payment_providers/eway_v2_form", payment_provider: payment_provider %}
         {% when "PayLater" %}
           {% render "checkout/payment_information/payment_providers/pay_later_form", payment_provider: payment_provider %}
         {% when "Paypal" %}
@@ -52,12 +64,18 @@
           {% render "checkout/payment_information/payment_providers/stripe_form", payment_provider: payment_provider %}
         {% when "StripeAch" %}
           {% render "checkout/payment_information/payment_providers/stripe_ach_form", payment_provider: payment_provider %}
+        {% when "Tyro" %}
+          {% render "checkout/payment_information/payment_providers/tyro_form", payment_provider: payment_provider %}
+        {% when "TouchNet" %}
+          {% render "checkout/payment_information/payment_providers/touch_net_form", payment_provider: payment_provider %}
+        {% when "WestpacOnlinePay" %}
+          {% render "checkout/payment_information/payment_providers/westpac_online_pay_form", payment_provider: payment_provider %}
         {% when "Windcave" %}
           {% render "checkout/payment_information/payment_providers/windcave_form", payment_provider: payment_provider %}
         {% when "Zippay" %}
           {% render "checkout/payment_information/payment_providers/zippay_form", payment_provider: payment_provider %}
         {% else %}
-          <p>Missing payment method - set it up now in <code>app/liquid/store_connect/theme/snippets/checkout/payment_information/page.liquid</code></p>
+          <p>Missing payment method - set it up now in <code>app/liquid/theme/snippets/checkout/payment_information/select_and_payment.liquid</code></p>
           <p>payment_provider.code = <code>{{ payment_provider.code }}</code></p>
         {% endcase %}
       {%- else %}

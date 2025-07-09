@@ -1,94 +1,68 @@
-{%- default image: blank -%}
-{%- default title: blank -%}
-{%- default meta_keywords: blank -%}
-{%- default meta_description: blank -%}
-{%- default type: "website" -%}
+{%- liquid
+  default image: nil
+  default price: nil
+  default title: nil
+  default meta_keywords: nil
+  default meta_description: nil
+  default type: "website"
 
-{%- if current_product != blank %}
-  {%- comment -%} Product {%- endcomment -%}
-  {%- liquid
-    assign canonical_url = current_product.url
+  if current_product != blank
+    # Product
     assign image = current_product.social_image | default: current_product.image
-
     if current_product.pricing.hide_price?
       assign price = current_product.pricing.hide_price_text
     else
       assign price = current_product.pricing.price
     endif
+  elsif current_product_category != blank
+    # Product Category
+    assign image = current_product_category.social_image | default: current_product_category.image
+  elsif current_article != blank
+    # Article
+    assign type = "article"
+    assign image = current_article.social_image | default: current_article.hero_image
+  elsif current_article_category != blank
+    # Article Category
+    assign image = current_article_category.social_image
+  elsif current_page != blank and current_page.home_page? == false
+    # Page
+    assign type = "page"
+    assign image = current_page.social_image
+  elsif current_location != blank
+    # Location
+    assign type = "page"
+  elsif current_location_group != blank
+    # Location Group
+    assign type = "page"
+    assign image = current_location_group.social_image
+  elsif current_search != blank
+    # Search
+    assign type = current_search.type
+    assign image = current_store.social_image | default: current_store.logo
+  else
+    assign image = current_store.social_image | default: current_store.logo
+  endif
+  if current_request.page_number > 1
+    assign title = "pagination.paged_title" | t: title: title, page: current_request.page_number
+  endif
   -%}
+  <title>{{ title }}</title>
+  <meta name="keywords" content="{{ meta_keywords }}" />
+  <meta name="description" content="{{ meta_description }}" />
+  <meta property="og:type" content="{{ type }}" />
+  <meta property="og:title" content="{{ title }}" />
+  <meta property="og:description" content="{{ meta_description }}" />
+  <meta property="og:url" content="{{ current_request.canonical_url }}" />
+  <meta property="og:locale" content="{{ current_store.locale }}" />
+  {%- if price != nil %}
   <meta property="og:price:amount" content="{{ price }}" />
   <meta property="og:price:currency" content="{{ current_store.currency_code }}" />
-{%- elsif current_product_category != blank %}
-  {%- comment -%} Product Category {%- endcomment -%}
-  {%- liquid
-    if current_search != blank
-      assign canonical_url = current_search.url
-    else
-      assign canonical_url = current_product_category.url
-    endif
-    assign image = current_product_category.social_image | default: current_product_category.image
-  -%}
-{%- elsif current_article != blank %}
-  {%- comment -%} Article {%- endcomment -%}
-  {%- liquid
-    assign type = "article"
-    assign canonical_url = current_article.canonical_url
-    assign image = current_article.social_image | default: current_article.hero_image
-  -%}
-{%- elsif current_article_category != blank %}
-  {%- comment -%} Article Category {%- endcomment -%}
-  {%- liquid
-    assign canonical_url = current_article_category.url
-    assign image = current_article_category.social_image
-  -%}
-{%- elsif current_page != blank and current_page.home_page? == false %}
-  {%- comment -%} Page {%- endcomment -%}
-  {%- liquid
-    assign type = "page"
-    assign canonical_url = current_page.url
-    assign image = current_page.social_image
-  -%}
-{%- elsif current_location != blank %}
-  {%- comment -%} Location {%- endcomment -%}
-  {%- liquid
-    assign type = "page"
-    assign canonical_url = current_location.url
-  -%}
-{%- elsif current_location_group != blank %}
-  {%- comment -%} Location Group {%- endcomment -%}
-  {%- liquid
-    assign type = "page"
-    if current_search != blank and current_search.type == "locations"
-      assign canonical_url = current_search.url
-    else
-      assign canonical_url = current_location_group.url
-    endif
-    assign image = current_location_group.social_image
-  -%}
-{%- else %}
-  {%- liquid
-    assign canonical_url = current_request.url
-    assign image = current_store.social_image | default: current_store.logo
-  -%}
-{%- endif -%}
-{%- liquid
-  if current_request.params["page"] != blank
-    assign title = "pagination.paged_title" | t: title: title, page: current_request.params["page"]
-  endif
--%}
-<title>{{ title }}</title>
-<meta name="keywords" content="{{ meta_keywords }}" />
-<meta name="description" content="{{ meta_description }}" />
-<meta property="og:type" content="{{ type }}" />
-<meta property="og:title" content="{{ title }}" />
-<meta property="og:description" content="{{ meta_description }}" />
-<meta property="og:url" content="{{ canonical_url }}" />
-<meta property="og:locale" content="{{ current_store.locale }}" />
-{%- if image != blank %}
+  {% endif -%}
+  {%- if image != blank %}
   <meta property="og:image" content="{{ image.huge_url }}" />
-{%- endif %}
-<meta name="sc-path" content="{{ current_store.path }}" />
-{% if current_search %}
+  {%- endif %}
+  <meta name="sc-path" content="{{ current_store.path }}" />
+  {% if current_search %}
   <meta name="sc-type" content="{{ current_search.type }}" />
-{%- endif %}
-<link rel="canonical" href="{{ canonical_url }}" />
+  {%- endif %}
+  <link rel="canonical" href="{{ current_request.canonical_url }}" />

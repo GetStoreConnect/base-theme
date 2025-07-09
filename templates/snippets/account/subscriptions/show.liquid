@@ -1,4 +1,4 @@
-{%- default subscription: blank %}
+{%- default subscription: nil %}
 
 {%- unless subscription == blank %}
   {%- assign status = "accounts.subscriptions.status.enum." | append: subscription.status | t  %}
@@ -40,12 +40,20 @@
         <th>{{ "accounts.subscriptions.index.renewal_date" | t }}</th>
         <th>{{ "accounts.subscriptions.index.next_due" | t }}</th>
         <th>{{ "accounts.subscriptions.index.price" | t }}</th>
+        {%- if subscription.renewal_order != nil %}
+          <th>{{ "accounts.subscriptions.index.renewal_order" | t }}</th>
+        {%- endif %}
       </tr>
       <tr>
         <td data-th="{{ "accounts.subscriptions.index.order" | t }}"><a href="{{ subscription.order.path }}">{{ subscription.order.reference }}</a></td>
         <td data-th="{{ "accounts.subscriptions.index.renewal_date" | t }}">{% render "shared/date", timestamp: subscription.renewal_date, time_style: "none" %}</td>
         <td data-th="{{ "accounts.subscriptions.index.next_due" | t }}">{% render "shared/date", timestamp: subscription.next_due_date, time_style: "none" %}</td>
         <td data-th="{{ "accounts.subscriptions.index.price" | t }}">{{ subscription.price | money }}</td>
+        {%- if subscription.renewal_order != nil %}
+          <td data-th="{{ "accounts.subscriptions.index.renewal_order" | t }}">
+            <a href="{{ subscription.renewal_order.path }}">{{ subscription.renewal_order.reference }}</a>
+          </td>
+        {%- endif %}
       </tr>
     </table>
   </section>
@@ -105,8 +113,7 @@
       <button class="SC-Link sc-mb-small" onClick="document.querySelector('[data-payment-details-forms]').classList.remove('sc-hide');">
         {{ "accounts.subscriptions.show.update_payment_details" | t }}
       </button>
-    {%- endif %}
-    {% if subscription.can_update_payment_source? %}
+
       <div class="sc-hide" data-payment-details-forms>
         <section data-tabs="payment" class="sc-mb" style="max-width: 600px">
           {%- assign payment_provider = subscription.payment_provider %}
@@ -116,7 +123,7 @@
           {%- form "update-subscription-payment-details",
                     subscription: subscription,
                     id: form_id,
-                    class: "SC-Panel SC-Panel-default",
+                    class: "SC-Panel",
                     data-provider: payment_provider.code,
                     data-provider-id: payment_provider.id %}
             {% render "account/subscriptions/payment_providers/form", form: form, payment_provider: payment_provider, order: subscription.order %}
