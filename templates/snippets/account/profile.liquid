@@ -23,6 +23,12 @@
     {% render "account/profile/orders" %}
   </section>
 
+  {%- if current_customer.fulfillments.size > 0 %}
+    <section class="SC-Card SC-Card-floating sc-mb-medium sc-expand">
+      {% render "account/profile/fulfillments" %}
+    </section>
+  {%- endif %}
+
   {%- if current_customer.subscriptions.size > 0 %}
     <section class="SC-Card SC-Card-floating sc-mb-medium sc-expand">
       {% render "account/profile/subscriptions" %}

@@ -1,17 +1,19 @@
-.SC-Grid, .Grid {
+.SC-Grid,
+.Grid {
   position: relative;
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: [sidebar] auto
-                      [main] 1fr
-                      [summary] auto;
+  grid-template-rows:
+    [sidebar] auto
+    [main] 1fr
+    [summary] auto;
 
   @include medium-and-up {
-    grid-template-columns: [sidebar] auto
-                           [main] 1fr
-                           [summary] auto;
+    grid-template-columns:
+      [sidebar] auto
+      [main] 1fr
+      [summary] auto;
   }
-
 
   /**
    * Main
@@ -23,7 +25,6 @@
       grid-column: main;
     }
   }
-
 
   /**
    * Sidebar
@@ -39,7 +40,6 @@
       }
     }
   }
-
 
   /**
    * Summary

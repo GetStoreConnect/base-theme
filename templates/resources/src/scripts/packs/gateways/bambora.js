@@ -1,75 +1,83 @@
-import { init, loadScript, setPayButton, showError, submitData } from "./common";
+import { init, loadScript, setPayButton, showError, submitData } from './common'
+import { onDomChange } from '../../theme/utils/init'
 
-window.StoreConnect = window.StoreConnect || {};
-window.StoreConnect.Gateways = window.StoreConnect.Gateways || {};
+onDomChange((node) => {
+  const forms = node.querySelectorAll('form[data-provider="Bambora"]')
+  forms.forEach((form) => {
+    const providerId = form.dataset.providerId
+    if (providerId) {
+      initBambora({ form, providerId })
+    }
+  })
+})
 
-window.StoreConnect.Gateways.Bambora = function ({providerId}) {
-  const cardNumberSelector = `card_number__payment__${providerId}`;
-  const cardVerificationSelector = `card_verification__payment__${providerId}`;
-  const cardExpirySelector = `card_expiry__payment__${providerId}`;
+function initBambora({ form, providerId }) {
+  const cardNumberSelector = `card_number__payment__${providerId}`
+  const cardVerificationSelector = `card_verification__payment__${providerId}`
+  const cardExpirySelector = `card_expiry__payment__${providerId}`
 
-  var checkout;
-  var isCardNumberComplete;
-  var isCVVComplete;
-  var isExpiryComplete;
+  var checkout
+  var isCardNumberComplete
+  var isCVVComplete
+  var isExpiryComplete
 
-  init('Bambora', providerId, createToken);
+  init(form, createToken)
 
   function createToken() {
-    checkout.createToken(createTokenCallback);
+    checkout.createToken(createTokenCallback)
   }
 
   function createTokenCallback(response) {
     if (response.error) {
-      showError(response.error.message);
+      showError(response.error.message)
     } else {
       const payload = {
         payment_source: {
           tok_id: response.token,
           last_digits: response.last4,
           month: response.exp_month,
-          year: response.exp_year
-        }
+          year: response.exp_year,
+        },
       }
-      submitData({payload})
+      submitData({ payload })
     }
   }
 
   function hideErrorForId(id) {
-    const element = document.getElementById(id);
+    const element = document.getElementById(id)
 
     if (element !== null) {
-      const errorElement = document.getElementById(`${id}-error`);
+      const errorElement = document.getElementById(`${id}-error`)
       if (errorElement !== null) {
-        errorElement.innerHTML = '';
+        errorElement.innerHTML = ''
       }
 
-      const bootStrapParent = document.getElementById(`${id}-bootstrap`);
+      const bootStrapParent = document.getElementById(`${id}-bootstrap`)
       if (bootStrapParent !== null) {
-        bootStrapParent.classList.remove('has-error');
-        bootStrapParent.classList.add('has-success');
+        bootStrapParent.classList.remove('has-error')
+        bootStrapParent.classList.add('has-success')
       }
     }
   }
 
   function showErrorForId(id, message) {
-    const element = document.getElementById(id);
+    const element = document.getElementById(id)
 
     if (element !== null) {
-      const errorElement = document.getElementById(`${id}-error`);
+      const errorElement = document.getElementById(`${id}-error`)
       if (errorElement !== null) {
-        errorElement.innerHTML = message;
+        errorElement.innerHTML = message
       }
 
-      const bootStrapParent = document.getElementById(`${id}-bootstrap`);
+      const bootStrapParent = document.getElementById(`${id}-bootstrap`)
       if (bootStrapParent !== null) {
-        bootStrapParent.classList.add('has-error');
-        bootStrapParent.classList.remove('has-success');
+        bootStrapParent.classList.add('has-error')
+        bootStrapParent.classList.remove('has-success')
       }
     }
   }
 
-  function createCheckoutInputs () {
+  function createCheckoutInputs() {
     const style = {
       base: {
         color: '#333333',
@@ -78,79 +86,79 @@ window.StoreConnect.Gateways.Bambora = function ({providerId}) {
         fontWeight: '400',
         padding: '16px',
       },
-    };
+    }
     const options = {
-      style: style
-    };
+      style: style,
+    }
 
     // Create and mount the inputs
     // 4030000010001234
-    options.placeholder = '0000 0000 0000 0000';
-    checkout.create('card-number', options).mount(`#${cardNumberSelector}`);
+    options.placeholder = '0000 0000 0000 0000'
+    checkout.create('card-number', options).mount(`#${cardNumberSelector}`)
 
     // 123
-    options.placeholder = 'CVC';
-    checkout.create('cvv', options).mount(`#${cardVerificationSelector}`);
+    options.placeholder = 'CVC'
+    checkout.create('cvv', options).mount(`#${cardVerificationSelector}`)
 
     // 12/24
-    options.placeholder = 'MM / YY';
-    checkout.create('expiry', options).mount(`#${cardExpirySelector}`);
+    options.placeholder = 'MM / YY'
+    checkout.create('expiry', options).mount(`#${cardExpirySelector}`)
   }
 
   function addCheckoutListeners() {
     checkout.on('empty', function (event) {
       if (event.empty) {
-        switch(event.field) {
+        switch (event.field) {
           case 'card-number':
-            isCardNumberComplete = false;
-            break;
+            isCardNumberComplete = false
+            break
           case 'cvv':
-            isCVVComplete = false;
-            break;
+            isCVVComplete = false
+            break
           case 'expiry':
-            isExpiryComplete = false;
-            break;
+            isExpiryComplete = false
+            break
         }
-        setPayButton(false);
+        setPayButton(false)
       }
-    });
+    })
 
     checkout.on('complete', function (event) {
       if (event.field === 'card-number') {
-        isCardNumberComplete = true;
-        hideErrorForId(cardNumberSelector);
+        isCardNumberComplete = true
+        hideErrorForId(cardNumberSelector)
       } else if (event.field === 'cvv') {
-        isCVVComplete = true;
-        hideErrorForId(cardVerificationSelector);
+        isCVVComplete = true
+        hideErrorForId(cardVerificationSelector)
       } else if (event.field === 'expiry') {
-        isExpiryComplete = true;
-        hideErrorForId(cardExpirySelector);
+        isExpiryComplete = true
+        hideErrorForId(cardExpirySelector)
       }
 
-      setPayButton(isCardNumberComplete && isCVVComplete && isExpiryComplete);
-    });
+      setPayButton(isCardNumberComplete && isCVVComplete && isExpiryComplete)
+    })
 
     checkout.on('error', function (event) {
       if (event.field === 'card-number') {
-        isCardNumberComplete = false;
-        showErrorForId(cardNumberSelector, event.message);
+        isCardNumberComplete = false
+        showErrorForId(cardNumberSelector, event.message)
       } else if (event.field === 'cvv') {
-        isCVVComplete = false;
-        showErrorForId(cardVerificationSelector, event.message);
+        isCVVComplete = false
+        showErrorForId(cardVerificationSelector, event.message)
       } else if (event.field === 'expiry') {
-        isExpiryComplete = false;
-        showErrorForId(cardExpirySelector, event.message);
+        isExpiryComplete = false
+        showErrorForId(cardExpirySelector, event.message)
       }
-      setPayButton(true);
-    });
+      setPayButton(true)
+    })
   }
 
   loadScript({
-    url: "https://libs.na.bambora.com/customcheckout/1/customcheckout.js",
+    url: 'https://libs.na.bambora.com/customcheckout/1/customcheckout.js',
     onload: function () {
-      checkout = customcheckout();
-      createCheckoutInputs();
-      addCheckoutListeners();
-    }
-  });
+      checkout = customcheckout()
+      createCheckoutInputs()
+      addCheckoutListeners()
+    },
+  })
 }

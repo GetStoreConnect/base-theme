@@ -1,11 +1,11 @@
-.SC-Table, .Table {
+.SC-Table,
+.Table {
   position: relative;
   z-index: var(--sc-depth-neutral);
   display: flex;
   flex-direction: column;
   max-height: 100%;
   overflow-x: auto;
-
 
   /**
    * Header
@@ -18,7 +18,6 @@
     margin-bottom: spacing('small');
   }
 
-
   /**
    * Section
    */
@@ -28,7 +27,6 @@
     margin-bottom: spacing('small');
   }
 
-
   /**
    * Row
    */
@@ -36,12 +34,12 @@
   &_row {
     display: flex;
 
-
     // Head
 
-    &-header {padding: spacing('tiny') 0;}
+    &-header {
+      padding: spacing('tiny') 0;
+    }
   }
-
 
   /**
    * Column
@@ -62,7 +60,6 @@
       min-width: 70%;
     }
 
-
     // Header
 
     &-header {
@@ -74,14 +71,14 @@
       }
     }
 
-
     // Anchor
 
     a {
       text-decoration: underline;
-      &:hover {text-decoration: none;}
+      &:hover {
+        text-decoration: none;
+      }
     }
-
 
     // Skinny
 
@@ -89,7 +86,6 @@
       flex-grow: 0;
       flex-basis: 200px;
     }
-
 
     // Sticky
 
@@ -100,7 +96,6 @@
     }
   }
 
-
   /**
    * Label
    */
@@ -109,17 +104,16 @@
     color: currentColor;
   }
 
-
   /**
    * Value
    */
 
-  &_value {color: shade($a: 0.7);}
+  &_value {
+    color: shade($a: 0.7);
+  }
 }
 
-
-
-table {
+table:not(.pika-table) {
   &.sc-compact {
     min-width: auto;
   }
@@ -134,18 +128,18 @@ table {
       margin-bottom: 0.25em;
 
       &:first-child {
-        padding-top: .5em;
+        padding-top: 0.5em;
       }
 
       &:last-child {
-        padding-bottom: .5em;
+        padding-bottom: 0.5em;
       }
 
       padding-left: 8em;
       text-indent: -8em;
       word-break: break-all;
       &:before {
-        content: " ";
+        content: ' ';
         text-indent: 0em;
         width: 8em;
         display: inline-block;
@@ -153,7 +147,7 @@ table {
 
       &[data-th] {
         &:before {
-          content: attr(data-th)": ";
+          content: attr(data-th) ': ';
           font-weight: bold;
         }
       }
@@ -163,11 +157,12 @@ table {
   @include small-and-up {
     min-width: 100%;
 
-    th, td {
+    th,
+    td {
       text-align: left;
       vertical-align: top;
       display: table-cell;
-      padding: .25em .5em;
+      padding: 0.25em 0.5em;
 
       &:first-child {
         padding-left: 0;

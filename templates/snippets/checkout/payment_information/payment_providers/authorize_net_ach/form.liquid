@@ -1,0 +1,60 @@
+<fieldset class="SC-Fieldset">
+  <div class="SC-Field">
+    {% assign field = form.fields["ach_account_holder_type"] %}
+    <label for="{{ field.id }}" class="SC-Field_label">
+      {{ "checkout.gateways.form.account_type" | t }}
+    </label>
+    <select name="{{ field.name }}" id="{{ field.id }}" class="SC-Field_input sc-expand" required>
+      {%# Only checking and savings are supported for ACH type WEB %}
+      {%# https://developer.authorize.net/api/reference/features/echeck.html#Understanding_ACH_Codes %}
+      <option value="checking">{{ "checkout.gateways.form.account_types.checking" | t }}</option>
+      <option value="savings">{{ "checkout.gateways.form.account_types.savings" | t }}</option>
+    </select>
+  </div>
+
+  <div class="SC-Field">
+    {% assign field = form.fields["ach_routing_number"] %}
+    <label for="{{ field.id }}" class="SC-Field_label">
+      {{ "checkout.gateways.form.routing_number" | t }}
+    </label>
+    <input type="text" name="{{ field.name }}" id="{{ field.id }}" value="{{ field.value }}"
+      class="SC-Field_input sc-expand"
+      maxlength="9"
+      placeholder="{{ "checkout.gateways.form.routing_number_placeholder" | t }}"
+      required>
+  </div>
+
+  <div class="SC-Field">
+    {% assign field = form.fields["ach_account_number"] %}
+    <label for="{{ field.id }}" class="SC-Field_label">
+      {{ "checkout.gateways.form.account_number" | t }}
+    </label>
+    <input type="text" name="{{ field.name }}" id="{{ field.id }}" value="{{ field.value }}"
+      class="SC-Field_input sc-expand"
+      maxlength="17"
+      placeholder="{{ "checkout.gateways.form.account_number_placeholder" | t }}"
+      required>
+  </div>
+
+  <div class="SC-Field">
+    {% assign field = form.fields["ach_account_name"] %}
+    <label for="{{ field.id }}" class="SC-Field_label">
+      {{ "checkout.gateways.form.name_on_account" | t }}
+    </label>
+    <input type="text" name="{{ field.name }}" id="{{ field.id }}" value="{{ field.value }}"
+      class="SC-Field_input sc-expand"
+      required>
+  </div>
+
+  <div class="SC-Field">
+    {% assign field = form.fields["ach_bank_name"] %}
+    <label for="{{ field.id }}" class="SC-Field_label">
+      {{ "checkout.gateways.form.bank_name" | t }}
+    </label>
+    <input type="text" name="{{ field.name }}" id="{{ field.id }}" value="{{ field.value }}"
+      class="SC-Field_input sc-expand"
+      required>
+  </div>
+</fieldset>
+
+<div id="{{ payment_provider.code }}PaymentError{{ payment_provider.id }}" class="SC-Field SC-Alert sc-hide"></div>

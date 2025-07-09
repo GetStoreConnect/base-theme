@@ -1,4 +1,4 @@
-{%- default identifier: blank %}
+{%- default identifier: nil %}
 
 {%- if identifier != blank %}
   {% render "account/product_approvals/show", approval: current_account.product_approvals[identifier] %}

@@ -42,8 +42,6 @@
   }
 }
 
-
-
 /**
  * Deprecated
  */
@@ -90,7 +88,6 @@
   }
 }
 
-
 // Subtract 0.02px in order to work around viewports with fractional widths
 // and avoid overlap.
 // See https://www.w3.org/TR/mediaqueries-4/#mq-min-max
@@ -114,4 +111,3 @@
     @content;
   }
 }
-

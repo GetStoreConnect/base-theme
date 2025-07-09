@@ -1,1 +1,0 @@
-(()=>{document.addEventListener("DOMContentLoaded",a);function a(){let e=document.querySelector("[data-theme-preview-recents]");e&&e.addEventListener("change",r)}function r(e){let n=e.currentTarget;if(n.value){let t=new URLSearchParams(window.location.search);t.delete("theme-preview"),t.append("theme-preview",n.value),window.location.search=t}}})();

@@ -2,9 +2,11 @@
 {%- default extended: false -%}
 {%- default hide_image: false -%}
 
-{%- assign items = current_cart.items | where: "product", current_product -%}
+{%- if current_cart %}
+  {%- assign items = current_cart.items | where: "product", current_product -%}
+{%- endif -%}
 
-{%- if items.size > 0 %}
+{%- if current_cart and items.size > 0 %}
   <div class="SC-Notice Notice_cart-preview sc-mb" data-in-your-cart>
     <h4>{{ "products.in_your_cart.header" | t }}</h4>
     {%- if current_product.bookable? %}
@@ -15,7 +17,8 @@
         {%- if item.in_bundle? and item.bundle_lead? == false %}
           {%- continue %}
         {%- endif %}
-        {%- render "shared/line_items/item", line_item: item, compact: compact, extended: extended, hide_image: hide_image %}
+        {%- comment %} Pass in `line_item` for backwards compatibility {% endcomment %}
+        {%- render "shared/cart_items/item", cart_item: item, line_item: item, compact: compact, extended: extended, hide_image: hide_image %}
       {%- endfor %}
     </div>
   </div>

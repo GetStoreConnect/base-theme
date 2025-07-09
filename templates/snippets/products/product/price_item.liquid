@@ -1,4 +1,4 @@
-{%- default product: blank -%}
+{%- default product: nil -%}
 {%- default strip_zeroes: true -%}
 {%- default large: true -%}
 
@@ -91,7 +91,7 @@
 
           {%- if pricing.points_sale? and current_store.display_points? and pricing.can_purchase_with_points? %}
             {%- if current_store.display_points? and pricing.can_purchase_with_points? %}
-              {% default both_on_sale: blank %}
+              {% default both_on_sale: nil %}
 
               {%# Or %}
               {%- if pricing.on_sale? and current_store.display_currency? and pricing.can_purchase_with_currency? %}

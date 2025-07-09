@@ -29,7 +29,7 @@
                   {{ date.location.information_content }}
                 {% endcapture %}
                 <small class="sc-ml-tiny sc-shade-neutral">
-                  <button data-modal-trigger="{{ date.id }}" class="Link Link-subtle" type="button">
+                  <button data-modal-trigger="{{ date.id }}" class="SC-Link SC-Link-subtle" type="button">
                     {{ "bookings.booking_details.location_info_more" | t }}
                   </button>
                 </small>
@@ -59,7 +59,8 @@
                     <span>{{ date_range }}</span>
                     {%- unless time.unlimited? %}
                       {%- if time.available > 0 %}
-                        {{ "products.availability.available" | t: count: time.available }}
+                        {%- assign available_slots = time.available | number %}
+                        {{ "products.availability.available" | t: count: available_slots }}
                       {%- else %}
                         {{ "products.availability.sold_out" | t }}
                       {%- endif %}

@@ -1,4 +1,4 @@
-{%- default location_group: blank -%}
+{%- default location_group: nil -%}
 
 {%- assign nav_path = location_group.path %}
 {%- assign nav_label = "location.navigation.all_locations" | t: name: location_group.name %}
@@ -98,7 +98,7 @@
       scrolling="no"
       marginheight="0"
       marginwidth="0"
-      src="https://maps.google.com/maps?q={{ location.latitude }},{{ location.longitude }}&zoom=6&output=embed">
+      src="https://www.openstreetmap.org/export/embed.html?bbox={{ location.longitude | minus: 0.0001 }},{{ location.latitude | minus: 0.0001 }},{{ location.longitude | plus: 0.0001 }},{{ location.latitude | plus: 0.0001 }}&layer=mapnik&marker={{ location.latitude }},{{ location.longitude }}">
     </iframe>
   {%- endunless %}
 </article>

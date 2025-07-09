@@ -6,6 +6,8 @@
 {%- case section %}
 {%- when "orders" %}
   {% render "account/orders", identifier: identifier %}
+{%- when "fulfillments" %}
+  {% render "account/fulfillments", identifier: identifier %}
 {%- when "subscriptions" %}
   {% render "account/subscriptions", identifier: identifier %}
 {%- when "account_credits" %}

@@ -2,10 +2,16 @@
 {%- case provider_code %}
   {%- when "adyen" %}
     {% render "account/subscriptions/payment_providers/forms/adyen", form: form, payment_provider: payment_provider, order: order %}
-  {%- when "stripe" %}
-    {% render "account/subscriptions/payment_providers/forms/stripe", form: form, payment_provider: payment_provider, order: order %}
-  {%- when "eway" %}
-    {% render "account/subscriptions/payment_providers/forms/eway", form: form, payment_provider: payment_provider, order: order %}
   {%- when "authorizenet" %}
     {% render "account/subscriptions/payment_providers/forms/authorize_net", form: form, payment_provider: payment_provider, order: order %}
+  {%- when "authorizenetach" %}
+    {% render "account/subscriptions/payment_providers/forms/authorize_net_ach", form: form, payment_provider: payment_provider, order: order %}
+  {%- when "eway" %}
+    {% render "account/subscriptions/payment_providers/forms/eway", form: form, payment_provider: payment_provider, order: order %}
+  {%- when "ewayv2" %}
+    {% render "account/subscriptions/payment_providers/forms/eway_v2", form: form, payment_provider: payment_provider, order: order %}
+  {%- when "stripe" %}
+    {% render "account/subscriptions/payment_providers/forms/stripe", form: form, payment_provider: payment_provider, order: order %}
+  {%- when "westpaconlinepay" %}
+    {% render "account/subscriptions/payment_providers/forms/westpac_online_pay", form: form, payment_provider: payment_provider, order: order %}
 {%- endcase %}

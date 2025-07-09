@@ -1,4 +1,4 @@
-{%- default account_credit: blank %}
+{%- default account_credit: nil %}
 
 {%- unless account_credit == blank %}
   {%- render "shared/page_header", heading: "t.accounts.account_credit.show.heading", sub_heading: account_credit.name %}

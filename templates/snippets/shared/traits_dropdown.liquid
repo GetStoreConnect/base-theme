@@ -1,0 +1,40 @@
+{%- default selection: nil -%}
+{%- default options: nil -%}
+{%- default id: nil -%}
+{%- default name: nil -%}
+{%- default style_class: nil -%}
+{%- default field: nil %}
+
+{% capture option_inputs %}
+  {%- for option in options %}
+    {% liquid 
+      if field.value contains option.value
+        assign checked = true
+        assign selection = option.label
+      else        
+        assign checked = false
+      endif
+    %}
+    <label class="sc-cursor-pointer sc-hover-bg-lightest sc-p-medium sc-m-none sc-pos-relative sc-flex-row sc-gap-small sc-align-items-center sc-expand" type="button"{% if data_attribute %} {{ data_attribute }}{% endif %}>
+      <input data-dropdown-option type="hidden" name="" value="{{ option.label }}">
+      <input{% if checked == true %} checked{% endif %} class="sc-hide" name="{{ field.name }}" value="{{ option.value }}" type="radio" onchange="window.StoreConnectUI.Filters.submit()" />
+      {{ option.label }}
+    </label>
+  {%- endfor %}
+{% endcapture %}
+
+<div data-selector="{{ name }}"{% unless id == blank %} {% endunless %}class="{% unless style_class == blank %}{{ style_class }} {% endunless %}sc-pos-relative sc-expand">
+  <button
+    data-dropdown-trigger
+    class="sc-input-height sc-bg-white sc-shadow sc-border-light sc-border-radius sc-top-100 sc-flex-row sc-expand sc-align-items-center sc-ps-medium"
+    type="button"
+  >
+    <span data-dropdown-selection data-default="{{ selection }}" class="sc-grow">
+      {{ selection }}
+    </span>
+    {%- render "icons/chevron", width: 11 %}
+  </button>
+  <menu data-dropdown-target aria-expanded="false" class="sc-hide sc-max-50vh sc-overflow-y-scroll sc-sides-0 sc-bg-white sc-depth-foreground sc-border-radius sc-shadow-3 sc-pos-absolute sc-flex-col sc-expand sc-p-none">
+    {{ option_inputs }}
+  </menu>
+</div>

@@ -1,10 +1,10 @@
 $widths: (
-  'one-whole':        100%,
-  'three-quarters':   75%,
-  'two-thirds':       66.666%,
-  'one-half':         50%,
-  'one-third':        33.333%,
-  'one-quarter':      25%,
+  'one-whole': 100%,
+  'three-quarters': 75%,
+  'two-thirds': 66.666%,
+  'one-half': 50%,
+  'one-third': 33.333%,
+  'one-quarter': 25%,
 );
 
 @function width($key) {

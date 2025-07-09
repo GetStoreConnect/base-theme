@@ -1,0 +1,149 @@
+{%- default line_item: nil -%}
+{%- default cart_item: nil -%}
+{%- default hide_image: false -%}
+{%- default compact: false -%}
+{%- default width: nil -%}
+{%- default extended: false -%}
+{%- default toggle_answers: false -%}
+
+{%- comment %} Fallback to deprecated `line_item` for backwards compatibility {% endcomment %}
+{%- if cart_item == blank -%}
+  {%- assign cart_item = line_item -%}
+{%- endif -%}
+
+{%- unless cart_item == blank or cart_item.product == blank %}
+  <div>
+    <div{% if cart_item.bookable? %} data-sc-cart-booking{% endif %} class="SC-CartItem sc-flex sc-align-items-center sc-gap-base sc-expand" data-line-item-id="{{ cart_item.id }}">
+    {%- comment %} Image {% endcomment %}
+    {%- unless hide_image %}
+      <a href="{{ cart_item.product.path }}" class="sc-no-shrink">
+        {%- if cart_item.product.image != blank %}
+          <img src="{{ cart_item.product.image.thumb_url }}" loading="lazy" width="{{ width }}">
+        {%- else %}
+          {%- render "shared/placeholder_image", width: width %}
+        {%- endif %}
+      </a>
+    {%- endunless %}
+
+    <div class="sc-flex sc-wrap-up-to-medium sc-align-items-center sc-gap-small-medium-and-up sc-expand">
+
+      <div class="sc-flex-col sc-gap-tiny sc-expand" style="max-width: var(--sc-product-info-max-width)">
+        <span>
+          <a href="{{ cart_item.product.path }}">
+            {{ cart_item.product.name }}
+          </a>
+          {% if cart_item.custom_forms.size > 0 and toggle_answers %}
+            <span class="sc-cursor-pointer target-hidden" data-toggle-visibility="line-item-answers-{{ cart_item.id }}">
+              {%- render "icons/info", width: 12 %}
+            </span>
+          {% endif %}
+        </span>
+
+        {%- comment %} Booking {% endcomment %}
+        {%- if cart_item.bookable_event != blank %}
+          <span class="sc-shade-neutral sc-font-small">
+            {%- render "shared/cart_items/booking_details", bookable_event: cart_item.bookable_event, extended: false %}
+          </span>
+        {%- endif %}
+        {%- comment %} Quantity {% endcomment %}
+        {%- if extended == false and cart_item.product.can_select_quantity? %}
+          <span class="sc-one-quarter sc-font-small sc-shade-neutral sc-whitespace-nowrap">
+            {{ "cart_items.quantity" | t: quantity: cart_item.quantity }}
+          </span>
+        {%- endif %}
+        {% comment %} Delivery Options {% endcomment %}
+        {%- if cart_item.delivery_date != blank or cart_item.delivery_day != blank %}
+          {%- capture preference %}
+            {%- if cart_item.delivery_day != blank %}
+              {% assign day_of_week = cart_item.delivery_day | downcase %}
+              {{ "deliveries.days.enum." | append: day_of_week | t -}}
+            {%- else %}
+              {{ cart_item.delivery_date | date: "%B %-d, %Y" -}}
+            {%- endif -%}
+            {%- if cart_item.delivery_time != blank -%}
+              , {{ cart_item.delivery_time }}
+            {%- endif %}
+          {%- endcapture %}
+          <span class="sc-one-whole sc-font-tiny sc-shade-neutral">
+            {{ "order_summary.delivery_options.delivery_preference" | t, preference: preference}}
+          </span>
+        {%- endif %}
+        {%- comment %} Bundles {% endcomment %}
+        {%- if cart_item.in_bundle? %}
+          {%- if extended %}
+          <a href="{{ cart_item.edit_bundle_path }}" class="SC-Link sc-font-small">
+            {{ "cart_items.links.edit_bundle" | t }}
+          </a>
+          {%- endif %}
+          <em class="sc-display-block sc-font-small sc-shade-dark">
+            {{ "bundles.bundle.includes" | t }}
+          </em>
+          <ul class="sc-m-none sc-pl-base sc-font-tiny sc-shade-dark">
+            {%- assign quantity_of_bundles = cart_item.quantity %}
+            {%- for bundle_item in cart_item.bundle_items %}
+              {%- unless bundle_item.bundle_lead? %}
+                <li>
+                  {{ bundle_item.quantity | divided_by: quantity_of_bundles }}
+                  {{ bundle_item.product.name }}
+                </li>
+              {%- endunless %}
+            {%- endfor %}
+          </ul>
+        {%- endif %}
+      </div>
+
+      {%- if extended %}
+        <div class="sc-two-thirds-up-to-medium sc-grow sc-flex sc-align-items-center sc-gap-small sc-me-small">
+          {%- comment %} Edit Quantity {% endcomment %}
+          <span class="sc-whitespace-nowrap">
+            {%- if cart_item.product.can_select_quantity? %}
+              <div class="SC-Field sc-m-none">
+                {%- capture data %}
+                  data-input-line-item-id="{{ cart_item.id }}"
+                {%- endcapture %}
+                {%- capture field_name %}
+                  cart_items[{{ cart_item.id }}][quantity]
+                {%- endcapture %}
+                {%
+                  render "shared/quantity_picker",
+                    default: cart_item.quantity,
+                    min: cart_item.min_quantity,
+                    max: cart_item.max_quantity,
+                    update_button: true,
+                    data: data,
+                    field_name: field_name
+                %}
+                {%- if cart_item.bookable? %}
+                  <span data-booking-expired-message>{{ "bookings.timer.singular.did_expire" | t }}</span>
+                {%- endif %}
+              </div>
+            {%- endif %}
+          </span>
+          <a href="{{ cart_item.delete_path }}" data-method="delete" class="SC-Link">
+            {{ "cart_items.links.remove_item" | t }}
+          </a>
+        </div>
+        <div class="sc-expand sc-text-right" data-line-item-use-points="{{ cart_item.id }}" data-product-id="{{ cart_item.product.id }}">
+          {%- if cart_item.pricing.can_purchase_with_currency? and cart_item.pricing.can_purchase_with_points? %}
+            {%- comment %} Pass in `line_item` for backwards compatibility {% endcomment %}
+            {%
+              render "shared/points_toggle",
+                default: cart_item.pricing.use_points?,
+                cart_item: cart_item,
+                line_item: cart_item
+            %}
+          {%- endif %}
+        </div>
+      {%- endif %}
+
+      {%- comment %} Total {% endcomment %}
+      <div class="sc-expand sc-text-right" data-line-item-pricing="{{ cart_item.id }}" data-product-id="{{ cart_item.product.id }}">
+        {%- render "shared/cart_items/pricing", pricing: cart_item.pricing, compact: compact %}
+      </div>
+    </div>
+    </div>
+    <div class="sc-font-tiny {% if toggle_answers %}is-hidden{% endif %}" data-toggle-visibility-target="line-item-answers-{{ cart_item.id }}">
+      {% render "custom_forms/answered_forms", custom_forms: cart_item.custom_forms %}
+    </div>
+  </div>
+{%- endunless %}

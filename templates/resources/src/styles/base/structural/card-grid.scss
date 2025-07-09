@@ -1,4 +1,5 @@
-.SC-CardGrid, .CardGrid {
+.SC-CardGrid,
+.CardGrid {
   display: grid;
   gap: var(--sc-spacing-base);
   grid-template-columns: repeat(2, 1fr);
@@ -8,7 +9,6 @@
   @include xlarge-and-up {
     grid-template-columns: repeat(4, 1fr);
   }
-
 
   /**
    * Variants

@@ -1,7 +1,7 @@
 @mixin outline {
   --sc-border-width: 2px;
 
-  content: "";
+  content: '';
   pointer-events: none;
   position: absolute;
   top: calc(var(--sc-border-width) * -1);

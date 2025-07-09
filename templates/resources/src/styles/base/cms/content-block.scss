@@ -1,12 +1,17 @@
-.SC-ContentBlock, .CB-Component {
+.SC-ContentBlock,
+.CB-Component {
   width: 100%;
 
-  p:last-child {margin: 0;}
+  p:last-child {
+    margin: 0;
+  }
 
   &.SC-Html,
   &.CB-Html {
     margin: 0;
 
-    p:last-child {margin: 0 0 20px}
+    p:last-child {
+      margin: 0 0 20px;
+    }
   }
 }

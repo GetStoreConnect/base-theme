@@ -10,7 +10,7 @@
       <a href="{{ product.path }}" class="SC-Button SC-Button-secondary SC-Button-expanded" data-js-buy-now="true">
         {{ "shared.product_buttons.configure_bundle" | t }}
       </a>
-    {%- elsif product.variants.size > 0 %}
+    {%- elsif product.variants.any? %}
       <a href="{{ product.path }}" class="SC-Button SC-Button-secondary SC-Button-expanded" data-js-buy-now="true">
         {{ "shared.product_buttons.select_option" | t }}
       </a>

@@ -1,4 +1,5 @@
-.SC-Overlay, .Overlay {
+.SC-Overlay,
+.Overlay {
   @include up-to-medium {
     @include pin-all-sides(fixed);
     z-index: depth('overlay');
@@ -8,8 +9,9 @@
     pointer-events: none;
     opacity: 0;
     transform: scale(0.7);
-    transition: .1s transform ease,
-                .1s opacity ease;
+    transition:
+      0.1s transform ease,
+      0.1s opacity ease;
 
     &.is-active {
       opacity: 1;
@@ -33,7 +35,6 @@
     }
   }
 
-
   /**
    * Body
    */
@@ -45,7 +46,6 @@
       padding: spacing('base');
     }
   }
-
 
   /**
    * Footer

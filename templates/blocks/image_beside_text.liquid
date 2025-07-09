@@ -1,5 +1,7 @@
+{%- assign type = content_block.sub_type | default: nil -%}
+
 <div
-  class="SC-ContentBlock SC-ImageBesideText{% if content_block.alignment != blank %} sc-align-{{ content_block.alignment }}{% endif %}"
+  class="SC-ContentBlock SC-ImageBesideText{% if content_block.alignment != blank %} sc-align-{{ content_block.alignment }}{% endif %}{% if type != blank %} sc-{{ type }}{% endif %}"
   id="{% if content_block.identifier != blank %}SC-ContentBlock-{{ content_block.identifier }}{% endif %}"
   data-cb="{{ content_block.identifier }}"
   data-alignment="{{ content_block.alignment }}"

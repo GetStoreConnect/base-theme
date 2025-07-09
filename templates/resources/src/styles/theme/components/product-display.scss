@@ -1,16 +1,18 @@
 $ProductDisplay: (
   'max-image-width': 600px,
-  'max-details-width': 500px
+  'max-details-width': 500px,
 ) !default;
 
 @if (map-has-key($override, 'ProductDisplay') == true) {
   $ProductDisplay: map-extend($ProductDisplay, map-get($override, 'ProductDisplay'), true);
 }
 
-@function ProductDisplay($key) { @return map-get($ProductDisplay, $key); }
+@function ProductDisplay($key) {
+  @return map-get($ProductDisplay, $key);
+}
 
-
-.SC-ProductDisplay, .ProductDisplay {
+.SC-ProductDisplay,
+.ProductDisplay {
   display: flex;
   flex-direction: column;
   margin-bottom: spacing('xlarge');
@@ -20,7 +22,6 @@ $ProductDisplay: (
   @include huge-and-up {
     margin-bottom: spacing('huge');
   }
-
 
   /**
    * Images
@@ -40,7 +41,6 @@ $ProductDisplay: (
       margin-right: spacing('huge');
     }
   }
-
 
   /**
    * Details

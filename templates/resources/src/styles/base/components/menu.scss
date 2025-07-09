@@ -9,13 +9,13 @@
   --sc-menu-link-color-hover: hsla(212, 100%, 50%, 1);
 }
 
-.SC-Menu, .Menu {
+.SC-Menu,
+.Menu {
   @include reset-list-styles;
   width: 100%;
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
-
 
   /**
    * Overlay properties for smaller
@@ -33,8 +33,9 @@
     background-color: white;
     z-index: depth('overlay');
     transform: scale(0.9);
-    transition: 100ms transform ease,
-                100ms opacity ease;
+    transition:
+      100ms transform ease,
+      100ms opacity ease;
 
     &.is-active {
       opacity: 1;
@@ -42,7 +43,6 @@
       transform: scale(1);
     }
   }
-
 
   /**
    * Tiers
@@ -64,17 +64,16 @@
     }
   }
 
-  &.tier2, &.tier3 {
+  &.tier2,
+  &.tier3 {
     flex-direction: column;
   }
-
 
   /**
    * Dropdown
    */
 
   &.dropdown {
-
     &:not(.tier1) {
       @include toggle-visibility;
       flex-direction: column;
@@ -88,10 +87,7 @@
         min-width: var(--sc-menu-dropdown-width);
         background-color: white;
         box-shadow: var(--sc-menu-shadow);
-        padding: spacing('small')
-                 spacing('large')
-                 spacing('large');
-
+        padding: spacing('small') spacing('large') spacing('large');
 
         /**
          * Offets dropdown position depending
@@ -112,7 +108,6 @@
       @include menu-overlay;
     }
   }
-
 
   /**
    * Full-width dropdown mega menu
@@ -143,7 +138,6 @@
     }
   }
 
-
   /**
    * Wrap columns
    */
@@ -155,14 +149,14 @@
     max-height: var(--sc-menu-max-height);
     overflow-x: auto;
 
-
     /**
      * Don't wrap menu items on smaller handheld
      * devices when they are inside a mega or
      * dropdown menu
      */
 
-    &.mega, &.dropdown {
+    &.mega,
+    &.dropdown {
       @include up-to-medium {
         max-height: none;
         flex-wrap: nowrap;
@@ -191,30 +185,26 @@
 
   &.space-around {
     @include medium-and-up {
-     justify-content: space-around;
+      justify-content: space-around;
     }
   }
 
   &.end {
     @include medium-and-up {
-     justify-content: flex-end;
+      justify-content: flex-end;
     }
   }
-
 
   /**
    * Item
    */
 
   &_item {
-
-
     // Dropdown
 
     &.dropdown {
       position: relative;
     }
-
 
     // Parent
 
@@ -225,33 +215,36 @@
         max-width: var(--sc-menu-column-max-width);
       }
 
-      &:last-of-type {margin-bottom: 0;}
+      &:last-of-type {
+        margin-bottom: 0;
+      }
 
-      & > a, & ~ li > a {
+      & > a,
+      & ~ li > a {
         padding-top: spacing('small');
         padding-bottom: spacing('small');
-        font-weight: font('weight','bold');
+        font-weight: font('weight', 'bold');
         opacity: 1;
       }
     }
-
 
     // Children
 
     &.tier2:not(.parent) > a,
     &.tier3:not(.parent) > a,
     &.subtle {
-      font-weight: font('weight','normal');
+      font-weight: font('weight', 'normal');
       opacity: 0.7;
       @include medium-and-up {
         padding-top: spacing('micro');
         padding-bottom: spacing('micro');
       }
 
-      &:hover {opacity: 1;}
+      &:hover {
+        opacity: 1;
+      }
     }
   }
-
 
   /**
    * Link
@@ -263,11 +256,11 @@
     padding-bottom: spacing('small');
     color: var(--sc-menu-link-color-resting);
 
-    &:hover, &:focus {
+    &:hover,
+    &:focus {
       color: var(--sc-menu-link-color-hover);
     }
   }
-
 
   /**
    * Image
@@ -279,9 +272,10 @@
     font-size: 0;
     margin-bottom: spacing('small');
 
-    img {max-width: 200px;}
+    img {
+      max-width: 200px;
+    }
   }
-
 
   /**
    * Button
@@ -292,12 +286,12 @@
     width: 100%;
     padding: spacing('medium') 0;
     color: color('primary');
-    font-size: font('size','medium');
+    font-size: font('size', 'medium');
     text-align: left;
     @include medium-and-up {
       display: none;
       padding: 0;
-      font-size: font('size','base');
+      font-size: font('size', 'base');
     }
   }
 }

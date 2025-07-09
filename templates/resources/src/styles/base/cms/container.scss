@@ -1,7 +1,6 @@
 .SC-ContentBlockContainer {
   padding: spacing('base') 0;
 
-
   /**
    * Header
    */
@@ -11,16 +10,15 @@
     margin-bottom: var(--sc-spacing-base);
   }
 
-    &_title {
-      margin-bottom: 0;
-    }
+  &_title {
+    margin-bottom: 0;
+  }
 
-    &_subtitle {
-      color: var(--sc-shade-dark);
-      font-size: var(--sc-font-large);
-      margin-top: var(--sc-spacing-small);
-    }
-
+  &_subtitle {
+    color: var(--sc-shade-dark);
+    font-size: var(--sc-font-large);
+    margin-top: var(--sc-spacing-small);
+  }
 
   /**
    * Body
@@ -29,7 +27,6 @@
   &_body:not(.sc-expand) {
     @include container;
   }
-
 
   /**
    * Footer
@@ -40,7 +37,6 @@
     margin-top: spacing('large');
   }
 }
-
 
 /**
  * DEPRECATED

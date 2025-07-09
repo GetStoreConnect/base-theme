@@ -1,7 +1,6 @@
-{%- default answer: blank %}
+{%- default answer: nil %}
 
 {% if answer.editable? %}<a data-custom-form-answer-id="{{ answer.id }}" class="SC-Link">{% endif %}
-
 {% if answer.editable? and answer.answer == blank %}
   {{ "custom_forms.click_to_enter_your_answer" | t }}
 {% elsif answer.question.data_type == 'Picklist' %}

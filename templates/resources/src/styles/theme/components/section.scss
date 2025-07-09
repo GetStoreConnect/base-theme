@@ -2,12 +2,12 @@
  * DEPRECATED
  */
 
-.SC-Section, .Section {
+.SC-Section,
+.Section {
   overflow: hidden;
   width: 100%;
   padding-top: spacing('large');
   padding-bottom: spacing('large');
-
 
   /**
    * Header
@@ -17,14 +17,12 @@
     margin-bottom: spacing('base');
     text-align: left;
 
-
     // Heading
 
     &_heading {
       margin: 0;
     }
   }
-
 
   /**
    * Variant: Offset

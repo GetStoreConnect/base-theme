@@ -1,0 +1,10 @@
+<div class="sc-flex-row sc-align-items-center">
+  <span class="sc-grow">
+    <h3>{{ "accounts.profile.sections.fulfillments.heading" | t }}</h3>
+  </span>
+  <span>
+    <a href="{{ current_store.fulfillments_path }}" class="SC-Button">{{ "accounts.profile.sections.fulfillments.view_all" | t }}</a>
+  </span>
+</div>
+{%- assign fulfillments = current_customer.fulfillments | where: "tracking?", true %}
+{%- render "account/fulfillments/fulfillments", fulfillments: fulfillments %}

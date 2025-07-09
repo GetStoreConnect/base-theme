@@ -1,7 +1,7 @@
-{%- default field: blank %}
-{%- default label: blank %}
-{%- default data_attribute: blank %}
-{%- default style_class: blank %}
+{%- default field: nil %}
+{%- default label: nil %}
+{%- default data_attribute: nil %}
+{%- default style_class: nil %}
 
 {% if field.options.size > 0 %}
   {%- for option in field.options %}
@@ -12,7 +12,7 @@
       {%- assign checked = false -%}
     {%- endif -%}
 
-    <label {%- if data_attribute %}{{ data_attribute }}{%- endif %}
+    <label{% if data_attribute %} {{ data_attribute }}{% endif %}
       class="SC-Checkbox{%- if style_class %} {{ style_class }}{%- endif %}">
       <input
         class="SC-Checkbox_input"

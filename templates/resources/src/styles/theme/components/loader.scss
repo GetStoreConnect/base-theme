@@ -1,4 +1,5 @@
-.SC-Loader, .Loader {
+.SC-Loader,
+.Loader {
   --sc-spinner-color: var(--sc-shade-light);
   --sc-spinner-size: 40px;
 
@@ -13,8 +14,9 @@
   transition: opacity 100ms ease;
   pointer-events: none;
 
-  svg {display: none;}
-
+  svg {
+    display: none;
+  }
 
   /**
    * Contextual
@@ -24,7 +26,6 @@
     position: absolute;
   }
 
-
   /**
    * Active
    */
@@ -33,9 +34,10 @@
     pointer-events: auto;
     opacity: 1;
 
-    svg {display: block;}
+    svg {
+      display: block;
+    }
   }
-
 
   /**
    * Size
@@ -47,10 +49,13 @@
 }
 
 @keyframes enter {
-  0% {opacity: 0}
-  100% {opacity: 1}
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
-
 
 /**
  * Spinner

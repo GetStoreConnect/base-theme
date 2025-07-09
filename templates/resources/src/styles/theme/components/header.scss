@@ -3,7 +3,8 @@
   --sc-header-color: var(--sc-shade-darkest);
 }
 
-.SC-Header, .Header {
+.SC-Header,
+.Header {
   z-index: depth('floating');
   position: sticky;
   top: 0;
@@ -13,22 +14,21 @@
   color: var(--sc-header-color);
   box-shadow: 0 4px 10px shade($a: 0.05);
 
-
   /**
    * Inner
    */
 
-   &_inner {
+  &_inner {
     display: flex;
     align-items: center;
     justify-content: space-between;
     height: 70px;
     @include container($max-width: false);
 
-
     // Sides
 
-    &_left, &_right {
+    &_left,
+    &_right {
       height: 100%;
       flex-basis: 0;
       flex-grow: 1;
@@ -36,7 +36,6 @@
       align-items: center;
       justify-content: flex-start;
     }
-
 
     // Right side
 
@@ -46,7 +45,6 @@
         align-items: center;
       }
     }
-
 
     // Center section
 

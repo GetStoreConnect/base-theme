@@ -97,7 +97,9 @@
   <div class="SC-PrivacySettingsForm_footer">
     <button class="SC-Button SC-Button-secondary SC-Button-small">{{ "privacy.modal.save" | t }}</button>
     <button formaction="{{ current_privacy.enable_all_path }}" class="SC-Button SC-Button-primary SC-Button-small">{{ "privacy.modal.save_accept_all" | t }}</button>
-    <button formaction="{{ current_privacy.disable_all_path }}" class="SC-Button SC-Button-secondary SC-Button-small">{{ "privacy.modal.save_reject_all" | t }}</button>
+    {%- if current_privacy.disable_all_path %}
+      <button formaction="{{ current_privacy.disable_all_path }}" class="SC-Button SC-Button-secondary SC-Button-small">{{ "privacy.modal.save_reject_all" | t }}</button>
+    {%- endif %}
     <div class="sc-text-right">
       <a href="{{ current_privacy.clear_settings_path }}">{{ "privacy.modal.clear" | t }}</a>
     </div>

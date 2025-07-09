@@ -63,7 +63,7 @@
                 <div class="sc-mb sc-mt">
                   <div>{{ current_product.summary_content }}</div>
                   {%# Tax exclusion %}
-                  {%- unless current_product.pricing.hide_price? or current_store.tax_inclusive? or current_product.restricted_text %}
+                  {%- unless current_product.pricing.hide_price? or current_product.pricing.tax_inclusive? or current_product.restricted_text %}
                     {% if current_product.pricing.price > 0 %}
                       <div class="SC-ExcludesTax">
                         {{ "products.show.excluding_tax" | t }}

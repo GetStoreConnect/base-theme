@@ -1,4 +1,4 @@
-{%- default identifier: blank %}
+{%- default identifier: nil %}
 
 {%- if identifier != blank %}
   {% render "orders/show", order: current_customer.orders[identifier] %}

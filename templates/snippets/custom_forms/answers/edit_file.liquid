@@ -1,0 +1,17 @@
+{%- default question: nil %}
+{%- default answer: nil %}
+
+<section class="SC-Field SC-Field-expand" data-cloudinary-upload-wrapper>
+  <label class="SC-Field_label">
+    <input type="file" data-cloudinary-upload-url="{{ question.direct_upload_url }}" data-answer-field="answer" data-url-field="url" class="SC-Field_input sc-one-whole sc-pe-small" name="file" value="" />
+    <input type="hidden" name="answer" />
+    <input type="hidden" name="url" />
+  </label>
+  <div class="SC-Progress sc-hide">
+    <span class="SC-Percentage SC-Percentage-0"></span>
+  </div>
+</section>
+
+<section class="SC-Field SC-Field-expand">
+  <input type="submit" value="Submit" class="SC-Button SC-Button-add sc-grow" />
+</section>

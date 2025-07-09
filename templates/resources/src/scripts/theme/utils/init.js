@@ -4,33 +4,33 @@
 // and it calls onDomChange, its callback won't be run against anything until the next mutation.
 // To work around this, ensure the script is loaded in the initial page load or a previous fetch.
 
-window.StoreConnect = window.StoreConnect || {};
-window.StoreConnect.ObserverCallbacks = window.StoreConnect.ObserverCallbacks || [];
+window.StoreConnect = window.StoreConnect || {}
+window.StoreConnect.ObserverCallbacks = window.StoreConnect.ObserverCallbacks || []
 
-document.addEventListener('DOMContentLoaded', establishObserver);
+document.addEventListener('DOMContentLoaded', establishObserver)
 
 export function onDomChange(initCallback) {
-  window.StoreConnect.ObserverCallbacks.push(initCallback);
+  window.StoreConnect.ObserverCallbacks.push(initCallback)
 }
 
 function establishObserver() {
-  if (window.StoreConnect.Observer) return;
+  if (window.StoreConnect.Observer) return
 
-  window.StoreConnect.Observer = new MutationObserver(mutations => {
-    mutations.forEach(mutation => {
-      mutation.addedNodes.forEach(node => {
+  window.StoreConnect.Observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      mutation.addedNodes.forEach((node) => {
         if (node.nodeType === Node.ELEMENT_NODE) {
-          runCallbacks(node, "mutation");
+          runCallbacks(node, 'mutation')
         }
-      });
-    });
-  });
+      })
+    })
+  })
 
-  window.StoreConnect.Observer.observe(document.body, { childList: true, subtree: true });
+  window.StoreConnect.Observer.observe(document.body, { childList: true, subtree: true })
 
-  runCallbacks(document, "initial load");
+  runCallbacks(document, 'initial load')
 }
 
 function runCallbacks(node, _context) {
-  window.StoreConnect.ObserverCallbacks.forEach(callback => callback(node));
+  window.StoreConnect.ObserverCallbacks.forEach((callback) => callback(node))
 }

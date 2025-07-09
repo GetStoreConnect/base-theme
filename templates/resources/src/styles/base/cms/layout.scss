@@ -16,133 +16,131 @@
   }
 }
 
-
 /**
  * Two column
  */
 
 .CB-two-column {
-
   & > .CB-Component,
   & > .CB-Container {
     width: 50%;
   }
 }
-
 
 /**
  * Three column
  */
 
 .CB-three-column {
-
   & > .CB-Component,
   & > .CB-Container {
     width: 33.333%;
   }
 }
 
-
 /**
  * Four column
  */
 
 .CB-four-column {
-
   & > .CB-Component,
   & > .CB-Container {
     width: 25%;
   }
 }
 
-
 /**
  * One to two column (adaptive)
  */
 
 .CB-one-to-two-column {
-
   & > .CB-Component,
   & > .CB-Container {
     width: 100%;
-    @include small-and-up {width: 50%;}
+    @include small-and-up {
+      width: 50%;
+    }
   }
 }
-
 
 /**
  * One to three column (adaptive)
  */
 
 .CB-one-to-three-column {
-
   & > .CB-Component,
   & > .CB-Container {
     width: 100%;
-    @include small-and-up {width: 33.333%;}
+    @include small-and-up {
+      width: 33.333%;
+    }
   }
 }
-
 
 /**
  * One to four column (adaptive)
  */
 
 .CB-one-to-four-column {
-
   & > .CB-Component,
   & > .CB-Container {
     width: 100%;
-    @include small-and-up {width: 25%;}
+    @include small-and-up {
+      width: 25%;
+    }
   }
 }
-
 
 /**
  * Two to four column (adaptive)
  */
 
 .CB-two-to-four-column {
-
   & > .CB-Component,
   & > .CB-Container {
     width: 50%;
-    @include small-and-up {width: 25%;}
+    @include small-and-up {
+      width: 25%;
+    }
   }
 }
-
 
 /**
  * One third left, Two thirds right
  */
 
 .CB-one-third-two-thirds {
-
   & > .CB-Component,
   & > .CB-Container {
     width: 100%;
 
     @include small-and-up {
-      &:nth-child(1) {width: width('one-third');}
-      &:nth-child(2) {width: width('two-thirds');}
+      &:nth-child(1) {
+        width: width('one-third');
+      }
+      &:nth-child(2) {
+        width: width('two-thirds');
+      }
     }
   }
 }
-
 
 /**
  * Two thirds left, One third right
  */
 
 .CB-two-thirds-one-third {
-
   & > .CB-Component,
   & > .CB-Container {
     width: 100%;
 
     @include small-and-up {
-      &:nth-child(1) {width: width('two-thirds');}
-      &:nth-child(2) {width: width('one-third');}
+      &:nth-child(1) {
+        width: width('two-thirds');
+      }
+      &:nth-child(2) {
+        width: width('one-third');
+      }
     }
   }
 }

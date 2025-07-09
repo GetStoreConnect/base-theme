@@ -1,7 +1,7 @@
-import { tns } from "tiny-slider/src/tiny-slider"
-import { onDomChange } from '../theme/utils/init';
+import { tns } from 'tiny-slider/src/tiny-slider'
+import { onDomChange } from '../theme/utils/init'
 
-onDomChange(init);
+onDomChange(init)
 
 const DEFAULT_PARAMS = {
   autoplay: true,
@@ -10,16 +10,18 @@ const DEFAULT_PARAMS = {
   arrowKeys: true,
   autoHeight: true,
   center: true,
-  controlsText: ['', '']
+  controlsText: ['', ''],
 }
 
 let slideshows = []
 
 function init(node) {
-  [...node.querySelectorAll('[data-slideshow]:not([data-initialized])')].forEach(slideshowEl => {
+  ;[...node.querySelectorAll('[data-slideshow]:not([data-initialized])')].forEach((slideshowEl) => {
     slideshowEl.setAttribute('data-initialized', true)
-    const container = {container: '[data-slideshow=' + slideshowEl.getAttribute('data-slideshow') + ']'}
-    const slideshow = tns({...DEFAULT_PARAMS, ...container})
+    const container = {
+      container: '[data-slideshow=' + slideshowEl.getAttribute('data-slideshow') + ']',
+    }
+    const slideshow = tns({ ...DEFAULT_PARAMS, ...container })
 
     let resizeId
 

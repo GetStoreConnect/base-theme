@@ -1,13 +1,8 @@
 {%- assign provider_id = payment_provider.id %}
 {%- assign provider = payment_provider.code %}
-{%- assign form_id = provider | append: "PaymentForm" | append: provider_id %}
 {%- assign button_id = provider | append: "PaymentButton" | append: provider_id %}
 
-{%- form "payment", provider: payment_provider,
-            id: form_id,
-            class: "SC-Panel",
-            data-provider: provider,
-            data-provider-id: provider_id%}
+{%- form "payment", provider: payment_provider, class: "SC-Panel" %}
   <div id="{{ provider }}ScriptBlock{{ provider_id }}"></div>
 
   {{ payment_provider.description_content }}
@@ -17,30 +12,11 @@
   <input type="submit"
     value="{{ 'checkout.gateways.form.pay_now' | t }}"
     id="{{ button_id }}"
-    class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small" />
+    class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small"
+    data-disable-with="{{ 'checkout.payment.processing' | t }}"
+    data-payment-info-submit />
 
- {% render "checkout/customer_notes", form: form %}
-
- {% if current_store.staff.size > 0 %}
-   {% render "checkout/assisted_by_user", form: form %}
- {% endif %}
-
-  {%# Questions %}
-  {%- if current_cart != blank and current_cart.custom_forms.size > 0 %}
-    {% render "custom_forms/forms", custom_forms: current_cart.custom_forms, form: form, display_mode: "in_checkout" %}
-  {%- endif %}
+ {% render "checkout/payment_information/additional_info", form: form %}
 {%- endform %}
 
-{% liquid
-  assign billing_address = current_cart.billing_address
-  if current_order
-    assign billing_address = current_order.billing_address
-  endif
-%}
 {%- require 'scripts/gateways/authorize-net.js' %}
-<script type="text/javascript">
-  StoreConnect.Gateways.AuthorizeNet({
-    providerId: '{{ provider_id }}',
-    zipCode: '{{ billing_address.postal_code }}'
-  });
-</script>

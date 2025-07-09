@@ -1,21 +1,22 @@
 $Logo: (
   'max-width': 150px,
-  'max-height': 60px
+  'max-height': 60px,
 ) !default;
 
 @if (map-has-key($override, 'Logo') == true) {
   $Logo: map-extend($Logo, map-get($override, 'Logo'), true);
 }
 
-@function Logo($keys...) { @return deep-map-get($Logo, $keys...); }
+@function Logo($keys...) {
+  @return deep-map-get($Logo, $keys...);
+}
 
-
-.SC-Logo, .Logo {
+.SC-Logo,
+.Logo {
   display: inline-block;
   flex-shrink: 0;
   font-size: 0;
   padding: spacing('medium') 0;
-
 
   /**
    * Image

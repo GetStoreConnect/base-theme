@@ -3,17 +3,15 @@
   --sc-footer-color: white;
 }
 
-.SC-Footer, .Footer {
+.SC-Footer,
+.Footer {
   display: grid;
   grid-template-columns: 1fr;
   grid-row-gap: spacing('large');
   justify-content: space-around;
   background-color: var(--sc-footer-bg);
   color: var(--sc-footer-color);
-  padding: spacing('large')
-           spacing('large')
-           spacing('base')
-           spacing('large');
+  padding: spacing('large') spacing('large') spacing('base') spacing('large');
 
   @include medium-and-up {
     justify-content: flex-start;
@@ -24,5 +22,7 @@
     padding-bottom: spacing('base');
   }
 
-  a:hover {color: currentColor;}
+  a:hover {
+    color: currentColor;
+  }
 }

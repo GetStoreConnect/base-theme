@@ -1,0 +1,25 @@
+.SC-Progress,
+.Progress {
+  background-color: #f5f5f5;
+  border-radius: 0.25rem;
+  height: 1rem;
+  overflow: hidden;
+  position: relative;
+  margin-top: 0.5rem;
+
+  .SC-Percentage,
+  .Percentage {
+    background-color: #007bff;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    transition: width 0.6s ease;
+
+    @for $i from 0 through 100 {
+      &.SC-Percentage-#{$i},
+      &.Percentage-#{$i} {
+        width: $i * 1%;
+      }
+    }
+  }
+}

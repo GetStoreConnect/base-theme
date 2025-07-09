@@ -1,4 +1,4 @@
-{%- default order: blank %}
+{%- default order: nil %}
 
 {%- if order.collect_booking_attendees? %}
   {%- require "scripts/booking-attendee.js" -%}
@@ -17,7 +17,7 @@
       <section data-booking-container class="sc-mb" id="{{ booking.id }}">
         <header class="sc-mb-small">
           <h4 class="sc-mb-small">{{ booking.order_item.name }}</h4>
-          {% render "shared/line_items/booking_details", bookable_event: booking.bookable_event, extended: true %}
+          {% render "shared/cart_items/booking_details", bookable_event: booking.bookable_event, extended: true %}
         </header>
 
         {% render "orders/bookings/attendees", booking: booking %}

@@ -1,13 +1,13 @@
 {%- default limit: 9 -%}
 {%- default min: 0 -%}
-{%- default max: blank -%}
+{%- default max: nil -%}
 {%- default default: 1 -%}
-{%- default style_class: blank -%}
-{%- default data: blank -%}
+{%- default style_class: nil -%}
+{%- default data: nil -%}
 {%- default update_button: false -%}
 {%- default field_name: "quantity" -%}
 {%- default field_id: "quantity" -%}
-{%- default field: blank -%}
+{%- default field: nil -%}
 
 {% if field != blank %}
   {% assign field_name = field.name %}

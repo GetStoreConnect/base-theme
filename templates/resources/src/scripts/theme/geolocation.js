@@ -6,10 +6,10 @@ export function getClientGeolocation(callback) {
   if (geolocation) return callback(geolocation)
   if (!navigator || !navigator.geolocation) return callback()
 
+  if (window.StoreConnectTestMode === 'enabled') return callback()
 
   navigator.geolocation.getCurrentPosition(
     (position) => {
-      console.log(position)
       const latLng = getLatLngFromPosition(position)
 
       setGeolocationToSession(latLng)
@@ -23,12 +23,12 @@ export function getClientGeolocation(callback) {
 }
 
 export function getGeolocationFromSession() {
-  return JSON.parse(window.sessionStorage.getItem('geolocation'));
+  return JSON.parse(window.sessionStorage.getItem('geolocation'))
 }
 
 export function setGeolocationToSession(geoloc) {
   if (geoloc === null) return
-  window.sessionStorage.setItem('geolocation', JSON.stringify(geoloc));
+  window.sessionStorage.setItem('geolocation', JSON.stringify(geoloc))
 }
 
 export function getLatLngFromPosition(position) {

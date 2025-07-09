@@ -8,7 +8,7 @@
   {%- endif %}
 {%- endcapture %}
 
-<li class="SC-Menu_item dropdown" data-root-nav data-cart-menu>
+<li class="SC-Menu_item dropdown" data-nav=root data-cart-menu>
   <a href="{{ current_store.cart_path }}" class="SC-Menu_link sc-hide-up-to-medium" data-nav-trigger="cart">
     <span class="sc-hide-up-to-medium sc-pointer-events-none">
       {{ "header.dropdowns.cart.heading" | t }}
@@ -27,7 +27,7 @@
       <button class="SC-Menu_button sc-hide-medium-and-up" data-nav-close="root" type="button">
         {{ "header.dropdowns.cart.close" | t }}
       </button>
-      {%# Line items %}
+      {%# Cart items %}
 
       <div class="SC-CartProducts sc-grow u-overflow-y-auto">
         {%- render "shared/cart/items", source: current_cart, compact: true, width: "70px", toggle_answers: true %}
@@ -39,9 +39,9 @@
       {%# Checkout button %}
       {%- render "shared/cart/checkout_button", class: "SC-Button SC-Button-primary SC-Button-expanded" %}
 
-      {%# Include Express Checkout Wallets unless already on cart or payment_information page %}
+      {%# Include Express Checkout Wallets unless already on cart, payment_information page, or on a product page %}
       {%- if current_cart.total_subscriptions == 0 %}
-        {%- unless current_request.path == current_store.cart_path or current_checkout_step == "payment_information" %}
+        {%- unless current_request.path == current_store.cart_path or current_checkout_step == "payment_information" or current_product != blank %}
           {%- if current_cart.currency_payment_required? %}
             <aside class="sc-mt">
               {% render "checkout/payment_information/show_wallets_only" %}

@@ -1,4 +1,5 @@
-{%- default: reset: false %}
+{%- default reset: false %}
+{%- default only_sso_provider: nil %}
 
 {%- for provider in current_store.authentication_providers %}
   {%- if only_sso_provider and provider.provider != only_sso_provider %}

@@ -1,5 +1,7 @@
+{%- assign type = content_block.sub_type | default: blank -%}
+
 <div class="CB-Component" data-cb="{{ content_block.identifier }}">
-  <div class="SC-Image"
+  <div class="SC-Image{% if type != blank %} sc-{{ type }}{% endif %}"
        data-alignment="{{ content_block.alignment }}"
        data-alignment-target="{{ content_block.identifier }}">
 

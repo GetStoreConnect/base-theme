@@ -8,5 +8,7 @@
     transition: 0.2s background-color ease;
   }
 
-  &:hover:after {background-color: rgba(black, 0.08);}
+  &:hover:after {
+    background-color: rgba(black, 0.08);
+  }
 }

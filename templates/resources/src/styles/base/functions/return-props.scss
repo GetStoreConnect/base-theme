@@ -13,19 +13,25 @@
         // If the child contains the desired props
         @if map-has-key($child_prop, $prop_key) {
           @return map-get($child_prop, $prop_key);
-        } @else { @error "'#{$child_key}' does not contain '#{$prop_key}' props"; }
+        } @else {
+          @error "'#{$child_key}' does not contain '#{$prop_key}' props";
+        }
       }
       // Return the value
-      @else { @return $child_prop; }
-
-    } @else { @error "Component does not contain the prop '#{$child_key}'"; }
-  }
-
-  @else if type-of($component) == 'map' {
+      @else {
+        @return $child_prop;
+      }
+    } @else {
+      @error "Component does not contain the prop '#{$child_key}'";
+    }
+  } @else if type-of($component) == 'map' {
     // If the component contains the desired props
     @if map-has-key($component, $prop_key) {
-     @return map-get($component, $prop_key);
-    } @else { @error "Component does not contain '#{$prop_key}' props"; }
-
-  } @else { @error "Component does not contain a map of props"; }
+      @return map-get($component, $prop_key);
+    } @else {
+      @error "Component does not contain '#{$prop_key}' props";
+    }
+  } @else {
+    @error "Component does not contain a map of props";
+  }
 }

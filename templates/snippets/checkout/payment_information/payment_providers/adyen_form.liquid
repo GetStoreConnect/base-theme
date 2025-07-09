@@ -2,46 +2,63 @@
 {%- assign provider = payment_provider.code %}
 {%- assign form_id = provider | append: "PaymentForm" | append: provider_id %}
 {%- assign button_id = provider | append: "PaymentButton" | append: provider_id %}
+{%- assign wallets_container_id = provider | append: "WalletsContainer" | append: provider_id %}
+{%- assign script_block_id = provider | append: "ScriptBlock" | append: provider_id %}
+{%- assign payment_error_id = provider | append: "PaymentError" | append: provider_id %}
 
-{%- form "payment", provider: payment_provider,
+{%- default only_express_checkout: false %}
+{%- default dedicated_cart_product_id: nil %}
+{%# Need unique IDs for per-product Wallets; since Cart dropdown is on same page %}
+{%- if dedicated_cart_product_id != blank %}
+  {%- assign form_id = form_id | append: "Product" | append: dedicated_cart_product_id %}
+  {%- assign button_id = button_id | append: "Product" | append: dedicated_cart_product_id %}
+  {%- assign wallets_container_id = wallets_container_id | append: "Product" | append: dedicated_cart_product_id %}
+  {%- assign script_block_id = script_block_id | append: "Product" | append: dedicated_cart_product_id %}
+  {%- assign payment_error_id = payment_error_id | append: "Product" | append: dedicated_cart_product_id %}
+{% endif %}
+
+{%- assign total_subscriptions = current_cart.total_subscriptions %}
+{%- if current_order %}
+  {%- assign total_subscriptions = current_order.total_subscriptions %}
+{%- endif %}
+
+<div id="{{ script_block_id }}"></div>
+
+{%- if total_subscriptions == 0 %}
+  <div id="{{ wallets_container_id }}" class="SC-Fieldset">
+    <div data-ref="wallet-buttons" class="SC-Field sc-flex-col-unless-wide sc-flex-equal-width"></div>
+    <div data-ref="wallet-error" class="SC-Field SC-Alert sc-hide"></div>
+  </div>
+{%- endif %}
+
+{%- form "payment", provider: payment_provider, class: "SC-Panel",
             id: form_id,
-            class: "SC-Panel",
-            data-provider: provider,
-            data-provider-id: provider_id%}
-  <div id="{{ provider }}ScriptBlock{{ provider_id }}"></div>
+            only-express-checkout: only_express_checkout,
+            dedicated-cart-product-id: dedicated_cart_product_id,
+            data-cart-product-id: dedicated_cart_product_id,
+            class: "SC-Panel" %}
 
-  {{ payment_provider.description_content }}
+  {% unless only_express_checkout %}
+    {{ payment_provider.description_content }}
 
-  <fieldset id="{{ provider }}Fieldset{{ provider_id }}-googlePay" class="SC-Fieldset sc-mb">
-  </fieldset>
+    <fieldset id="{{ provider }}Fieldset{{ provider_id }}" class="SC-Fieldset sc-mb">
+    </fieldset>
 
-  <fieldset id="{{ provider }}Fieldset{{ provider_id }}" class="SC-Fieldset sc-mb">
-  </fieldset>
+    {% render "checkout/payment_information/additional_info", form: form %}
 
-  <div id="{{ provider }}PaymentError{{ provider_id }}"
-    class="SC-Field SC-Alert sc-hide"
+    <input type="submit"
+      value="{{ 'checkout.gateways.form.pay_now' | t }}"
+      id="{{ button_id }}"
+      class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small"
+      data-disable-with="{{ 'checkout.payment.processing' | t }}"
+      data-payment-info-submit />
+  {% endunless %}
+
+  <div id="{{ payment_error_id }}"
+    class="SC-Field SC-Alert sc-mt-small sc-hide"
     data-placeholder="{{ "checkout.gateways.form.errors.invalid" | t }}"></div>
 
-  <input type="submit"
-    value="{{ 'checkout.gateways.form.pay_now' | t }}"
-    id="{{ button_id }}"
-    class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small"
-    data-payment-info-submit />
-
- {% render "checkout/customer_notes", form: form %}
-
- {% if current_store.staff.size > 0 %}
-   {% render "checkout/assisted_by_user", form: form %}
- {% endif %}
-
-  {%# Questions %}
-  {%- if current_cart != blank and current_cart.custom_forms.size > 0 %}
-    {% render "custom_forms/forms", custom_forms: current_cart.custom_forms, form: form, display_mode: "in_checkout" %}
-  {%- endif %}
 {%- endform %}
 
 {%- require 'scripts/gateways/adyen.js' %}
 {%- require 'styles/gateways/adyen.css' %}
-<script type="text/javascript">
-  StoreConnect.Gateways.Adyen({ providerId: '{{ provider_id }}' });
-</script>

@@ -19,6 +19,9 @@
       <a href="{{ current_store.orders_path }}" class="SC-PageNav_link{% if current_request.params.section == "orders" %} is-current{% endif %}">
         {{ "accounts.menu.orders" | t }}
       </a>
+      <a href="{{ current_store.fulfillments_path }}" class="SC-PageNav_link{% if current_request.params.section == "fulfillments" %} is-current{% endif %}">
+        {{ "accounts.menu.fulfillments" | t }}
+      </a>
       <a href="{{ current_store.subscriptions_path }}" class="SC-PageNav_link{% if current_request.params.section == "subscriptions" %} is-current{% endif %}">
         {{ "accounts.menu.subscriptions" | t }}
       </a>

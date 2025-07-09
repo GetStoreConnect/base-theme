@@ -4,9 +4,7 @@ export function setLocationCardData(location, origin) {
   const originParam = `&origin=${origin.lat},${origin.lng}`
   const destParam = `&destination=${location.dataset.lat},${location.dataset.lng}`
 
-  directionsBtn.setAttribute('href',
-    encodeURI(directionsHref + originParam + destParam)
-  )
+  directionsBtn.setAttribute('href', encodeURI(directionsHref + originParam + destParam))
 }
 
 export function onClickLocationCard(location, callback) {
@@ -16,7 +14,7 @@ export function onClickLocationCard(location, callback) {
 }
 
 export function hideLocationCards() {
-  getLocations().forEach(card => card.classList.add('sc-hide'))
+  getLocations().forEach((card) => card.classList.add('sc-hide'))
 }
 
 export function setFocusedLocationCard(card) {

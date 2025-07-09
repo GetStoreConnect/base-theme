@@ -7,8 +7,6 @@
 }
 
 @each $s, $px in $spacing {
-
-
   // Margin
 
   .sc-m-#{$s} {
@@ -63,7 +61,6 @@
     margin-left: $px;
     margin-right: $px;
   }
-
 
   // Padding
 
@@ -120,7 +117,6 @@
     padding-right: $px;
   }
 }
-
 
 /**
  * DEPRECATED

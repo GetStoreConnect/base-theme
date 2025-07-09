@@ -5,11 +5,13 @@
 $Nav: (
   'dropdown': (
     'width': 300px,
-    'border': true
+    'border': true,
   ),
 ) !default;
 
-@function Nav($keys...) { @return deep-map-get($Nav, $keys...); }
+@function Nav($keys...) {
+  @return deep-map-get($Nav, $keys...);
+}
 
 @if (map-has-key($override, 'Nav') == true) {
   $Nav: map-extend($Nav, map-get($override, 'Nav'), true);
@@ -18,8 +20,8 @@ $Nav: (
 @mixin dropdown {
   z-index: depth('overlay');
   left: 0;
-  border-top: 1px solid rgba(black,.1);
-  box-shadow: 0 8px 10px rgba(black,.1);
+  border-top: 1px solid rgba(black, 0.1);
+  box-shadow: 0 8px 10px rgba(black, 0.1);
   opacity: 0;
   pointer-events: none;
 
@@ -29,10 +31,9 @@ $Nav: (
   }
 }
 
-
-.SC-Nav, .Nav {
+.SC-Nav,
+.Nav {
   background-color: white;
-
 
   /**
    * On touch devices all tiers of navigation overlay the screen
@@ -51,8 +52,9 @@ $Nav: (
     opacity: 0;
     transform-origin: center;
     transform: translateX(100%) scale(1);
-    transition: 200ms transform ease, 200ms opacity ease;
-
+    transition:
+      200ms transform ease,
+      200ms opacity ease;
 
     // Open
 
@@ -63,7 +65,6 @@ $Nav: (
     }
   }
 
-
   /**
    * Root
    */
@@ -71,7 +72,9 @@ $Nav: (
   &-root {
     @include up-to-large {
       transform: translateX(0%) scale(0.8);
-      transition: 100ms transform ease, 100ms opacity ease;
+      transition:
+        100ms transform ease,
+        100ms opacity ease;
 
       &.is-open {
         transform: translateX(0%) scale(1);
@@ -83,17 +86,18 @@ $Nav: (
     }
   }
 
-
   /**
    * Cart
    */
 
-   &-cart {
+  &-cart {
     display: flex;
     flex-direction: column;
 
     @include up-to-large {
-      transition: 0.1s transform ease, 0.1s opacity ease;
+      transition:
+        0.1s transform ease,
+        0.1s opacity ease;
       transform: translateX(0%) scale(0.8);
       overflow-y: hidden;
     }
@@ -110,16 +114,14 @@ $Nav: (
     }
   }
 
-
-
   /**
    * Account
    */
 
-   &-account {
+  &-account {
     @include large-and-up {
       @include dropdown;
-      width: Nav('dropdown','width');
+      width: Nav('dropdown', 'width');
       position: absolute;
       right: 0;
       left: auto;
@@ -128,7 +130,6 @@ $Nav: (
     }
   }
 
-
   /**
    * Slim
    */
@@ -136,12 +137,11 @@ $Nav: (
   &-slim {
     @include large-and-up {
       @include dropdown;
-      width: Nav('dropdown','width');
+      width: Nav('dropdown', 'width');
       position: absolute;
       padding: spacing('base');
     }
   }
-
 
   /**
    * Mega

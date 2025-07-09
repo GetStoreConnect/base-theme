@@ -3,7 +3,8 @@ a {
   text-decoration: none;
   transition: 0.2s color ease;
 
-  &:hover:not([class]), &:focus:not([class]) {
+  &:hover:not([class]),
+  &:focus:not([class]) {
     color: color('primary');
   }
 }

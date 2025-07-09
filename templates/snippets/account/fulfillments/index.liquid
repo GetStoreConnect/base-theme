@@ -1,0 +1,3 @@
+{%- render "shared/page_header", heading: "t.accounts.fulfillments.index.heading" %}
+{%- assign fulfillments = current_customer.fulfillments | where: "tracking?", true %}
+{%- render "account/fulfillments/fulfillments", fulfillments: fulfillments %}

@@ -1,5 +1,5 @@
 <template id="sc-location-form-exact">
-  {%- default location_group: blank -%}
+  {%- default location_group: nil -%}
   {%- default found_locations: "no-search" -%}
   {%- assign states = location_group.locations | pluck: "state" | uniq | sort_natural %}
   {%- assign countries = location_group.locations | pluck: "country" | uniq | sort_natural %}

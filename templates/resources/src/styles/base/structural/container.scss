@@ -1,5 +1,6 @@
-.sc-container, .container {
-    @include container;
+.sc-container,
+.container {
+  @include container;
 
   /**
    * Modifiers
@@ -20,7 +21,11 @@
     }
   }
 
-  &-capsule {max-width: 500px;}
+  &-capsule {
+    max-width: 500px;
+  }
 
-  &-expanded {max-width: none;}
+  &-expanded {
+    max-width: none;
+  }
 }

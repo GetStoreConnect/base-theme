@@ -5,35 +5,37 @@
 {%- assign trait_keys = fields.filters.traits | keys %}
 
 {%- unless traits == blank %}
-<section class="SC-Filters_traits">
-  {%- for trait in trait_keys %}
-    {%- assign field = traits[trait] %}
+  <section class="SC-Filters_traits{% if component == "dropdown" %} sc-flex-col sc-gap-small{% endif %}">
+    {%- for trait in trait_keys %}
+      {%- assign field = traits[trait] %}
 
-    {%- unless field == blank or field.options.size == 0 %}
-      {%- assign open = false %}
-      {%- unless field.value == blank %}
-        {%- assign open = true %}
+      {%- unless field == blank or field.options.size == 0 %}
+        {%- assign open = false %}
+        {%- unless field.value == blank %}
+          {%- assign open = true %}
+        {%- endunless %}
+
+        {%- capture content -%}
+          {%- render "search/filters/field", field: field, data_attribute: "data-filter data-source='products'" %}
+        {%- endcapture -%}
+
+        {% case component %}
+          {% when "accordion" %}
+            {% render "shared/accordion",
+                      heading: field.label,
+                      content: content,
+                      open: open %}
+          {% when "dropdown" %}
+            {% render "shared/traits_dropdown",
+                      data_attribute: "data-filter data-source='products'"
+                      field: field,
+                      name: field.label, 
+                      id: field.id, 
+                      options: field.options,
+                      selection: field.label
+            %}
+        {% endcase %}
       {%- endunless %}
-
-      {%- capture content -%}
-        {%- render "search/filters/field", field: field %}
-      {%- endcapture -%}
-
-      {% case component %}
-        {% when "accordion" %}
-          {% render "shared/accordion",
-                    data_attribute: "data-filter data-source='products'",
-                    heading: field.label,
-                    content: content,
-                    open: open %}
-        {% when "dropdown" %}
-          {% render "shared/dropdown",
-                    data_attribute: "data-filter data-source='products'",
-                    heading: field.label,
-                    content: content,
-                    open: open %}
-      {% endcase %}
-    {%- endunless %}
-  {% endfor %}
-</section>
+    {% endfor %}
+  </section>
 {% endunless %}

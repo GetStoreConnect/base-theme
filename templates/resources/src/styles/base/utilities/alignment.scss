@@ -1,9 +1,13 @@
 $alignments: center, left, right;
 
 @each $alignment in $alignments {
-  .u-text-align-#{$alignment} {text-align: $alignment;}
+  .u-text-align-#{$alignment} {
+    text-align: $alignment;
+  }
 
-  .sc-text-#{$alignment} {text-align: $alignment;}
+  .sc-text-#{$alignment} {
+    text-align: $alignment;
+  }
 }
 
 .u-text-align-center-up-to-medium,

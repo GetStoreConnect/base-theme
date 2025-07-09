@@ -1,8 +1,8 @@
-{%- assign current_delivery_date = current_delivery_options.line_item.delivery_date | date: "%Y-%m-%d" %}
+{%- assign current_delivery_date = current_delivery_options.cart_item.delivery_date | date: "%Y-%m-%d" %}
 {%- assign delivery_window = current_delivery_options.delivery_window %}
 
 {%- if delivery_window.timeslot_groups.size > 0 %}
-  <div class="sc-p-medium" data-delivery-option-timeslots="{{ current_delivery_options.line_item.id }}">
+  <div class="sc-p-medium" data-delivery-option-timeslots="{{ current_delivery_options.cart_item.id }}">
     <div class="sc-mb-medium">
       <strong>{{ "checkout.delivery_options.timeslot_prompt" | t }}</strong>
     </div>
@@ -24,12 +24,12 @@
                   <input
                     class="sc-hide"
                     type="radio"
-                    name="delivery_options[{{ current_delivery_options.line_item.id }}][delivery_time]"
+                    name="delivery_options[{{ current_delivery_options.cart_item.id }}][delivery_time]"
                     value="{{ timeslot }}"
-                    {% if current_delivery_options.line_item.delivery_time == timeslot and current_delivery_date == current_delivery_options.selected_date %}
+                    {% if current_delivery_options.cart_item.delivery_time == timeslot and current_delivery_date == current_delivery_options.selected_date %}
                       checked
                     {% endif %}
-                    date1="{{ current_delivery_options.line_item.delivery_date }}"
+                    date1="{{ current_delivery_options.cart_item.delivery_date }}"
                     date2="{{ current_delivery_options.selected_date }}"
                     required
                   />

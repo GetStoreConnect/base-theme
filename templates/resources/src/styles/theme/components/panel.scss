@@ -1,6 +1,5 @@
-.SC-Panel, .Panel {
-
-
+.SC-Panel,
+.Panel {
   /**
    * Header
    */
@@ -52,7 +51,6 @@
       margin-bottom: spacing('base');
     }
 
-
     // Heading
 
     &_heading {
@@ -63,7 +61,6 @@
       font-size: var(--sc-font-large);
       color: currentColor;
     }
-
 
     // Desc
 
@@ -82,10 +79,8 @@
         flex-direction: row;
         margin: 0 0 0 spacing('small');
       }
-
     }
   }
-
 
   /**
    * Section
@@ -94,7 +89,6 @@
   &_section {
     margin: 0 0 spacing('large');
   }
-
 
   /**
    * Variants
@@ -109,7 +103,7 @@
       margin-right: spacing('tiny');
       font-size: var(--sc-font-large);
       counter-increment: panel-count;
-      content: counter(panel-count) ".";
+      content: counter(panel-count) '.';
     }
   }
 }

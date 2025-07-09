@@ -1,4 +1,4 @@
-{%- default order: blank %}
+{%- default order: nil %}
 
 {%- unless order == blank %}
   {%- if order.bookable? %}
@@ -10,30 +10,7 @@
     {% render "orders/collection_point", order: order %}
   {%- else %}
     {%- comment %} Shipping address {% endcomment %}
-    <section id="SC-OrderShippingConfirmation" class="SC-Panel sc-mb-large">
-      <header class="SC-Panel_header SC-Panel_header-border">
-        <h4 class="SC-Panel_header_heading">
-          {{ "accounts.orders.show.shipping_details" | t }}
-        </h4>
-      </header>
-      <div class="sc-mb-tiny">
-        <strong>{{ order.ship_to_contact.name }}</strong>
-      </div>
-      {%- render "shared/address_multi_line",
-              lines: order.shipping_address_lines,
-              city: order.shipping_city,
-              state: order.shipping_state,
-              country: order.shipping_country,
-              postal_code: order.shipping_postal_code,
-              style: "sc-mb-tiny" %}
-
-      {%- render "shared/address_map",
-              lines: order.shipping_address_lines,
-              city: order.shipping_city,
-              state: order.shipping_state,
-              country: order.shipping_country,
-              postal_code: order.shipping_postal_code %}
-    </section>
+    {% render "orders/shipping_address", order: order %}
 
     {%- comment %} Delivery Options {% endcomment %}
     {%- default show_deliveries: false %}
@@ -58,7 +35,7 @@
     {%- endcapture %}
 
     {%- if show_deliveries %}
-      <section class="SC-Panel sc-mb-large" data-order-item-delivery-options="{{ item.id }}">
+      <section class="SC-Panel sc-mb-large">
         <header class="SC-Panel_header SC-Panel_header-border">
           <h2 class="SC-Panel_header_heading">{{ "accounts.orders.delivery.heading" | t }}</h2>
         </header>
@@ -66,6 +43,8 @@
       </section>
     {%- endif %}
   {%- endif %}
+
+  {%- render "orders/fulfillments", order: order %}
 
   {%- comment %} Shipping Notes {% endcomment %}
   {%- if order.shipping_notes != blank %}
@@ -106,7 +85,7 @@
             {%- if order.payments.size > 0 %}:
               {%- comment %} Currency Amount {% endcomment %}
               {%- if payment.amount > 0 %}
-                <span data-currency>{{ payment.amount | money }}</span>
+                <span data-currency>{{ payment.amount | money, compact: false }}</span>
               {%- endif %}
 
               {%- comment %} And {% endcomment %}
@@ -152,15 +131,21 @@
 
   {%- comment %} Custom Form Answers {% endcomment %}
   {%- if order.custom_forms.size > 0 %}
-    <section class="Panel">
-      <header class="SC-Panel_header SC-Panel_header-border">
-        <h3 class="SC-Panel_header_heading">
-          {{ "accounts.orders.show.custom_forms" | t }}
-        </h3>
-      </header>
-      <div>
-        {% render "custom_forms/answered_forms", custom_forms: order.custom_forms %}
-      </div>
-    </section>
+    {%- capture form_answers %}
+      {%- render "custom_forms/answered_forms", custom_forms: order.custom_forms %}
+    {%- endcapture %}
+    {%- assign form_answers = form_answers | strip %}
+    {%- unless form_answers == "" or form_answers == blank %}
+      <section class="Panel">
+        <header class="SC-Panel_header SC-Panel_header-border">
+          <h3 class="SC-Panel_header_heading">
+            {{ "accounts.orders.show.custom_forms" | t }}
+          </h3>
+        </header>
+        <div>
+          {{ form_answers }}
+        </div>
+      </section>
+    {%- endunless %}
   {%- endif %}
 {%- endunless %}

@@ -1,4 +1,5 @@
-.SC-Button, .Button {
+.SC-Button,
+.Button {
   @include reset-button-styles;
   display: inline-flex;
   align-items: center;
@@ -11,9 +12,9 @@
   font-size: var(--sc-font-base);
   font-weight: var(--sc-font-bold);
   line-height: 1;
-  transition: 100ms background-color ease,
-              100ms color ease;
-
+  transition:
+    100ms background-color ease,
+    100ms color ease;
 
   /**
    * States
@@ -23,11 +24,11 @@
     color: color('primary', $lighten: 10%);
   }
 
-  &:disabled, &.disabled {
+  &:disabled,
+  &.disabled {
     background-color: shade('lightest');
     color: shade($a: 0.3);
   }
-
 
   /**
    * Variant: Primary
@@ -46,7 +47,6 @@
     }
   }
 
-
   /**
    * Variant: Secondary
    */
@@ -63,7 +63,6 @@
     }
   }
 
-
   /**
    * Variant: Subtle
    */
@@ -72,7 +71,9 @@
     color: shade('darkest');
     padding: spacing('small') spacing('medium');
 
-    &:hover:not(:disabled) {color: currentColor;}
+    &:hover:not(:disabled) {
+      color: currentColor;
+    }
 
     @include medium-and-up {
       &:hover:not(:disabled) {
@@ -81,7 +82,6 @@
       }
     }
   }
-
 
   /**
    * Variant: Buy
@@ -104,22 +104,21 @@
     }
   }
 
-   &-add {
-     width: auto;
-     background-color: color('primary');
-     color: white;
-     font-size: var(--sc-font-medium);
-     padding: spacing('medium') spacing('base');
-     @include large-and-up {
+  &-add {
+    width: auto;
+    background-color: color('primary');
+    color: white;
+    font-size: var(--sc-font-medium);
+    padding: spacing('medium') spacing('base');
+    @include large-and-up {
       width: 100%;
     }
 
-     &:hover:not(:disabled) {
-       background-color: color('primary', $darken: 5%);
-       color: white;
-     }
-   }
-
+    &:hover:not(:disabled) {
+      background-color: color('primary', $darken: 5%);
+      color: white;
+    }
+  }
 
   /**
    * Size variants
@@ -160,16 +159,20 @@
 }
 
 @keyframes rotate {
-  from {transform: rotate(0deg);}
-  to {transform: rotate(360deg);}
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
-
 
 /**
  * Deprecated
  */
 
-.SC-OverlayButton, .OverlayButton {
+.SC-OverlayButton,
+.OverlayButton {
   @include reset-button-styles;
   position: absolute;
   z-index: var(--sc-depth-foreground);
@@ -189,8 +192,8 @@
   }
 
   svg {
-      width: 15px;
-      height: 15px;
-      fill: currentColor;
+    width: 15px;
+    height: 15px;
+    fill: currentColor;
   }
 }

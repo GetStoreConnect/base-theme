@@ -1,0 +1,35 @@
+<script src="https://pay.connect.tyro.com/v1/tyro.js"></script>
+
+{%- assign provider_id = payment_provider.id %}
+{%- assign provider = payment_provider.code %}
+{%- assign button_id = provider | append: "PaymentButton" | append: provider_id %}
+
+<style>
+  .form-disabled {
+    pointer-events: none;
+    opacity: 0.5;
+  }
+</style>
+
+{%- form "payment", provider: payment_provider, class: "SC-Panel" %}
+  <div data-ref="inline-form"></div>
+
+  {{ payment_provider.description_content }}
+
+  <div id="{{ provider }}PaymentError{{ provider_id }}"
+    class="SC-Field SC-Alert sc-hide"
+    data-placeholder="{{ "checkout.gateways.form.errors.invalid" | t }}"></div>
+
+  <input type="submit"
+         value="{{ 'checkout.gateways.form.pay_now' | t }}"
+         id="{{ button_id }}"
+         class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small"
+         data-disable-with="{{ 'checkout.payment.processing' | t }}"
+         data-payment-info-submit
+         disabled
+  />
+
+  {% render "checkout/payment_information/additional_info", form: form %}
+{%- endform %}
+
+{%- require 'scripts/gateways/tyro.js' %}

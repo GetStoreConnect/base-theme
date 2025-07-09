@@ -7,14 +7,13 @@
   gap: var(--sc-grid-gap);
 }
 
-
 /**
  * Responsive columns
  */
 
 .sc-one-to-two-column {
   @include common-grid;
-  grid-template-columns: 1;
+  grid-template-columns: 1fr;
   @include medium-and-up {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -22,7 +21,7 @@
 
 .sc-one-to-three-column {
   @include common-grid;
-  grid-template-columns: 1;
+  grid-template-columns: 1fr;
   @include medium-and-up {
     grid-template-columns: repeat(3, 1fr);
   }
@@ -30,7 +29,7 @@
 
 .sc-one-to-four-column {
   @include common-grid;
-  grid-template-columns: 1;
+  grid-template-columns: 1fr;
   @include medium-and-up {
     grid-template-columns: repeat(4, 1fr);
   }
@@ -43,7 +42,6 @@
     grid-template-columns: repeat(4, 1fr);
   }
 }
-
 
 /**
  * Fixed columns
@@ -74,8 +72,6 @@
   grid-template-columns: repeat(4, 1fr);
 }
 
-
-
 /**
  * Misc
  */
@@ -90,9 +86,4 @@
       grid-row-start: 1;
     }
   }
-}
-
-.sc-even-distribution {
-  gap: spacing('base');
-  display: flex;
 }

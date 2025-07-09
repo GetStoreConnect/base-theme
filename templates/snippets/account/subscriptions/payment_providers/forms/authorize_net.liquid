@@ -2,17 +2,15 @@
 {%- assign provider = payment_provider.code %}
 {%- assign button_id = provider | append: "PaymentButton" | append: provider_id %}
 
-<div id="{{ provider }}ScriptBlock{{ provider_id }}"></div>
+<form data-provider="AuthorizeNet" data-provider-id="{{ payment_provider.id }}">
+  <div id="{{ provider }}ScriptBlock{{ provider_id }}"></div>
 
-{% render "checkout/payment_information/payment_providers/authorize_net/form", form: form, payment_provider: payment_provider %}
+  {% render "checkout/payment_information/payment_providers/authorize_net/form", form: form, payment_provider: payment_provider %}
 
-<input id="{{ button_id }}" type="submit" class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small" data-payment-info-submit
-  value="{{ "accounts.subscriptions.show.submit_update_button_label" | t }}" />
+  <input id="{{ button_id }}" type="submit" class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small"
+    data-disable-with="{{ 'checkout.payment.processing' | t }}"
+    data-payment-info-submit
+    value="{{ "accounts.subscriptions.show.submit_update_button_label" | t }}" />
+</form>
 
 {%- require 'scripts/gateways/authorize-net.js' %}
-<script type="text/javascript">
-  StoreConnect.Gateways.AuthorizeNet({
-    providerId: '{{ payment_provider.id }}',
-    zipCode: '{{ order.billing_postal_code }}'
-  });
-</script>

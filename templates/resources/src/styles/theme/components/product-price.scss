@@ -1,4 +1,5 @@
-.SC-ProductPrice, .ProductPrice {
+.SC-ProductPrice,
+.ProductPrice {
   line-height: 1;
   display: flex;
   align-items: baseline;
@@ -8,7 +9,7 @@
 
   &-small {
     color: shade('dark');
-    font-size: var(--sc-font-base)
+    font-size: var(--sc-font-base);
   }
 }
 

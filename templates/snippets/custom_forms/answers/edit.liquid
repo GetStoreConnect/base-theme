@@ -1,12 +1,14 @@
-{%- default question: blank %}
-{%- default answer: blank %}
+{%- default question: nil %}
+{%- default answer: nil %}
 
-<form data-custom-form-answer-id="{{ answer.id }}">
+<form data-custom-form-answer-id="{{ answer.id }}" action="javascript:void(0);">
   {%- case question.data_type %}
   {%- when "Boolean" %}
     {% render "custom_forms/answers/edit_boolean", question: question, answer: answer %}
   {%- when "Text" %}
     {% render "custom_forms/answers/edit_text", question: question, answer: answer %}
+  {%- when "Text Area" %}
+    {% render "custom_forms/answers/edit_text_area", question: question, answer: answer %}
   {%- when "Integer" %}
     {% render "custom_forms/answers/edit_integer", question: question, answer: answer %}
   {%- when "Decimal" %}
@@ -19,5 +21,7 @@
     {% render "custom_forms/answers/edit_picklist", question: question, answer: answer %}
   {%- when "Multi-Picklist" %}
     {% render "custom_forms/answers/edit_multi_picklist", question: question, answer: answer %}
+  {%- when "File" %}
+    {% render "custom_forms/answers/edit_file", question: question, answer: answer %}
   {%- endcase %}
 </form>

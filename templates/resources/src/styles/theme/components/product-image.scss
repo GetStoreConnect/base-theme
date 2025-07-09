@@ -2,7 +2,8 @@
  * Deprecated
  */
 
-.SC-ProductImage, .ProductImage {
+.SC-ProductImage,
+.ProductImage {
   @include aspect-ratio(1, 1);
   font-size: 0;
   background-color: white;
@@ -13,7 +14,8 @@
     width: 90px;
   }
 
-  img, svg {
+  img,
+  svg {
     position: absolute;
     left: 50%;
     top: 50%;

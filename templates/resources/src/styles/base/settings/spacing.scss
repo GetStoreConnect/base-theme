@@ -1,13 +1,13 @@
 $spacing: (
-  'micro':        3px,
-  'tiny':         5px,
-  'small':        10px,
-  'medium':       15px,
-  'base':         20px,
-  'large':        30px,
-  'xlarge':       40px,
-  'xxlarge':      60px,
-  'huge':         80px,
+  'micro': 3px,
+  'tiny': 5px,
+  'small': 10px,
+  'medium': 15px,
+  'base': 20px,
+  'large': 30px,
+  'xlarge': 40px,
+  'xxlarge': 60px,
+  'huge': 80px,
 ) !default;
 
 @if (map-has-key($core_override, 'spacing') == true) {

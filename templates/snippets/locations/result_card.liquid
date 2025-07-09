@@ -1,7 +1,7 @@
-{%- default match: blank -%}
+{%- default match: nil -%}
 {%- default distance_unit: "metric" -%}
-{%- default distance_string: blank -%}
-{%- default google_maps_api_key: blank -%}
+{%- default distance_string: nil -%}
+{%- default google_maps_api_key: nil -%}
 
 {%- unless match == blank %}
   {%- if match.distance_in_kilometers != blank %}

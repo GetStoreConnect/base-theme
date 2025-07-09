@@ -42,18 +42,22 @@
                 data-tab-trigger="delivery">
                   {{ "checkout.shipping.form.shipping" | t }}
             </button>
-            <button type="button"
-                class="SC-Tab SC-Tab-button{% unless shipping_active %} is-active{% endunless %}"
-                data-tab-trigger="click-and-collect">
-                  {{ "checkout.shipping.form.click_and_collect" | t }}
-            </button>
+            {%- if current_store.pickup_enabled? -%}
+              <button type="button"
+                  class="SC-Tab SC-Tab-button{% unless shipping_active %} is-active{% endunless %}"
+                  data-tab-trigger="click-and-collect">
+                    {{ "checkout.shipping.form.click_and_collect" | t }}
+              </button>
+            {%- endif -%}
           </menu>
           <div data-tab="delivery" class="{% unless shipping_active %}sc-hide{% endunless %}">
             {% render "checkout/shipping_information/delivery", form: form, shipping_active: shipping_active, click_and_collect_active: click_and_collect_active %}
           </div>
-          <div data-tab="click-and-collect" class="{% if shipping_active %}sc-hide{% endif %}">
-            {% render "checkout/shipping_information/click_and_collect", form: form, shipping_active: shipping_active, click_and_collect_active: click_and_collect_active %}
-          </div>
+          {%- if current_store.pickup_enabled? -%}
+            <div data-tab="click-and-collect" class="{% if shipping_active %}sc-hide{% endif %}">
+              {% render "checkout/shipping_information/click_and_collect", form: form, shipping_active: shipping_active, click_and_collect_active: click_and_collect_active %}
+            </div>
+          {%- endif -%}
         </section>
       {% else %}
         <section>

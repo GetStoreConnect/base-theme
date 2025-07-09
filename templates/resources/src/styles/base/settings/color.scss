@@ -6,13 +6,12 @@
  * without the use of SASS compilation.
  */
 
-
 $colors: (
-  'primary':      hsl(212, 100%, 50%),
-  'secondary':    hsl(0, 0%, 15%),
-  'error':        hsl(0, 100%, 45%),
-  'sale':         hsl(0, 100%, 45%),
-  'bonus':        hsl(212, 100%, 50%)
+  'primary': hsl(212, 100%, 50%),
+  'secondary': hsl(0, 0%, 15%),
+  'error': hsl(0, 100%, 45%),
+  'sale': hsl(0, 100%, 45%),
+  'bonus': hsl(212, 100%, 50%),
 ) !default;
 
 @if (map-has-key($core_override, 'colors') == true) {
@@ -27,7 +26,6 @@ $colors: (
     --sc-color-#{$key}-l: #{lightness($value)};
   }
 }
-
 
 /**
  * Used to retrieve variable values from a map. Usage:
@@ -44,15 +42,18 @@ $colors: (
   $alpha: var(--sc-color-#{$key}-a);
 
   @if $lighten or $darken {
-    $lightness:
-      if($lighten,
-        calc(#{$lightness} + #{$lighten}),
-        calc(#{$lightness} - #{$darken}));
+    $lightness: if($lighten, calc(#{$lightness} + #{$lighten}), calc(#{$lightness} - #{$darken}));
   }
 
-  @if $l {$lightness: $l;}
-  @if $s {$saturation: $s;}
-  @if $a {$alpha: $a;}
+  @if $l {
+    $lightness: $l;
+  }
+  @if $s {
+    $saturation: $s;
+  }
+  @if $a {
+    $alpha: $a;
+  }
 
   @return hsla($hue, $saturation, $lightness, $alpha);
 }

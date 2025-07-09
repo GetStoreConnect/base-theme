@@ -1,0 +1,57 @@
+{%- default fulfillments: nil %}
+{%- default hide_order: nil %}
+
+{%- if fulfillments.size > 0 %}
+  {%- paginate fulfillments by 10 %}
+    <table class="sc-mb-spacious">
+      <tr>
+        <th>{{ "accounts.fulfillments.index.reference" | t }}</th>
+        {%- if hide_order != true %}
+          <th>{{ "accounts.fulfillments.index.order" | t }}</th>
+        {%- endif %}
+        <th>{{ "accounts.fulfillments.index.tracking_code" | t }}</th>
+        <th>{{ "accounts.fulfillments.index.tracking_status" | t }}</th>
+        <th>{{ "accounts.fulfillments.index.items" | t }}</th>
+        <th>&nbsp;</th>
+      </tr>
+      {% for fulfillment in fulfillments %}
+        <tr>
+          <td data-th="{{ "accounts.fulfillments.index.reference" | t }}">
+            {{ fulfillment.reference }}
+          </td>
+          {%- if hide_order != true %}
+            <td data-th="{{ "accounts.fulfillments.index.order" | t }}">
+              <a href="{{ fulfillment.order.path }}">{{ fulfillment.order.reference }}</a>
+            </td>
+          {%- endif %}
+          <td data-th="{{ "accounts.fulfillments.index.tracking_code" | t }}">
+            {% if fulfillment.tracking? %}
+              <a href="{{ fulfillment.tracking_public_url }}" target="_blank">{{ fulfillment.tracking_code }}</a>
+            {% else %}
+              &mdash;
+            {% endif %}
+          </td>
+          <td data-th="{{ "accounts.fulfillments.index.tracking_status" | t }}">
+            {% if fulfillment.tracking? %}
+              {%- assign tracking_status = fulfillment.tracking_status | default: "unknown" %}
+              {%- assign tracking_status = "accounts.orders.fulfillments.status.enum." | append: tracking_status | t %}
+              {{ tracking_status }}
+            {% else %}
+              &mdash;
+            {% endif %}
+          </td>
+          <td data-th="{{ "accounts.fulfillments.index.items" | t }}">
+            {%- assign items_count = fulfillment.fulfillment_items | sum: "quantity" %}
+            {{ "accounts.fulfillments.index.items_count.count" | t: count: items_count }}
+          </td>
+          <td data-th="{{ "accounts.fulfillments.index.view" | t }}">
+            <a href="{{ fulfillment.path }}">{{ "accounts.fulfillments.index.view" | t }}</a>
+          </td>
+        </tr>
+      {%- endfor %}
+    </table>
+    {%- render 'shared/pagination-nav', paginate: paginate %}
+  {%- endpaginate %}
+{%- else %}
+  <div class="sc-shade-neutral">{{ "accounts.fulfillments.index.no_fulfillments" | t }}</div>
+{%- endif %}

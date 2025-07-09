@@ -1,8 +1,8 @@
 import hoverintent from 'hoverintent/dist/hoverintent.min'
 import { largeAndUp } from '../theme/viewport'
-import { onDomChange } from '../theme/utils/init';
+import { onDomChange } from '../theme/utils/init'
 
-onDomChange(init);
+onDomChange(init)
 
 let prevNav
 
@@ -14,20 +14,19 @@ function init(node) {
   const triggers = [...node.querySelectorAll('[data-nav-trigger]')]
 
   if (largeAndUp()) {
-    triggers.forEach(trigger => {
+    triggers.forEach((trigger) => {
       hoverintent(trigger.parentNode, show, hide)
     })
   } else {
-    triggers.forEach(trigger => {
+    triggers.forEach((trigger) => {
       trigger.addEventListener('click', open)
     })
   }
 
-  [...node.querySelectorAll('[data-nav-close]')].forEach(btn => {
+  ;[...node.querySelectorAll('[data-nav-close]')].forEach((btn) => {
     btn.addEventListener('click', close)
   })
 }
-
 
 /**
  * Desktop event handlers
@@ -54,7 +53,6 @@ function hide(e) {
   e.target.parentNode.querySelector('[data-nav-trigger]')?.classList?.remove('is-active')
 }
 
-
 /**
  * Handheld event handlers
  */
@@ -68,7 +66,7 @@ function open(event) {
     event.preventDefault()
     prevNav = nav
     nav.classList.add('is-active')
-    document.querySelector('body').style.overflow = "hidden"
+    document.querySelector('body').style.overflow = 'hidden'
   }
 }
 

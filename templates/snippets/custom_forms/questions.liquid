@@ -1,10 +1,13 @@
-{%- default questions: blank %}
-{%- default form: blank %}
+{%- default questions: nil %}
+{%- default form: nil %}
+{%- default item: nil %}
 
 {%- for question in questions %}
   {%- capture field_prefix %}answers[{{ question.id }}]{%- endcapture %}
   {%- capture field_name %}{{ field_prefix }}[answer]{%- endcapture %}
   {%- assign field = form.fields[field_name] %}
+
+  {%- require "scripts/custom-form-answers.js" -%}
 
   {%- unless item == blank %}
     <input type="hidden" name="{{ field_prefix }}[item_id]" value="{{ item.id }}" />
@@ -18,6 +21,8 @@
       {% render "custom_forms/questions/boolean", question: question, field_name: field_name, field: field %}
     {%- when "Text" %}
       {% render "custom_forms/questions/text", question: question, field_name: field_name, field: field %}
+    {%- when "Text Area" %}
+      {% render "custom_forms/questions/text_area", question: question, field_name: field_name, field: field %}
     {%- when "Integer" %}
       {% render "custom_forms/questions/integer", question: question, field_name: field_name, field: field %}
     {%- when "Decimal" %}
@@ -30,6 +35,8 @@
       {% render "custom_forms/questions/picklist", question: question, field_name: field_name, field: field %}
     {%- when "Multi-Picklist" %}
       {% render "custom_forms/questions/multi_picklist", question: question, field_name: field_name, field: field %}
+    {%- when "File" %}
+      {% render "custom_forms/questions/file", question: question, field_name: field_prefix, field: field %}
     {%- endcase %}
   {%- endif %}
 {%- endfor %}

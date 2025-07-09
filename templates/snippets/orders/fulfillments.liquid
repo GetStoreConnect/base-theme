@@ -1,0 +1,11 @@
+{%- assign fulfillments = order.fulfillments %}
+
+{%- if fulfillments.size > 0 %}
+  <section class="SC-Panel sc-mb-large">
+    <header class="SC-Panel_header SC-Panel_header-border">
+      <h2 class="SC-Panel_header_heading">{{ "accounts.orders.fulfillments.heading" | t }}</h2>
+    </header>
+    {% render 'account/fulfillments/fulfillments', fulfillments: fulfillments, hide_order: true %}
+  </section>
+{%- endif %}
+

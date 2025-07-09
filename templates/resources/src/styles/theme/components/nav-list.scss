@@ -5,23 +5,24 @@
 $NavList: (
   'color': shade('neutral'),
   'mega': (
-    'max-height': 360px
-  )
+    'max-height': 360px,
+  ),
 ) !default;
 
-@function NavList($keys...) { @return deep-map-get($NavList, $keys...); }
+@function NavList($keys...) {
+  @return deep-map-get($NavList, $keys...);
+}
 
 @if (map-has-key($override, 'NavList') == true) {
   $NavList: map-extend($NavList, map-get($override, 'NavList'), true);
 }
 
-
-.SC-NavList, .NavList {
+.SC-NavList,
+.NavList {
   @include reset-list-styles;
   display: flex;
   flex-direction: column;
   color: NavList('color');
-
 
   /**
    * Root
@@ -37,11 +38,11 @@ $NavList: (
       margin-left: - spacing('medium');
       margin-right: - spacing('medium');
 
-
-      & > li {flex-shrink: 0;}
+      & > li {
+        flex-shrink: 0;
+      }
     }
   }
-
 
   /**
    * Mega

@@ -5,7 +5,11 @@ body {
   color: shade('darkest');
 }
 
-h1, h2, h3, h4, h5 {
+h1,
+h2,
+h3,
+h4,
+h5 {
   margin: 0 0 spacing('small');
   font-weight: var(--sc-font-bold);
 }
@@ -26,9 +30,13 @@ h2 {
   }
 }
 
-h3 {font-size: var(--sc-font-large);}
+h3 {
+  font-size: var(--sc-font-large);
+}
 
-h4 {font-size: var(--sc-font-medium);}
+h4 {
+  font-size: var(--sc-font-medium);
+}
 
 h5 {
   font-size: var(--sc-font-small);
@@ -36,10 +44,18 @@ h5 {
   color: shade('dark');
 }
 
-strong {font-weight: var(--sc-font-bold);}
+strong {
+  font-weight: var(--sc-font-bold);
+}
 
-p {margin: 0 0 spacing('base');}
+p {
+  margin: 0 0 spacing('base');
+}
 
-small {font-size: var(--sc-font-small);}
+small {
+  font-size: var(--sc-font-small);
+}
 
-::placeholder {color: rgba(0,0,0,0.45);}
+::placeholder {
+  color: rgba(0, 0, 0, 0.45);
+}

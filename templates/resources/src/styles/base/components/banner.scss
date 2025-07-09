@@ -1,10 +1,10 @@
-.SC-Banner, .Banner {
+.SC-Banner,
+.Banner {
   position: relative;
   overflow: hidden;
   width: 100%;
   background-color: shade($a: 0.1);
   background-size: cover;
-
 
   /**
    * Container
@@ -33,7 +33,6 @@
       }
     }
 
-
     // Alignments
 
     &.sc-left {
@@ -54,7 +53,7 @@
       }
     }
 
-    &.sc-right  {
+    &.sc-right {
       @include medium-and-up {
         justify-content: flex-end;
         transform: translateX(-5%);
@@ -73,9 +72,10 @@
       }
     }
 
-    &-center-text {text-align: center;}
+    &-center-text {
+      text-align: center;
+    }
   }
-
 
   /**
    * Content
@@ -86,20 +86,27 @@
     z-index: var(--sc-depth-neutral);
     max-width: 90%;
     align-self: center;
-    @include medium-and-up {max-width: 70%;}
-    @include huge-and-up {max-width: 50%;}
+    @include medium-and-up {
+      max-width: 70%;
+    }
+    @include huge-and-up {
+      max-width: 50%;
+    }
 
     .sc-one-to-two-column &,
     .CB-one-to-two-column & {
-      @include medium-and-up {max-width: 85%;}
+      @include medium-and-up {
+        max-width: 85%;
+      }
     }
 
     .sc-one-to-three-column &,
     .CB-one-to-three-column & {
-      @include medium-and-up {max-width: 90%;}
+      @include medium-and-up {
+        max-width: 90%;
+      }
     }
   }
-
 
   /**
    * Heading
@@ -136,7 +143,6 @@
     }
   }
 
-
   /**
    * Subheading
    */
@@ -156,7 +162,6 @@
       }
     }
   }
-
 
   /**
    * Call to action

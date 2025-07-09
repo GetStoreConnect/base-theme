@@ -1,0 +1,11 @@
+/* src/styles/packs/theme-preview.scss */
+.sc-theme-preview-bar {
+  background-color: #00c4f4;
+  border-bottom: 1px solid rgba(0, 0, 0, .1);
+  color: #fff;
+  font-size: small;
+  padding: .5em;
+  text-align: right;
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, .1);
+}
+/*# sourceMappingURL=theme-preview.75VCKKKT.css.map */
