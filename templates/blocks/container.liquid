@@ -1,5 +1,7 @@
+{%- assign type = content_block.sub_type | default: blank -%}
+
 <section
-  class="SC-ContentBlockContainer"
+  class="SC-ContentBlockContainer{% if type != blank %} sc-{{ type }}{% endif %}"
   id="{% if content_block.identifier != blank %}SC-ContentBlockContainer-{{ content_block.identifier }}{% endif %}"
   data-cb="{{ content_block.identifier }}">
 
@@ -16,7 +18,7 @@
     </header>
   {%- endif %}
 
-  <div class="SC-ContentBlockContainer_body{% if content_block.layout_style != blank %} sc-{{ content_block.layout_style }}{% endif %}{% if content_block.sub_type != blank %} sc-{{ content_block.sub_type }}{% endif %}">
+  <div class="SC-ContentBlockContainer_body{% if content_block.layout_style != blank %} sc-{{ content_block.layout_style }}{% endif %}{% if type != blank %} sc-{{ type }}{% endif %}">
     {%- for child in content_block.children %}
       {{ child.render }}
     {%- endfor %}
