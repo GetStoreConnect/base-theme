@@ -1,4 +1,8 @@
-{% capture body_content %}{{ current_page.body_content }}{% endcapture %}
+{% capture body_content %}
+  {%- if current_page != blank -%}
+    {{ current_page.body_content }}
+  {%- endif -%}
+{% endcapture %}
 {%- if body_content != blank %}
 {{ body_content }}
 {%- else %}
