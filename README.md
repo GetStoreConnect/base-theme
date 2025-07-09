@@ -1,5 +1,7 @@
 # Base Theme
 
+**version: StoreConnect v19**
+
 The StoreConnect Base theme is a clean and simple boilerplate ready for use. This starter theme is the default theme used in every StoreConnect installation.
 
 ![base_theme_banner](https://github.com/GetStoreConnect/base-theme/assets/77841884/8ae12805-438b-4d72-b224-f8496448b5d4)
@@ -57,12 +59,10 @@ If you have chosen the first option, you can follow the theme reference instruct
 
 Following the point #2 you will need to upload your theme using theme installer.
 
-- Ensure that your root directory does not contain any .git hidden folders or files
 - Compress it to a zip file
 - Upload it via the theme importer
-- Now, go to the theme template list and remove the .liquid on each template
 - Preview your theme
 
-The theme installer is located in your Salesforce org, where you need to upload this theme as a zip file. Before uploading, remove the .git directory and README.md file from this repo. The theme installer displays errors if it does not find the standard directory structure.
+The theme installer is located in your Salesforce org, where you need to upload this theme as a zip file as mentioned above.
 
-** Compatible with StoreConnect Liquid 0.11.3 and up **
+**Compatible with StoreConnect Liquid 0.11.3 and up**
