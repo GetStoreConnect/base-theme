@@ -14,7 +14,6 @@
   display: block;
 }
 
-
 /**
  * Visibility
  */
@@ -26,7 +25,6 @@
 .sc-invisible {
   visibility: hidden;
 }
-
 
 // Hide by breakpoint
 
@@ -72,12 +70,14 @@
   }
 }
 
-
 /**
  * DEPRECATED
  */
 
-.u-hide, .hide {display: none;}
+.u-hide,
+.hide {
+  display: none;
+}
 
 .u-hide-up-to-small {
   @include up-to-small {
@@ -125,38 +125,72 @@
   display: none;
 }
 
-.u-display-inline-block {display: inline-block;}
+.u-display-inline-block {
+  display: inline-block;
+}
 
-.u-display-inline {display: inline;}
+.u-display-inline {
+  display: inline;
+}
 
-.u-display-block {display: block;}
+.u-display-block {
+  display: block;
+}
 
 .u-display-block-small-and-up {
-  @include small-and-up {display: block;}
+  @include small-and-up {
+    display: block;
+  }
 }
 
 .u-display-block-medium-and-up {
-  @include medium-and-up {display: block;}
+  @include medium-and-up {
+    display: block;
+  }
 }
 
 .u-display-block-large-and-up {
-  @include large-and-up {display: block;}
+  @include large-and-up {
+    display: block;
+  }
 }
 
 .u-display-block-xlarge-and-up {
-  @include xlarge-and-up {display: block;}
+  @include xlarge-and-up {
+    display: block;
+  }
 }
 
 .u-display-block-huge-and-up {
-  @include huge-and-up {display: block;}
+  @include huge-and-up {
+    display: block;
+  }
 }
 
-.u-invisible {visibility: hidden;}
+.u-invisible {
+  visibility: hidden;
+}
 
-.u-hide-tablet-and-up {@include tablet-and-up {display: none;}}
+.u-hide-tablet-and-up {
+  @include tablet-and-up {
+    display: none;
+  }
+}
 
-.u-hide-mobile {@include mobile-only {display: none;}}
+.u-hide-mobile {
+  @include mobile-only {
+    display: none;
+  }
+}
 
-.u-hide-handheld {@include tablet-only {display: none;}}
+.u-hide-handheld {
+  @include tablet-only {
+    display: none;
+  }
+}
 
-.u-hide-desktop {@include xlarge-and-up {display: none;}}
+.u-hide-desktop {
+  @include xlarge-and-up {
+    display: none;
+  }
+}

@@ -1,14 +1,15 @@
-.SC-ImageBesideText, .ImageBesideText {
+.SC-ImageBesideText,
+.ImageBesideText {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: spacing('huge');
 
-  @include small-and-up  {
+  @include small-and-up {
     flex-direction: row;
 
     &.sc-align-right,
-    &[data-alignment=right] {
+    &[data-alignment='right'] {
       flex-direction: row-reverse;
     }
   }
@@ -17,7 +18,7 @@
     flex-direction: row;
 
     &.sc-align-right,
-    &[data-alignment=right] {
+    &[data-alignment='right'] {
       flex-direction: row-reverse;
     }
   }
@@ -34,11 +35,10 @@
     flex-direction: row;
 
     &.sc-align-right,
-    &[data-alignment=right] {
+    &[data-alignment='right'] {
       flex-direction: row-reverse;
     }
   }
-
 
   /**
    * Image
@@ -53,20 +53,20 @@
     }
   }
 
-
   /**
    * Content
    */
 
   &_content {
-    @include xlarge-and-up {max-width: 50vw;}
+    @include xlarge-and-up {
+      max-width: 50vw;
+    }
 
     .sc-one-to-two-column &,
     .CB-one-to-two-column & {
       max-width: 85%;
     }
   }
-
 
   // Headline
 
@@ -97,7 +97,6 @@
     }
   }
 
-
   // Subheadline
 
   &_subheadline {
@@ -112,7 +111,6 @@
     }
   }
 
-
   // Call to action
 
   &_cta {
@@ -122,7 +120,10 @@
     margin-top: spacing('large');
     color: color('primary');
 
-    &:hover, &:focus {text-decoration: underline;}
+    &:hover,
+    &:focus {
+      text-decoration: underline;
+    }
 
     .sc-one-to-two-column &,
     .CB-one-to-two-column & {

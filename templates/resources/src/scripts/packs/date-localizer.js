@@ -1,27 +1,29 @@
-import { onDomChange } from '../theme/utils/init';
+import { onDomChange } from '../theme/utils/init'
 
-onDomChange(init);
+onDomChange(init)
 
 function init(node) {
-  [...node.querySelectorAll('time[data-timestamp]')].forEach(elem => localize(elem));
+  ;[...node.querySelectorAll('time[data-timestamp]')].forEach((elem) => localize(elem))
 }
 
 function localize(elem) {
-  const styles = ["full", "long", "medium", "short"]
+  const styles = ['full', 'long', 'medium', 'short']
   const timestamp = elem.getAttribute('data-timestamp')
+
+  if (!timestamp || timestamp === '') return
 
   let format = {}
 
   let dateStyle = elem.getAttribute('data-date-style')
-  if (styles.includes(dateStyle)) format["dateStyle"] = dateStyle;
+  if (styles.includes(dateStyle)) format['dateStyle'] = dateStyle
 
   let timeStyle = elem.getAttribute('data-time-style')
-  if (styles.includes(timeStyle)) format["timeStyle"] = timeStyle;
+  if (styles.includes(timeStyle)) format['timeStyle'] = timeStyle
 
-  const formatter = new Intl.DateTimeFormat(Intl.DateTimeFormat().resolvedOptions().locale, format);
-  outputString = formatter.format(Date.parse(timestamp));
+  const formatter = new Intl.DateTimeFormat(Intl.DateTimeFormat().resolvedOptions().locale, format)
+  outputString = formatter.format(Date.parse(timestamp))
 
   elem.innerHTML = outputString
 
-  elem.setAttribute('title', Intl.DateTimeFormat().resolvedOptions().timeZone);
+  elem.setAttribute('title', Intl.DateTimeFormat().resolvedOptions().timeZone)
 }

@@ -1,63 +1,66 @@
 :root {
-  --sc-input-height: 48px;
+  --sc-input-height: 44px;
+  --sc-input-border-radius: 8px;
 }
 
 $Field: (
-  "height": var(--sc-input-height),
-  "label": (
-    "color": var(--sc-shade-dark),
-    "size": #{var(--sc-font-small)},
+  'height': var(--sc-input-height),
+  'label': (
+    'color': var(--sc-shade-dark),
+    'size': #{var(--sc-font-small)},
   ),
-  "error-label": (
-    "color": var(--sc-color-error),
-    "size": #{var(--sc-font-small)},
+  'error-label': (
+    'color': var(--sc-color-error),
+    'size': #{var(--sc-font-small)},
   ),
-  "input": (
-    "bg": (
-      "resting": white,
-      "focus": shade($a: 0.025),
+  'input': (
+    'bg': (
+      'resting': white,
+      'focus': color('primary', $s: 20%, $l: 98%),
     ),
-    "placeholder": (
-      "resting": shade($a: 0.5),
-      "focus": shade($a: 0.3),
-    )
+    'placeholder': (
+      'resting': hsla(0, 0%, 0%, 0.5),
+      'focus': hsla(0, 0%, 0%, 0.3),
+    ),
   ),
-  "special": (
-    "icon": (
-      "resting": shade($a: 0.5),
-      "focus": color('primary', $s: 60%, $l: 70%),
+  'special': (
+    'icon': (
+      'resting': hsla(0, 0%, 0%, 0.5),
+      'focus': color('primary', $s: 60%, $l: 70%),
     ),
-    "bg": (
-      "resting": shade($l: 97%),
-      "focus": color('primary', $s: 60%, $l: 96%),
+    'bg': (
+      'resting': hsla(0, 0%, 97%, 1),
+      'focus': color('primary', $s: 60%, $l: 96%),
     ),
-    "placeholder": (
-      "resting": shade($a: 0.5),
-      "focus": color('primary', $s: 60%, $l: 80%),
-    )
-  )
+    'placeholder': (
+      'resting': hsla(0, 0%, 0%, 0.5),
+      'focus': color('primary', $s: 60%, $l: 80%),
+    ),
+  ),
 ) !default;
 
 @if (map-has-key($override, 'Field') == true) {
   $Field: map-extend($Field, map-get($override, 'Field'), true);
 }
 
-@function Field($keys...) { @return deep-map-get($Field, $keys...); }
-
+@function Field($keys...) {
+  @return deep-map-get($Field, $keys...);
+}
 
 @mixin common-field-properties {
   padding: 0 spacing('medium');
-  background-color: Field('input','bg','resting');
-  border: 1px solid shade('light');
-  border-radius: var(--sc-border-radius);
+  background-color: Field('input', 'bg', 'resting');
+  border: none;
+  box-shadow: inset 0 1px 2px hsla(0, 0%, 0%, 0.05);
+  outline: 1px solid hsla(0, 0%, 85%, 1);
+  border-radius: var(--sc-input-border-radius);
 }
 
-
-.SC-Field, .Field {
+.SC-Field,
+.Field {
   position: relative;
   margin-bottom: spacing('base');
   max-width: 500px;
-
 
   /**
    * Label
@@ -65,9 +68,8 @@ $Field: (
 
   &_label {
     margin-bottom: spacing('tiny');
-    color: Field('label','color');
-    font-size: Field('label','size');
-
+    color: Field('label', 'color');
+    font-size: Field('label', 'size');
 
     // Explanation
 
@@ -80,16 +82,15 @@ $Field: (
   &_error {
     display: none;
     margin-top: spacing('tiny');
-    color: Field('error-label','color');
-    font-size: Field('label','size');
+    color: Field('error-label', 'color');
+    font-size: Field('label', 'size');
   }
 
   &.has-error {
-    .SC-Field_input, .SC-Field_select {
+    .SC-Field_input,
+    .SC-Field_select {
       border-color: var(--sc-color-error);
-      background-color: hsl(var(--sc-color-error-h),
-        var(--sc-color-error-s),
-        98%);
+      background-color: hsl(var(--sc-color-error-h), var(--sc-color-error-s), 98%);
     }
 
     .SC-Field_error {
@@ -99,7 +100,7 @@ $Field: (
 
   &.required {
     .SC-Field_label::after {
-      content: " *";
+      content: ' *';
     }
   }
 
@@ -112,51 +113,44 @@ $Field: (
     @include common-field-properties;
     position: relative;
     height: Field('height');
-    box-shadow: inset 0 1px 2px shade($a: 0.05);
-    transition: 200ms border-color ease,
-                200ms background-color ease;
-
+    transition:
+      200ms border-color ease,
+      200ms background-color ease;
 
     // Placeholder
 
     &::placeholder {
       transition: 200ms color ease;
-      color: Field('input','placeholder','resting');
+      color: Field('input', 'placeholder', 'resting');
     }
-
 
     // State: Disabled
 
     &:disabled {
-      background-color: shade($a: 0.03);
+      background-color: hsla(0, 0%, 0%, 0.03);
       border-color: shade('lighter');
       color: shade('darkest');
     }
 
-
     // State: Focus
 
     &:focus {
-      background-color: Field('input','bg','focus');
+      background-color: Field('input', 'bg', 'focus');
+      outline-color: color('primary', $s: 71%, $l: 80%);
+      box-shadow: 0 0 0 4px color('primary', $s: 71%, $l: 92%);
 
       &::placeholder {
-        color: Field('input','placeholder','focus');
+        color: Field('input', 'placeholder', 'focus');
       }
     }
-
 
     // Error
 
     &.has-error {
       border-color: var(--sc-color-error);
-      background-color: hsl(
-        var(--sc-color-error-h),
-        var(--sc-color-error-s),
-        98%
-      );
+      background-color: hsl(var(--sc-color-error-h), var(--sc-color-error-s), 98%);
     }
   }
-
 
   /**
    * Select
@@ -170,13 +164,17 @@ $Field: (
     background-image: url('theme/icons/chevron.svg');
     background-size: 10px;
     background-position-y: center;
-    background-position-x: calc(100% - #{spacing('base')});
+    background-position-x: calc(100% - var(--sc-spacing-base));
     background-repeat: no-repeat;
-    padding-right: spacing('xlarge');
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    padding-right: var(--sc-spacing-xlarge);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
     height: Field('height');
-  }
 
+    &:focus {
+      box-shadow: 0 0 0 4px color('primary', $s: 71%, $l: 92%);
+      outline: 1px solid color('primary', $s: 71%, $l: 80%);
+    }
+  }
 
   /**
    * Textarea
@@ -184,29 +182,33 @@ $Field: (
 
   &_textarea {
     @include common-field-properties;
-    padding: spacing('medium');
-    box-shadow: inset 0 1px 2px shade($a: 0.1);
-  }
+    padding: var(--sc-spacing-medium);
+    box-shadow: inset 0 1px 2px hsla(0, 0%, 0%, 0.1);
 
+    &:focus {
+      box-shadow: 0 0 0 4px color('primary', $s: 71%, $l: 92%);
+      outline: 1px solid color('primary', $s: 71%, $l: 80%);
+    }
+  }
 
   /**
    * Hint
    */
 
   &_hint {
-    margin-top: spacing('tiny');
+    margin-top: var(--sc-spacing-tiny);
     font-size: var(--sc-font-tiny);
-    color: shade('neutral');
+    color: var(--sc-shade-neutral);
   }
-
 
   /**
    * Variant: Icon
    */
 
   &-icon {
-
-    input {padding-left: 43px;}
+    input {
+      padding-left: 43px;
+    }
 
     svg {
       position: absolute;
@@ -220,44 +222,44 @@ $Field: (
     }
   }
 
-
   /**
    * Variant: Special
    */
 
   &-special {
-
-    svg {color: Field('special','icon','resting');}
+    svg {
+      color: Field('special', 'icon', 'resting');
+    }
 
     input {
-      background-color: Field('special','bg','resting');
-      border-color: transparent;
+      background-color: Field('special', 'bg', 'resting');
+      outline-color: transparent;
       box-shadow: none;
       max-width: 100%;
-
 
       // Placeholder
 
       &::placeholder {
-        color: Field('special','placeholder','resting');
+        color: Field('special', 'placeholder', 'resting');
       }
-
 
       // State: Focus
 
       &:focus {
-        background-color: Field('special','bg','focus');
-        border-color: transparent;
+        background-color: Field('special', 'bg', 'focus');
+        outline: transparent;
+        box-shadow: none;
 
         &::placeholder {
-          color: Field('special','placeholder','focus');
+          color: Field('special', 'placeholder', 'focus');
         }
 
-        & ~ svg {fill: Field('special','icon','focus');}
+        & ~ svg {
+          fill: Field('special', 'icon', 'focus');
+        }
       }
     }
   }
-
 
   /**
    * Variant: Inline
@@ -267,23 +269,24 @@ $Field: (
     display: flex;
     align-items: center;
 
-    label {margin: 0 spacing('small') 0 0;}
+    label {
+      margin: 0 spacing('small') 0 0;
+    }
   }
-
 
   /**
    * Variant: Expand (deprecated)
    */
 
-  &-expand input {width: 100%;}
-
+  &-expand input {
+    width: 100%;
+  }
 
   /**
    * Bambora
    */
 
   &-bambora {
-
     iframe {
       position: absolute;
       top: 0;
@@ -319,7 +322,9 @@ $Field: (
  * Errors
  */
 
-
-.field_with_errors input, .field_with_errors select {
-  &:not(:focus) {border-color: color('error');}
+.field_with_errors input,
+.field_with_errors select {
+  &:not(:focus) {
+    border-color: color('error');
+  }
 }

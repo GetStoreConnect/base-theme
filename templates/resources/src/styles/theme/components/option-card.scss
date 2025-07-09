@@ -1,33 +1,42 @@
-.SC-OptionCard, .OptionCard {
+.SC-OptionCard,
+.OptionCard {
   position: relative;
   border-radius: var(--sc-border-radius);
   background-color: white;
-  transition: 100ms box-shadow ease,
-              100ms background-color ease,
-              100ms border-radius ease;
+  transition:
+    100ms box-shadow ease,
+    100ms background-color ease,
+    100ms border-radius ease;
 
-
-  &:last-child {margin: 0;}
+  &:last-child {
+    margin: 0;
+  }
 
   &.is-disabled {
     pointer-events: none;
     opacity: 0.4;
 
-    &:hover {background: white;}
+    &:hover {
+      background: white;
+    }
   }
 
   &.is-active {
     margin-bottom: var(--sc-spacing-base);
-    box-shadow: 0 2px 8px hsla(0, 0%, 0%, 0.15),
-                0 1px 1px hsla(0, 0%, 0%, 0.05);
+    box-shadow:
+      0 2px 8px hsla(0, 0%, 0%, 0.15),
+      0 1px 1px hsla(0, 0%, 0%, 0.05);
   }
 
   @include medium-and-up {
-    &:hover {background: shade($a: 0.05);}
+    &:hover {
+      background: shade($a: 0.05);
+    }
     &.SC-OptionCard-parent.is-active:hover,
-    &.OptionCard-parent.is-active:hover {background: none;}
+    &.OptionCard-parent.is-active:hover {
+      background: none;
+    }
   }
-
 
   /**
    * Elements
@@ -49,10 +58,14 @@
     margin-right: var(--sc-spacing-base);
 
     .SC-OptionCard.is-active &,
-    .OptionCard.is-active & {display: none;}
+    .OptionCard.is-active & {
+      display: none;
+    }
 
     .SC-OptionCard_subset.is-active &,
-    .OptionCard_subset.is-active & {display: block;}
+    .OptionCard_subset.is-active & {
+      display: block;
+    }
   }
 
   &_checkbox {
@@ -61,10 +74,14 @@
     margin-right: var(--sc-spacing-small);
 
     .SC-OptionCard.is-active &,
-    .OptionCard.is-active & {display: none;}
+    .OptionCard.is-active & {
+      display: none;
+    }
 
     .SC-OptionCard_subset.is-active &,
-    .OptionCard_subset.is-active & {display: block;}
+    .OptionCard_subset.is-active & {
+      display: block;
+    }
   }
 
   &_detail {
@@ -94,18 +111,21 @@
     display: none;
     padding: 0 var(--sc-spacing-small) var(--sc-spacing-small);
 
-    &.is-active {display: block;}
+    &.is-active {
+      display: block;
+    }
   }
 }
-
 
 /**
  * TODO: Replace global radio with this pattern
  */
 
-.SC-RadioInput, .RadioInput {
-
-  input {display: none;}
+.SC-RadioInput,
+.RadioInput {
+  input {
+    display: none;
+  }
 
   svg {
     width: 23px;

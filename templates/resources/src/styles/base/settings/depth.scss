@@ -7,11 +7,11 @@
 }
 
 $depths: (
-  'background':   -1,
-  'neutral':       1,
-  'foreground':    2,
-  'floating':      3,
-  'overlay':       4,
+  'background': -1,
+  'neutral': 1,
+  'foreground': 2,
+  'floating': 3,
+  'overlay': 4,
 ) !default;
 
 @function depth($key) {

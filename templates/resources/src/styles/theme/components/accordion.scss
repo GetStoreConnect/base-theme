@@ -1,7 +1,7 @@
-.SC-Accordion, .Accordion {
+.SC-Accordion,
+.Accordion {
   text-align: left;
   border-top: var(--sc-border-width) solid var(--sc-border-color);
-
 
   /**
    * Header
@@ -14,7 +14,6 @@
     align-items: center;
     padding: spacing('medium') 0;
 
-
     // Heading
 
     &_heading {
@@ -25,7 +24,6 @@
       margin: 0;
       @include truncate-single-line;
     }
-
 
     // Icon
 
@@ -43,7 +41,6 @@
     }
   }
 
-
   /**
    * Body
    */
@@ -53,8 +50,9 @@
     color: shade('darkest');
     padding: 0 0 spacing('base') 0;
 
-    p:last-child {margin: 0;}
-
+    p:last-child {
+      margin: 0;
+    }
 
     // State: Expanded
 

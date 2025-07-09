@@ -30,7 +30,6 @@
   }
 }
 
-
 /**
  * Row
  */
@@ -52,6 +51,18 @@
   }
 }
 
+.sc-flex-col-unless-wide {
+  display: flex;
+  flex-direction: column;
+}
+
+/* When the container named 'fieldset' is wider than 480px, switch to row */
+@container fieldset (min-width: 480px) {
+  .sc-flex-col-unless-wide {
+    flex-direction: row;
+    gap: spacing('small');
+  }
+}
 
 /**
  * Wrap
@@ -72,7 +83,6 @@
     flex-wrap: wrap;
   }
 }
-
 
 /**
  * Justify content
@@ -102,26 +112,42 @@
   justify-content: flex-end;
 }
 
+.sc-even-distribution {
+  display: flex;
+  gap: var(--sc-spacing-base);
+}
+
+.sc-flex-equal-width > * {
+  flex: 1;
+}
 
 /**
  * Align items
  */
 
-.sc-align-items-center {align-items: center;}
+.sc-align-items-center {
+  align-items: center;
+}
 
-.sc-align-items-start {align-items: flex-start;}
+.sc-align-items-start {
+  align-items: flex-start;
+}
 
-.sc-align-items-end {align-items: flex-end;}
-
+.sc-align-items-end {
+  align-items: flex-end;
+}
 
 /**
  * Grow & shrink
  */
 
-.sc-grow {flex-grow: 1;}
+.sc-grow {
+  flex-grow: 1;
+}
 
-.sc-no-shrink {flex-shrink: 0;}
-
+.sc-no-shrink {
+  flex-shrink: 0;
+}
 
 /**
  * DEPRECATED
@@ -153,26 +179,50 @@
   flex-direction: column;
 }
 
-.u-flex-wrap {flex-wrap: wrap;}
+.u-flex-wrap {
+  flex-wrap: wrap;
+}
 
-.u-justify-space-between {justify-content: space-between;}
+.u-justify-space-between {
+  justify-content: space-between;
+}
 
-.u-justify-space-evenly {justify-content: space-evenly;}
+.u-justify-space-evenly {
+  justify-content: space-evenly;
+}
 
-.u-justify-space-around {justify-content: space-around;}
+.u-justify-space-around {
+  justify-content: space-around;
+}
 
-.u-justify-center {justify-content: center;}
+.u-justify-center {
+  justify-content: center;
+}
 
-.u-justify-flex-start {justify-content: flex-start;}
+.u-justify-flex-start {
+  justify-content: flex-start;
+}
 
-.u-justify-flex-end {justify-content: flex-end;}
+.u-justify-flex-end {
+  justify-content: flex-end;
+}
 
-.u-flex-align-center {align-items: center;}
+.u-flex-align-center {
+  align-items: center;
+}
 
-.u-flex-align-start {align-items: flex-start;}
+.u-flex-align-start {
+  align-items: flex-start;
+}
 
-.u-flex-align-end {align-items: flex-end;}
+.u-flex-align-end {
+  align-items: flex-end;
+}
 
-.u-flex-grow {flex-grow: 1;}
+.u-flex-grow {
+  flex-grow: 1;
+}
 
-.u-flex-no-shrink {flex-shrink: 0;}
+.u-flex-no-shrink {
+  flex-shrink: 0;
+}

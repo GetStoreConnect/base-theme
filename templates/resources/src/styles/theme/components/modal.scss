@@ -1,4 +1,5 @@
-.SC-Modal, .Modal {
+.SC-Modal,
+.Modal {
   @include pin-all-sides;
   z-index: depth('overlay');
   position: fixed;
@@ -11,7 +12,6 @@
     pointer-events: inherit;
     opacity: 1;
   }
-
 
   /**
    * Inner
@@ -34,13 +34,11 @@
       max-width: 80%;
     }
 
-
     // Header
 
     &_header {
       padding: spacing('base');
     }
-
 
     // Body
 
@@ -50,7 +48,6 @@
       margin-bottom: spacing('base');
     }
 
-
     // Footer
 
     &_footer {
@@ -59,7 +56,6 @@
       border-top: 1px solid shade('lighter');
     }
 
-
     // Variant: Skinny
 
     &-skinny {
@@ -67,7 +63,6 @@
       max-width: 90%;
     }
   }
-
 
   /**
    * Overlay

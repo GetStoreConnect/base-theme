@@ -1,25 +1,29 @@
-import { init, prepareSubmit, showError, submitData } from './common';
-import { apiKey, callbackUrl, currency } from './form';
-import { loadScript } from "@paypal/paypal-js";
+import { init, prepareSubmit, showError, submitData, submitElement } from './common'
+import { apiKey, callbackUrl, currency } from './form'
+import { loadScript } from '@paypal/paypal-js'
+import { onDomChange } from '../../theme/utils/init'
 
-window.StoreConnect = window.StoreConnect || {};
-window.StoreConnect.Gateways = window.StoreConnect.Gateways || {};
+onDomChange((node) => {
+  const forms = node.querySelectorAll('form[data-provider="Paypal"]')
+  forms.forEach((form) => {
+    const providerId = form.dataset.providerId
+    if (providerId) {
+      initPaypal({ form, providerId })
+    }
+  })
+})
 
-window.StoreConnect.Gateways.Paypal = function ({ providerId }) {
-  init('Paypal', providerId, null, setPayButton);
-
-  function paypalButton() {
-    return document.getElementById(`PaypalButton${providerId}`);
-  }
+function initPaypal({ form, providerId }) {
+  init(form, null, setPayButton)
 
   function setPayButton(payButton, enabled) {
     if (payButton) {
       if (enabled) {
-        payButton.classList.add("sc-hide");
-        paypalButton().classList.remove("sc-hide");
+        payButton.classList.add('sc-hide')
+        submitElement().classList.remove('sc-hide')
       } else {
-        payButton.classList.remove("sc-hide");
-        paypalButton().classList.add("sc-hide");
+        payButton.classList.remove('sc-hide')
+        submitElement().classList.add('sc-hide')
       }
     }
   }
@@ -30,43 +34,45 @@ window.StoreConnect.Gateways.Paypal = function ({ providerId }) {
         .Buttons({
           style: { layout: 'horizontal' },
           createOrder: function () {
-            const SETEC_URL = callbackUrl();
+            const SETEC_URL = callbackUrl()
 
             return fetch(SETEC_URL, {
               method: 'post',
               headers: {
-                'content-type': 'application/json'
-              }
-            }).then(function (res) {
-              return res.json();
-            }).then(function (data) {
-              if (data.message) {
-                showError(data.message);
-              }
-              return data.id;
-            });
+                'content-type': 'application/json',
+              },
+            })
+              .then(function (res) {
+                return res.json()
+              })
+              .then(function (data) {
+                if (data.message) {
+                  showError(data.message)
+                }
+                return data.id
+              })
           },
           onApprove: function (data, _actions) {
             prepareSubmit(() => {
               const payload = {
                 payment_source: {
-                  tok_id: data.orderID
-                }
+                  tok_id: data.orderID,
+                },
               }
               submitData({ payload })
-            });
+            })
           },
           onError: function (err) {
             // false is passed to showError not to replace existing error message if any
-            showError(err, false);
-          }
+            showError(err, { replace: false })
+          },
         })
         .render(`#paypal-button-container${providerId}`)
         .catch((error) => {
-          console.error("failed to render the PayPal Buttons", error);
-        });
+          console.error('failed to render the PayPal Buttons', error)
+        })
     })
     .catch((error) => {
-      console.error("failed to load the PayPal JS SDK script", error);
-    });
+      console.error('failed to load the PayPal JS SDK script', error)
+    })
 }

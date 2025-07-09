@@ -1,20 +1,34 @@
-import AdyenCheckout from '@adyen/adyen-web';
-import '@adyen/adyen-web/dist/adyen.css';
-import { init, submitData, formElement } from './common';
-import { apiMode, showWallets } from './form';
+import AdyenCheckout from '@adyen/adyen-web'
+import '@adyen/adyen-web/dist/adyen.css'
+import { init, form, submitData } from './common'
+import { isProduction, showWallets } from './form'
+import { walletsElementExists, showWalletsError } from './wallets'
+import { onDomChange } from '../../theme/utils/init'
+import { initGooglePayForm } from './google-pay'
+import { initApplePayForm } from './apple-pay'
 
-window.StoreConnect = window.StoreConnect || {};
-window.StoreConnect.Gateways = window.StoreConnect.Gateways || {};
+onDomChange((node) => {
+  const forms = node.querySelectorAll('form[data-provider="Adyen"]')
+  forms.forEach((form) => {
+    const providerId = form.dataset.providerId
+    if (providerId) {
+      initAdyen({ form, providerId })
+    }
+  })
+})
 
-window.StoreConnect.Gateways.Adyen = function ({ providerId, clientOpts }) {
-  init('Adyen', providerId, onSubmit);
-  const mountElementId = `AdyenFieldset${providerId}`;
+function initAdyen({ form, providerId }) {
+  init(form, onSubmit)
+  const mountElementId = `AdyenFieldset${providerId}`
 
-  let data;
-  let card;
+  const clientKey = form.dataset.apiClient
+  const environment = isProduction() ? 'live' : 'test'
 
-  function handleOnChange(state, method = "scheme") {
-    if (method === "scheme") {
+  let data
+  let card
+
+  function handleOnChange(state, method = 'scheme') {
+    if (method === 'scheme') {
       if (state.isValid) {
         data = state.data
       } else {
@@ -25,102 +39,102 @@ window.StoreConnect.Gateways.Adyen = function ({ providerId, clientOpts }) {
     }
   }
 
-  const clientKey = formElement().dataset.apiClient;
-  const environment = apiMode() === 'production' ? 'live' : 'test';
-  const merchantName = formElement().dataset.merchantName;
-  const merchantGoogleId = formElement().dataset.merchantGoogleId;
-  const merchantAccount = formElement().dataset.merchantAccount;
-
   const configuration = {
     environment,
     clientKey,
-    locale: "en_US",
-    onChange: handleOnChange
-  };
-
-  const googlePayConfiguration = {
-    amount: {
-      value: formElement().dataset.amountPayableInCents,
-      currency: formElement().dataset.currencyCode,
-    },
-    countryCode: formElement().dataset.countryCode,
-    clientKey,
-    configuration: {
-      gatewayMerchantId: merchantAccount,
-      merchantName: merchantName,
-      merchantId: merchantGoogleId
-    },
-    environment: environment,
-    onSubmit: onSubmitGooglePay,
-    onAuthorized: onAuthorizeGooglePay,
-  }
-
-  async function initializeGooglePayForm() {
-    const checkout = await AdyenCheckout(googlePayConfiguration);
-    const googlePayComponent = checkout.create('googlepay', googlePayConfiguration);
-
-    googlePayComponent
-      .isAvailable()
-      .then(() => {
-        googlePayComponent.mount(`#${mountElementId}-googlePay`);
-      })
-      .catch(e => {
-        console.log("Can't load googlePay")
-      });
+    locale: 'en_US',
+    onChange: handleOnChange,
   }
 
   async function initializeAdyenForm() {
     const checkout = await AdyenCheckout(configuration)
-    card = checkout.create("card", {
-      ...clientOpts,
-      hasHolderName: true,
-      holderNameRequired: true,
-      billingAddressRequired: false,
-      onChange: handleOnChange
-    }).mount(`#${mountElementId}`);
-  }
-
-  function onSubmitGooglePay(state) {
-    handleOnChange(state, "googlePay")
-  }
-
-  function onAuthorizeGooglePay(response) {
-    //NOTE: consider also checking cardHolderAuthenticated, currently did not include
-    // since it's always false in test env haven't fully check on when this will be true
-    // maybe in production
-    if (response.paymentMethodData.info.assuranceDetails.accountVerified === true) {
-      const payload = {
-        url: `/checkout/payment`,
-        payment: {
-          method: "Adyen"
-        },
-        method: 'post',
-        payment_source: data.paymentMethod
-      }
-      submitData({ payload });
+    try {
+      card = checkout
+        .create('card', {
+          hasHolderName: true,
+          holderNameRequired: true,
+          billingAddressRequired: false,
+          onChange: handleOnChange,
+        })
+        .mount(`#${mountElementId}`)
+    } catch (error) {
+      console.error('Error initializing Adyen card component:', error)
     }
   }
 
   function onSubmit() {
     const payload = {
-      payment: {
-        provider_id: providerId,
-        method: "Adyen"
-      },
+      // An internal Object of payment data
       payment_source: data.paymentMethod,
       additional_info: {
         browserInfo: {
           userAgent: data.browserInfo.userAgent,
-          timeZoneOffset: data.browserInfo.timeZoneOffset
+          timeZoneOffset: data.browserInfo.timeZoneOffset,
         },
         origin: data.origin,
-        channel: "Web"
-      }
+        channel: 'Web',
+      },
     }
 
-    submitData({ payload, handleSuccess: card.handleAction });
-  };
+    submitData({ payload, handleSuccess: card.handleAction })
+  }
 
-  initializeAdyenForm();
-  if (showWallets()) { initializeGooglePayForm() };
+  const initTasks = [initializeAdyenForm()]
+  if (showWallets() && walletsElementExists()) {
+    initTasks.push(setupApplePay())
+    initTasks.push(setupGooglePay())
+  }
+
+  Promise.allSettled(initTasks)
+}
+
+async function setupGooglePay() {
+  initGooglePayForm({
+    merchantId: form.dataset.googleMerchantId,
+    merchantName: form.dataset.googleMerchantName || form.dataset.merchantName,
+    gateway: 'adyen',
+    gatewayMerchantId: form.dataset.merchantId,
+    // Extract the google payment token into payload used by adyen_service.rb
+    extractTokenCallback: (paymentData) => {
+      const paymentToken = paymentData.paymentMethodData.tokenizationData.token
+      const paymentTokenBase64 = btoa(paymentToken)
+
+      return {
+        wallet_payment_source: {
+          tok_id: paymentTokenBase64,
+          payment_method: 'googlepay',
+          card_network: paymentData.paymentMethodData.info?.cardNetwork,
+          card_last_four: paymentData.paymentMethodData.info?.cardDetails,
+        },
+      }
+    },
+  })
+}
+
+async function setupApplePay() {
+  const merchantId = form.dataset.appleMerchantId
+  if (!merchantId) {
+    showWalletsError('Configure api_options.apple_merchant_id et al to enable Apple Pay')
+    return
+  }
+
+  initApplePayForm({
+    merchantId,
+    merchantName: form.dataset.appleMerchantName || form.dataset.merchantName,
+    providerId: form.dataset.providerId,
+    // Extract the apple payment token into payload used by adyen_service.rb
+    extractTokenCallback: (paymentData) => {
+      const paymentToken = JSON.stringify(paymentData.token.paymentData)
+      const paymentTokenBase64 = btoa(paymentToken)
+
+      return {
+        wallet_payment_source: {
+          tok_id: paymentTokenBase64,
+          payment_method: 'applepay',
+          card_network: paymentData.token.paymentMethod?.network,
+          card_last_four: paymentData.token.paymentMethod?.displayName?.match(/\d{4}$/)?.[0],
+        },
+      }
+    },
+  })
 }

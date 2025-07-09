@@ -1,11 +1,12 @@
 export default function (url) {
-  const storePath = document.querySelector('meta[name="sc-path"]');
+  const storePath = document.querySelector('meta[name="sc-path"]')
+
   if (storePath) {
-    const storePathContent = storePath.content;
+    const storePathContent = storePath.content
 
     if (storePathContent) {
-      return `/${storePathContent}${url}`;
+      return `/${storePathContent}${url}`
     }
   }
-  return url;
+  return url
 }

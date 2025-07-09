@@ -1,6 +1,21 @@
-import { createMap, createLocationMarker, setNearBeacon, setZoomForSingleResult, setFocusedMarker, onClickMarker } from '../theme/location-map'
-import { initNearAddressForm, initExactAreaForm, setupFormTemplate } from '../theme/location-search-form'
-import { setFocusedLocationCard, onClickLocationCard, setLocationCardData } from '../theme/location-cards'
+import {
+  createMap,
+  createLocationMarker,
+  setNearBeacon,
+  setZoomForSingleResult,
+  setFocusedMarker,
+  onClickMarker,
+} from '../theme/location-map'
+import {
+  initNearAddressForm,
+  initExactAreaForm,
+  setupFormTemplate,
+} from '../theme/location-search-form'
+import {
+  setFocusedLocationCard,
+  onClickLocationCard,
+  setLocationCardData,
+} from '../theme/location-cards'
 import { setContainerToWindowHeight } from '../theme/utils/window'
 import { getClientGeolocation } from '../theme/geolocation'
 import { startLoader, stopLoader } from '../theme/loader'
@@ -13,7 +28,7 @@ const mapContainer = document.querySelector('[data-location-map]')
 
 startLoader(container)
 setContainerToWindowHeight(container)
-getClientGeolocation(geolocation =>  {
+getClientGeolocation((geolocation) => {
   // When a Google API key is unavailable we don't include the map
   // container in the HTML at all and return results based on the
   // country, state and/or postal code.
@@ -30,12 +45,12 @@ getClientGeolocation(geolocation =>  {
   const latLng = getLatLngParams() || geolocation || DEFAULT_COORD
   const origin = geolocation || DEFAULT_COORD
 
-  createMap(latLng, map => {
+  createMap(latLng, (map) => {
     const bounds = new google.maps.LatLngBounds()
 
     setNearBeacon(latLng)
 
-    locations.forEach(location => {
+    locations.forEach((location) => {
       // Create a marker for each location abd extend the
       // map's bounds to include each marker's position.
       const latLng = getLatLngFromElem(location)
@@ -99,10 +114,12 @@ function getLatLngFromElem(location) {
   const lat = location.dataset.lat
   const lng = location.dataset.lng
 
-  return lat && lng ? {
-    lat: parseFloat(lat),
-    lng: parseFloat(lng),
-  } : null
+  return lat && lng
+    ? {
+        lat: parseFloat(lat),
+        lng: parseFloat(lng),
+      }
+    : null
 }
 
 function getLatLngParams() {

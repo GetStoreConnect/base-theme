@@ -1,8 +1,10 @@
 import Pikaday from 'pikaday'
-import { onDomChange } from '../theme/utils/init';
+import { onDomChange } from '../theme/utils/init'
 
-onDomChange(init);
+onDomChange(init)
 
 function init(node) {
-  [...node.querySelectorAll('[data-date-picker]')].forEach(elem => new Pikaday({ field: elem }))
+  ;[...node.querySelectorAll('[data-date-picker]')].forEach(
+    (elem) => new Pikaday({ field: elem, format: 'YYYY-MM-DD', minDate: new Date() })
+  )
 }

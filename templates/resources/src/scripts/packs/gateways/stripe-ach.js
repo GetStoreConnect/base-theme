@@ -1,31 +1,40 @@
 import Rails from '@rails/ujs'
 import { init, formFieldElement, showError, submitData, refreshForm } from './common'
-import { apiKey } from './form';
-import { loadStripe } from '@stripe/stripe-js/pure';
+import { apiKey } from './form'
+import { loadStripe } from '@stripe/stripe-js/pure'
+import { onDomChange } from '../../theme/utils/init'
 
-window.StoreConnect = window.StoreConnect || {}
-window.StoreConnect.Gateways = window.StoreConnect.Gateways || {}
+onDomChange((node) => {
+  const forms = node.querySelectorAll('form[data-provider="StripeAch"]')
+  forms.forEach((form) => {
+    const providerId = form.dataset.providerId
+    if (providerId) {
+      initStripeAch({ form, providerId })
+    }
+  })
+})
 
-window.StoreConnect.Gateways.StripeAch = function ({ providerId }) {
-  init('StripeAch', providerId, stripeCreatePaymentIntent)
-  let stripe;
+function initStripeAch({ form, providerId }) {
+  init(form, stripeCreatePaymentIntent)
+  let stripe
 
   function collectBankAccountForMicrodeposit(response) {
     const paymentIntentSecret = response.payment_intent
 
-    stripe.confirmUsBankAccountPayment(paymentIntentSecret, {
-      payment_method: {
-        billing_details: {
-          name: formFieldElement('ach_account_name').value,
-          email: formFieldElement('ach_email').value
+    stripe
+      .confirmUsBankAccountPayment(paymentIntentSecret, {
+        payment_method: {
+          billing_details: {
+            name: formFieldElement('ach_account_name').value,
+            email: formFieldElement('ach_email').value,
+          },
+          us_bank_account: {
+            account_number: formFieldElement('ach_account_number').value,
+            routing_number: formFieldElement('ach_routing_number').value,
+            account_holder_type: formFieldElement('ach_account_holder_type').value,
+          },
         },
-        us_bank_account: {
-          account_number: formFieldElement('ach_account_number').value,
-          routing_number: formFieldElement('ach_routing_number').value,
-          account_holder_type: formFieldElement('ach_account_holder_type').value,
-        }
-      },
-    })
+      })
       .then(({ paymentIntent, error }) => {
         if (error) {
           showError(error.message)
@@ -33,7 +42,7 @@ window.StoreConnect.Gateways.StripeAch = function ({ providerId }) {
           const payload = {
             payment_source: {
               tok_id: paymentIntent.id,
-            }
+            },
           }
           submitData({ payload })
         }
@@ -44,7 +53,7 @@ window.StoreConnect.Gateways.StripeAch = function ({ providerId }) {
     let data = {
       payment: {
         provider_id: providerId,
-        method: 'StripeAch'
+        method: 'StripeAch',
       },
       payment_details: {
         name: formFieldElement('ach_account_name').value,
@@ -53,7 +62,7 @@ window.StoreConnect.Gateways.StripeAch = function ({ providerId }) {
         routing_number: formFieldElement('ach_routing_number').value,
         account_holder_type: formFieldElement('ach_account_holder_type').value,
         terms: formFieldElement('ach_terms').checked,
-      }
+      },
     }
 
     const url = `${form.getAttribute('action')}/ach`
@@ -66,7 +75,7 @@ window.StoreConnect.Gateways.StripeAch = function ({ providerId }) {
         options.data = JSON.stringify(data)
         return true
       },
-      success: (function (response, _textStatus, _jqXHR) {
+      success: function (response, _textStatus, _jqXHR) {
         if (response.redirect_url) {
           window.location = response.redirect_url
         } else if (response.error_message) {
@@ -74,21 +83,23 @@ window.StoreConnect.Gateways.StripeAch = function ({ providerId }) {
         } else {
           collectBankAccountForMicrodeposit(response)
         }
-      }),
-      error: (function (_response, _textStatus, jqXHR) {
+      },
+      error: function (_response, _textStatus, jqXHR) {
         if (jqXHR.status == 0) {
           return
         }
 
-        const error = document.querySelector("[data-general-error-message]").getAttribute("data-general-error-message")
+        const error = document
+          .querySelector('[data-general-error-message]')
+          .getAttribute('data-general-error-message')
         showError(error)
-      })
+      },
     })
   }
 
   async function initializeStripe() {
-    stripe = await loadStripe(apiKey());
+    stripe = await loadStripe(apiKey())
   }
 
-  initializeStripe();
+  initializeStripe()
 }

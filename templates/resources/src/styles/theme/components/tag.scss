@@ -3,18 +3,20 @@ $Tag: (
   'color': white,
   'bg': (
     'resting': color('primary'),
-    'hover': darken-color('primary', 15%)
-  )
+    'hover': darken-color('primary', 15%),
+  ),
 ) !default;
 
 @if (map-has-key($override, 'Tag') == true) {
   $Tag: map-extend($Tag, map-get($override, 'Tag'), true);
 }
 
-@function Tag($keys...) { @return deep-map-get($Tag, $keys...); }
+@function Tag($keys...) {
+  @return deep-map-get($Tag, $keys...);
+}
 
-
-.SC-Tag, .Tag {
+.SC-Tag,
+.Tag {
   display: inline-block;
   margin-bottom: spacing('tiny');
   border-radius: var(--sc-border-rounded);

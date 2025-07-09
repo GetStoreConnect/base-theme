@@ -1,4 +1,5 @@
-.SC-BundleProduct, .BundleProduct {
+.SC-BundleProduct,
+.BundleProduct {
   display: flex;
   align-items: flex-start;
   padding: spacing('small') 0;
@@ -6,7 +7,6 @@
   @include medium-and-up {
     padding: spacing('medium') 0;
   }
-
 
   /**
    * Image
@@ -22,7 +22,6 @@
     }
   }
 
-
   /**
    * Detail
    */
@@ -35,7 +34,6 @@
     align-items: center;
     font-size: var(--sc-font-small);
 
-
     // Title & description
 
     &_desc {
@@ -45,17 +43,16 @@
       margin-right: spacing('small');
     }
 
-      &_heading {
-        color: shade('darkest');
-        font-size: inherit;
-        margin-bottom: 0;
-      }
+    &_heading {
+      color: shade('darkest');
+      font-size: inherit;
+      margin-bottom: 0;
+    }
 
-      &_savings {
-        font-size: var(--sc-font-tiny);
-        margin: 0;
-      }
-
+    &_savings {
+      font-size: var(--sc-font-tiny);
+      margin: 0;
+    }
 
     // Price
 
@@ -65,7 +62,6 @@
       text-align: right;
     }
 
-
     // Line
 
     &_line {
@@ -73,15 +69,17 @@
       margin-bottom: spacing('tiny');
     }
 
-
     // Qty
 
-    &_qty {max-width: 25%;}
-
+    &_qty {
+      max-width: 25%;
+    }
 
     // Variants
 
-    &_variants {width: 100%;}
+    &_variants {
+      width: 100%;
+    }
 
     &_variant {
       display: flex;

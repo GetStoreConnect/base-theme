@@ -1,4 +1,5 @@
-.SC-PageNav, .PageNav {
+.SC-PageNav,
+.PageNav {
   @include medium-and-up {
     margin-bottom: spacing('base');
   }
@@ -19,7 +20,6 @@
     padding: spacing('medium') 0;
     margin: 0;
   }
-
 
   /**
    * Modifier: Inline
@@ -71,5 +71,4 @@
       display: none;
     }
   }
-
 }

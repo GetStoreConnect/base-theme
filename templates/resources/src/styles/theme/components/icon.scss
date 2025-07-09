@@ -1,4 +1,5 @@
-.SC-Icon, .Icon {
+.SC-Icon,
+.Icon {
   @include reset-button-styles;
   position: relative;
   -webkit-tap-highlight-color: transparent;
@@ -10,8 +11,9 @@
   font-size: 0;
   fill: currentColor;
 
-  svg {width: 100%;}
-
+  svg {
+    width: 100%;
+  }
 
   /**
    * Variants
@@ -22,7 +24,8 @@
   }
 
   &-button {
-    svg, img {
+    svg,
+    img {
       pointer-events: none;
       width: 50%;
       @include xlarge-and-up {

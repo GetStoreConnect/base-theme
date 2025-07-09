@@ -7,10 +7,13 @@
   border-radius: var(--sc-border-radius);
   background-color: color('primary', $l: 95%);
   color: color('primary', $l: 50%);
-  transition: 200ms background-color ease,
-              200ms color ease;
+  transition:
+    200ms background-color ease,
+    200ms color ease;
 
-  &_time {margin-left: spacing('tiny');}
+  &_time {
+    margin-left: spacing('tiny');
+  }
 
   &.warning {
     background-color: color('error', $lighten: 50%);
@@ -21,6 +24,8 @@
     background-color: shade('lightest');
     color: shade('neutral');
 
-    .SC-CartTimer_time {display: none;}
+    .SC-CartTimer_time {
+      display: none;
+    }
   }
 }

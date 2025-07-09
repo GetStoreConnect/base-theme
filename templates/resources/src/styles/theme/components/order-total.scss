@@ -1,6 +1,5 @@
-.SC-OrderTotal, .OrderTotal {
-
-
+.SC-OrderTotal,
+.OrderTotal {
   /**
    * Line
    */
@@ -12,18 +11,22 @@
     font-size: var(--sc-font-small);
     color: shade('dark');
 
-    &:last-child {margin-bottom: 0;}
-
+    &:last-child {
+      margin-bottom: 0;
+    }
 
     // Total
 
-    &_total {text-align: right;}
+    &_total {
+      text-align: right;
+    }
   }
-
 
   /**
    * Modifier: Position right
    */
 
-  &-right {margin-left: auto;}
+  &-right {
+    margin-left: auto;
+  }
 }

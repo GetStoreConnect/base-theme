@@ -1,52 +1,71 @@
-import { init, formFieldElement, showError, submitData, loadScript } from './common';
-import { apiMode, apiKey } from './form';
-import { formElement } from "./common";
+import { init, formFieldElement, showError, submitData, loadScript } from './common'
+import { isProduction, apiKey } from './form'
+import { onDomChange } from '../../theme/utils/init'
 
-window.StoreConnect = window.StoreConnect || {};
-window.StoreConnect.Gateways = window.StoreConnect.Gateways || {};
+onDomChange((node) => {
+  const forms = node.querySelectorAll('form[data-provider*="AuthorizeNet"]')
+  forms.forEach((form) => {
+    const providerId = form.dataset.providerId
+    if (providerId) {
+      initAuthorizeNet({ form })
+    }
+  })
+})
 
-window.StoreConnect.Gateways.AuthorizeNet = function ({ providerId, zipCode }) {
-  init("AuthorizeNet", providerId, createToken);
+function initAuthorizeNet({ form }) {
+  const zipCode = form.dataset.zipCode
+
+  init(form, createToken)
 
   const authData = {
     apiLoginID: apiKey(),
-    clientKey: formElement().dataset.publicKey,
-  };
+    clientKey: form.dataset.publicKey,
+  }
 
   function createToken() {
-    const cardData = {
-      fullName: formFieldElement("card_name").value,
-      cardNumber: formFieldElement("card_number").value,
-      month: formFieldElement("card_month").value,
-      year: formFieldElement("card_year").value,
-      cardCode: formFieldElement("card_verification").value,
-      zip: zipCode
-    };
+    let secureData = { authData }
 
-    const secureData = {
-      authData: authData,
-      cardData: cardData
-    };
+    if (formFieldElement('card_name')) {
+      secureData.cardData = {
+        fullName: formFieldElement('card_name').value,
+        cardNumber: formFieldElement('card_number').value,
+        month: formFieldElement('card_month').value,
+        year: formFieldElement('card_year').value,
+        cardCode: formFieldElement('card_verification').value,
+        zip: zipCode,
+      }
+    }
 
-    Accept.dispatchData(secureData, createTokenCallback);
+    if (formFieldElement('ach_account_holder_type')) {
+      secureData.bankData = {
+        accountType: formFieldElement('ach_account_holder_type').value,
+        accountNumber: formFieldElement('ach_account_number').value,
+        routingNumber: formFieldElement('ach_routing_number').value,
+        nameOnAccount: formFieldElement('ach_account_name').value,
+        bankName: formFieldElement('ach_bank_name').value,
+        echeckType: 'WEB',
+      }
+    }
+
+    Accept.dispatchData(secureData, createTokenCallback)
   }
 
   function createTokenCallback(response) {
-    if (response.messages.resultCode === "Error") {
-      showError(response.messages.message.map(obj => obj.text).join("\n"))
+    if (response.messages.resultCode === 'Error') {
+      const error = response.messages.message.map((obj) => obj.text).join('\n')
+      showError(error)
     } else {
       const payload = {
         payment_source: {
-          tok_id: response.opaqueData['dataValue']
-        }
+          tok_id: response.opaqueData['dataValue'],
+        },
       }
-      submitData({ payload });
+      submitData({ payload })
     }
   }
 
-  let authorizeNetUrl = "https://js.authorize.net/v1/Accept.js";
-  if (apiMode() !== "production") {
-    authorizeNetUrl = "https://jstest.authorize.net/v1/Accept.js";
-  }
-  loadScript({ url: authorizeNetUrl });
+  const authorizeNetUrl = isProduction()
+    ? 'https://js.authorize.net/v1/Accept.js'
+    : 'https://jstest.authorize.net/v1/Accept.js'
+  loadScript({ url: authorizeNetUrl })
 }

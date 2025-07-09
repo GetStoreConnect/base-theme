@@ -13,39 +13,33 @@
   --sc-font-bold: 600;
 }
 
-
 /**
  * DEPRECATED - Use CSS custom props (above) directly
  */
 
 $font-settings: (
-
   // Family
-
   'family': (-apple-system, BlinkMacSystemFont, sans-serif),
-
-
   // Size
-
-  'size': (
-    'tiny':           14px,
-    'small':          15px,
-    'base':           16px,
-    'medium':         18px,
-    'large':          20px,
-    'xlarge':         24px,
-    'xxlarge':        30px,
-    'huge':           35px,
-    'gigantic':       45px,
-  ),
-
+  'size':
+    (
+      'tiny': 14px,
+      'small': 15px,
+      'base': 16px,
+      'medium': 18px,
+      'large': 20px,
+      'xlarge': 24px,
+      'xxlarge': 30px,
+      'huge': 35px,
+      'gigantic': 45px,
+    ),
 
   // Weight
-
-  'weight': (
-    'normal':         400,
-    'bold':           600,
-  )
+  'weight':
+    (
+      'normal': 400,
+      'bold': 600,
+    )
 ) !default;
 
 @if (map-has-key($core_override, 'font') == true) {

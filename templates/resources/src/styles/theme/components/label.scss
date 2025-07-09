@@ -1,4 +1,5 @@
-.SC-Label, .Label {
+.SC-Label,
+.Label {
   line-height: 1;
   display: inline-block;
   background-color: color('primary', $lighten: 45%);
@@ -7,7 +8,6 @@
   border-radius: var(--sc-border-radius);
   font-weight: var(--sc-font-normal);
   font-size: var(--sc-font-base);
-
 
   /**
    * Variants

@@ -11,7 +11,6 @@ export function setupFormTemplate(template) {
   return container.querySelector('form')
 }
 
-
 /* Near address search form */
 
 export async function initNearAddressForm(geolocation = null) {
@@ -19,14 +18,17 @@ export async function initNearAddressForm(geolocation = null) {
   const addressParam = params.get('address')
 
   setDistanceUnit()
-  setFormLatLng(geolocation)
+
   if (addressParam) {
     setFormAddress(addressParam)
     enableFormSubmit()
-  } else getAddressFromCoords(geolocation, address => {
-    setFormAddress(address)
-    enableFormSubmit()
-  })
+  } else
+    getAddressFromCoords(geolocation, (address) => {
+      setFormLatLng(geolocation)
+      setFormAddress(address)
+      handleAddressChange({ address: addressInput.value, geolocation })
+      enableFormSubmit()
+    })
 
   container.querySelector('form').addEventListener('submit', () => {
     startLoader(container)
@@ -34,39 +36,11 @@ export async function initNearAddressForm(geolocation = null) {
     clearLocationResults()
   })
 
-  addressInput.addEventListener('change', event => {
-    clearLocationMarkers()
-    clearLocationResults()
-    disableFormSubmit()
-
-    if (event.target.value) {
-      startLoader(container)
-      getLocationFromAddress(event.target.value, ({ latLng, formattedAddress }) => {
-        setFormLatLng(latLng)
-        setFormAddress(formattedAddress)
-        submitForm()
-      }).catch(error => {
-        stopLoader(container)
-        setFormError()
-      })
-    } else if (geolocation) {
-      const useGeoBtn = container.querySelector('[data-use-geoloc]')
-
-      useGeoBtn.classList.remove('sc-hide')
-      clearFormError()
-      clearLocationData()
-      getAddressFromCoords(geolocation, address => {
-        useGeoBtn.addEventListener('click', () => {
-          useGeoBtn.classList.add('sc-hide')
-          setFormAddress(address)
-          submit()
-        })
-      })
-    }
-    else setFormError()
+  addressInput.addEventListener('change', (event) => {
+    handleAddressChange({ address: event.target.value, geolocation })
   })
 
-  addressInput.addEventListener('input', event => {
+  addressInput.addEventListener('input', (event) => {
     const address = event.target.value
     const searched = event.target.getAttribute('searched-value')
 
@@ -76,7 +50,6 @@ export async function initNearAddressForm(geolocation = null) {
   })
 }
 
-
 /* Exact area search form */
 
 export function initExactAreaForm() {
@@ -84,7 +57,7 @@ export function initExactAreaForm() {
   const countrySelector = container.querySelector('[data-selector=country]')
 
   setupStateSelectors(country)
-  countrySelector.addEventListener('change', event => {
+  countrySelector.addEventListener('change', (event) => {
     setupStateSelectors(event.target.value)
   })
 }
@@ -97,7 +70,7 @@ function setupStateSelectors(country) {
   const stateSelectors = container.querySelectorAll('[data-selector=state]')
   const combinedSelector = container.querySelector('[data-combined-state-selector]')
 
-  stateSelectors.forEach(selector => {
+  stateSelectors.forEach((selector) => {
     resetFormSelection(selector)
     if (country === null) {
       // Show the combined state selector
@@ -114,7 +87,7 @@ function setupStateSelectors(country) {
 export function activateLocationCard(locationCard) {
   const locationCards = container.querySelectorAll('[data-location]')
 
-  locationCards.forEach(card => card.classList.remove('sc-outline'))
+  locationCards.forEach((card) => card.classList.remove('sc-outline'))
   locationCard.classList.add('sc-outline')
   scrollToLocationCard(card)
 }
@@ -134,7 +107,7 @@ function clearLocationResults() {
 
   if (cards.length === 0) return
   summary.innerText = summary.dataset.default
-  cards.forEach(card => card.classList.add('sc-hide'))
+  cards.forEach((card) => card.classList.add('sc-hide'))
 }
 
 function setFormLatLng(latLng = null) {
@@ -145,6 +118,36 @@ function setFormLatLng(latLng = null) {
 
 function setFormAddress(address) {
   container.querySelector('input[name=address]').value = address
+}
+
+function handleAddressChange({ address, geolocation }) {
+  disableFormSubmit()
+
+  if (address.length > 0) {
+    startLoader(container)
+    getLocationFromAddress(address, ({ latLng, formattedAddress }) => {
+      setFormLatLng(latLng)
+      setFormAddress(formattedAddress)
+      clearLocationMarkers()
+      clearLocationResults()
+      submitForm()
+    }).catch((error) => {
+      stopLoader(container)
+      setFormError()
+    })
+  } else if (geolocation) {
+    const useGeoBtn = container.querySelector('[data-use-geoloc]')
+
+    useGeoBtn.classList.remove('sc-hide')
+    clearFormError()
+    clearLocationData()
+    getAddressFromCoords(geolocation, (address) => {
+      useGeoBtn.addEventListener('click', () => {
+        useGeoBtn.classList.add('sc-hide')
+        handleAddressChange({ address, geolocation })
+      })
+    })
+  } else setFormError()
 }
 
 function setDistanceUnit() {
@@ -167,13 +170,14 @@ function resetSelectorLabel(selector) {
 }
 
 function resetSelections(selector) {
-  selector.querySelectorAll('[data-dropdown-option]:checked')
-    .forEach(option => option.checked = false)
+  selector
+    .querySelectorAll('[data-dropdown-option]:checked')
+    .forEach((option) => (option.checked = false))
 }
 
 function resetFormSelection(selector) {
   const selected = selector.querySelectorAll('[data-dropdown-option]:checked')
-  selected.forEach(option => option.checked = false)
+  selected.forEach((option) => (option.checked = false))
 }
 
 function clearLocationData() {
@@ -184,13 +188,13 @@ function clearLocationData() {
 }
 
 function setFormError() {
-  container.querySelector('[data-location-error]').classList.remove('sc-hide');
-  container.querySelector('input[name=address]').classList.add('has-error');
+  container.querySelector('[data-location-error]').classList.remove('sc-hide')
+  container.querySelector('input[name=address]').classList.add('has-error')
 }
 
 function clearFormError() {
-  container.querySelector('[data-location-error]').classList.add('sc-hide');
-  container.querySelector('input[name=address]').classList.remove('has-error');
+  container.querySelector('[data-location-error]').classList.add('sc-hide')
+  container.querySelector('input[name=address]').classList.remove('has-error')
 }
 
 function enableFormSubmit() {

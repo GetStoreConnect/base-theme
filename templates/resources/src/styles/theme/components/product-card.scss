@@ -4,43 +4,44 @@ $ProductCard: (
   'align-prices': true,
   'headline': (
     'weight': #{var(--sc-font-normal)},
-    'size': #{var(--sc-font-small)}
+    'size': #{var(--sc-font-small)},
   ),
   'price': (
     'size': #{var(--sc-font-small)},
-    'weight': #{var(--sc-font-bold)}
+    'weight': #{var(--sc-font-bold)},
   ),
   'points': (
     'size': #{var(--sc-font-small)},
-    'weight': #{var(--sc-font-bold)}
+    'weight': #{var(--sc-font-bold)},
   ),
   'subscription': (
     'size': #{var(--sc-font-tiny)},
-    'color': shade('dark')
+    'color': shade('dark'),
   ),
   'fulfilment': (
     'size': #{var(--sc-font-tiny)},
-    'color': shade('dark')
+    'color': shade('dark'),
   ),
   'restricted': (
     'size': #{var(--sc-font-tiny)},
-    'color': shade('dark')
-  )
+    'color': shade('dark'),
+  ),
 );
 
 @if (map-has-key($override, 'ProductCard') == true) {
   $ProductCard: map-extend($ProductCard, map-get($override, 'ProductCard'), true);
 }
 
-@function ProductCard($keys...) { @return deep-map-get($ProductCard, $keys...); }
+@function ProductCard($keys...) {
+  @return deep-map-get($ProductCard, $keys...);
+}
 
-
-.SC-ProductCard, .ProductCard {
+.SC-ProductCard,
+.ProductCard {
   position: relative;
   display: flex;
   flex-direction: column;
   height: 100%;
-
 
   /**
    * Image wrapper
@@ -49,7 +50,6 @@ $ProductCard: (
   &_image_wrapper {
     position: relative;
   }
-
 
   /**
    * Image link
@@ -64,11 +64,12 @@ $ProductCard: (
 
     @if ProductCard('image-aspect-ratio') != unset {
       @include aspect-ratio(
-        ProductCard('image-aspect-ratio','width'),
-        ProductCard('image-aspect-ratio','height')
+        ProductCard('image-aspect-ratio', 'width'),
+        ProductCard('image-aspect-ratio', 'height')
       );
 
-      img, svg {
+      img,
+      svg {
         position: absolute;
         left: 50%;
         top: 50%;
@@ -77,14 +78,13 @@ $ProductCard: (
         transform: translateY(-50%) translateX(-50%);
         height: auto;
       }
-
     } @else {
-      img, svg {
+      img,
+      svg {
         width: 100%;
       }
     }
   }
-
 
   /**
    * Headline
@@ -92,8 +92,8 @@ $ProductCard: (
 
   &_headline {
     display: flex;
-    font-size: ProductCard('headline','size');
-    font-weight: ProductCard('headline','weight');
+    font-size: ProductCard('headline', 'size');
+    font-weight: ProductCard('headline', 'weight');
     margin-bottom: 7px;
 
     @if ProductCard('align-headlines') == false {
@@ -104,9 +104,10 @@ $ProductCard: (
       flex-grow: 1;
     }
 
-    &:hover {color: currentColor;}
+    &:hover {
+      color: currentColor;
+    }
   }
-
 
   /**
    * Detail
@@ -118,115 +119,112 @@ $ProductCard: (
     }
   }
 
+  // Earn Points
 
-    // Earn Points
+  &_points {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background-color: rgba(255, 255, 255, 0.5);
+    padding: 1em;
+    text-align: right;
 
-    &_points {
-      position: absolute;
-      bottom: 0;
-      right: 0;
-      left: 0;
-      background-color: rgba(255, 255, 255, 0.5);
-      padding: 1em;
-      text-align: right;
+    &_earn {
+      font-weight: ProductCard('points', 'weight');
+      font-size: ProductCard('points', 'size');
+      display: inline-block;
 
-      &_earn {
-        font-weight: ProductCard('points', 'weight');
-        font-size: ProductCard('points', 'size');
+      &.is-original {
+        text-decoration: line-through;
+        font-weight: var(--sc-font-normal);
+        color: shade('dark');
         display: inline-block;
+      }
 
-        &.is-original {
-          text-decoration: line-through;
-          font-weight: var(--sc-font-normal);
-          color: shade('dark');
-          display: inline-block;
-        }
-
-        &.is-bonus {
-          color: color('bonus');
-          margin-right: spacing('micro');
-          display: inline-block;
-        }
+      &.is-bonus {
+        color: color('bonus');
+        margin-right: spacing('micro');
+        display: inline-block;
       }
     }
+  }
 
+  // Price
 
-    // Price
+  &_price {
+    margin-bottom: spacing('small');
+
+    &_item {
+      font-weight: ProductCard('price', 'weight');
+      font-size: ProductCard('price', 'size');
+      display: inline-block;
+
+      &.is-original {
+        text-decoration: line-through;
+        font-weight: var(--sc-font-normal);
+        color: shade('dark');
+        display: inline-block;
+      }
+
+      &.is-sale {
+        color: color('sale');
+        margin-right: spacing('micro');
+        display: inline-block;
+      }
+    }
+  }
+
+  // Points
+
+  &_points {
+    margin-bottom: spacing('small');
+
+    // Purchase Points
 
     &_price {
-      margin-bottom: spacing('small');
+      font-weight: ProductCard('points', 'weight');
+      font-size: ProductCard('points', 'size');
+      display: inline-block;
 
-      &_item {
-        font-weight: ProductCard('price','weight');
-        font-size: ProductCard('price','size');
+      &.is-original {
+        text-decoration: line-through;
+        font-weight: var(--sc-font-normal);
+        color: shade('dark');
         display: inline-block;
+      }
 
-        &.is-original {
-          text-decoration: line-through;
-          font-weight: var(--sc-font-normal);
-          color: shade('dark');
-          display: inline-block;
-        }
-
-        &.is-sale {
-          color: color('sale');
-          margin-right: spacing('micro');
-          display: inline-block;
-        }
+      &.is-sale {
+        color: color('sale');
+        margin-right: spacing('micro');
+        display: inline-block;
       }
     }
+  }
 
-    // Points
+  // Subscription details
 
-    &_points {
-      margin-bottom: spacing('small');
+  &_subscription {
+    line-height: 1;
+    font-size: ProductCard('subscription', 'size');
+    color: ProductCard('subscription', 'color');
+  }
 
-      // Purchase Points
+  // Fulfilment
 
-      &_price {
-        font-weight: ProductCard('points', 'weight');
-        font-size: ProductCard('points', 'size');
-        display: inline-block;
+  &_fulfilment {
+    line-height: 1;
+    font-size: ProductCard('fulfilment', 'size');
+    color: ProductCard('fulfilment', 'color');
+  }
 
-        &.is-original {
-          text-decoration: line-through;
-          font-weight: var(--sc-font-normal);
-          color: shade('dark');
-          display: inline-block;
-        }
+  // Restricted
 
-        &.is-sale {
-          color: color('sale');
-          margin-right: spacing('micro');
-          display: inline-block;
-        }
-      }
-    }
-
-    // Subscription details
-
-    &_subscription {
-      line-height: 1;
-      font-size: ProductCard('subscription','size');
-      color: ProductCard('subscription','color');
-    }
-
-    // Fulfilment
-
-    &_fulfilment {
-      line-height: 1;
-      font-size: ProductCard('fulfilment','size');
-      color: ProductCard('fulfilment','color');
-    }
-
-    // Restricted
-
-    &_restricted {
-      line-height: 1;
-      font-size: ProductCard('restricted', 'size');
-      color: ProductCard('restricted', 'color');
-    }
-
+  &_restricted {
+    line-height: 1;
+    font-size: ProductCard('restricted', 'size');
+    color: ProductCard('restricted', 'color');
+  }
 
   /**
    * Actions
@@ -237,23 +235,22 @@ $ProductCard: (
     min-height: 40px; // Height of button
   }
 
-
-   /**
+  /**
     * Tags
     */
 
-   &_tags {
-     display: flex;
-     position: absolute;
-     gap: var(--sc-spacing-tiny);
-     top: var(--sc-spacing-small);
-     left: var(--sc-spacing-small);
-   }
+  &_tags {
+    display: flex;
+    position: absolute;
+    gap: var(--sc-spacing-tiny);
+    top: var(--sc-spacing-small);
+    left: var(--sc-spacing-small);
+  }
 
-   &_tag {
-     background-color: var(--sc-color-primary);
-     color: white;
-     border-radius: var(--sc-border-radius);
-     padding: var(--sc-spacing-tiny) var(--sc-spacing-small);
-   }
+  &_tag {
+    background-color: var(--sc-color-primary);
+    color: white;
+    border-radius: var(--sc-border-radius);
+    padding: var(--sc-spacing-tiny) var(--sc-spacing-small);
+  }
 }

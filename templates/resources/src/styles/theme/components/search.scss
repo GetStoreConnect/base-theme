@@ -9,13 +9,19 @@ $Search: (
   'border': (
     'width': 1px,
     'color': (
-      'resting': shade($a: 0.1),
-      'focus': shade('light')
-    )
+      'resting':
+        shade(
+          $a: 0.1,
+        ),
+      'focus': shade('light'),
+    ),
   ),
   'icon': (
     'size': 15px,
-    'color': shade($a: 0.6)
+    'color':
+      shade(
+        $a: 0.6,
+      ),
   ),
   'button': (
     'bg': color('primary'),
@@ -24,20 +30,26 @@ $Search: (
     'border': (
       'width': 0,
       'color': (
-        'resting': shade($a: 0.1),
-        'hover': shade('light')
-      )
-    )
-  )
+        'resting':
+          shade(
+            $a: 0.1,
+          ),
+        'hover': shade('light'),
+      ),
+    ),
+  ),
 ) !default;
 
 @if (map-has-key($override, 'Search') == true) {
   $Search: map-extend($Search, map-get($override, 'Search'), true);
 }
 
-@function Search($keys...) { @return deep-map-get($Search, $keys...); }
+@function Search($keys...) {
+  @return deep-map-get($Search, $keys...);
+}
 
-.SC-Search, .Search {
+.SC-Search,
+.Search {
   position: relative;
   display: flex;
   width: 100%;
@@ -45,7 +57,6 @@ $Search: (
   @include medium-and-up {
     max-width: Search('width');
   }
-
 
   /**
    * Input
@@ -66,10 +77,9 @@ $Search: (
 
     @if Search('has_border') {
       border-style: solid;
-      border-width: Search('border','width');
-      @include set-state-prop('border-color', Search('border','color'));
+      border-width: Search('border', 'width');
+      @include set-state-prop('border-color', Search('border', 'color'));
     }
-
 
     // Truncate label unless focused
 
@@ -79,7 +89,6 @@ $Search: (
       white-space: nowrap;
     }
   }
-
 
   /**
    * Icon
@@ -91,12 +100,11 @@ $Search: (
       transform: translateY(-50%);
       top: 50%;
       left: spacing('base');
-      width: Search('icon','size');
-      height: Search('icon','size');
-      fill: Search('icon','color');
+      width: Search('icon', 'size');
+      height: Search('icon', 'size');
+      fill: Search('icon', 'color');
     }
   }
-
 
   /**
    * Button
@@ -114,12 +122,13 @@ $Search: (
       border-color: Search('button', 'border', 'color', 'resting');
       border-style: solid;
     }
-    padding: Search('button','padding');
-    background: Search('button','bg');
+    padding: Search('button', 'padding');
+    background: Search('button', 'bg');
     align-items: center;
-    color: Search('button','color');
+    color: Search('button', 'color');
 
-    &:hover, &:focus {
+    &:hover,
+    &:focus {
       background: darken-color('primary', 15%);
       @if Search('has_border') {
         border-color: Search('button', 'border', 'color', 'hover');

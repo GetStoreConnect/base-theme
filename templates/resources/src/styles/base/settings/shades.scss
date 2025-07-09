@@ -6,18 +6,22 @@
  */
 
 $shades: (
-  'darkest':      hsl(0, 0%, 10%), // Body text
-  'dark':         hsl(0, 0%, 30%), // Secondary text
-  'neutral':      hsl(0, 0%, 45%), // Subtle text
-  'light':        hsl(0, 0%, 70%),
-  'lighter':      hsl(0, 0%, 87%), // Subtle borders
-  'lightest':     hsl(0, 0%, 95%), // Offset background colour
+  'darkest': hsl(0, 0%, 10%),
+  // Body text
+  'dark': hsl(0, 0%, 30%),
+  // Secondary text
+  'neutral': hsl(0, 0%, 45%),
+  // Subtle text
+  'light': hsl(0, 0%, 70%),
+  'lighter': hsl(0, 0%, 87%),
+  // Subtle borders
+  'lightest': hsl(0, 0%, 95%),
+  // Offset background colour
 ) !default;
 
 @if (map-has-key($core_override, 'shades') == true) {
   $shades: map-extend($shades, map-get($core_override, 'shades'), true);
 }
-
 
 /**
  * Global CSS custom properties:
@@ -37,15 +41,13 @@ $shades: (
   }
 }
 
-
 /**
  * Usage:
  * shade('dark')
  * shade($a: 0.5)
  */
 
- @function shade($shade: false, $a: 1, $l: 0%) {
-
+@function shade($shade: false, $a: 1, $l: 0%) {
   // If a named shade is passed into the function
   // we return its value directly from the CSS
   // variable in salesforce_settings.scss

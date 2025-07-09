@@ -1,46 +1,56 @@
-import { init, formElement, loadScript, showError, submitData } from './common';
-import { callbackUrl } from './form';
+import { init, loadScript, showError, submitData } from './common'
+import { callbackUrl } from './form'
+import { onDomChange } from '../../theme/utils/init'
+import Rails from '@rails/ujs'
 
-window.StoreConnect = window.StoreConnect || {};
-window.StoreConnect.Gateways = window.StoreConnect.Gateways || {};
+onDomChange((node) => {
+  const forms = node.querySelectorAll('form[data-provider="Zippay"]')
+  forms.forEach((form) => {
+    const providerId = form.dataset.providerId
+    if (providerId) {
+      initZippay({ form, providerId })
+    }
+  })
+})
 
-window.StoreConnect.Gateways.initZippay = function ({providerId}) {
-  init("Zippay", providerId);
+function initZippay({ form, providerId }) {
+  init(form)
 
-  const zipCheckoutId = `#ZippayPayWithButton${providerId}`;
+  const payButtonId = `#ZippayPayWithButton${providerId}`
 
-  const zipCheckout = formElement().querySelector(zipCheckoutId);
-  zipCheckout.disabled = true;
+  const payButton = form.querySelector(payButtonId)
+  Rails.disableElement(payButton)
 
   loadScript({
-    url: "https://static.zipmoney.com.au/checkout/checkout-v1.min.js",
-    onload: function() {
-      zipCheckout.disabled = false;
+    url: 'https://static.zipmoney.com.au/checkout/checkout-v1.min.js',
+    onload: function () {
+      Rails.enableElement(payButton)
 
-      const checkoutUri = callbackUrl();
+      const checkoutUri = callbackUrl()
 
       const args = {
         checkoutUri,
         redirectUri: `${checkoutUri}&type=redirect`, // Required; but we are not handling this scenario ATM
-        onComplete: function(data) {
+        onComplete: function (data) {
           const payload = {
             payment_source: {
               tok_id: data.checkoutId,
               customer_id: data.customerId,
-              state: data.state
-            }
+              state: data.state,
+            },
           }
-          submitData({payload})
+          submitData({ payload })
         },
-        onError: function(error) {
+        onError: function (error) {
           if (error.detail.message) {
-            showError(error.detail.message);
+            showError(error.detail.message)
           } else {
-            showError(error.message);
+            showError(error.message)
           }
-        }
+          Rails.enableElement(payButton)
+        },
       }
-      Zip.Checkout.attachButton(zipCheckoutId, args);
-    }
-  });
+      Zip.Checkout.attachButton(payButtonId, args)
+    },
+  })
 }

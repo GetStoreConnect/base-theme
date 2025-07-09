@@ -2,7 +2,6 @@
   position: relative;
   margin-bottom: spacing('base');
 
-
   // Dates and Location dropdowns
 
   &_filters {
@@ -12,32 +11,33 @@
     box-sizing: border-box;
   }
 
-
   // List of dates and time slots
 
   &_availabilities {
     position: relative;
-    height: 300px;
-    overflow-y: scroll;
+    height: auto;
+    max-height: 300px;
+    overflow-y: auto;
     border-bottom: 1px solid shade($l: 85%);
 
     .sc-notice {
       height: 100%;
+      min-height: 100px;
       display: flex;
       align-items: center;
       justify-content: center;
       color: shade('neutral');
+      text-align: center;
+      padding: var(--sc-spacing-base);
     }
   }
 }
-
 
 /**
  * Date group
  */
 
 .SC-BookingDate {
-
   header {
     z-index: var(--sc-depth-neutral);
     position: sticky;
@@ -49,7 +49,6 @@
     background-color: white;
   }
 
-
   // List of time slots
 
   ul {
@@ -58,7 +57,6 @@
     padding: spacing('small') 0;
   }
 }
-
 
 /**
  * Time slot
@@ -71,7 +69,9 @@
   display: flex;
   margin-bottom: spacing('tiny');
 
-  input {display: none;}
+  input {
+    display: none;
+  }
 
   button {
     @include reset-button-styles;
@@ -83,9 +83,10 @@
     padding: spacing('medium') spacing('base');
     background-color: shade($l: 97%);
     border-radius: var(--sc-border-radius);
-    transition: 100ms box-shadow ease,
-                100ms background-color ease,
-                100ms color ease;
+    transition:
+      100ms box-shadow ease,
+      100ms background-color ease,
+      100ms color ease;
   }
 
   input:checked ~ button {
@@ -100,7 +101,6 @@
     color: shade($l: 65%);
   }
 }
-
 
 /**
  * Lite Picker (npm package used for date range picker)
@@ -137,11 +137,11 @@
     border-style: solid;
   }
 
-
   // Month
 
-  .month-item {width: 100%;}
-
+  .month-item {
+    width: 100%;
+  }
 
   // Day
 
@@ -187,7 +187,7 @@
         position: relative;
 
         &::after {
-          content: " ";
+          content: ' ';
           height: 4px;
           width: 4px;
           margin: 0 2px;
@@ -200,7 +200,6 @@
       }
     }
   }
-
 
   // Month header
 
@@ -217,7 +216,6 @@
     }
   }
 
-
   // Days of week
 
   .month-item-weekdays-row {
@@ -225,12 +223,17 @@
     font-size: var(--sc-font-tiny);
   }
 
-
   // Icons
 
-  .button-previous-month {transform: rotate(90deg);}
+  .button-previous-month {
+    transform: rotate(90deg);
+  }
 
-  .button-next-month {transform: rotate(-90deg);}
+  .button-next-month {
+    transform: rotate(-90deg);
+  }
 
-  svg {width: 12px;}
+  svg {
+    width: 12px;
+  }
 }

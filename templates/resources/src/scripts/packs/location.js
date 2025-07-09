@@ -1,4 +1,9 @@
-import { createMap, createLocationMarker, setNearBeacon, setFocusedMarker } from '../theme/location-map'
+import {
+  createMap,
+  createLocationMarker,
+  setNearBeacon,
+  setFocusedMarker,
+} from '../theme/location-map'
 import { getClientGeolocation } from '../theme/geolocation'
 import { startLoader, stopLoader } from '../theme/loader'
 import { setContainerToWindowHeight } from '../theme/utils/window'
@@ -8,7 +13,7 @@ const latLng = getLatLngFromMap()
 
 setContainerToWindowHeight(container)
 startLoader(container)
-getClientGeolocation(geolocation =>  {
+getClientGeolocation((geolocation) => {
   createMap(latLng, () => {
     const marker = createLocationMarker(latLng)
 
@@ -23,8 +28,10 @@ function getLatLngFromMap() {
   const lat = map.dataset.lat
   const lng = map.dataset.lng
 
-  return lat && lng ? {
-    lat: parseFloat(lat),
-    lng: parseFloat(lng),
-  } : null
+  return lat && lng
+    ? {
+        lat: parseFloat(lat),
+        lng: parseFloat(lng),
+      }
+    : null
 }

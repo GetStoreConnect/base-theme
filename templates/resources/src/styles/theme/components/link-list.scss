@@ -1,67 +1,71 @@
 $LinkList: (
-  'spacing':                spacing('base'),
+  'spacing': spacing('base'),
   'item': (
-    'spacing':              spacing('small')
+    'spacing': spacing('small'),
   ),
   'link': (
-    'size':                 inherit,
+    'size': inherit,
     'color': (
-      'resting':            color('primary'),
-      'hover':              color('primary')
-    )
+      'resting': color('primary'),
+      'hover': color('primary'),
+    ),
   ),
   'heading': (
-    'size':                 inherit,
-    'weight':               #{var(--sc-font-normal)},
-    'text-transform':       unset,
+    'size': inherit,
+    'weight': #{var(--sc-font-normal)},
+    'text-transform': unset,
     'color': (
-      'resting':            currentColor,
-      'hover':              color('primary')
-    )
+      'resting': currentColor,
+      'hover': color('primary'),
+    ),
   ),
-
 ) !default;
 
 @if (map-has-key($override, 'LinkList') == true) {
   $LinkList: map-extend($LinkList, map-get($override, 'LinkList'), true);
 }
 
-@function LinkList($keys...) { @return deep-map-get($LinkList, $keys...); }
+@function LinkList($keys...) {
+  @return deep-map-get($LinkList, $keys...);
+}
 
-
-.SC-LinkList, .LinkList {
+.SC-LinkList,
+.LinkList {
   @include reset-list-styles;
   display: flex;
   flex-direction: column;
 
   &_item {
     color: currentColor;
-    margin: 0 0 LinkList('item','spacing');
+    margin: 0 0 LinkList('item', 'spacing');
 
     .SC-LinkList-inline &,
     .LinkList-inline & {
-      margin: 0 (calc(#{LinkList('item','spacing')} * 3)) 0 0;
+      margin: 0 (calc(#{LinkList('item', 'spacing')} * 3)) 0 0;
     }
   }
 
   &_link {
     display: block;
-    font-size: LinkList('link','size');
-    color: LinkList('link','color','resting');
+    font-size: LinkList('link', 'size');
+    color: LinkList('link', 'color', 'resting');
 
-    &:hover {text-decoration: underline;}
+    &:hover {
+      text-decoration: underline;
+    }
   }
 
   &_heading {
     display: block;
-    font-size: LinkList('heading','size');
-    font-weight: LinkList('heading','weight');
-    color: LinkList('heading','color','resting');
-    text-transform: LinkList('heading','text-transform');
+    font-size: LinkList('heading', 'size');
+    font-weight: LinkList('heading', 'weight');
+    color: LinkList('heading', 'color', 'resting');
+    text-transform: LinkList('heading', 'text-transform');
 
-    &:hover {color: LinkList('heading','color','hover');}
+    &:hover {
+      color: LinkList('heading', 'color', 'hover');
+    }
   }
-
 
   /**
    * Modifier: Wrap
@@ -78,10 +82,11 @@ $LinkList: (
     }
   }
 
-
   /**
    * Modifier: Inline
    */
 
-  &-inline {flex-direction: row;}
+  &-inline {
+    flex-direction: row;
+  }
 }

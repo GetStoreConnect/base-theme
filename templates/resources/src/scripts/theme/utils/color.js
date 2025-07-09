@@ -8,19 +8,19 @@ function RGBToHSL(rgb) {
 
   for (let R in rgb) {
     let r = rgb[R]
-    if (r.indexOf('%') > -1) rgb[R] = Math.round(r.substr(0,r.length - 1) / 100 * 255)
+    if (r.indexOf('%') > -1) rgb[R] = Math.round((r.substr(0, r.length - 1) / 100) * 255)
   }
 
   let r = rgb[0] / 255,
-      g = rgb[1] / 255,
-      b = rgb[2] / 255
+    g = rgb[1] / 255,
+    b = rgb[2] / 255
 
-  let cmin = Math.min(r,g,b),
-      cmax = Math.max(r,g,b),
-      delta = cmax - cmin,
-      h = 0,
-      s = 0,
-      l = 0
+  let cmin = Math.min(r, g, b),
+    cmax = Math.max(r, g, b),
+    delta = cmax - cmin,
+    h = 0,
+    s = 0,
+    l = 0
 
   if (delta == 0) h = 0
   else if (cmax == r) h = ((g - b) / delta) % 6

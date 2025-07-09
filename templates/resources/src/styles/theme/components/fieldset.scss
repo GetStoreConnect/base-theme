@@ -1,11 +1,13 @@
-.SC-Fieldset, .Fieldset {
+.SC-Fieldset,
+.Fieldset {
   border: none;
   margin: 0;
   padding: 0;
   display: flex;
   flex-direction: column;
   gap: spacing('small');
-
+  container-type: inline-size;
+  container-name: fieldset;
 
   /**
    * Row
@@ -19,6 +21,8 @@
     margin-right: calc(-1 * var(--sc-spacing-tiny));
 
     & > .Field,
-    & > .SC-Field {padding: 0 spacing('tiny');}
+    & > .SC-Field {
+      padding: 0 spacing('tiny');
+    }
   }
 }

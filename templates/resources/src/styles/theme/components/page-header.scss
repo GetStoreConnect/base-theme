@@ -11,34 +11,46 @@ $PageHeader: (
     'underline': unset,
     'transform': unset,
     'size': unset,
-    'weight': unset
+    'weight': unset,
   ),
   'subheading': (
     'size': var(--sc-font-large),
-    'color': shade($a: 0.8)
+    'color':
+      shade(
+        $a: 0.8,
+      ),
   ),
   'summary': (
     'size': var(--sc-font-medium),
-    'color': shade($a: 0.6)
+    'color':
+      shade(
+        $a: 0.6,
+      ),
   ),
 
   // Variants
-  'expansive': (
-    'height': 280px,
-    'bg': shade($a: 0.1),
-    'color': white,
-    'overlay': rgba(0,0,0,0.7)
-  )
+  'expansive':
+    (
+      'height': 280px,
+      'bg':
+        shade(
+          $a: 0.1,
+        ),
+      'color': white,
+      'overlay': rgba(0, 0, 0, 0.7),
+    ),
 ) !default;
 
 @if (map-has-key($override, 'PageHeader') == true) {
   $PageHeader: map-extend($PageHeader, map-get($override, 'PageHeader'), true);
 }
 
-@function PageHeader($keys...) { @return deep-map-get($PageHeader, $keys...); }
+@function PageHeader($keys...) {
+  @return deep-map-get($PageHeader, $keys...);
+}
 
-
-.SC-PageHeader, .PageHeader {
+.SC-PageHeader,
+.PageHeader {
   position: relative;
   @include set('max-width', PageHeader('max-width'));
   @include set('text-align', PageHeader('alignment'));
@@ -48,7 +60,6 @@ $PageHeader: (
     margin-right: auto;
   }
 
-
   /**
    * Heading
    */
@@ -57,25 +68,24 @@ $PageHeader: (
     display: flex;
     flex-direction: column;
     position: relative;
-    @include set-adaptive-prop('font-size', PageHeader('heading','size'));
-    @include set('font-weight', PageHeader('heading','weight'));
-    @include set('text-transform', PageHeader('heading','transform'));
-    @include set('color', PageHeader('heading','color'));
+    @include set-adaptive-prop('font-size', PageHeader('heading', 'size'));
+    @include set('font-weight', PageHeader('heading', 'weight'));
+    @include set('text-transform', PageHeader('heading', 'transform'));
+    @include set('color', PageHeader('heading', 'color'));
     margin: 0;
 
-    @if PageHeader('heading','underline') != unset {
+    @if PageHeader('heading', 'underline') != unset {
       &:after {
         content: '';
         display: inline-block;
-        width: PageHeader('heading','underline','width');
-        height: PageHeader('heading','underline','height');
-        border-radius: PageHeader('heading','underline','height');
-        background: PageHeader('heading','underline', 'bg');
+        width: PageHeader('heading', 'underline', 'width');
+        height: PageHeader('heading', 'underline', 'height');
+        border-radius: PageHeader('heading', 'underline', 'height');
+        background: PageHeader('heading', 'underline', 'bg');
         margin: spacing('small') 0;
       }
     }
   }
-
 
   /**
    * Subheading
@@ -85,10 +95,9 @@ $PageHeader: (
     position: relative;
     z-index: var(--sc-depth-foreground);
     margin-top: spacing('small');
-    @include set('color', PageHeader('subheading','color'));
-    @include set-adaptive-prop('font-size', PageHeader('subheading','size'));
+    @include set('color', PageHeader('subheading', 'color'));
+    @include set-adaptive-prop('font-size', PageHeader('subheading', 'size'));
   }
-
 
   /**
    * Summary
@@ -101,10 +110,9 @@ $PageHeader: (
     }
     z-index: var(--sc-depth-foreground);
     margin-top: spacing('medium');
-    @include set('color', PageHeader('summary','color'));
-    @include set-adaptive-prop('font-size', PageHeader('summary','size'));
+    @include set('color', PageHeader('summary', 'color'));
+    @include set-adaptive-prop('font-size', PageHeader('summary', 'size'));
   }
-
 
   /**
    * Modifier
@@ -114,7 +122,9 @@ $PageHeader: (
     text-align: center;
 
     .SC-PageHeader_heading,
-    .PageHeader_heading {align-items: center;}
+    .PageHeader_heading {
+      align-items: center;
+    }
   }
 
   &-left {
@@ -126,7 +136,9 @@ $PageHeader: (
     @include up-to-small {
       text-align: center;
       .SC-PageHeader_heading,
-      .PageHeader_heading {align-items: center;}
+      .PageHeader_heading {
+        align-items: center;
+      }
     }
   }
 
@@ -138,17 +150,21 @@ $PageHeader: (
     align-items: center;
     justify-content: center;
     text-align: center;
-    @include set('color', PageHeader('expansive','color'));
-    @include set('background-color', PageHeader('expansive','bg'));
-    @include set('min-height', PageHeader('expansive','height'));
+    @include set('color', PageHeader('expansive', 'color'));
+    @include set('background-color', PageHeader('expansive', 'bg'));
+    @include set('min-height', PageHeader('expansive', 'height'));
 
-    .SC-PageHeader_heading, .SC-PageHeader_subheading,
-    .PageHeader_heading, .PageHeader_subheading {color: currentColor;}
+    .SC-PageHeader_heading,
+    .SC-PageHeader_subheading,
+    .PageHeader_heading,
+    .PageHeader_subheading {
+      color: currentColor;
+    }
 
     &:after {
       content: '';
       @include pin-all-sides(absolute);
-      @include set('background-color', PageHeader('expansive','overlay'));
+      @include set('background-color', PageHeader('expansive', 'overlay'));
     }
   }
 }

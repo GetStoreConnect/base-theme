@@ -1,4 +1,5 @@
-.SC-ProductListCard, .ProductListCard {
+.SC-ProductListCard,
+.ProductListCard {
   @include reset-button-styles;
   cursor: inherit;
   width: 100%;
@@ -8,7 +9,6 @@
   margin: 0;
   border-radius: var(--sc-border-radius);
   font-size: var(--sc-font-small);
-
 
   /**
    * Image
@@ -20,7 +20,6 @@
     font-size: 0;
   }
 
-
   /**
    * Detail
    */
@@ -28,7 +27,6 @@
   &_detail {
     align-self: center;
     flex-grow: 1;
-
 
     // Heading
 
@@ -38,14 +36,12 @@
       margin-bottom: spacing('tiny');
     }
 
-
     // Subheadline
 
     &_subheadline {
       color: shade('neutral');
     }
   }
-
 
   /**
    * Remove
@@ -54,7 +50,6 @@
   &_remove {
     align-self: center;
   }
-
 
   /**
    * Variants
@@ -73,6 +68,8 @@
   &-trigger {
     cursor: pointer;
 
-    &:hover {background-color: hsl(0,0%,95%);}
+    &:hover {
+      background-color: hsl(0, 0%, 95%);
+    }
   }
 }

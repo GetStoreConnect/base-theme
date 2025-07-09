@@ -1,17 +1,19 @@
 $Count: (
   'bg': color('primary'),
   'color': white,
-  'size': 22px
+  'size': 22px,
 ) !default;
 
 @if (map-has-key($override, 'Count') == true) {
   $Count: map-extend($Count, map-get($override, 'Count'), true);
 }
 
-@function Count($key) { @return map-get($Count, $key); }
+@function Count($key) {
+  @return map-get($Count, $key);
+}
 
-
-.SC-Count, .Count {
+.SC-Count,
+.Count {
   text-align: center;
   border-radius: 100%;
   flex-shrink: 0;

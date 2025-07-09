@@ -1,4 +1,5 @@
-.SC-ProductGallery, .ProductGallery {
+.SC-ProductGallery,
+.ProductGallery {
   @include pin-all-sides(fixed);
   z-index: depth('floating');
   background: white;
@@ -7,14 +8,12 @@
   text-align: center;
   transition: 0.2s ease opacity;
 
-
   // State: Active
 
   &.is-active {
     opacity: 1;
     pointer-events: auto;
   }
-
 
   /**
    * Image
@@ -33,7 +32,6 @@
     transform: translateY(-50%) translateX(-50%) scale(0.75);
     cursor: zoom-in;
 
-
     // State: Zoomed in
 
     &.is-zoomed {
@@ -41,18 +39,18 @@
       cursor: grab;
     }
 
-
     // State: Dragging
 
-    &.is-dragging {cursor: grabbing;}
+    &.is-dragging {
+      cursor: grabbing;
+    }
   }
-
 
   /**
    * Close button
    */
 
-   &_close {
+  &_close {
     @include reset-button-styles;
     font-size: 0;
     z-index: depth('floating');

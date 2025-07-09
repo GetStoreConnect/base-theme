@@ -1,32 +1,41 @@
-import { init, loadScript, showError, submitData, formElement } from './common'
-import { apiKey, currency, showWallets, totalPayable, apiMode } from './form';
+import { init, loadScript, showError, submitData } from './common'
+import { apiKey, currency, showWallets, totalPayable, isProduction } from './form'
+import { onDomChange } from '../../theme/utils/init'
+import { removeWalletsContainer } from './wallets'
 
-window.StoreConnect = window.StoreConnect || {}
-window.StoreConnect.Gateways = window.StoreConnect.Gateways || {}
+onDomChange((node) => {
+  const forms = node.querySelectorAll('form.sq-payment-form[data-provider="Square"]')
+  forms.forEach((form) => {
+    const providerId = form.dataset.providerId
+    if (providerId) {
+      initSquare({ form, providerId })
+    }
+  })
+})
 
-window.StoreConnect.Gateways.Square = async function ({
-  providerId,
-  firstname,
-  lastname,
-  email,
-  phone,
-  billingStreet,
-  billingCity,
-  billingCountry
-}) {
-  init("Square", providerId, createToken)
+async function initSquare({ form, providerId }) {
+  init(form, createToken)
 
-  let card;
-  let payments;
+  const firstname = form.dataset.contactFirstname
+  const lastname = form.dataset.contactLastname
+  const email = form.dataset.contactEmail
+  const phone = form.dataset.contactPhone
+  const billingStreet = form.dataset.billingStreet
+  const billingCity = form.dataset.billingCity
+  const billingCountry = form.dataset.billingCountry
+
+  let card
+  let payments
 
   async function tokenize(paymentMethod) {
     const tokenResult = await paymentMethod.tokenize()
+
     if (tokenResult.status === 'OK') {
       return tokenResult.token
+    } else if (tokenResult.status === 'Cancel') {
+      throw new Error('Payment cancelled')
     } else {
-      throw new Error(
-        `Tokenization errors: ${JSON.stringify(tokenResult.errors)}`
-      )
+      throw new Error(`Tokenization errors: ${JSON.stringify(tokenResult.errors)}`)
     }
   }
 
@@ -38,8 +47,8 @@ window.StoreConnect.Gateways.Square = async function ({
       const payload = {
         payment_source: {
           tok_id: tokId,
-          verification_token: verificationToken
-        }
+          verification_token: verificationToken,
+        },
       }
       submitData({ payload })
     } catch (e) {
@@ -67,26 +76,23 @@ window.StoreConnect.Gateways.Square = async function ({
       intent: 'CHARGE',
     }
 
-    const verificationResults = await payments.verifyBuyer(
-      token,
-      verificationDetails
-    )
+    const verificationResults = await payments.verifyBuyer(token, verificationDetails)
     return verificationResults.token
   }
 
-  var squareUrl = "https://web.squarecdn.com/v1/square.js"
-  if (apiMode() !== "production") {
-    squareUrl = "https://sandbox.web.squarecdn.com/v1/square.js"
-  }
+  const squareUrl = isProduction()
+    ? 'https://web.squarecdn.com/v1/square.js'
+    : 'https://sandbox.web.squarecdn.com/v1/square.js'
 
   loadScript({
-    url: squareUrl, onload: async function () {
+    url: squareUrl,
+    onload: async function () {
       if (!window.Square) {
         throw new Error('Square.js failed to load properly')
       }
 
       const applicationId = apiKey()
-      const locationId = formElement().dataset.locationId;
+      const locationId = form.dataset.locationId
       try {
         // in test environments we allow the Square client to be mocked
         if (window.mockSquare) {
@@ -124,7 +130,7 @@ window.StoreConnect.Gateways.Square = async function ({
           total: {
             amount: totalPayable(),
             label: 'Total',
-          }
+          },
         })
       }
 
@@ -136,77 +142,90 @@ window.StoreConnect.Gateways.Square = async function ({
       }
 
       if (showWallets()) {
+        // Initialize Google Pay and Apple Pay in parallel
+        const walletTasks = []
+
         // Google Pay
         const googlePayButtonId = `SquareGooglePaymentButton${providerId}`
         if (document.getElementById(googlePayButtonId)) {
           if (document.querySelector(`#${googlePayButtonId}`)) {
-            try {
-              const paymentRequest = buildPaymentRequest(payments)
-              const googlePay = await payments.googlePay(paymentRequest)
-              await googlePay.attach(`#${googlePayButtonId}`)
+            walletTasks.push(
+              (async () => {
+                try {
+                  const paymentRequest = buildPaymentRequest(payments)
+                  const googlePay = await payments.googlePay(paymentRequest)
+                  await googlePay.attach(`#${googlePayButtonId}`)
 
-              document
-                .getElementById(googlePayButtonId)
-                .addEventListener('click', async function (event) {
-                  event.preventDefault()
+                  document
+                    .getElementById(googlePayButtonId)
+                    .addEventListener('click', async function (event) {
+                      event.preventDefault()
 
-                  const tokId = await tokenize(googlePay)
-                  const verificationToken = await verifyBuyer(payments, tokId)
+                      const tokId = await tokenize(googlePay)
+                      const verificationToken = await verifyBuyer(payments, tokId)
 
-                  const payload = {
-                    payment_source: {
-                      tok_id: tokId,
-                      verification_token: verificationToken
-                    }
-                  }
-                  submitData({ payload })
-                })
-            } catch (e) {
-              console.error('Initializing Google Pay failed', e)
-              // There are a number of reason why Google Pay may not be supported
-              // (e.g. Browser Support, Device Support, Account). Therefore you should handle
-              // initialization failures, while still loading other applicable payment methods.
-            }
+                      const payload = {
+                        payment_source: {
+                          tok_id: tokId,
+                          verification_token: verificationToken,
+                        },
+                      }
+                      submitData({ payload })
+                    })
+                } catch (e) {
+                  console.error('Initializing Google Pay failed', e)
+                  // There are a number of reason why Google Pay may not be supported
+                  // (e.g. Browser Support, Device Support, Account). Therefore you should handle
+                  // initialization failures, while still loading other applicable payment methods.
+                }
+              })()
+            )
           }
         }
 
         // Apple Pay
         const userAgent = navigator.userAgent
-        const isSafari = userAgent.includes('Safari') && !userAgent.includes("Chrome")
+        const isSafari = userAgent.includes('Safari') && !userAgent.includes('Chrome')
         const applePayButton = document.getElementById(`SquareApplePaymentButton${providerId}`)
         if (applePayButton) {
           if (window.mockSquare || isSafari) {
-            try {
-              const applePay = await initializeApplePay(payments)
+            walletTasks.push(
+              (async () => {
+                try {
+                  const applePay = await initializeApplePay(payments)
 
-              applePayButton.addEventListener('click', async () => {
-                const tokenResult = await applePay.tokenize()
+                  applePayButton.addEventListener('click', async () => {
+                    const tokenResult = await applePay.tokenize()
 
-                const payload = {
-                  payment_source: {
-                    tok_id: tokenResult['token'],
-                  }
+                    const payload = {
+                      payment_source: {
+                        tok_id: tokenResult['token'],
+                      },
+                    }
+                    submitData({ payload })
+                  })
+                } catch (e) {
+                  console.error('Initializing Apple Pay failed', e)
+                  // There are a number of reason why Apple Pay may not be supported
+                  // (e.g. Browser Support, Device Support, Account). Therefore you should handle
+                  // initialization failures, while still loading other applicable payment methods.
+
+                  applePayButton.parentNode.removeChild(applePayButton)
                 }
-                submitData({ payload })
-              })
-            } catch (e) {
-              console.error('Initializing Apple Pay failed', e)
-              // There are a number of reason why Apple Pay may not be supported
-              // (e.g. Browser Support, Device Support, Account). Therefore you should handle
-              // initialization failures, while still loading other applicable payment methods.
-
-              applePayButton.parentNode.removeChild(applePayButton)
-            }
+              })()
+            )
           } else if (applePayButton) {
             applePayButton.parentNode.removeChild(applePayButton)
           }
         }
-      } else {
-        const container = document.getElementById(`SquareWalletsContainer${providerId}`)
-        if (container) {
-          container.remove();
+
+        // Execute all wallet initialization tasks in parallel
+        if (walletTasks.length > 0) {
+          await Promise.allSettled(walletTasks)
         }
+      } else {
+        removeWalletsContainer()
       }
-    }
+    },
   })
 }

@@ -1,10 +1,10 @@
-.SC-PricePicker, .PricePicker {
+.SC-PricePicker,
+.PricePicker {
   display: inline-flex;
   flex-shrink: 0;
   position: relative;
   min-width: 80px;
   white-space: nowrap;
-
 
   /**
    * Trigger
@@ -22,20 +22,22 @@
     border-radius: var(--sc-border-radius);
     background-color: white;
     border: 1px solid shade($l: 80%);
-    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 
     .PricePicker-large &,
     .SC-PricePicker-large & {
       padding: spacing('medium') spacing('base');
     }
 
-    &.is-hidden {display: none;}
-
+    &.is-hidden {
+      display: none;
+    }
 
     // Label
 
-    &_label {pointer-events: none;}
-
+    &_label {
+      pointer-events: none;
+    }
 
     // Icon
 
@@ -55,12 +57,11 @@
     }
   }
 
-
   /**
    * Input (hidden by default)
    */
 
-  &_input[type=number] {
+  &_input[type='number'] {
     border: none;
     display: none;
     height: auto;
@@ -72,12 +73,14 @@
     border: 1px solid shade($l: 80%);
     box-shadow: inset 0 1px 2px shade($a: 0.05);
 
-    &:focus, &:hover {
+    &:focus,
+    &:hover {
       background-color: white;
     }
 
-    &.is-active {display: block;}
-
+    &.is-active {
+      display: block;
+    }
 
     // Modifier: Large
 
@@ -86,7 +89,6 @@
       padding: calc(#{spacing('medium')} - 1px) calc(#{spacing('base')} - 1px);
     }
   }
-
 
   /**
    * Dropdown list of price options
@@ -107,11 +109,11 @@
     box-shadow: 0 5px 8px shade($a: 0.1);
     display: none;
 
-
     // State: Active
 
-    &.is-active {display: block;}
-
+    &.is-active {
+      display: block;
+    }
 
     // Price option
 
@@ -123,9 +125,12 @@
       text-align: left;
       padding: spacing('tiny') spacing('small');
 
-      & > span {pointer-events: none;}
+      & > span {
+        pointer-events: none;
+      }
 
-      &:hover, &:focus {
+      &:hover,
+      &:focus {
         background-color: shade($a: 0.1);
       }
 

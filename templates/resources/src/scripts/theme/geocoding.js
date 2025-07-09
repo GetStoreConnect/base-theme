@@ -2,20 +2,23 @@
 // coordinates. There does not appear to be a more reasonable
 // way to check if the API is enabled at present.
 export async function tryGeocoder(onSuccess, onError) {
-  const maps = await google.maps.importLibrary("maps")
-  const places = await google.maps.importLibrary("places")
+  const maps = await google.maps.importLibrary('maps')
+  const places = await google.maps.importLibrary('places')
 
-  new google.maps.Geocoder().geocode({
-    address: '123 Test Address'
-  }, (_results, status) => {
-    switch (status) {
-      case google.maps.GeocoderStatus.REQUEST_DENIED:
-        onError()
-        break
-      default:
-        onSuccess()
+  new google.maps.Geocoder().geocode(
+    {
+      address: '123 Test Address',
+    },
+    (_results, status) => {
+      switch (status) {
+        case google.maps.GeocoderStatus.REQUEST_DENIED:
+          onError()
+          break
+        default:
+          onSuccess()
+      }
     }
-  })
+  )
 }
 
 export async function getLocationFromAddress(address, onSuccess) {
@@ -26,7 +29,7 @@ export async function getLocationFromAddress(address, onSuccess) {
     latLng: {
       lat: data.results[0].geometry.location.lat(),
       lng: data.results[0].geometry.location.lng(),
-    }
+    },
   })
 }
 
@@ -42,6 +45,6 @@ export async function getAddressFromCoords(coords = null, onSuccess) {
 function getAddressFromLocationData(data) {
   if (!data) return
 
-  const location = data.results.find(d => d.types.length == 1 && d.types.includes('postal_code'))
+  const location = data.results.find((d) => d.types.length == 1 && d.types.includes('postal_code'))
   return location ? location.formatted_address : null
 }

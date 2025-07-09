@@ -1,93 +1,9 @@
-/**
- * Deprecated
- */
+.SC-CartItem,
+.SC-LineItem {
+  --sc-product-info-max-width: 400px;
 
-.SC-CartItem, .CartItem {
-  position: relative;
-  display: flex;
-  padding: spacing('small') 0;
-  border-bottom: 1px solid shade($a: 0.05);
-
-
-  /**
-   * Image
-   */
-
-  &_image {
-    font-size: 0;
-    flex-shrink: 0;
-    margin-right: spacing('base');
-    max-width: 80px;
-
-    img {max-width: 100%;}
-  }
-
-
-  /**
-   * Summary
-   */
-
-  &_summary {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--sc-spacing-small);
-    flex-grow: 1;
-    justify-content: space-between;
-    align-items: center;
-    @include medium-and-up {
-      gap: 0;
-    }
-
-
-    // Heading
-
-    &_heading {
-      width: 70%;
-      @include medium-and-up {
-        width: 240px;
-      }
-    }
-
-
-    // Action
-
-    &_action {
-      @include medium-and-up {
-        width: 40%;
-      }
-    }
-
-
-    // Unit
-
-    &_unit {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-grow: 1;
-      @include medium-and-up {
-        width: 300px;
-      }
-
-      &_qty {
-        display: flex;
-        flex-direction: column;
-        color: shade('dark');
-        @include medium-and-up {
-          flex-direction: row;
-          align-items: center;
-        }
-
-        [data-booking-expired-message] {
-          display: none;
-        }
-      }
-
-      &_total {
-        font-weight: var(--sc-font-normal);
-        text-align: right;
-      }
-    }
+  [data-booking-expired-message] {
+    display: none;
   }
 
   &.expired {
@@ -101,14 +17,4 @@
       display: none;
     }
   }
-}
-
-
-/**
- * Temporary: Should find a better home and selector
- */
-
-.SC-Menu.dropdown[data-nav=cart],
-.Menu.dropdown[data-nav=cart] {
-  padding: spacing('medium');
 }

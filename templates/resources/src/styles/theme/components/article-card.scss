@@ -1,10 +1,10 @@
-.SC-ArticleCard, .ArticleCard {
+.SC-ArticleCard,
+.ArticleCard {
   display: block;
 
   &:hover {
     color: currentColor;
   }
-
 
   /**
    * Image
@@ -17,9 +17,10 @@
     font-size: 0;
     margin-bottom: var(--sc-spacing-medium);
 
-    img {width: 100%;}
+    img {
+      width: 100%;
+    }
   }
-
 
   /**
    * Heading
@@ -33,7 +34,6 @@
       font-size: var(--sc-font-medium);
     }
   }
-
 
   /**
    * Date

@@ -3,7 +3,6 @@
  */
 
 @function hsl-var($identifier, $hsl_value: false) {
-
   @if $hsl_value {
     $identifier_css_variable: var(#{'--sc-color-' + $identifier + $hsl_value});
 
@@ -14,4 +13,4 @@
       @return false;
     }
   }
-};
+}

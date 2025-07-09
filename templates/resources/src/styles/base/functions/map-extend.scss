@@ -10,7 +10,7 @@
 //   @default false
 //   @desc Whether or not to enable recursive mode.
 // @return merged map
-@function map-extend($map, $maps.../*, $deep */) {
+@function map-extend($map, $maps... /*, $deep */) {
   $last: nth($maps, -1);
   $deep: $last == true;
   $max: if($deep, length($maps) - 1, length($maps));
@@ -26,15 +26,19 @@
     } @else {
       // If in deep mode, loop through all tuples in current map
       @each $key, $value in $current {
-
         // If value is a nested map and same key from map is a nested map as well
-        @if type-of($value) == "map" and type-of(map-get($map, $key)) == "map" {
+        @if type-of($value) == 'map' and type-of(map-get($map, $key)) == 'map' {
           // Recursive extend
           $value: map-extend(map-get($map, $key), $value, true);
         }
 
         // Merge current tuple with map
-        $map: map-merge($map, ($key: $value));
+        $map: map-merge(
+          $map,
+          (
+            $key: $value,
+          )
+        );
       }
     }
   }

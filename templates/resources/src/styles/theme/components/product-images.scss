@@ -1,23 +1,30 @@
 $ProductImages: (
   'max-image-width': none,
-  'thumbnail-width': 100px
+  'thumbnail-width': 100px,
 ) !default;
 
 @if (map-has-key($override, 'ProductImages') == true) {
   $ProductImages: map-extend($ProductImages, map-get($override, 'ProductImages'), true);
 }
 
-@function ProductImages($key) { @return map-get($ProductImages, $key); }
+@function ProductImages($key) {
+  @return map-get($ProductImages, $key);
+}
 
-
-.SC-ProductImages, .ProductImages {
+.SC-ProductImages,
+.ProductImages {
   height: 100%;
   display: flex;
   flex-direction: column;
-  @include small-and-up {flex-direction: row-reverse;}
-  @include medium-and-up {flex-direction: column;}
-  @include xlarge-and-up {flex-direction: row-reverse;}
-
+  @include small-and-up {
+    flex-direction: row-reverse;
+  }
+  @include medium-and-up {
+    flex-direction: column;
+  }
+  @include xlarge-and-up {
+    flex-direction: row-reverse;
+  }
 
   /**
    * Main image
@@ -31,12 +38,12 @@ $ProductImages: (
     align-items: flex-start;
     justify-content: center;
 
-    img, svg {
+    img,
+    svg {
       width: 100%;
       max-width: ProductImages('max-image-width');
     }
   }
-
 
   /**
    * List of thumbnails
@@ -53,7 +60,6 @@ $ProductImages: (
     }
   }
 
-
   /**
    * TODO: Handle overflow
    */
@@ -64,10 +70,15 @@ $ProductImages: (
     font-size: 0;
     margin: spacing('small') 0 0;
     @include ListOfThumbnails('x');
-    @include small-and-up  {@include ListOfThumbnails('y')}
-    @include medium-and-up  {@include ListOfThumbnails('x')}
-    @include xlarge-and-up {@include ListOfThumbnails('y')}
-
+    @include small-and-up {
+      @include ListOfThumbnails('y');
+    }
+    @include medium-and-up {
+      @include ListOfThumbnails('x');
+    }
+    @include xlarge-and-up {
+      @include ListOfThumbnails('y');
+    }
 
     // Track (with scroll)
 
@@ -91,12 +102,17 @@ $ProductImages: (
       display: flex;
       align-items: center;
       @include thumbnailScroller('x');
-      @include small-and-up  {@include thumbnailScroller('y')}
-      @include medium-and-up  {@include thumbnailScroller('x')}
-      @include xlarge-and-up {@include thumbnailScroller('y')}
+      @include small-and-up {
+        @include thumbnailScroller('y');
+      }
+      @include medium-and-up {
+        @include thumbnailScroller('x');
+      }
+      @include xlarge-and-up {
+        @include thumbnailScroller('y');
+      }
     }
   }
-
 
   /**
    * Thumbnail
@@ -121,6 +137,9 @@ $ProductImages: (
       margin: 0 0 spacing('small');
     }
 
-    &.is-active, &:hover {opacity: 1;}
+    &.is-active,
+    &:hover {
+      opacity: 1;
+    }
   }
 }

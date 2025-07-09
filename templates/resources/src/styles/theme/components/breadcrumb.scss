@@ -3,33 +3,35 @@ $Breadcrumb: (
   'spacing': 0,
   'font-size': (
     'mobile': var(--sc-font-small),
-    'desktop': var(--sc-font-base)
+    'desktop': var(--sc-font-base),
   ),
   'color': (
     'resting': shade('neutral'),
-    'hover': color('primary')
+    'hover': color('primary'),
   ),
   'border': (
-    'width': 0
+    'width': 0,
   ),
   'hover': (
     'color': color('primary'),
   ),
   'divider': (
-    'symbol': "/",
+    'symbol': '/',
     'color': currentColor,
     'spacing': spacing('tiny'),
-  )
+  ),
 ) !default;
 
 @if (map-has-key($override, 'Breadcrumb') == true) {
   $Breadcrumb: map-extend($Breadcrumb, map-get($override, 'Breadcrumb'), true);
 }
 
-@function Breadcrumb($keys...) { @return deep-map-get($Breadcrumb, $keys...); }
+@function Breadcrumb($keys...) {
+  @return deep-map-get($Breadcrumb, $keys...);
+}
 
-
-.SC-Breadcrumb, .Breadcrumb {
+.SC-Breadcrumb,
+.Breadcrumb {
   display: if(Breadcrumb('hide-on-mobile'), none, flex);
   flex-wrap: wrap;
   align-items: center;
@@ -44,7 +46,6 @@ $Breadcrumb: (
     display: flex;
   }
 
-
   /**
    * Item
    */
@@ -52,7 +53,6 @@ $Breadcrumb: (
   &_item {
     display: flex;
     align-items: center;
-
 
     // Divider
 
@@ -62,9 +62,10 @@ $Breadcrumb: (
       color: Breadcrumb('divider', 'color');
     }
 
-    &:last-child:after {display: none;}
+    &:last-child:after {
+      display: none;
+    }
   }
-
 
   /**
    * Link
@@ -73,6 +74,9 @@ $Breadcrumb: (
   a {
     color: Breadcrumb('color', 'resting');
 
-    &:hover, &:focus {color: Breadcrumb('color', 'hover');}
+    &:hover,
+    &:focus {
+      color: Breadcrumb('color', 'hover');
+    }
   }
 }

@@ -1,19 +1,30 @@
-import AdyenCheckout from '@adyen/adyen-web';
-import '@adyen/adyen-web/dist/adyen.css';
-import { init, submitData } from './common';
-import { apiMode } from './form';
-import { formElement } from "./common";
+import AdyenCheckout from '@adyen/adyen-web'
+import '@adyen/adyen-web/dist/adyen.css'
+import { init, submitData } from './common'
+import { isProduction } from './form'
+import { onDomChange } from '../../theme/utils/init'
 
-window.StoreConnect = window.StoreConnect || {};
-window.StoreConnect.Gateways = window.StoreConnect.Gateways || {};
+onDomChange((node) => {
+  const forms = node.querySelectorAll('form[data-provider="AdyenAch"]')
+  forms.forEach((form) => {
+    const providerId = form.dataset.providerId
+    if (providerId) {
+      initAdyenAch({ form, providerId })
+    }
+  })
+})
 
-window.StoreConnect.Gateways.AdyenAch = function ({ providerId, clientOpts }) {
-  init('AdyenAch', providerId, onSubmit);
+function initAdyenAch({ form, providerId }) {
+  init(form, onSubmit)
 
-  const mountElementId = `AdyenAchFieldset${providerId}`;
+  const environment = isProduction() ? 'live' : 'test'
+  const clientKey = form.dataset.apiClient
+  const clientOpts = form.dataset.clientOpts ? JSON.parse(form.dataset.clientOpts) : {}
 
-  let data;
-  let card;
+  const mountElementId = `AdyenAchFieldset${providerId}`
+
+  let data
+  let card
 
   function handleOnChange(state, component) {
     if (state.isValid) {
@@ -23,36 +34,35 @@ window.StoreConnect.Gateways.AdyenAch = function ({ providerId, clientOpts }) {
     }
   }
 
-  const clientKey = formElement().dataset.apiClient;
-  const environment = apiMode() === 'production' ? 'live' : 'test';
-
   const configuration = {
     environment,
     clientKey,
-    locale: "en_US",
-    onChange: handleOnChange
-  };
+    locale: 'en_US',
+    onChange: handleOnChange,
+  }
 
   async function initializeAdyenAchForm() {
     const checkout = await AdyenCheckout(configuration)
-    card = checkout.create("ach", {
-      ...clientOpts,
-      billingAddressRequired: false,
-      onChange: handleOnChange
-    }).mount(`#${mountElementId}`);
+    card = checkout
+      .create('ach', {
+        ...clientOpts,
+        billingAddressRequired: false,
+        onChange: handleOnChange,
+      })
+      .mount(`#${mountElementId}`)
   }
 
   function onSubmit() {
     const payload = {
       payment: {
         provider_id: providerId,
-        method: "Adyen"
+        method: 'Adyen',
       },
-      payment_source: data.paymentMethod
-    };
+      payment_source: data.paymentMethod,
+    }
 
-    submitData({ payload });
-  };
+    submitData({ payload })
+  }
 
-  initializeAdyenAchForm();
+  initializeAdyenAchForm()
 }
