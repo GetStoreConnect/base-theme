@@ -66,6 +66,7 @@ accounts.menu.orders,Orders
 accounts.menu.product_approvals,Product approvals
 accounts.menu.profile,Account
 accounts.menu.shipping,Shipping Address
+accounts.menu.fulfillments,Deliveries
 accounts.menu.subscriptions,Subscriptions
 accounts.not_authorized.heading,Not Authorized
 accounts.not_authorized.message,You are not authorized to access this page.
@@ -84,11 +85,26 @@ accounts.orders.bookings.attendees.save,Save
 accounts.orders.bookings.attendees_required_notice,Your booking has been received. Please also make sure to submit the attendee details below.
 accounts.orders.bookings.heading,Bookings
 accounts.orders.delivery.heading,Delivery Preferences
+accounts.orders.fulfillments.heading,Deliveries
+accounts.orders.fulfillments.status.enum.unknown,Unknown
+accounts.orders.fulfillments.status.enum.pre_transit,Pre-transit
+accounts.orders.fulfillments.status.enum.in_transit,In transit
+accounts.orders.fulfillments.status.enum.out_for_delivery,Out for delivery
+accounts.orders.fulfillments.status.enum.delivered,Delivered
+accounts.orders.fulfillments.status.enum.failure,Failure
+accounts.orders.fulfillments.status.enum.cancelled,Cancelled
+accounts.orders.fulfillments.status.enum.error,Error
+accounts.orders.fulfillments.status.enum.pending,Pending
+accounts.orders.fulfillments.status.enum.info_received,Info received
+accounts.orders.fulfillments.status.enum.failed_attempt,Failed attempt
+accounts.orders.fulfillments.status.enum.available_for_pickup,Available for pickup
+accounts.orders.fulfillments.status.enum.exception,Exception
 accounts.orders.index.currency_and_points_connector,and
 accounts.orders.index.date,Date
 accounts.orders.index.heading,Orders
 accounts.orders.index.items,Items
 accounts.orders.index.no_orders,No orders
+accounts.orders.index.pending_renewal,Pending Renewal
 accounts.orders.index.reference,Reference
 accounts.orders.index.reorder,Reorder
 accounts.orders.index.status,Status
@@ -99,6 +115,10 @@ accounts.orders.payments.shared.currency_and_points_connector,and
 accounts.orders.payments.shared.status.enum.failed,Failed
 accounts.orders.payments.shared.status.enum.pending,Pending
 accounts.orders.payments.shared.status.enum.success,Success
+accounts.orders.payments.shared.status.enum.preauthorized,Preauthorized
+accounts.orders.payments.shared.status.enum.confirm_preauthorization,Confirming Preauthorization
+accounts.orders.payments.shared.status.enum.cancel_preauthorization,Cancelling Preauthorization
+accounts.orders.payments.shared.status.enum.released,Released
 accounts.orders.shared.status.enum.activated,Complete
 accounts.orders.shared.status.enum.draft,Draft
 accounts.orders.show.collection_point.click_and_collect,Click & Collect
@@ -191,6 +211,11 @@ accounts.profile.sections.product_approvals.no_product_approvals,No Product Appr
 accounts.profile.sections.product_approvals.view_all,View all
 accounts.profile.sections.shipping.edit,Edit
 accounts.profile.sections.shipping.heading,Shipping Address
+accounts.profile.sections.fulfillments.heading,Deliveries
+accounts.profile.sections.fulfillments.view_all,View all
+accounts.profile.sections.fulfillments.count.one,1 delivery
+accounts.profile.sections.fulfillments.count.zero,No deliveries
+accounts.profile.sections.fulfillments.count.other,%{count} deliveries
 accounts.profile.sections.subscriptions.count.one,1 order
 accounts.profile.sections.subscriptions.count.other,%{count} active subscriptions
 accounts.profile.sections.subscriptions.heading,Subscriptions
@@ -220,16 +245,35 @@ accounts.shared.address_form.city,City
 accounts.shared.address_form.country,Country
 accounts.shared.address_form.state,State
 accounts.shared.address_form.zip_code,Zip code
+accounts.fulfillments.index.heading,Deliveries
+accounts.fulfillments.index.reference,Reference
+accounts.fulfillments.index.order,Order
+accounts.fulfillments.index.tracking_code,Tracking Code
+accounts.fulfillments.index.tracking_status,Tracking Status
+accounts.fulfillments.index.items,Items
+accounts.fulfillments.index.items_count.count.one,1 item
+accounts.fulfillments.index.items_count.count.zero,No items
+accounts.fulfillments.index.items_count.count.other,%{count} items
+accounts.fulfillments.index.no_fulfillments,No deliveries
+accounts.fulfillments.index.view,View
+accounts.fulfillments.show.heading,Delivery: %{tracking_code}
+accounts.fulfillments.show.tracking_code,Tracking Code: %{tracking_code}
+accounts.fulfillments.show.tracking_status,Status: %{tracking_status}
+accounts.fulfillments.show.tracking_last_updated_at,Last updated at: %{last_updated_at}
+accounts.fulfillments.show.order.heading,Order
+accounts.fulfillments.show.items.heading,Items
 accounts.shipping.heading,Shipping Address
 accounts.shipping.path,shipping
 accounts.shipping.update,Update your shipping address
 accounts.subscriptions.index.heading,Subscriptions
 accounts.subscriptions.index.next_due,Next Due
+accounts.subscriptions.index.no_renewal_order,none
 accounts.subscriptions.index.no_subscriptions,No Subscriptions
 accounts.subscriptions.index.order,Order
 accounts.subscriptions.index.price,Price
 accounts.subscriptions.index.product,Product
 accounts.subscriptions.index.renewal_date,Renewal Date
+accounts.subscriptions.index.renewal_order,Renewal Order
 accounts.subscriptions.index.status,Status
 accounts.subscriptions.index.view,View
 accounts.subscriptions.show.amount,Amount
@@ -280,6 +324,8 @@ auth.login.sso.enum.entra_id,via Entra
 auth.login.sso.enum.experience_cloud,via our Portal
 auth.login.sso.enum.google,via Google
 auth.login.sso.enum.keycloak_openid,via Keycloak OpenID
+auth.login.sso.enum.openid,via OpenID
+auth.login.sso.enum.saml,via our Portal
 auth.login.sso.enum.singlekey_id,via SingleKey ID
 auth.login.sso.reset_password,Reset
 auth.login.sso.sign_in,Sign in
@@ -378,6 +424,15 @@ checkout.gateways.form.notices.processing,Processing
 checkout.gateways.form.pay_now,Pay Now
 checkout.gateways.form.verification,CVC
 checkout.gateways.form.verification_placeholder,123
+checkout.gateways.form.account_type,Account type
+checkout.gateways.form.account_types.checking,Checking
+checkout.gateways.form.account_types.savings,Savings
+checkout.gateways.form.account_number,Account number
+checkout.gateways.form.account_number_placeholder,0000 0000 0000 0000
+checkout.gateways.form.name_on_account,Name on account
+checkout.gateways.form.routing_number,Routing number
+checkout.gateways.form.routing_number_placeholder,0000 00000
+checkout.gateways.form.bank_name,Bank name
 checkout.gateways.free_form.no_payment_required,No payment required
 checkout.gateways.pay_by_account_form.account_on_credit_hold,"Account is on credit hold, please contact us for information."
 checkout.gateways.pay_by_account_form.enter_purchase_order_number,Enter Purchase Order Number
@@ -401,6 +456,8 @@ checkout.gateways.stripe_ach_form.pay_now,Authorize Now
 checkout.gateways.stripe_ach_form.routing_number,Routing Number
 checkout.payment.error,"Sorry, an error occurred while trying to process the payment. Please try again later."
 checkout.payment.header,Payment
+checkout.payment.provider_misconfigured,"Sorry, but there seems to be a problem with the selected payment provider. Please contact support."
+checkout.payment.processing,Processing...
 checkout.points.insufficient_balance,You do not have enough points to complete this order
 checkout.points.requires_login,You must be logged in to pay with points
 checkout.promo_codes.apply,Apply
@@ -431,6 +488,7 @@ checkout.vouchers.remove,Remove
 custom_forms.click_to_enter_your_answer,Click here to enter your answer
 custom_forms.no_option_selected,No option selected
 custom_forms.select_option,Select option...
+custom_forms.submission_successful,The form has been successfully submitted
 deliveries.days.enum.friday,Friday
 deliveries.days.enum.monday,Monday
 deliveries.days.enum.saturday,Saturday
@@ -456,9 +514,9 @@ header.menu.account,Account
 header.menu.close,Close
 header.search.placeholder,Search for products or content
 header.submenu.back_to_main,Back to main menu
-line_items.links.edit_bundle,Edit bundle
-line_items.links.remove_item,Remove
-line_items.quantity,Qty %{quantity}
+cart_items.links.edit_bundle,Edit bundle
+cart_items.links.remove_item,Remove
+cart_items.quantity,Qty %{quantity}
 location.menu.email,Email
 location.menu.phone,Call
 location.menu.website,Website
@@ -573,7 +631,6 @@ products.pricing.deposit,Deposit %{amount}
 products.pricing.free,FREE
 products.pricing.free_in_bundle,Free in bundle
 products.pricing.from,From %{price}
-products.pricing.not_purchasable,Not purchasable
 products.pricing.original_price,Was %{amount}
 products.pricing.subscription_price,%{amount}
 products.pricing.subscription_term,Every %{timespan}
@@ -623,6 +680,7 @@ sc.accounts.orders.bookings.attendees.update.errors.fail,There was an error upda
 sc.accounts.orders.bookings.attendees.update.notices.success,Attendee details were updated
 sc.accounts.orders.bookings.attendees.validation.email_format,Email address is invalid
 sc.accounts.orders.bookings.attendees.validation.email_or_phone_required,Either an email or phone number must be provided
+sc.accounts.orders.bookings.attendees.validation.phone_too_long,Phone number is too long
 sc.accounts.profile.update.errors.fail,There was an unexpected error updating your details. Please contact support for assistance.
 sc.accounts.profile.update.errors.invalid,There was an error updating your details
 sc.accounts.profile.update.notices.success,Your details were successfully updated
@@ -635,6 +693,7 @@ sc.accounts.subscriptions.cancel.errors.not_allowed,That subscription cannot be 
 sc.accounts.subscriptions.cancel.notices.success,Subscription has been cancelled
 sc.accounts.subscriptions.update_payment_details.errors.fail,Updating payment details failed
 sc.accounts.subscriptions.update_payment_details.notices.success,Payment details updated
+sc.additional_payments.errors.renewal_order_not_permitted,You cannot make payments for renewal orders
 sc.article.errors.not_found,That article was not found.
 sc.article.errors.requires_membership,You do not have the required membership level to access this article. Requires: %{membership_required}.
 sc.article_category.errors.not_found,That article category was not found.
@@ -705,6 +764,12 @@ sc.auth.sso.incorrect_provider,"Could not authenticate, account is already linke
 sc.auth.sso.keycloak_openid.fail,Could not authenticate you from Keycloak OpenID because: %{reason}
 sc.auth.sso.keycloak_openid.success,Successfully authenticated from your Keycloak OpenID account.
 sc.auth.sso.keycloak_openid.support,"There was a problem processing your registration, please contact support."
+sc.auth.sso.openid.fail,Could not authenticate you from OpenID because: %{reason}
+sc.auth.sso.openid.success,Successfully authenticated from your OpenID account.
+sc.auth.sso.openid.support,"There was a problem processing your registration, please contact support."
+sc.auth.sso.saml.fail,Could not authenticate you from the portal because: %{reason}
+sc.auth.sso.saml.success,Successfully authenticated from your account.
+sc.auth.sso.saml.support,"There was a problem processing your registration, please contact support."
 sc.auth.sso.singlekey_id.fail,Could not authenticate you from SingleKey ID because: %{reason}
 sc.auth.sso.singlekey_id.success,Successfully authenticated from your SingleKey ID account.
 sc.auth.sso.singlekey_id.support,"There was a problem processing your registration, please contact support."
@@ -741,6 +806,7 @@ sc.checkout.payment.create.errors.card_declined,Payment failed. That card was de
 sc.checkout.payment.create.errors.card_expired,"Payment failed. That card has expired, or the expiration date is incorrect."
 sc.checkout.payment.create.errors.card_invalid,"Payment failed. That card is not valid, please check all fields are correct."
 sc.checkout.payment.create.errors.card_not_supported,Payment failed. That card type is not supported.
+sc.checkout.payment.create.errors.contact_missing,Payment failed. Please ensure you have provided a required contact details.
 sc.checkout.payment.create.errors.general,"Sorry, an error occurred while trying to process the payment. Please try again later."
 sc.checkout.payment.create.errors.license_error,Live payments disabled for Sandbox StoreConnect licenses
 sc.checkout.payment.create.errors.no_cart_found,"We could not find your cart, perhaps it expired. No payment has been taken."
@@ -762,6 +828,8 @@ sc.checkout.shipping.errors.no_longer_available,"The selected shipping service i
 sc.checkout.shipping.errors.shipping_method_not_selected,Please select a shipping method.
 sc.checkout.shipping.errors.some_items_not_shippable,Some of the items can not be shipped via the selected shipping method.
 sc.checkout.shipping.errors.tax_provider_offline,Tax provider offline. Please try again in a few minutes.
+sc.checkout.shipping.cart_item_name.custom,Shipping: %{label}
+sc.checkout.shipping.cart_item_name.provider,Shipping: %{provider}: %{label}
 sc.checkout.terms_and_conditions.errors.must_accept,Please accept the terms to continue
 sc.checkout.express.shipping.click_and_collect,%{location}. Collection point is %{point}.
 sc.errors.buy_button.add.fail,We were unable to add some or all of those items to your cart
@@ -1243,6 +1311,7 @@ sc.promo_codes.apply.errors.no_longer_valid,Promo code was removed as it is no l
 sc.promo_codes.apply.errors.unexpected,The promotion could not be added to your cart
 sc.promo_codes.apply.notices.success,Promo code applied!
 sc.quotations.errors.not_enabled,Quotations are not enabled for this Store
+sc.request.verification_failed,Your session has expired or an unexpected error occurred. Please try again.
 sc.salesforce_payments.errors.incomplete_billing_address,The Order is missing a Billing Address.
 sc.shared.breadcrumbs.home,Home
 sc.shared.maintenance,Maintenance is being performed. Please try again later.
@@ -1308,6 +1377,10 @@ shared.sort.sort_relevance,Relevance
 shared.variable_pricing_picker.label,Price
 shared.variable_pricing_picker.other_amount,Other Amount
 shared.variable_pricing_picker.placeholder,Amount...
+shipments.errors.provider_not_enabled,%{provider} shipping provider is not configured or not active
+shipments.errors.not_ready_to_ship,Shipment is not ready to ship
+shipments.errors.provider_shipment_id_is_shipping_rate,Provider Shipment ID references a custom Shipping Rate
+shipments.errors.invalid_shipment,Shipment data is currently invalid and no changes are allowed
 subscriptions.term_units.day,day
 subscriptions.term_units.days,%{number} days
 subscriptions.term_units.fortnight,fortnight
