@@ -1,6 +1,6 @@
 # Base Theme
 
-**version: StoreConnect v19**
+**Version: StoreConnect v20**
 
 The StoreConnect Base theme is a clean and simple boilerplate ready for use. This starter theme is the default theme used in every StoreConnect installation.
 
@@ -16,9 +16,7 @@ The Base Theme can help you with any of the following customizations:
 - Creating and inserting new and reusable templates
 - Finding specific templates, snippets, variables, or translation keys that you need to override in your StoreConnect app
 
-We currently provide liquid templates to generate front-end components such as pages, content block templates, snippets, and components. Most pages are liquidify, meaning that you can access their page templates.
-
-However, there are some exceptions such as product and category pages. On such cases, you can still access product cards, notices bars, and various sections that can be modified. You can even insert custom content blocks using the StoreConnect interface. You can learn more about how to customize your store in this [article](https://help.getstoreconnect.com/documentation/how-to-customise-the-design-of-your-store.html).
+We currently provide liquid templates to generate front-end components such as pages, content block templates, snippets, and components. Most pages are liquidify, meaning that you can access their page templates. You can also insert custom content blocks using the StoreConnect interface. You can learn more about how to customize your store in this [article](https://help.getstoreconnect.com/documentation/how-to-customise-the-design-of-your-store.html).
 
 One important point to note is that you don't need to upload the entire base theme if you have modified or added any of the pages, templates, or snippets. You can simply override them directly into a new theme in your StoreConnect app.
 
@@ -36,6 +34,12 @@ Templates control the content you see on your Store. They define the HTML layout
 
 Snippets are reusable templates that you can load from any other template. For example, you may have a header that you want to use on each page.
 
+### Resources
+
+You now have access to all JavaScript resources provided by the base theme. These can be customized by working within the resources directory. For guidance on how to effectively use these theme resources, refer to our Wiki and [documentation](https://github.com/GetStoreConnect/base-theme/wiki/Theme-resources).
+
+⚠️ **Important:** Only modify theme resources if you're confident in what you're doing. Our team does not provide support for custom modifications beyond the official documentation available in our repositories and support site.
+
 ### Locales
 
 A Locale defines a set of translations for a given language. You can create a Locale for each language your theme needs to support.
@@ -47,6 +51,10 @@ Variables are key-value pairs that you can use to provide configuration options 
 ### Assets
 
 Stores your CSS and JS assets.
+
+### Controllers
+
+Theme controllers give you full flexibility to design and manage how user data is handled within your theme. Learn more about Liquid controllers [here](https://support.getstoreconnect.com/article/Liquid-Controllers).
 
 ## Getting Started
 
@@ -60,9 +68,9 @@ If you have chosen the first option, you can follow the theme reference instruct
 Following the point #2 you will need to upload your theme using theme installer.
 
 - Compress it to a zip file
-- Upload it via the theme importer
+- Upload it via the [theme importer](https://support.getstoreconnect.com/article/Theme-Importer)
 - Preview your theme
 
 The theme installer is located in your Salesforce org, where you need to upload this theme as a zip file as mentioned above.
 
-**Compatible with StoreConnect Liquid 0.11.3 and up**
+**Compatible with StoreConnect Liquid 1.1.3 and up**
