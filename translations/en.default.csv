@@ -1230,7 +1230,7 @@ sc.products.add_to_cart.notices.added_to_cart,%{name} added to your cart
 sc.products.add_to_cart.notices.updated_line_price,The amount has been updated for: %{name}
 sc.products.default_text.add_bundle_to_cart,Add bundle to cart
 sc.products.default_text.add_to_cart,Add to cart
-sc.products.default_text.buy_it_now,Buy it Now
+sc.products.default_text.buy_now,Buy Now
 sc.products.default_text.hide_price,POA
 sc.products.default_text.out_of_stock,Out of stock
 sc.products.default_text.unavailable,Unavailable
