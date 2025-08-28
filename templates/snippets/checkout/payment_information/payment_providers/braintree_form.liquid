@@ -7,7 +7,7 @@
   {%- assign total_subscriptions = current_order.total_subscriptions %}
 {%- endif %}
 
-{%- if total_subscriptions == 0 %}
+{%- if total_subscriptions == 0 and current_subscription == blank %}
   <div id="{{ provider }}WalletsContainer{{ provider_id }}" class="sc-mb"></div>
 {%- endif %}
 

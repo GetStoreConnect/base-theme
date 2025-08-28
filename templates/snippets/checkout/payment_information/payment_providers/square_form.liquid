@@ -1,6 +1,7 @@
 {%- assign provider_id = payment_provider.id %}
 {%- assign provider = payment_provider.code %}
 {%- assign button_id = provider | append: "PaymentButton" | append: provider_id %}
+{%- assign payment_error_id = provider | append: "PaymentError" | append: provider_id %}
 
 <style>
    .square-apple-pay-button {
@@ -28,7 +29,7 @@
   <!-- Square Google Pay form -->
   {%- form "payment", provider: payment_provider,
               id: "SquareGooglePaymentForm{{ provider_id }}",
-              class: "SC-Panel" %}
+              class: "SC-Panel SC-GooglePay" %}
     <button type="submit" id="SquareGooglePaymentButton{{ provider_id }}"></button>
   {%- endform %}
 </div>
@@ -38,10 +39,8 @@
 
   {{ payment_provider.description_content }}
 
-  <div id="{{ provider }}ScriptBlock{{ provider_id }}"></div>
-  <div id="{{ provider }}PaymentFields{{ provider_id }}"></div>
-  <div id="{{ provider }}PaymentStatus{{ provider_id }}"></div>
-  <div id="{{ provider }}PaymentError{{ provider_id }}" class="SC-Field SC-Alert sc-hide"></div>
+  {% render "checkout/payment_information/payment_providers/square/form",
+          form: form, payment_provider: payment_provider  %}
 
   <input type="submit"
     id="{{ button_id }}"
@@ -51,6 +50,9 @@
     data-payment-info-submit />
 
   {% render "checkout/payment_information/additional_info", form: form %}
+
+  <div id="{{ payment_error_id }}" class="SC-Field SC-Alert sc-mt-small sc-hide"></div>
 {%- endform %}
+
 
 {%- require 'scripts/gateways/square.js' %}

@@ -1,0 +1,16 @@
+{%- assign provider_id = payment_provider.id %}
+{%- assign provider = payment_provider.code %}
+{%- assign button_id = provider | append: "PaymentButton" | append: provider_id %}
+{%- assign payment_error_id = provider | append: "PaymentError" | append: provider_id %}
+
+{% render "checkout/payment_information/payment_providers/square/form",
+        form: form, payment_provider: payment_provider  %}
+
+<input id="{{ button_id }}" type="submit" class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small"
+  data-disable-with="{{ 'checkout.payment.processing' | t }}"
+  data-payment-info-submit
+  value="{{ "accounts.subscriptions.show.submit_update_button_label" | t }}" />
+
+<div id="{{ payment_error_id }}" class="SC-Field SC-Alert sc-hide"></div>
+
+{%- require 'scripts/gateways/square.js' %}

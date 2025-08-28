@@ -81,7 +81,7 @@
 
         {%# Original Price %}
         <div>
-          {%- if pricing.on_sale? and current_store.display_currency? and pricing.can_purchase_with_currency? %}
+          {%- if current_store.display_currency? and pricing.can_purchase_with_currency? and pricing.has_sale_price? %}
             {%# Currency %}
             <span class="sc-color-sale sc-font-{% if large %}base{% else %}tiny{% endif %}" data-original-price>
               {%- capture price %}{{ pricing.original_price | money }}{%- endcapture %}
@@ -89,12 +89,12 @@
             </span>
           {%- endif %}
 
-          {%- if pricing.points_sale? and current_store.display_points? and pricing.can_purchase_with_points? %}
+          {%- if current_store.display_points? and pricing.can_purchase_with_points? and pricing.has_sale_points? %}
             {%- if current_store.display_points? and pricing.can_purchase_with_points? %}
               {% default both_on_sale: nil %}
 
               {%# Or %}
-              {%- if pricing.on_sale? and current_store.display_currency? and pricing.can_purchase_with_currency? %}
+              {%- if current_store.display_currency? and pricing.can_purchase_with_currency? and pricing.has_sale_price? %}
                 {% assign both_on_sale = true %}
                 {{ "pricing.currency_or_points_connector" | t }}
               {%- elsif pricing.variable_pricing? %}

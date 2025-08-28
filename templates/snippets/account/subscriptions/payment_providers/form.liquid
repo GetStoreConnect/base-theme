@@ -10,6 +10,8 @@
     {% render "account/subscriptions/payment_providers/forms/eway", form: form, payment_provider: payment_provider, order: order %}
   {%- when "ewayv2" %}
     {% render "account/subscriptions/payment_providers/forms/eway_v2", form: form, payment_provider: payment_provider, order: order %}
+  {%- when "square" %}
+    {% render "account/subscriptions/payment_providers/forms/square", form: form, payment_provider: payment_provider, order: order %}
   {%- when "stripe" %}
     {% render "account/subscriptions/payment_providers/forms/stripe", form: form, payment_provider: payment_provider, order: order %}
   {%- when "westpaconlinepay" %}

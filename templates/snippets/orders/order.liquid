@@ -132,11 +132,11 @@
   {%- comment %} Custom Form Answers {% endcomment %}
   {%- if order.custom_forms.size > 0 %}
     {%- capture form_answers %}
-      {%- render "custom_forms/answered_forms", custom_forms: order.custom_forms %}
+      {%- render "custom_forms/answered_forms", custom_forms: order.custom_forms, style_class: "sc-mt-base sc-mb-base" %}
     {%- endcapture %}
     {%- assign form_answers = form_answers | strip %}
     {%- unless form_answers == "" or form_answers == blank %}
-      <section class="Panel">
+      <section class="SC-Panel">
         <header class="SC-Panel_header SC-Panel_header-border">
           <h3 class="SC-Panel_header_heading">
             {{ "accounts.orders.show.custom_forms" | t }}

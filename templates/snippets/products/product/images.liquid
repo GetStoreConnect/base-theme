@@ -21,6 +21,9 @@ assign main_medium = media.first
     <div class="SC-ProductImages_main" data-product-image-container>
       <img data-product-image class="sc-hide">
       <video data-product-video class="sc-hide" controls style="width: 100%;"><source></video>
+      <div class="sc-responsive-iframe">
+        <iframe data-product-video-iframe class="sc-hide" frameborder=0 webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+      </div>
     </div>
   {% else %}
     {%# Placeholder %}
@@ -35,14 +38,26 @@ assign main_medium = media.first
       <div class="SC-ProductImages_thumbnails_track" data-product-thumbnails>
         {% for medium in media %}
           {% if medium.video? %}
-            <video
-                id="thumbnail-{{ medium.id }}"
-                class="SC-ProductImages_thumbnail"
-                class="SC-ProductImages_thumbnail"
-                data-product-thumbnail="{{ medium.id }}"
-                data-src="{{ medium.url }}">
-              <source src="{{ medium.url }}">
-            </video>
+            {% assign video = medium.video %}
+            {% if video.type == "youtube" or video.type == "vimeo" %}
+              <img
+                  src="{{ video.thumb_url }}"
+                  id="thumbnail-{{ video.id }}"
+                  alt="{{ product.name }}"
+                  class="SC-ProductImages_thumbnail"
+                  data-target-type="video-iframe"
+                  data-product-thumbnail="{{ video.id }}"
+                  data-src="{{ video.embed_url }}">
+            {% else %}
+              <video
+                  id="thumbnail-{{ medium.id }}"
+                  class="SC-ProductImages_thumbnail"
+                  class="SC-ProductImages_thumbnail"
+                  data-product-thumbnail="{{ medium.id }}"
+                  data-src="{{ medium.url }}">
+                <source src="{{ medium.url }}">
+              </video>
+            {% endif %}
           {% else %}
             {% assign image = medium.image %}
             <img
