@@ -1,0 +1,69 @@
+{%- liquid 
+    assign alignment = content_block.alignment | default: 'left'
+    assign count = content_block.product_categories.size | default: 0
+
+    case alignment
+      when "left"
+        assign alignment = "sc-align-items-left"
+      when "center"
+        assign alignment = "sc-align-items-center"
+      when "right"
+        assign alignment =  "sc-align-items-end"
+    endcase
+
+    assign products = ''
+    new List products_list
+
+    assign unique_ids = ''
+    new List unique_products
+
+    for product_category in content_block.product_categories
+      paginate product_category.products by 25
+        for product in product_category.products
+          assign products = product
+          assign products_list = products_list | push: products
+        endfor
+        capture pagination
+          render 'shared/pagination-nav', paginate: paginate
+        endcapture
+      endpaginate 
+    endfor 
+-%}
+
+<section class="SC-ContentBlock SC-FeaturedCategoryProducts sc-expand sc-me-large sc-md:me-xlarge"
+         id="SC-ContentBlock-{{ content_block.identifier }}">
+
+  {%- if content_block.title != blank or content_block.subtitle %}
+    <div class="SC-FeaturedCategoryProducts_header sc-mb-small sc-flex-col{% if alignment != blank %} {{ alignment }}{% endif %}">
+      {%- if content_block.title != blank %}
+        <h2 class="sc-font-xxlarge sc-font-bold sc-m-none">{{ content_block.title }}</h2>
+      {%- endif %}
+      {%- if content_block.subtitle != blank %}
+        <p class="sc-font-large">{{ content_block.subtitle }}</p>
+      {%- endif %}
+    </div>
+  {%- endif %}
+
+  <div class="SC-FeaturedCategoryProducts_wrapper">
+    <div class="SC-FeaturedCategoryProducts_grid">
+      {%- for product in products_list %}
+        {%- unless unique_products contains product.id %}
+          {%- assign unique_ids = product.id %}
+          {%- assign unique_products = unique_products | push: unique_ids %}
+            <div class="SC-FeaturedCategoryProducts_grid_item">
+              {% render "products/card", product: product %}
+            </div>
+        {%- endunless %}
+      {%- endfor %}
+    </div>
+    <div class="sc-container sc-mt-large">
+      {{ pagination }}
+    </div>
+  </div>
+
+  <div class="SC-FeaturedCategoryProducts_footer sc-flex sc-justify-center sc-mt-base">
+    <a class="sc-button sc-button-outline" href="{{ content_block.link_target }}">
+      <span>{{ content_block.link_label }}</span>
+    </a>
+  </div>
+</section>
