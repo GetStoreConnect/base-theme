@@ -1,5 +1,4 @@
-import { init, prepareSubmit, showError, submitData, submitElement } from './common'
-import { apiKey, callbackUrl, currency } from './form'
+import { PaymentForm } from './payment-form'
 import { loadScript } from '@paypal/paypal-js'
 import { onDomChange } from '../../theme/utils/init'
 
@@ -14,27 +13,29 @@ onDomChange((node) => {
 })
 
 function initPaypal({ form, providerId }) {
-  init(form, null, setPayButton)
+  const paymentForm = new PaymentForm(form, {
+    setPayButtonCallback: (payButton, enabled) => setPayButton(payButton, enabled, paymentForm),
+  })
 
-  function setPayButton(payButton, enabled) {
+  function setPayButton(payButton, enabled, paymentForm) {
     if (payButton) {
       if (enabled) {
         payButton.classList.add('sc-hide')
-        submitElement().classList.remove('sc-hide')
+        paymentForm.submitElement().classList.remove('sc-hide')
       } else {
         payButton.classList.remove('sc-hide')
-        submitElement().classList.add('sc-hide')
+        paymentForm.submitElement().classList.add('sc-hide')
       }
     }
   }
 
-  loadScript({ clientId: apiKey(), currency: currency() })
+  loadScript({ clientId: paymentForm.apiKey(), currency: paymentForm.currency() })
     .then((paypal) => {
       paypal
         .Buttons({
           style: { layout: 'horizontal' },
           createOrder: function () {
-            const SETEC_URL = callbackUrl()
+            const SETEC_URL = paymentForm.callbackUrl()
 
             return fetch(SETEC_URL, {
               method: 'post',
@@ -47,24 +48,24 @@ function initPaypal({ form, providerId }) {
               })
               .then(function (data) {
                 if (data.message) {
-                  showError(data.message)
+                  paymentForm.showError(data.message)
                 }
                 return data.id
               })
           },
           onApprove: function (data, _actions) {
-            prepareSubmit(() => {
+            paymentForm.prepareSubmit(() => {
               const payload = {
                 payment_source: {
                   tok_id: data.orderID,
                 },
               }
-              submitData({ payload })
+              paymentForm.submitData({ payload })
             })
           },
           onError: function (err) {
             // false is passed to showError not to replace existing error message if any
-            showError(err, { replace: false })
+            paymentForm.showError(err, { replace: false })
           },
         })
         .render(`#paypal-button-container${providerId}`)

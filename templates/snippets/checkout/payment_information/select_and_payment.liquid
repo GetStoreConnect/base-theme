@@ -1,4 +1,11 @@
 {% assign valid_providers = current_store.payment_providers | where: "valid_payment_method?" %}
+
+{% default only_recurring_payments: false %}
+{% default subscription: current_subscription %}
+{% if only_recurring_payments %}
+  {% assign valid_providers = valid_providers | where: "supports_recurring_payments?" %}
+{% endif %}
+
 {% assign first_provider = valid_providers | first %}
 {% assign multiple_providers = false %}
 
@@ -8,8 +15,8 @@
 
 {%- require "scripts/payments.js" %}
 
-<section id="select-and-payment" data-tabs="payment" class="sc-mb" style="max-width: 600px" data-currency-payment>
-  {%# if current_store.payment_providers has 2+ items then show a menu %}
+<section id="select-and-payment" data-tabs="payment" class="sc-mb" style="max-width: 600px" data-currency-payment{% if subscription and subscription.payment_provider %} data-default-payment-provider="{{ subscription.payment_provider.id }}"{% endif %}>
+  {%# if valid_providers has 2+ items then show a menu %}
   {% if multiple_providers %}
     <menu class="sc-flex-wrap sc-mb">
       {%- for payment_provider in valid_providers %}

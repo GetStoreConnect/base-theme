@@ -24,7 +24,7 @@
 
 <div id="{{ script_block_id }}"></div>
 
-{%- if total_subscriptions == 0 %}
+{%- if total_subscriptions == 0 and current_subscription == blank %}
   <div id="{{ wallets_container_id }}" class="SC-Fieldset">
     <div data-ref="wallet-buttons" class="SC-Field sc-flex-col-unless-wide sc-flex-equal-width"></div>
     <div data-ref="wallet-error" class="SC-Field SC-Alert sc-hide"></div>

@@ -4,21 +4,22 @@
 
 .SC-PrivacyBanner {
   @include container-padding;
-  z-index: var(--sc-depth-foreground);
-  position: sticky;
-  top: 120px;
+  z-index: var(--sc-depth-overlay);
+  position: fixed;
+  bottom: 0;
   left: 0;
   right: 0;
   display: flex;
   flex-direction: column;
   gap: spacing('base');
-  align-items: center;
+  align-items: flex-start;
   padding-top: spacing('base');
   padding-bottom: spacing('base');
   background-color: white;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 -1px 8px hsla(0, 0%, 0%, 0.1);
 
   @include medium-and-up {
+    align-items: center;
     flex-direction: row;
   }
 
@@ -26,6 +27,10 @@
 
   &_markdown {
     flex-grow: 1;
+    font-size: var(--sc-font-tiny);
+    @include medium-and-up {
+      font-size: var(--sc-font-base);
+    }
 
     p:last-of-type {
       margin-bottom: 0;
@@ -38,7 +43,11 @@
     display: flex;
     gap: spacing('small');
     flex-shrink: 0;
-    align-items: center;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    @include medium-and-up {
+      align-items: center;
+    }
 
     button,
     input[type='submit'] {
@@ -48,6 +57,11 @@
       padding: spacing('small') spacing('base');
       background-color: color('secondary');
       color: white;
+      font-size: var(--sc-font-tiny);
+
+      @include medium-and-up {
+        font-size: var(--sc-font-base);
+      }
     }
   }
 }

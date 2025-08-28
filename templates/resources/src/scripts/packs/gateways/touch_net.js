@@ -1,5 +1,4 @@
-import { init, setPayButton, showError } from './common'
-import { addFormInput, callbackUrl, cacheFormParamsAndOnSubmit } from './form'
+import { PaymentForm } from './payment-form'
 import { onDomChange } from '../../theme/utils/init'
 import fetchWithResponseHandler from '../../theme/utils/fetch'
 
@@ -14,28 +13,30 @@ onDomChange((node) => {
 })
 
 function initTouchNet({ form }) {
-  init(form, (form) => cacheFormParamsAndOnSubmit(() => form.submit()))
+  const paymentForm = new PaymentForm(form, {
+    onSubmit: () => paymentForm.cacheFormParamsAndOnSubmit(() => paymentForm.form.submit()),
+  })
 
   // Generate a unique "ticket" token for the TouchNet payment
   // Also receive the ticket_name (order number) to be used in the form
-  fetchWithResponseHandler(callbackUrl(), {
+  fetchWithResponseHandler(paymentForm.callbackUrl(), {
     method: 'post',
     headers: { 'content-type': 'application/json' },
   }).then((response) => {
     if (response.message) {
-      showError(response.message)
-      setPayButton(false)
+      paymentForm.showError(response.message)
+      paymentForm.setPayButton(false)
       return
     }
 
-    initializeTouchNetForm({ form, response })
+    initializeTouchNetForm({ paymentForm, response })
   })
 }
 
-function initializeTouchNetForm({ form, response }) {
-  addFormInput({ form, name: 'TICKET', value: response.token.ticket })
-  addFormInput({ form, name: 'TICKET_NAME', value: response.token.ticket_name })
-  addFormInput({ form, name: 'UPAY_SITE_ID', value: form.dataset.upaySiteId })
+function initializeTouchNetForm({ paymentForm, response }) {
+  paymentForm.addHiddenField({ name: 'TICKET', value: response.token.ticket })
+  paymentForm.addHiddenField({ name: 'TICKET_NAME', value: response.token.ticket_name })
+  paymentForm.addHiddenField({ name: 'UPAY_SITE_ID', value: paymentForm.form.dataset.upaySiteId })
 
-  setPayButton(true)
+  paymentForm.setPayButton(true)
 }

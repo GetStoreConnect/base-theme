@@ -1,5 +1,4 @@
-import { init, loadScript, showError, setPayButton, submitData } from './common'
-import { apiKey, isProduction } from './form'
+import { PaymentForm } from './payment-form'
 import { onDomChange } from '../../theme/utils/init'
 
 onDomChange((node) => {
@@ -33,11 +32,10 @@ function defaultInputStyles() {
 }
 
 function initSecurePay({ form, providerId }) {
-  var mySecurePayUI
-
-  init(form, function () {
-    mySecurePayUI.tokenise()
+  const paymentForm = new PaymentForm(form, {
+    onSubmit: () => mySecurePayUI.tokenise(),
   })
+  var mySecurePayUI
 
   // Get inputStyles from the data attribute, if available
   const inputStyles = form.dataset.inputStyles
@@ -46,17 +44,17 @@ function initSecurePay({ form, providerId }) {
 
   const scriptId = `SecurePayScript${providerId}`
 
-  var securepayUiUrl = isProduction()
+  var securepayUiUrl = paymentForm.isProduction()
     ? 'https://payments.auspost.net.au/v3/ui/client/securepay-ui.min.js'
     : 'https://payments-stest.npe.auspost.zone/v3/ui/client/securepay-ui.min.js'
 
-  loadScript({
+  paymentForm.loadScript({
     url: securepayUiUrl,
     id: scriptId,
     onload: function () {
       const merchantCode = form.dataset.merchantCode
 
-      setPayButton(false)
+      paymentForm.setPayButton(false)
 
       function tokeniseSuccessful(tokenisedCard) {
         const payload = {
@@ -64,13 +62,13 @@ function initSecurePay({ form, providerId }) {
             tok_id: tokenisedCard.token,
           },
         }
-        submitData({ payload })
+        paymentForm.submitData({ payload })
       }
 
       function tokeniseFailed(errors) {
         // error while tokenising card
         const errorMessage = JSON.parse(errors).errors[0].detail
-        showError(errorMessage)
+        paymentForm.showError(errorMessage)
       }
 
       function initStyles() {
@@ -80,13 +78,13 @@ function initSecurePay({ form, providerId }) {
 
       function loadComplete() {
         initStyles()
-        setPayButton(true)
+        paymentForm.setPayButton(true)
       }
 
       mySecurePayUI = new securePayUI.init({
         containerId: `SecurePayContainer${providerId}`,
         scriptId: scriptId,
-        clientId: apiKey(),
+        clientId: paymentForm.apiKey(),
         merchantCode,
         card: {
           onTokeniseSuccess: tokeniseSuccessful,

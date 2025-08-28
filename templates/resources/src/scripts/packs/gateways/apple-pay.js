@@ -1,93 +1,143 @@
-import { dedicatedCartProductId, showError, submitData } from './common'
-import { currency, merchantCountryCode, totalPayable, wrapOuterElement } from './form'
-import {
-  allowedShippingCountries,
-  fetchShippingRates,
-  formAuthentityToken,
-  onlyExpressCheckout,
-  offerShipping,
-  setShippingRate,
-  walletsElement,
-  showWalletsError,
-} from './wallets'
+// PaymentForm instance will be passed as parameter
 import storePathUrl from '../../theme/store-path-url'
 
 /**
  * Initialize Apple Pay button and payment processing
- *
- * @param {object} options
- * @param {string} options.merchantId - Apple Pay merchant identifier
- * @param {string} options.merchantName - Name to display in Apple Pay sheet
- * @param {string} options.providerId - Payment provider ID for certificate lookup
- * @param {function} options.extractTokenCallback - Function that extracts the token from the payment data as required by the ruby gateway service class
  */
-export async function initApplePayForm({
-  merchantId,
-  merchantName,
-  providerId,
-  extractTokenCallback,
-}) {
-  // Check if Apple Pay is available
-  if (!window.ApplePaySession || !ApplePaySession.canMakePayments()) {
-    console.log('Apple Pay is not available on this device/browser')
-    return
-  }
-  let missingArguments = []
-  if (!merchantId) {
-    missingArguments.push('merchantId')
-  }
-  if (!merchantName) {
-    missingArguments.push('merchantName')
-  }
-  if (!providerId) {
-    missingArguments.push('providerId')
-  }
-  if (!extractTokenCallback || typeof extractTokenCallback !== 'function') {
-    missingArguments.push('extractTokenCallback')
-  }
-  if (missingArguments.length > 0) {
-    console.error(`Apple Pay missing arguments: ${missingArguments.join(', ')}`)
-    return
+export class ApplePay {
+  /**
+   * @param {object} options
+   * @param {PaymentForm} options.paymentForm - PaymentForm instance for accessing form data and methods
+   * @param {Wallet} options.wallet - Wallet instance for accessing wallet functionality
+   * @param {string} [options.merchantId] - Apple Pay merchant identifier (defaults to paymentForm.appleMerchantId())
+   * @param {string} [options.merchantName] - Name to display in Apple Pay sheet (defaults to paymentForm.merchantName() with fallbacks)
+   * @param {string} [options.providerId] - Payment provider ID for certificate lookup (defaults to paymentForm.getProviderId())
+   * @param {function} options.extractTokenCallback - Function that extracts the token from the payment data as required by the ruby gateway service class
+   */
+  constructor({ paymentForm, wallet, merchantId, merchantName, providerId, extractTokenCallback }) {
+    // Check if Apple Pay is available
+    if (!window.ApplePaySession || !ApplePaySession.canMakePayments()) {
+      console.log('Apple Pay is not available on this device/browser')
+      return
+    }
+    let missingArguments = []
+    if (!paymentForm) {
+      missingArguments.push('paymentForm')
+    }
+    if (!wallet) {
+      missingArguments.push('wallet')
+    }
+    if (!extractTokenCallback || typeof extractTokenCallback !== 'function') {
+      missingArguments.push('extractTokenCallback')
+    }
+    if (missingArguments.length > 0) {
+      console.error(`Apple Pay missing arguments: ${missingArguments.join(', ')}`)
+      return
+    }
+
+    this.paymentForm = paymentForm
+    this.wallet = wallet
+    this.merchantId = merchantId || paymentForm.appleMerchantId()
+    this.merchantName =
+      merchantName ||
+      paymentForm.merchantName() ||
+      paymentForm.appleMerchantName() ||
+      paymentForm.googleMerchantName()
+    this.providerId = providerId || paymentForm.getProviderId()
+    this.extractTokenCallback = extractTokenCallback
+
+    // Validate computed defaults
+    if (!this.merchantId) {
+      console.error(
+        'Apple Pay missing merchantId: could not get value from paymentForm.appleMerchantId()'
+      )
+      return
+    }
+    if (!this.merchantName) {
+      console.error('Apple Pay missing merchantName: could not get value from paymentForm methods')
+      return
+    }
+    if (!this.providerId) {
+      console.error(
+        'Apple Pay missing providerId: could not get value from paymentForm.getProviderId()'
+      )
+      return
+    }
+
+    // Initialize Apple Pay
+    this.checkApplePayAvailability()
+
+    // Test mode support
+    if (window.StoreConnectTestMode === 'enabled') {
+      window.testApplePayCallback = async () => {
+        this.handleWalletError({
+          error: { message: `testApplePayCallback: put your right foot in` },
+        })
+
+        const paymentData = {
+          token: {
+            paymentData: {
+              data: 'test-payment-data',
+              signature: 'test-signature',
+              header: {
+                ephemeralPublicKey: 'test-key',
+                publicKeyHash: 'test-hash',
+                transactionId: 'test-transaction',
+              },
+            },
+            paymentMethod: {
+              displayName: 'Visa •••• 1234',
+              network: 'Visa',
+              type: 'debit',
+            },
+            transactionIdentifier: 'test-transaction-id',
+          },
+        }
+        const payload = this.extractTokenCallback(paymentData)
+        this.handleWalletError({ error: payload })
+        this.paymentForm.submitData({ payload })
+      }
+    }
   }
 
   /**
    * Apple Pay API version
    */
-  const applePayVersion = 3
+  applePayVersion = 3
 
   /**
    * Supported payment networks for Apple Pay
    */
-  const supportedNetworks = ['visa', 'masterCard', 'amex', 'discover', 'jcb']
+  supportedNetworks = ['visa', 'masterCard', 'amex', 'discover', 'jcb']
 
   /**
    * Merchant capabilities for Apple Pay
    */
-  const merchantCapabilities = ['supports3DS']
+  merchantCapabilities = ['supports3DS']
 
   /**
    * Create Apple Pay payment request
    */
-  function createPaymentRequest() {
+  createPaymentRequest() {
     const paymentRequest = {
-      countryCode: merchantCountryCode() || 'US',
-      currencyCode: currency(),
-      supportedNetworks,
-      merchantCapabilities,
+      countryCode: this.paymentForm.merchantCountryCode() || 'US',
+      currencyCode: this.paymentForm.currency(),
+      supportedNetworks: this.supportedNetworks,
+      merchantCapabilities: this.merchantCapabilities,
       total: {
-        label: merchantName,
-        amount: totalPayable(),
+        label: this.merchantName,
+        amount: this.paymentForm.totalPayable(),
         type: 'final',
       },
     }
 
-    if (onlyExpressCheckout()) {
-      if (offerShipping()) {
+    if (this.paymentForm.onlyExpressCheckout()) {
+      if (this.paymentForm.offerShipping()) {
         paymentRequest.requiredShippingContactFields = ['name', 'phone', 'email', 'postalAddress']
         paymentRequest.shippingType = 'shipping'
 
         // Set allowed shipping countries
-        const allowedCountries = allowedShippingCountries()
+        const allowedCountries = this.paymentForm.allowedShippingCountries()
         if (allowedCountries && allowedCountries.length > 0) {
           paymentRequest.supportedCountries = allowedCountries
         }
@@ -100,9 +150,9 @@ export async function initApplePayForm({
   /**
    * Handle Apple Pay button click
    */
-  function onApplePayButtonClicked() {
-    const paymentRequest = createPaymentRequest()
-    const session = new ApplePaySession(applePayVersion, paymentRequest)
+  onApplePayButtonClicked() {
+    const paymentRequest = this.createPaymentRequest()
+    const session = new ApplePaySession(this.applePayVersion, paymentRequest)
 
     session.onvalidatemerchant = async (event) => {
       try {
@@ -113,8 +163,8 @@ export async function initApplePayForm({
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            provider_id: providerId,
-            authenticity_token: formAuthentityToken(),
+            provider_id: this.providerId,
+            authenticity_token: this.paymentForm.formAuthentityToken(),
           }),
         })
 
@@ -128,20 +178,20 @@ export async function initApplePayForm({
       } catch (error) {
         console.error('Apple Pay merchant validation error:', error)
         session.abort()
-        showWalletsError(
+        this.wallet.showWalletsError(
           error.message || 'Apple Pay setup failed. Please try another payment method.'
         )
       }
     }
 
     session.onshippingcontactselected = async (event) => {
-      if (!offerShipping()) {
+      if (!this.paymentForm.offerShipping()) {
         session.completeShippingContactSelection({
           status: ApplePaySession.STATUS_SUCCESS,
           newShippingMethods: [],
           newTotal: {
-            label: merchantName,
-            amount: totalPayable(),
+            label: this.merchantName,
+            amount: this.paymentForm.totalPayable(),
             type: 'final',
           },
         })
@@ -150,7 +200,7 @@ export async function initApplePayForm({
 
       try {
         const shippingContact = event.shippingContact
-        const shippingOptions = await fetchShippingRates({
+        const shippingOptions = await this.wallet.fetchShippingRates({
           country: shippingContact.countryCode,
           postal_code: shippingContact.postalCode,
           city: shippingContact.locality,
@@ -163,15 +213,17 @@ export async function initApplePayForm({
             status: ApplePaySession.STATUS_INVALID_SHIPPING_POSTAL_ADDRESS,
             newShippingMethods: [],
             newTotal: {
-              label: merchantName,
-              amount: totalPayable(),
+              label: this.merchantName,
+              amount: this.paymentForm.totalPayable(),
             },
           })
           return
         }
 
         // Set default shipping rate
-        const response = await setShippingRate({ id: shippingOptions.defaultShippingRateId })
+        const response = await this.wallet.setShippingRate({
+          id: shippingOptions.defaultShippingRateId,
+        })
         const amount = response.amount
 
         const shippingMethods = shippingOptions.shippingRates.map((rate) => ({
@@ -185,7 +237,7 @@ export async function initApplePayForm({
           status: ApplePaySession.STATUS_SUCCESS,
           newShippingMethods: shippingMethods,
           newTotal: {
-            label: merchantName,
+            label: this.merchantName,
             amount: (amount / 100).toFixed(2),
           },
         })
@@ -195,8 +247,8 @@ export async function initApplePayForm({
           status: ApplePaySession.STATUS_FAILURE,
           newShippingMethods: [],
           newTotal: {
-            label: merchantName,
-            amount: totalPayable(),
+            label: this.merchantName,
+            amount: this.paymentForm.totalPayable(),
           },
         })
       }
@@ -204,7 +256,7 @@ export async function initApplePayForm({
 
     session.onshippingmethodselected = async (event) => {
       try {
-        const response = await setShippingRate({ id: event.shippingMethod.identifier })
+        const response = await this.wallet.setShippingRate({ id: event.shippingMethod.identifier })
         if (response.error) {
           throw new Error(response.error.message)
         }
@@ -217,7 +269,7 @@ export async function initApplePayForm({
         session.completeShippingMethodSelection({
           status: ApplePaySession.STATUS_SUCCESS,
           newTotal: {
-            label: merchantName,
+            label: this.merchantName,
             amount: (amount / 100).toFixed(2),
             type: 'final',
           },
@@ -227,8 +279,8 @@ export async function initApplePayForm({
         session.completeShippingMethodSelection({
           status: ApplePaySession.STATUS_FAILURE,
           newTotal: {
-            label: merchantName,
-            amount: totalPayable(),
+            label: this.merchantName,
+            amount: this.paymentForm.totalPayable(),
             type: 'final',
           },
         })
@@ -240,7 +292,7 @@ export async function initApplePayForm({
         const paymentData = event.payment
 
         // Create cart with shipping and billing info for express checkout
-        if (onlyExpressCheckout()) {
+        if (this.paymentForm.onlyExpressCheckout()) {
           // Validate that we have required email address
           if (!paymentData.shippingContact.emailAddress) {
             throw new Error('Email address is required but was not provided by Apple Pay')
@@ -272,8 +324,8 @@ export async function initApplePayForm({
             billing_details,
             shipping_address,
             shipping_rate: { id: session._selectedShippingMethodId },
-            authenticity_token: formAuthentityToken(),
-            dedicated_cart_product_id: dedicatedCartProductId,
+            authenticity_token: this.paymentForm.formAuthentityToken(),
+            dedicated_cart_product_id: this.paymentForm.dedicatedCartProductId,
           }
 
           const res = await fetch(storePathUrl(`/express_checkout/carts`), {
@@ -285,7 +337,7 @@ export async function initApplePayForm({
           if (!res.ok) {
             const { error } = await res.json()
             if (error) {
-              handleWalletError({ error })
+              this.handleWalletError({ error })
               session.completePayment(ApplePaySession.STATUS_FAILURE)
               return
             }
@@ -295,15 +347,15 @@ export async function initApplePayForm({
         session.completePayment(ApplePaySession.STATUS_SUCCESS)
 
         // Process the payment with the gateway
-        const payload = extractTokenCallback(paymentData)
-        if (dedicatedCartProductId) {
-          payload.dedicated_cart_product_id = dedicatedCartProductId
+        const payload = this.extractTokenCallback(paymentData)
+        if (this.paymentForm.dedicatedCartProductId) {
+          payload.dedicated_cart_product_id = this.paymentForm.dedicatedCartProductId
         }
-        submitData({ payload })
+        this.paymentForm.submitData({ payload })
       } catch (error) {
         console.error('Apple Pay payment authorization error:', error)
         session.completePayment(ApplePaySession.STATUS_FAILURE)
-        handleWalletError({ error: { message: error.message } })
+        this.handleWalletError({ error: { message: error.message } })
       }
     }
 
@@ -318,8 +370,8 @@ export async function initApplePayForm({
   /**
    * Add Apple Pay button to the page
    */
-  function addApplePayButton() {
-    const walletsContainer = walletsElement()
+  addApplePayButton() {
+    const walletsContainer = this.wallet.walletsElement()
     if (!walletsContainer) {
       console.error('Cannot setup Apple Pay button: no wallets container found')
       return
@@ -340,20 +392,22 @@ export async function initApplePayForm({
       margin-bottom: 8px;
     `
 
-    button.addEventListener('click', onApplePayButtonClicked)
-    walletsContainer.appendChild(wrapOuterElement({ element: button, classNames: 'sc-grow' }))
+    button.addEventListener('click', () => this.onApplePayButtonClicked())
+    walletsContainer.appendChild(
+      this.paymentForm.wrapOuterElement({ element: button, classNames: 'sc-grow' })
+    )
   }
 
   /**
    * Check if Apple Pay is available and can make payments with active card
    */
-  function checkApplePayAvailability() {
+  checkApplePayAvailability() {
     if (ApplePaySession.applePayCapabilities) {
-      ApplePaySession.applePayCapabilities(merchantId)
+      ApplePaySession.applePayCapabilities(this.merchantId)
         .then((canMakePayments) => {
-          console.log('checkApplePayAvailability', merchantId, canMakePayments)
+          console.log('checkApplePayAvailability', this.merchantId, canMakePayments)
           if (canMakePayments) {
-            addApplePayButton()
+            this.addApplePayButton()
           }
         })
         .catch((error) => {
@@ -361,49 +415,16 @@ export async function initApplePayForm({
         })
     } else {
       // Fallback for older browsers
-      addApplePayButton()
+      this.addApplePayButton()
     }
   }
 
-  // Initialize Apple Pay
-  checkApplePayAvailability()
-
-  // Test mode support
-  if (window.StoreConnectTestMode === 'enabled') {
-    window.testApplePayCallback = async () => {
-      handleWalletError({ error: { message: `testApplePayCallback: put your right foot in` } })
-
-      const paymentData = {
-        token: {
-          paymentData: {
-            data: 'test-payment-data',
-            signature: 'test-signature',
-            header: {
-              ephemeralPublicKey: 'test-key',
-              publicKeyHash: 'test-hash',
-              transactionId: 'test-transaction',
-            },
-          },
-          paymentMethod: {
-            displayName: 'Visa •••• 1234',
-            network: 'Visa',
-            type: 'debit',
-          },
-          transactionIdentifier: 'test-transaction-id',
-        },
-      }
-      const payload = extractTokenCallback(paymentData)
-      handleWalletError({ error: payload })
-      submitData({ payload })
-    }
-  }
-
-  function handleWalletError({ error, event }) {
+  handleWalletError({ error, event }) {
     if (error) {
       if (error.message) {
-        showWalletsError(error.message)
+        this.wallet.showWalletsError(error.message)
       } else {
-        showWalletsError(JSON.stringify(error))
+        this.wallet.showWalletsError(JSON.stringify(error))
       }
     }
     if (event) {

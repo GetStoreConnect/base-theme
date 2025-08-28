@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../../src/styles/packs/theme-preview.scss", "../../src/styles/packs/undefined"],
-  "sourcesContent": [".sc-theme-preview-bar {\n  background-color: rgb(0, 196, 244);\n  border-bottom: 1px solid rgba(0, 0, 0, 0.1);\n  color: white;\n  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.1);\n  text-align: right;\n  font-size: small;\n  padding: 0.5em;\n}\n", ".sc-theme-preview-bar {\n  background-color: rgb(0, 196, 244);\n  border-bottom: 1px solid rgba(0, 0, 0, 0.1);\n  color: white;\n  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.1);\n  text-align: right;\n  font-size: small;\n  padding: 0.5em;\n}\n/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL1VzZXJzL2djaGF2ZXovRG9jdW1lbnRzL0dpdEh1Yi9jb3JlLWdlbS9hcHAvbGlxdWlkL3RoZW1lL3Jlc291cmNlcy9zcmMvc3R5bGVzL3BhY2tzIiwic291cmNlcyI6WyJ0aGVtZS1wcmV2aWV3LnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQSIsInNvdXJjZXNDb250ZW50IjpbIi5zYy10aGVtZS1wcmV2aWV3LWJhciB7XG4gIGJhY2tncm91bmQtY29sb3I6IHJnYigwLCAxOTYsIDI0NCk7XG4gIGJvcmRlci1ib3R0b206IDFweCBzb2xpZCByZ2JhKDAsIDAsIDAsIDAuMSk7XG4gIGNvbG9yOiB3aGl0ZTtcbiAgdGV4dC1zaGFkb3c6IDFweCAxcHggMCByZ2JhKDAsIDAsIDAsIDAuMSk7XG4gIHRleHQtYWxpZ246IHJpZ2h0O1xuICBmb250LXNpemU6IHNtYWxsO1xuICBwYWRkaW5nOiAwLjVlbTtcbn1cbiJdfQ== */"],
-  "mappings": ";AAAA,CAAA;AACE,oBAAA;AACA,iBAAA,IAAA,MAAA,KAAA,CAAA,EAAA,CAAA,EAAA,CAAA,EAAA;AACA,SAAA;AAGA,aAAA;AACA,WAAA;AAFA,cAAA;AADA,eAAA,IAAA,IAAA,EAAA,KAAA,CAAA,EAAA,CAAA,EAAA,CAAA,EAAA;ACIF;",
-  "names": []
-}

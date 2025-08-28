@@ -1,0 +1,6 @@
+{%- assign provider_id = payment_provider.id %}
+{%- assign provider = payment_provider.code %}
+
+<div id="{{ provider }}ScriptBlock{{ provider_id }}"></div>
+<div id="{{ provider }}PaymentFields{{ provider_id }}"></div>
+<div id="{{ provider }}PaymentStatus{{ provider_id }}"></div>

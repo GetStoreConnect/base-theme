@@ -68,7 +68,7 @@
 
           {%- comment %} Currency Price {% endcomment %}
           {%- if current_store.display_currency? and product.pricing.can_purchase_with_currency? %}
-            {%- if product.pricing.on_sale? %}
+            {%- if product.pricing.has_sale_price? %}
               <span class="SC-ProductCard_price_item is-sale">
                 {%- if product.pricing.sale_price == 0 %}
                   {{ "pricing.free" | t }}

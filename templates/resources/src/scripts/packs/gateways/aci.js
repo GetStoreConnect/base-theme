@@ -1,5 +1,4 @@
-import { addFormInput, totalPayable } from './form'
-import { basicInit } from './common'
+import { PaymentForm } from './payment-form'
 import { onDomChange } from '../../theme/utils/init'
 
 onDomChange((node) => {
@@ -13,16 +12,16 @@ onDomChange((node) => {
 })
 
 function initAci({ form }) {
-  basicInit(form)
+  const paymentForm = new PaymentForm(form)
 
-  addFormInput({ form, name: 'cde-Name-0', value: form.dataset.uniqueId })
-  addFormInput({ form, name: 'productId', value: form.dataset.productId })
-  addFormInput({ form, name: 'paymentAmount', value: totalPayable() })
-  addFormInput({ form, name: 'postbackUrl', value: form.dataset.postbackUrl })
-  addFormInput({ form, name: 'returnUrl', value: form.dataset.returnUrl })
-  addFormInput({ form, name: 'errorUrl', value: form.dataset.cancelUrl })
-  addFormInput({ form, name: 'cancelUrl', value: form.dataset.cancelUrl })
-  addFormInput({ form, name: 'firstName', value: form.dataset.firstName })
-  addFormInput({ form, name: 'lastName', value: form.dataset.lastName })
-  addFormInput({ form, name: 'email', value: form.dataset.billingEmail })
+  paymentForm.addHiddenField({ name: 'cde-Name-0', value: form.dataset.uniqueId })
+  paymentForm.addHiddenField({ name: 'productId', value: form.dataset.productId })
+  paymentForm.addHiddenField({ name: 'paymentAmount', value: paymentForm.totalPayable() })
+  paymentForm.addHiddenField({ name: 'postbackUrl', value: form.dataset.postbackUrl })
+  paymentForm.addHiddenField({ name: 'returnUrl', value: form.dataset.returnUrl })
+  paymentForm.addHiddenField({ name: 'errorUrl', value: form.dataset.cancelUrl })
+  paymentForm.addHiddenField({ name: 'cancelUrl', value: form.dataset.cancelUrl })
+  paymentForm.addHiddenField({ name: 'firstName', value: form.dataset.firstName })
+  paymentForm.addHiddenField({ name: 'lastName', value: form.dataset.lastName })
+  paymentForm.addHiddenField({ name: 'email', value: form.dataset.billingEmail })
 }

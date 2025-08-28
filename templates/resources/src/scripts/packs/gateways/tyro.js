@@ -1,5 +1,4 @@
-import { init, showError, hideError, setPayButton, submitData } from './common'
-import { callbackUrl, showWallets } from './form'
+import { PaymentForm } from './payment-form'
 import { onDomChange } from '../../theme/utils/init'
 import fetchWithResponseHandler from '../../theme/utils/fetch'
 
@@ -20,40 +19,42 @@ let tyro
 let tyroForm
 
 function initTyro({ form }) {
-  init(form, tyroSubmitPayment)
-  setPayButton(false)
+  const paymentForm = new PaymentForm(form, {
+    onSubmit: () => tyroSubmitPayment(paymentForm),
+  })
+  paymentForm.setPayButton(false)
 
-  fetchWithResponseHandler(callbackUrl(), {
+  fetchWithResponseHandler(paymentForm.callbackUrl(), {
     method: 'post',
     headers: {
       'content-type': 'application/json',
     },
   }).then((json) => {
     if (json.message) {
-      showError(json.message)
+      paymentForm.showError(json.message)
       return
     }
 
     payRequestId = json.token.id
     paySecret = json.token.paySecret
 
-    initializeTyro(form)
+    initializeTyro(paymentForm)
   })
 }
 
-async function initializeTyro(form) {
+async function initializeTyro(paymentForm) {
   tyro = Tyro({
-    liveMode: form.dataset.apiMode === 'production',
+    liveMode: paymentForm.form.dataset.apiMode === 'production',
   })
 
   // If an error generating pay request/pay secret, show the error message
-  if (form.dataset.error) {
-    showError(form.dataset.error)
+  if (paymentForm.form.dataset.error) {
+    paymentForm.showError(paymentForm.form.dataset.error)
     return
   }
 
   try {
-    setPayButton(false)
+    paymentForm.setPayButton(false)
     // Pay secret is provided by the backend
     await tyro.init(paySecret)
 
@@ -72,10 +73,10 @@ async function initializeTyro(form) {
       },
       options: {
         applePay: {
-          enabled: showWallets(),
+          enabled: paymentForm.showWallets(),
         },
         googlePay: {
-          enabled: showWallets(),
+          enabled: paymentForm.showWallets(),
         },
         creditCardForm: {
           enabled: true,
@@ -85,32 +86,34 @@ async function initializeTyro(form) {
 
     payForm.setReadyListener(() => {
       // Enable the pay button after the form is ready
-      setPayButton(true)
+      paymentForm.setPayButton(true)
     })
 
     payForm.setWalletPaymentBeginListener((_) => {
-      disableForm()
+      disableForm(paymentForm)
     })
 
     payForm.setWalletPaymentCancelledListener((_) => {
-      enableForm()
+      enableForm(paymentForm)
     })
 
-    payForm.setWalletPaymentCompleteListener(tyroWalletPaymentComplete)
+    payForm.setWalletPaymentCompleteListener((paymentType, error) => {
+      tyroWalletPaymentComplete(paymentType, error, paymentForm)
+    })
 
     // Inject the Tyro form
-    const inlineFormId = `${form.id}[data-ref="inline-form"]`
+    const inlineFormId = `${paymentForm.form.id}[data-ref="inline-form"]`
     tyroForm = document.querySelector(inlineFormId)
     payForm.inject(inlineFormId)
   } catch (error) {
-    showError(error.message)
+    paymentForm.showError(error.message)
   }
 }
 
 // https://docs.connect.tyro.com/app/apis/pay/tyro-js/submit-pay/
-async function tyroSubmitPayment() {
-  disableForm()
-  hideError()
+async function tyroSubmitPayment(paymentForm) {
+  disableForm(paymentForm)
+  paymentForm.hideError()
 
   try {
     await tyro.submitPay()
@@ -118,28 +121,28 @@ async function tyroSubmitPayment() {
     // fails and is handled by the error handler below.
     // But perhaps the error outcome only discovered
     // by fetchPayRequest().
-    processPaymentOutcome()
+    processPaymentOutcome(paymentForm)
   } catch (error) {
-    handleFailedPayment({ message: error.errorMessage, error })
+    handleFailedPayment({ message: error.errorMessage, error, paymentForm })
   }
 }
 
-async function tyroWalletPaymentComplete(paymentType, error) {
+async function tyroWalletPaymentComplete(paymentType, error, paymentForm) {
   if (error) {
-    handleFailedPayment({ message: error.errorMessage, error })
+    handleFailedPayment({ message: error.errorMessage, error, paymentForm })
     return
   }
   try {
-    processPaymentOutcome()
+    processPaymentOutcome(paymentForm)
   } catch (error) {
-    handleFailedPayment({ message: error.errorMessage, error })
+    handleFailedPayment({ message: error.errorMessage, error, paymentForm })
   }
 }
 
-async function processPaymentOutcome() {
+async function processPaymentOutcome(paymentForm) {
   const payRequest = await tyro.fetchPayRequest()
   if (payRequest.status !== 'SUCCESS') {
-    handleFailedPayment({ message: payRequest.errorMessage, error: payRequest })
+    handleFailedPayment({ message: payRequest.errorMessage, error: payRequest, paymentForm })
     return
   }
 
@@ -151,12 +154,12 @@ async function processPaymentOutcome() {
       tok_id: payRequestId,
     },
   }
-  submitData({ payload })
+  paymentForm.submitData({ payload })
 }
 
 // https://docs.connect.tyro.com/app/apis/pay/error-types/
 // https://docs.connect.tyro.com/app/apis/pay/errors/
-async function handleFailedPayment({ message, error }) {
+async function handleFailedPayment({ message, error, paymentForm }) {
   let errorMessage = message
   if (!errorMessage) {
     const payRequest = await tyro.fetchPayRequest()
@@ -166,18 +169,18 @@ async function handleFailedPayment({ message, error }) {
   if (error?.type === 'CLIENT_VALIDATION_ERROR') {
     // Ignore these errors as they're handled by validation
   } else {
-    showError(errorMessage)
+    paymentForm.showError(errorMessage)
   }
 
-  enableForm()
+  enableForm(paymentForm)
 }
 
-function enableForm() {
-  setPayButton(true)
+function enableForm(paymentForm) {
+  paymentForm.setPayButton(true)
   tyroForm.classList.remove('form-disabled')
 }
 
-function disableForm() {
-  setPayButton(false)
+function disableForm(paymentForm) {
+  paymentForm.setPayButton(false)
   tyroForm.classList.add('form-disabled')
 }

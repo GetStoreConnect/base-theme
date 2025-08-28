@@ -1,4 +1,4 @@
-import { basicInit, showError, submitElement } from './common'
+import { PaymentForm } from './payment-form'
 import { onDomChange } from '../../theme/utils/init'
 
 onDomChange((node) => {
@@ -12,16 +12,16 @@ onDomChange((node) => {
 })
 
 async function initBosch({ form, providerId }) {
-  basicInit(form)
+  const paymentForm = new PaymentForm(form)
   const providerName = form.dataset.provider
 
-  const button = submitElement()
+  const button = paymentForm.submitElement()
 
   try {
     const url = form.dataset.prepareFormDataUrl
 
     if (!url) {
-      showError('Bosch payment form URL is not set')
+      paymentForm.showError('Bosch payment form URL is not set')
       return
     }
 
@@ -46,7 +46,7 @@ async function initBosch({ form, providerId }) {
       form.classList.remove('sc-hide')
     } else {
       console.error(data.error || 'Error initializing Bosch payment form')
-      showError(
+      paymentForm.showError(
         Array.isArray(data.error)
           ? data.error.join(', ')
           : data.error || 'An error occurred initializing the payment form.'
@@ -54,6 +54,6 @@ async function initBosch({ form, providerId }) {
     }
   } catch (error) {
     console.error('Network error:', error)
-    showError('A network error occurred. Please try again later.')
+    paymentForm.showError('A network error occurred. Please try again later.')
   }
 }

@@ -4,6 +4,8 @@ accounts/attendees,update
 accounts/orders,reorder
 accounts/profiles,update
 accounts/subscriptions,destroy
+accounts/subscriptions,index
+accounts/subscriptions,show
 accounts/subscriptions,threeds_callback
 accounts/subscriptions,update
 accounts,create

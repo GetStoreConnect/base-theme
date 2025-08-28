@@ -1,4 +1,4 @@
-import { init, setPayButton, showError, submitData } from './common'
+import { PaymentForm } from './payment-form'
 import { onDomChange } from '../../theme/utils/init'
 
 onDomChange((node) => {
@@ -12,11 +12,13 @@ onDomChange((node) => {
 })
 
 function initEwayV2({ form }) {
-  init(form, showEwayModal)
+  const paymentForm = new PaymentForm(form, {
+    onSubmit: () => showEwayModal(paymentForm),
+  })
 
   const accessCode = form.dataset.accessCode
 
-  function showEwayModal() {
+  function showEwayModal(paymentForm) {
     const sharedPaymentUrl = form.dataset.sharedPaymentUrl
 
     if (typeof eCrypt !== 'undefined') {
@@ -31,12 +33,12 @@ function initEwayV2({ form }) {
       confirmPayment(transactionID)
     } else if (result === 'Cancelled') {
       console.error('Payment was cancelled.')
-      showError(errors)
-      setPayButton(true)
+      paymentForm.showError(errors)
+      paymentForm.setPayButton(true)
     } else if (result === 'Error') {
       console.error(`Payment Error: ${errors}`)
-      showError(errors)
-      setPayButton(true)
+      paymentForm.showError(errors)
+      paymentForm.setPayButton(true)
     }
   }
 
@@ -46,6 +48,6 @@ function initEwayV2({ form }) {
         tok_id: accessCode,
       },
     }
-    submitData({ payload })
+    paymentForm.submitData({ payload })
   }
 }

@@ -1,5 +1,4 @@
-import { addFormInput, totalPayable } from './form'
-import { basicInit } from './common'
+import { PaymentForm } from './payment-form'
 import { onDomChange } from '../../theme/utils/init'
 
 onDomChange((node) => {
@@ -13,23 +12,26 @@ onDomChange((node) => {
 })
 
 function initCboss({ form }) {
-  basicInit(form)
+  const paymentForm = new PaymentForm(form)
 
-  addFormInput({ form, name: 'ClientAccount', value: form.dataset.clientAccount })
-  addFormInput({ form, name: 'OriginatorID', value: form.dataset.originatorId })
-  addFormInput({ form, name: 'SuccessfulURL', value: form.dataset.callbackUrl })
-  addFormInput({ form, name: 'UnsuccessfulURL', value: form.dataset.callbackUrl })
-  addFormInput({ form, name: 'FirstName', value: form.dataset.firstName })
-  addFormInput({ form, name: 'LastName', value: form.dataset.lastName })
-  addFormInput({ form, name: 'BillingAddressLine1', value: form.dataset.billingAddressLine1 })
-  addFormInput({ form, name: 'BillingEmail', value: form.dataset.billingEmail })
-  addFormInput({ form, name: 'BillingCity', value: form.dataset.billingCity })
-  addFormInput({ form, name: 'BillingCountry', value: form.dataset.billingCountry })
-  addFormInput({ form, name: 'BillingZip', value: form.dataset.billingZip })
-  addFormInput({ form, name: 'BillingPhoneNumber', value: form.dataset.billingPhoneNumber })
-  addFormInput({ form, name: 'BillingState', value: form.dataset.billingState })
-  addFormInput({ form, name: 'Currency', value: form.dataset.currency })
-  addFormInput({ form, name: 'Amount', value: totalPayable() })
-  addFormInput({ form, name: 'Number', value: form.dataset.number })
-  addFormInput({ form, name: 'PaymentType', value: form.dataset.paymentType })
+  paymentForm.addHiddenField({ name: 'ClientAccount', value: form.dataset.clientAccount })
+  paymentForm.addHiddenField({ name: 'OriginatorID', value: form.dataset.originatorId })
+  paymentForm.addHiddenField({ name: 'SuccessfulURL', value: form.dataset.callbackUrl })
+  paymentForm.addHiddenField({ name: 'UnsuccessfulURL', value: form.dataset.callbackUrl })
+  paymentForm.addHiddenField({ name: 'FirstName', value: form.dataset.firstName })
+  paymentForm.addHiddenField({ name: 'LastName', value: form.dataset.lastName })
+  paymentForm.addHiddenField({
+    name: 'BillingAddressLine1',
+    value: form.dataset.billingAddressLine1,
+  })
+  paymentForm.addHiddenField({ name: 'BillingEmail', value: form.dataset.billingEmail })
+  paymentForm.addHiddenField({ name: 'BillingCity', value: form.dataset.billingCity })
+  paymentForm.addHiddenField({ name: 'BillingCountry', value: form.dataset.billingCountry })
+  paymentForm.addHiddenField({ name: 'BillingZip', value: form.dataset.billingZip })
+  paymentForm.addHiddenField({ name: 'BillingPhoneNumber', value: form.dataset.billingPhoneNumber })
+  paymentForm.addHiddenField({ name: 'BillingState', value: form.dataset.billingState })
+  paymentForm.addHiddenField({ name: 'Currency', value: form.dataset.currency })
+  paymentForm.addHiddenField({ name: 'Amount', value: paymentForm.totalPayable() })
+  paymentForm.addHiddenField({ name: 'Number', value: form.dataset.number })
+  paymentForm.addHiddenField({ name: 'PaymentType', value: form.dataset.paymentType })
 }

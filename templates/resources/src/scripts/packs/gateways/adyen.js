@@ -1,11 +1,10 @@
 import AdyenCheckout from '@adyen/adyen-web'
 import '@adyen/adyen-web/dist/adyen.css'
-import { init, form, submitData } from './common'
-import { isProduction, showWallets } from './form'
-import { walletsElementExists, showWalletsError } from './wallets'
+import { PaymentForm } from './payment-form'
+import { Wallet } from './wallet'
 import { onDomChange } from '../../theme/utils/init'
-import { initGooglePayForm } from './google-pay'
-import { initApplePayForm } from './apple-pay'
+import { GooglePay } from './google-pay'
+import { ApplePay } from './apple-pay'
 
 onDomChange((node) => {
   const forms = node.querySelectorAll('form[data-provider="Adyen"]')
@@ -18,11 +17,14 @@ onDomChange((node) => {
 })
 
 function initAdyen({ form, providerId }) {
-  init(form, onSubmit)
+  const paymentForm = new PaymentForm(form, {
+    onSubmit: () => onSubmit(paymentForm),
+  })
+  const wallet = new Wallet(paymentForm)
   const mountElementId = `AdyenFieldset${providerId}`
 
   const clientKey = form.dataset.apiClient
-  const environment = isProduction() ? 'live' : 'test'
+  const environment = paymentForm.isProduction() ? 'live' : 'test'
 
   let data
   let card
@@ -62,7 +64,7 @@ function initAdyen({ form, providerId }) {
     }
   }
 
-  function onSubmit() {
+  function onSubmit(paymentForm) {
     const payload = {
       // An internal Object of payment data
       payment_source: data.paymentMethod,
@@ -76,24 +78,23 @@ function initAdyen({ form, providerId }) {
       },
     }
 
-    submitData({ payload, handleSuccess: card.handleAction })
+    paymentForm.submitData({ payload, handleSuccess: card.handleAction })
   }
 
   const initTasks = [initializeAdyenForm()]
-  if (showWallets() && walletsElementExists()) {
-    initTasks.push(setupApplePay())
-    initTasks.push(setupGooglePay())
+  if (paymentForm.showWallets() && wallet.walletsElementExists()) {
+    initTasks.push(setupApplePay(paymentForm, wallet))
+    initTasks.push(setupGooglePay(paymentForm, wallet))
   }
 
   Promise.allSettled(initTasks)
 }
 
-async function setupGooglePay() {
-  initGooglePayForm({
-    merchantId: form.dataset.googleMerchantId,
-    merchantName: form.dataset.googleMerchantName || form.dataset.merchantName,
+async function setupGooglePay(paymentForm, wallet) {
+  new GooglePay({
+    paymentForm,
+    wallet,
     gateway: 'adyen',
-    gatewayMerchantId: form.dataset.merchantId,
     // Extract the google payment token into payload used by adyen_service.rb
     extractTokenCallback: (paymentData) => {
       const paymentToken = paymentData.paymentMethodData.tokenizationData.token
@@ -111,17 +112,16 @@ async function setupGooglePay() {
   })
 }
 
-async function setupApplePay() {
-  const merchantId = form.dataset.appleMerchantId
+async function setupApplePay(paymentForm, wallet) {
+  const merchantId = paymentForm.appleMerchantId()
   if (!merchantId) {
-    showWalletsError('Configure api_options.apple_merchant_id et al to enable Apple Pay')
+    wallet.showWalletsError('Configure api_options.apple_merchant_id et al to enable Apple Pay')
     return
   }
 
-  initApplePayForm({
-    merchantId,
-    merchantName: form.dataset.appleMerchantName || form.dataset.merchantName,
-    providerId: form.dataset.providerId,
+  new ApplePay({
+    paymentForm,
+    wallet,
     // Extract the apple payment token into payload used by adyen_service.rb
     extractTokenCallback: (paymentData) => {
       const paymentToken = JSON.stringify(paymentData.token.paymentData)

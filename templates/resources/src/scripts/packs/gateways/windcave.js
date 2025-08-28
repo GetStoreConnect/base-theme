@@ -1,5 +1,4 @@
-import { init } from './common'
-import { callbackUrl, cacheFormParamsAndOnSubmit } from './form'
+import { PaymentForm } from './payment-form'
 import { onDomChange } from '../../theme/utils/init'
 
 // Register onDomChange handler to detect and initialize Windcave forms
@@ -15,10 +14,12 @@ onDomChange((node) => {
 
 // Internal initialization function
 function initWindcave({ form }) {
-  init(form, onClick)
+  const paymentForm = new PaymentForm(form, {
+    onSubmit: () => onClick(paymentForm),
+  })
 
-  function onClick() {
-    fetch(callbackUrl(), {
+  function onClick(paymentForm) {
+    fetch(paymentForm.callbackUrl(), {
       method: 'post',
       headers: {
         'content-type': 'application/json',
@@ -28,7 +29,7 @@ function initWindcave({ form }) {
         return res.json()
       })
       .then(function (result) {
-        cacheFormParamsAndOnSubmit(() => {
+        paymentForm.cacheFormParamsAndOnSubmit(() => {
           location.href = result.form_url
         })
       })

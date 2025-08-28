@@ -1,4 +1,4 @@
-import { init, loadScript, setPayButton, showError, submitData } from './common'
+import { PaymentForm } from './payment-form'
 import { onDomChange } from '../../theme/utils/init'
 
 onDomChange((node) => {
@@ -21,15 +21,17 @@ function initBambora({ form, providerId }) {
   var isCVVComplete
   var isExpiryComplete
 
-  init(form, createToken)
+  const paymentForm = new PaymentForm(form, {
+    onSubmit: () => createToken(paymentForm),
+  })
 
-  function createToken() {
-    checkout.createToken(createTokenCallback)
+  function createToken(paymentForm) {
+    checkout.createToken((response) => createTokenCallback(response, paymentForm))
   }
 
-  function createTokenCallback(response) {
+  function createTokenCallback(response, paymentForm) {
     if (response.error) {
-      showError(response.error.message)
+      paymentForm.showError(response.error.message)
     } else {
       const payload = {
         payment_source: {
@@ -39,7 +41,7 @@ function initBambora({ form, providerId }) {
           year: response.exp_year,
         },
       }
-      submitData({ payload })
+      paymentForm.submitData({ payload })
     }
   }
 
@@ -119,7 +121,7 @@ function initBambora({ form, providerId }) {
             isExpiryComplete = false
             break
         }
-        setPayButton(false)
+        paymentForm.setPayButton({ enabled: false })
       }
     })
 
@@ -135,7 +137,9 @@ function initBambora({ form, providerId }) {
         hideErrorForId(cardExpirySelector)
       }
 
-      setPayButton(isCardNumberComplete && isCVVComplete && isExpiryComplete)
+      paymentForm.setPayButton({
+        enabled: isCardNumberComplete && isCVVComplete && isExpiryComplete,
+      })
     })
 
     checkout.on('error', function (event) {
@@ -149,11 +153,11 @@ function initBambora({ form, providerId }) {
         isExpiryComplete = false
         showErrorForId(cardExpirySelector, event.message)
       }
-      setPayButton(true)
+      paymentForm.setPayButton({ enabled: true })
     })
   }
 
-  loadScript({
+  paymentForm.loadScript({
     url: 'https://libs.na.bambora.com/customcheckout/1/customcheckout.js',
     onload: function () {
       checkout = customcheckout()

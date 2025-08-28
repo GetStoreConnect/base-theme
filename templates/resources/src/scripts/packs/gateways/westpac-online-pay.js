@@ -1,9 +1,8 @@
-import { init, form, formFieldElement, loadScript, setPayButton, submitData } from './common'
-import { removeWalletsContainer, walletsElementExists } from './wallets'
-import { showWallets } from './form'
+import { PaymentForm } from './payment-form'
+import { Wallet } from './wallet'
 import { onDomChange } from '../../theme/utils/init'
-import { initGooglePayForm } from './google-pay'
-import { initApplePayForm } from './apple-pay'
+import { GooglePay } from './google-pay'
+import { ApplePay } from './apple-pay'
 
 // https://verifone.cloud/docs/online-payments/checkout/card-encryption-verifonejs
 
@@ -19,28 +18,31 @@ onDomChange((node) => {
 })
 
 async function initWestpacOnlinePay({ form }) {
-  init(form, onSubmit)
+  const paymentForm = new PaymentForm(form, {
+    onSubmit: onSubmit,
+  })
+  const wallet = new Wallet(paymentForm)
 
-  const encryptionKey = form.dataset.secureCardCaptureKey
+  const encryptionKey = paymentForm.secureCardCaptureKey()
   if (!encryptionKey) {
     console.error('Add WestpacOnlinePay api_options.secure_card_capture_key to payment provider.')
     return
   }
 
-  loadScript({
-    url: form.dataset.scriptUrl,
+  paymentForm.loadScript({
+    url: paymentForm.scriptUrl(),
     onload: () => {
-      setPayButton(true)
+      paymentForm.setPayButton(true)
     },
   })
 
   const initTasks = []
 
-  if (showWallets() && walletsElementExists()) {
-    initTasks.push(setupApplePay())
-    initTasks.push(setupGooglePay())
+  if (paymentForm.showWallets() && wallet.walletsElementExists()) {
+    initTasks.push(setupApplePay(paymentForm, wallet))
+    initTasks.push(setupGooglePay(paymentForm, wallet))
   } else {
-    removeWalletsContainer()
+    wallet.removeWalletsContainer()
   }
 
   if (initTasks.length > 0) {
@@ -49,11 +51,11 @@ async function initWestpacOnlinePay({ form }) {
 
   async function onSubmit() {
     const cardDetails = {
-      cardholderName: formFieldElement('card_name').value,
-      cardNumber: formFieldElement('card_number').value.replace(/\s+/g, ''),
-      expiryMonth: formFieldElement('card_month').value.padStart(2, '0'),
-      expiryYear: formFieldElement('card_year').value.slice(-2),
-      cvv: formFieldElement('card_verification').value,
+      cardholderName: paymentForm.getFieldValue('card_name'),
+      cardNumber: paymentForm.getFieldValue('card_number').replace(/\s+/g, ''),
+      expiryMonth: paymentForm.getFieldValue('card_month').padStart(2, '0'),
+      expiryYear: paymentForm.getFieldValue('card_year').slice(-2),
+      cvv: paymentForm.getFieldValue('card_verification'),
     }
 
     const cyphertext = await verifone.encryptCard(cardDetails, encryptionKey)
@@ -63,16 +65,15 @@ async function initWestpacOnlinePay({ form }) {
         tok_id: cyphertext,
       },
     }
-    submitData({ payload })
+    paymentForm.submitData({ payload })
   }
 }
 
-async function setupGooglePay() {
-  initGooglePayForm({
-    merchantId: form.dataset.googleMerchantId,
-    merchantName: form.dataset.googleMerchantName,
+async function setupGooglePay(paymentForm, wallet) {
+  new GooglePay({
+    paymentForm,
+    wallet,
     gateway: 'verifone',
-    gatewayMerchantId: form.dataset.merchantId,
     // Extract the google payment token into payload used by westpac_online_pay_service.rb
     extractTokenCallback: (paymentData) => {
       const paymentToken = paymentData.paymentMethodData.tokenizationData.token
@@ -90,17 +91,16 @@ async function setupGooglePay() {
   })
 }
 
-async function setupApplePay() {
-  const merchantId = form.dataset.appleMerchantId
+async function setupApplePay(paymentForm, wallet) {
+  const merchantId = paymentForm.appleMerchantId()
   if (!merchantId) {
     console.error('Configure api_options.apple_merchant_id to enable Apple Pay')
     return
   }
 
-  initApplePayForm({
-    merchantId,
-    merchantName: form.dataset.appleMerchantName || form.dataset.googleMerchantName,
-    providerId: form.dataset.providerId,
+  new ApplePay({
+    paymentForm,
+    wallet,
     // Extract the apple payment token into payload used by westpac_online_pay_service.rb
     extractTokenCallback: (paymentData) => {
       const paymentToken = JSON.stringify(paymentData.token.paymentData)

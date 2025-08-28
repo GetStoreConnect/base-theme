@@ -17,4 +17,13 @@
       display: none;
     }
   }
+
+  &_answers {
+    p {
+      margin-bottom: var(--sc-spacing-small);
+    }
+    p:last-of-type {
+      margin-bottom: var(--sc-spacing-tiny);
+    }
+  }
 }

@@ -1,5 +1,4 @@
-import { init, errorElement, formFieldElement, submitData, showError } from './common'
-import { isProduction, callbackUrl, currency, totalPayable, showWallets } from './form'
+import { PaymentForm } from './payment-form'
 import { onDomChange } from '../../theme/utils/init'
 import fetchWithResponseHandler from '../../theme/utils/fetch'
 
@@ -18,7 +17,9 @@ onDomChange((node) => {
 })
 
 async function initBraintree({ form, providerId }) {
-  init(form, preparePayload)
+  const paymentForm = new PaymentForm(form, {
+    onSubmit: () => preparePayload(paymentForm),
+  })
 
   const firstname = form.dataset.contactFirstname
   const lastname = form.dataset.contactLastname
@@ -31,14 +32,14 @@ async function initBraintree({ form, providerId }) {
   const billingPostalCode = form.dataset.billingPostalCode
 
   // Get a client token from the server
-  fetchWithResponseHandler(callbackUrl(), {
+  fetchWithResponseHandler(paymentForm.callbackUrl(), {
     method: 'post',
     headers: {
       'content-type': 'application/json',
     },
   }).then((json) => {
     if (json.message) {
-      showError(json.message)
+      paymentForm.showError(json.message)
       return
     }
 
@@ -55,7 +56,7 @@ async function initBraintree({ form, providerId }) {
         initializeHostedFields()
       })
       .catch((err) => {
-        showError(err)
+        paymentForm.showError(err)
       })
   }
 
@@ -76,22 +77,28 @@ async function initBraintree({ form, providerId }) {
         },
         fields: {
           number: {
-            container: formFieldElement('card_number'),
-            placeholder: formFieldElement('card_number').getAttribute('data-placeholder'),
+            container: paymentForm.formFieldElement('card_number'),
+            placeholder: paymentForm
+              .formFieldElement('card_number')
+              .getAttribute('data-placeholder'),
           },
           cvv: {
-            container: formFieldElement('card_verification'),
-            placeholder: formFieldElement('card_verification').getAttribute('data-placeholder'),
+            container: paymentForm.formFieldElement('card_verification'),
+            placeholder: paymentForm
+              .formFieldElement('card_verification')
+              .getAttribute('data-placeholder'),
           },
           expirationDate: {
-            container: formFieldElement('card_expiry'),
-            placeholder: formFieldElement('card_expiry').getAttribute('data-placeholder'),
+            container: paymentForm.formFieldElement('card_expiry'),
+            placeholder: paymentForm
+              .formFieldElement('card_expiry')
+              .getAttribute('data-placeholder'),
           },
         },
       },
       (hostedFieldsErr, hostedFieldsInstance_) => {
         if (hostedFieldsErr) {
-          showError(hostedFieldsErr)
+          paymentForm.showError(hostedFieldsErr)
           return
         }
 
@@ -100,18 +107,18 @@ async function initBraintree({ form, providerId }) {
     )
   }
 
-  function preparePayload() {
+  function preparePayload(paymentForm) {
     hostedFieldsInstance.tokenize((tokenizeErr, tokenPayload) => {
       if (tokenizeErr) {
-        const errorMessage = errorElement().getAttribute('data-placeholder')
-        showError(errorMessage)
+        const errorMessage = paymentForm.errorElement().getAttribute('data-placeholder')
+        paymentForm.showError(errorMessage)
         return
       }
 
       const threeDSecure = form.dataset.threeDSecure === 'true'
 
       if (threeDSecure) {
-        prepareThreeDSecurePayload({ payload: tokenPayload })
+        prepareThreeDSecurePayload({ payload: tokenPayload, paymentForm })
       } else {
         const payload = {
           payment_source: {
@@ -121,21 +128,21 @@ async function initBraintree({ form, providerId }) {
             year: tokenPayload.details.expirationYear,
           },
         }
-        submitData({ payload })
+        paymentForm.submitData({ payload })
       }
     })
   }
 
-  function prepareThreeDSecurePayload({ payload }) {
+  function prepareThreeDSecurePayload({ payload, paymentForm }) {
     braintree.threeDSecure.create(
       { client: clientInstance, version: 2 },
       (threeDSecureErr, threeDSecureInstance) => {
         if (threeDSecureErr) {
-          showError(threeDSecureErr)
+          paymentForm.showError(threeDSecureErr)
           return
         }
 
-        const amount = parseFloat(form.dataset.totalPayable).toFixed(2)
+        const amount = parseFloat(paymentForm.form.dataset.totalPayable).toFixed(2)
         const params = {
           amount,
           email,
@@ -170,7 +177,7 @@ async function initBraintree({ form, providerId }) {
 
         threeDSecureInstance.verifyCard(params, (threeDSecureVerifyErr, response) => {
           if (threeDSecureVerifyErr) {
-            showError(threeDSecureVerifyErr)
+            paymentForm.showError(threeDSecureVerifyErr)
             return
           }
 
@@ -187,16 +194,16 @@ async function initBraintree({ form, providerId }) {
             },
           }
 
-          submitData({ payload: threeDSecurePayload })
+          paymentForm.submitData({ payload: threeDSecurePayload })
         })
       }
     )
   }
 
   // Google Pay
-  if (showWallets()) {
+  if (paymentForm.showWallets()) {
     let googlePay
-    const environment = isProduction() ? 'PRODUCTION' : 'TEST'
+    const environment = paymentForm.isProduction() ? 'PRODUCTION' : 'TEST'
 
     const paymentsClient = new google.payments.api.PaymentsClient({
       environment: environment,
@@ -209,9 +216,9 @@ async function initBraintree({ form, providerId }) {
 
       paymentDataRequest = googlePay.createPaymentDataRequest({
         transactionInfo: {
-          currencyCode: currency(),
+          currencyCode: paymentForm.currency(),
           totalPriceStatus: 'FINAL',
-          totalPrice: totalPayable(),
+          totalPrice: paymentForm.totalPayable(),
         },
       })
 
@@ -233,19 +240,19 @@ async function initBraintree({ form, providerId }) {
               },
             },
           }
-          submitData({ payload })
+          paymentForm.submitData({ payload })
         })
         .catch(function (err) {
-          showError(err)
+          paymentForm.showError(err)
         })
     }
 
-    const googleMerchantId = form.dataset.merchantId
+    const googleMerchantId = paymentForm.form.dataset.merchantId
     const googleMerchantEnabled = googleMerchantId && googleMerchantId.length > 0
     const container = document.getElementById(`BraintreeWalletsContainer${providerId}`)
 
     if (container && googleMerchantEnabled) {
-      fetch(callbackUrl(), {
+      fetch(paymentForm.callbackUrl(), {
         method: 'post',
         headers: {
           'content-type': 'application/json',
@@ -256,7 +263,7 @@ async function initBraintree({ form, providerId }) {
         })
         .then((json) => {
           if (json.message) {
-            showError(json.message)
+            paymentForm.showError(json.message)
             return
           }
           const token = json.token
@@ -297,7 +304,7 @@ async function initBraintree({ form, providerId }) {
               }
             })
             .catch((err) => {
-              showError(err)
+              paymentForm.showError(err)
             })
         })
     } else {

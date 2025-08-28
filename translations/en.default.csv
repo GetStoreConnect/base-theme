@@ -806,10 +806,12 @@ sc.checkout.payment.create.errors.card_declined,Payment failed. That card was de
 sc.checkout.payment.create.errors.card_expired,"Payment failed. That card has expired, or the expiration date is incorrect."
 sc.checkout.payment.create.errors.card_invalid,"Payment failed. That card is not valid, please check all fields are correct."
 sc.checkout.payment.create.errors.card_not_supported,Payment failed. That card type is not supported.
+sc.checkout.payment.create.errors.customer_card_store_failed,Payment failed. We were unable to store your card details for future use.
 sc.checkout.payment.create.errors.contact_missing,Payment failed. Please ensure you have provided a required contact details.
 sc.checkout.payment.create.errors.general,"Sorry, an error occurred while trying to process the payment. Please try again later."
 sc.checkout.payment.create.errors.license_error,Live payments disabled for Sandbox StoreConnect licenses
 sc.checkout.payment.create.errors.no_cart_found,"We could not find your cart, perhaps it expired. No payment has been taken."
+sc.checkout.payment.create.errors.no_saved_card,Payment failed. No saved card found for this account.
 sc.checkout.payment.create.errors.points.insufficient_balance,You do not have enough points to complete this order.
 sc.checkout.payment.create.errors.points.not_permitted,You are not allowed to use the account points for this account
 sc.checkout.payment.create.errors.unauthorized,"Unable to authenticate, please check the payment provider's credentials."

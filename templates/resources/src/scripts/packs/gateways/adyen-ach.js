@@ -1,7 +1,6 @@
 import AdyenCheckout from '@adyen/adyen-web'
 import '@adyen/adyen-web/dist/adyen.css'
-import { init, submitData } from './common'
-import { isProduction } from './form'
+import { PaymentForm } from './payment-form'
 import { onDomChange } from '../../theme/utils/init'
 
 onDomChange((node) => {
@@ -15,9 +14,11 @@ onDomChange((node) => {
 })
 
 function initAdyenAch({ form, providerId }) {
-  init(form, onSubmit)
+  const paymentForm = new PaymentForm(form, {
+    onSubmit: () => onSubmit(paymentForm),
+  })
 
-  const environment = isProduction() ? 'live' : 'test'
+  const environment = paymentForm.isProduction() ? 'live' : 'test'
   const clientKey = form.dataset.apiClient
   const clientOpts = form.dataset.clientOpts ? JSON.parse(form.dataset.clientOpts) : {}
 
@@ -52,7 +53,7 @@ function initAdyenAch({ form, providerId }) {
       .mount(`#${mountElementId}`)
   }
 
-  function onSubmit() {
+  function onSubmit(paymentForm) {
     const payload = {
       payment: {
         provider_id: providerId,
@@ -61,7 +62,7 @@ function initAdyenAch({ form, providerId }) {
       payment_source: data.paymentMethod,
     }
 
-    submitData({ payload })
+    paymentForm.submitData({ payload })
   }
 
   initializeAdyenAchForm()

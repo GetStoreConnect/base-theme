@@ -1,7 +1,7 @@
-import { init, loadScript, showError, submitData } from './common'
-import { callbackUrl } from './form'
+import { PaymentForm } from './payment-form'
 import { onDomChange } from '../../theme/utils/init'
-import Rails from '@rails/ujs'
+
+const Rails = window.Rails
 
 onDomChange((node) => {
   const forms = node.querySelectorAll('form[data-provider="Zippay"]')
@@ -14,19 +14,19 @@ onDomChange((node) => {
 })
 
 function initZippay({ form, providerId }) {
-  init(form)
+  const paymentForm = new PaymentForm(form)
 
   const payButtonId = `#ZippayPayWithButton${providerId}`
 
   const payButton = form.querySelector(payButtonId)
   Rails.disableElement(payButton)
 
-  loadScript({
+  paymentForm.loadScript({
     url: 'https://static.zipmoney.com.au/checkout/checkout-v1.min.js',
     onload: function () {
       Rails.enableElement(payButton)
 
-      const checkoutUri = callbackUrl()
+      const checkoutUri = paymentForm.callbackUrl()
 
       const args = {
         checkoutUri,
@@ -39,13 +39,13 @@ function initZippay({ form, providerId }) {
               state: data.state,
             },
           }
-          submitData({ payload })
+          paymentForm.submitData({ payload })
         },
         onError: function (error) {
           if (error.detail.message) {
-            showError(error.detail.message)
+            paymentForm.showError(error.detail.message)
           } else {
-            showError(error.message)
+            paymentForm.showError(error.message)
           }
           Rails.enableElement(payButton)
         },

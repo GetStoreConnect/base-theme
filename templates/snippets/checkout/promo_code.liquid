@@ -11,7 +11,7 @@
             <span class="SC-Field_error">{{ field.errors | try: "messages" }}</span>
           </div>
         </div>
-        <input type="submit" class="SC-Button SC-Button-subtle sc-ml-small" value="{{ "checkout.promo_codes.apply" | t }}">
+        <input type="submit" class="SC-Button SC-Button-subtle sc-ml-small" value="{{ "checkout.promo_codes.apply" | t }}" data-disable-with="{{ "checkout.promo_codes.apply" | t }}">
       </div>
     {% endform %}
   </section>
