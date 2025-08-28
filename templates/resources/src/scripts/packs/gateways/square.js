@@ -1,10 +1,9 @@
-import { init, loadScript, showError, submitData } from './common'
-import { apiKey, currency, showWallets, totalPayable, isProduction } from './form'
+import { PaymentForm } from './payment-form'
+import { Wallet } from './wallet'
 import { onDomChange } from '../../theme/utils/init'
-import { removeWalletsContainer } from './wallets'
 
 onDomChange((node) => {
-  const forms = node.querySelectorAll('form.sq-payment-form[data-provider="Square"]')
+  const forms = node.querySelectorAll('form[data-provider="Square"]:not(.SC-GooglePay)')
   forms.forEach((form) => {
     const providerId = form.dataset.providerId
     if (providerId) {
@@ -14,7 +13,10 @@ onDomChange((node) => {
 })
 
 async function initSquare({ form, providerId }) {
-  init(form, createToken)
+  const paymentForm = new PaymentForm(form, {
+    onSubmit: () => createToken(paymentForm),
+  })
+  const wallet = new Wallet(paymentForm)
 
   const firstname = form.dataset.contactFirstname
   const lastname = form.dataset.contactLastname
@@ -27,6 +29,7 @@ async function initSquare({ form, providerId }) {
   let card
   let payments
 
+  // Returns payment token (aka nonce)
   async function tokenize(paymentMethod) {
     const tokenResult = await paymentMethod.tokenize()
 
@@ -39,7 +42,7 @@ async function initSquare({ form, providerId }) {
     }
   }
 
-  async function createToken() {
+  async function createToken(paymentForm) {
     try {
       const tokId = await tokenize(card)
       const verificationToken = await verifyBuyer(payments, tokId)
@@ -50,19 +53,19 @@ async function initSquare({ form, providerId }) {
           verification_token: verificationToken,
         },
       }
-      submitData({ payload })
+      paymentForm.submitData({ payload })
     } catch (e) {
       console.error(e.message)
       // this will re-enable the form button but
       // not show a message, which is what we want
       // because Square already shows an err msg
-      showError(null)
+      paymentForm.showError(null)
     }
   }
 
   async function verifyBuyer(payments, token) {
     const verificationDetails = {
-      amount: totalPayable(),
+      amount: paymentForm.totalPayable(),
       billingContact: {
         givenName: firstname,
         familyName: lastname,
@@ -72,7 +75,7 @@ async function initSquare({ form, providerId }) {
         city: billingCity,
         country: billingCountry,
       },
-      currencyCode: currency(),
+      currencyCode: paymentForm.currency(),
       intent: 'CHARGE',
     }
 
@@ -80,18 +83,18 @@ async function initSquare({ form, providerId }) {
     return verificationResults.token
   }
 
-  const squareUrl = isProduction()
+  const squareUrl = paymentForm.isProduction()
     ? 'https://web.squarecdn.com/v1/square.js'
     : 'https://sandbox.web.squarecdn.com/v1/square.js'
 
-  loadScript({
+  paymentForm.loadScript({
     url: squareUrl,
     onload: async function () {
       if (!window.Square) {
         throw new Error('Square.js failed to load properly')
       }
 
-      const applicationId = apiKey()
+      const applicationId = paymentForm.apiKey()
       const locationId = form.dataset.locationId
       try {
         // in test environments we allow the Square client to be mocked
@@ -126,9 +129,9 @@ async function initSquare({ form, providerId }) {
       function buildPaymentRequest(payments) {
         return payments.paymentRequest({
           countryCode: billingCountry,
-          currencyCode: currency(),
+          currencyCode: paymentForm.currency(),
           total: {
-            amount: totalPayable(),
+            amount: paymentForm.totalPayable(),
             label: 'Total',
           },
         })
@@ -141,7 +144,7 @@ async function initSquare({ form, providerId }) {
         return payments.applePay(paymentRequest)
       }
 
-      if (showWallets()) {
+      if (paymentForm.showWallets()) {
         // Initialize Google Pay and Apple Pay in parallel
         const walletTasks = []
 
@@ -170,7 +173,7 @@ async function initSquare({ form, providerId }) {
                           verification_token: verificationToken,
                         },
                       }
-                      submitData({ payload })
+                      paymentForm.submitData({ payload })
                     })
                 } catch (e) {
                   console.error('Initializing Google Pay failed', e)
@@ -202,7 +205,7 @@ async function initSquare({ form, providerId }) {
                         tok_id: tokenResult['token'],
                       },
                     }
-                    submitData({ payload })
+                    paymentForm.submitData({ payload })
                   })
                 } catch (e) {
                   console.error('Initializing Apple Pay failed', e)
@@ -224,7 +227,7 @@ async function initSquare({ form, providerId }) {
           await Promise.allSettled(walletTasks)
         }
       } else {
-        removeWalletsContainer()
+        wallet.removeWalletsContainer()
       }
     },
   })

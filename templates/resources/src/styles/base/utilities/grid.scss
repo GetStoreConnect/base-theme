@@ -7,6 +7,10 @@
   gap: var(--sc-grid-gap);
 }
 
+.sc-grid {
+  display: grid;
+}
+
 /**
  * Responsive columns
  */
@@ -40,6 +44,20 @@
   grid-template-columns: repeat(2, 1fr);
   @include medium-and-up {
     grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.sc-two-to-five-column {
+  @include common-grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  @include medium-and-up {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  @include large-and-up {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  @include huge-and-up {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
   }
 }
 

@@ -1,9 +1,8 @@
-import { init, form, formFieldElement, showError, submitData } from './common'
-import { onlyExpressCheckout, removeWalletsContainer, walletsElementExists } from './wallets'
-import { callbackUrl, showWallets } from './form'
+import { PaymentForm } from './payment-form'
+import { Wallet } from './wallet'
 import { onDomChange } from '../../theme/utils/init'
-import { initGooglePayForm } from './google-pay'
-import { initApplePayForm } from './apple-pay'
+import { GooglePay } from './google-pay'
+import { ApplePay } from './apple-pay'
 
 onDomChange((node) => {
   const forms = node.querySelectorAll('form[data-provider="CyberSource"]')
@@ -16,19 +15,22 @@ onDomChange((node) => {
 })
 
 async function initCyberSource({ form }) {
-  init(form, submitPaymentForm)
+  const paymentForm = new PaymentForm(form, {
+    onSubmit: () => submitPaymentForm(paymentForm),
+  })
+  const wallet = new Wallet(paymentForm)
 
   const initTasks = []
 
-  if (formFieldElement('card_name') && !onlyExpressCheckout()) {
-    initTasks.push(initCreditCardForm())
+  if (paymentForm.formFieldElement('card_name') && !paymentForm.onlyExpressCheckout()) {
+    initTasks.push(initCreditCardForm(paymentForm))
   }
 
-  if (showWallets() && walletsElementExists()) {
-    initTasks.push(setupApplePay())
-    initTasks.push(setupGooglePay())
+  if (paymentForm.showWallets() && wallet.walletsElementExists()) {
+    initTasks.push(setupApplePay(paymentForm, wallet))
+    initTasks.push(setupGooglePay(paymentForm, wallet))
   } else {
-    removeWalletsContainer()
+    wallet.removeWalletsContainer()
   }
 
   if (initTasks.length > 0) {
@@ -38,10 +40,10 @@ async function initCyberSource({ form }) {
 
 var microformInstance = null
 
-async function initCreditCardForm() {
-  const captureContext = await initializeCaptureContext()
+async function initCreditCardForm(paymentForm) {
+  const captureContext = await initializeCaptureContext(paymentForm)
   if (!captureContext) {
-    showError('Error preparing to capture payment')
+    paymentForm.showError('Error preparing to capture payment')
     return
   }
 
@@ -80,15 +82,15 @@ async function initCreditCardForm() {
 }
 
 // Called on submit, after the user has entered their card details
-async function submitPaymentForm(form) {
+async function submitPaymentForm(paymentForm) {
   const tokenOptions = {
-    expirationMonth: formFieldElement('card_month').value,
-    expirationYear: formFieldElement('card_year').value,
+    expirationMonth: paymentForm.getFieldValue('card_month'),
+    expirationYear: paymentForm.getFieldValue('card_year'),
   }
 
   await microformInstance.createToken(tokenOptions, (err, token) => {
     if (err) {
-      showError(err.message)
+      paymentForm.showError(err.message)
       return
     }
 
@@ -108,14 +110,14 @@ async function submitPaymentForm(form) {
       },
     }
 
-    submitData({ payload })
+    paymentForm.submitData({ payload })
   })
 }
 
-async function initializeCaptureContext() {
+async function initializeCaptureContext(paymentForm) {
   // Get a capture context token from the server
   try {
-    const response = await fetch(callbackUrl(), {
+    const response = await fetch(paymentForm.callbackUrl(), {
       method: 'post',
       headers: {
         'content-type': 'application/json',
@@ -123,13 +125,13 @@ async function initializeCaptureContext() {
     })
     const json = await response.json()
     if (json.message) {
-      showError(json.message)
+      paymentForm.showError(json.message)
       return
     }
 
     return json.token
   } catch (error) {
-    showError('Error fetching capture context')
+    paymentForm.showError('Error fetching capture context')
     return
   }
 }
@@ -149,12 +151,11 @@ async function loadFlexLibrary(captureContext) {
   })
 }
 
-async function setupGooglePay() {
-  initGooglePayForm({
-    merchantId: form.dataset.googleMerchantId,
-    merchantName: form.dataset.googleMerchantName,
+async function setupGooglePay(paymentForm, wallet) {
+  new GooglePay({
+    paymentForm,
+    wallet,
     gateway: 'cybersource',
-    gatewayMerchantId: form.dataset.merchantId,
     // Extract the google payment token into payload used by cyber_source_service.rb
     extractTokenCallback: (paymentData) => {
       const paymentToken = paymentData.paymentMethodData.tokenizationData.token
@@ -175,17 +176,16 @@ async function setupGooglePay() {
   })
 }
 
-async function setupApplePay() {
-  const merchantId = form.dataset.appleMerchantId
+async function setupApplePay(paymentForm, wallet) {
+  const merchantId = paymentForm.appleMerchantId()
   if (!merchantId) {
     console.error('Configure api_options.apple_merchant_id to enable Apple Pay')
     return
   }
 
-  initApplePayForm({
-    merchantId,
-    merchantName: form.dataset.appleMerchantName || form.dataset.googleMerchantName,
-    providerId: form.dataset.providerId,
+  new ApplePay({
+    paymentForm,
+    wallet,
     // Extract the apple payment token into payload used by cyber_source_service.rb
     extractTokenCallback: (paymentData) => {
       const paymentToken = JSON.stringify(paymentData.token.paymentData)

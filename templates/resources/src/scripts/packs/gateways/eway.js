@@ -1,4 +1,4 @@
-import { init, formFieldElement, loadScript, submitData } from './common'
+import { PaymentForm } from './payment-form'
 import { onDomChange } from '../../theme/utils/init'
 
 // Replace direct initialization with onDomChange pattern
@@ -14,25 +14,27 @@ onDomChange((node) => {
 
 // Keep existing function but rename to make it internal
 function initEway({ form }) {
-  init(form, getFormFields)
+  const paymentForm = new PaymentForm(form, {
+    onSubmit: () => getFormFields(paymentForm),
+  })
 
   const publicKey = form.dataset.publicKey
 
-  function getFormFields(form) {
-    const cardNumberEl = form.querySelector("[data-encrypt-name='EWAY_CARDNUMBER']")
-    const cvnEl = form.querySelector("[data-encrypt-name='EWAY_CARDCVN']")
+  function getFormFields(paymentForm) {
+    const cardNumberEl = paymentForm.form.querySelector("[data-encrypt-name='EWAY_CARDNUMBER']")
+    const cvnEl = paymentForm.form.querySelector("[data-encrypt-name='EWAY_CARDCVN']")
     const payload = {
       payment_source: {
         number: eCrypt.encryptValue(cardNumberEl.value, publicKey),
-        name: formFieldElement('card_name').value,
-        expiry_month: formFieldElement('card_month').value,
-        expiry_year: formFieldElement('card_year').value,
+        name: paymentForm.getFieldValue('card_name'),
+        expiry_month: paymentForm.getFieldValue('card_month'),
+        expiry_year: paymentForm.getFieldValue('card_year'),
         cvn: eCrypt.encryptValue(cvnEl.value, publicKey),
       },
     }
 
-    submitData({ payload })
+    paymentForm.submitData({ payload })
   }
 
-  loadScript({ url: 'https://secure.ewaypayments.com/scripts/eCrypt.min.js' })
+  paymentForm.loadScript({ url: 'https://secure.ewaypayments.com/scripts/eCrypt.min.js' })
 }

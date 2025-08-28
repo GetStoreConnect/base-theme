@@ -1,8 +1,8 @@
-import Rails from '@rails/ujs'
-import { init, formFieldElement, showError, submitData, refreshForm } from './common'
-import { apiKey } from './form'
+import { PaymentForm } from './payment-form'
 import { loadStripe } from '@stripe/stripe-js/pure'
 import { onDomChange } from '../../theme/utils/init'
+
+const Rails = window.Rails
 
 onDomChange((node) => {
   const forms = node.querySelectorAll('form[data-provider="StripeAch"]')
@@ -15,7 +15,9 @@ onDomChange((node) => {
 })
 
 function initStripeAch({ form, providerId }) {
-  init(form, stripeCreatePaymentIntent)
+  const paymentForm = new PaymentForm(form, {
+    onSubmit: () => stripeCreatePaymentIntent(paymentForm),
+  })
   let stripe
 
   function collectBankAccountForMicrodeposit(response) {
@@ -25,47 +27,47 @@ function initStripeAch({ form, providerId }) {
       .confirmUsBankAccountPayment(paymentIntentSecret, {
         payment_method: {
           billing_details: {
-            name: formFieldElement('ach_account_name').value,
-            email: formFieldElement('ach_email').value,
+            name: paymentForm.getFieldValue('ach_account_name'),
+            email: paymentForm.getFieldValue('ach_email'),
           },
           us_bank_account: {
-            account_number: formFieldElement('ach_account_number').value,
-            routing_number: formFieldElement('ach_routing_number').value,
-            account_holder_type: formFieldElement('ach_account_holder_type').value,
+            account_number: paymentForm.getFieldValue('ach_account_number'),
+            routing_number: paymentForm.getFieldValue('ach_routing_number'),
+            account_holder_type: paymentForm.getFieldValue('ach_account_holder_type'),
           },
         },
       })
       .then(({ paymentIntent, error }) => {
         if (error) {
-          showError(error.message)
+          paymentForm.showError(error.message)
         } else {
           const payload = {
             payment_source: {
               tok_id: paymentIntent.id,
             },
           }
-          submitData({ payload })
+          paymentForm.submitData({ payload })
         }
       })
   }
 
-  function stripeCreatePaymentIntent(form) {
+  function stripeCreatePaymentIntent(paymentForm) {
     let data = {
       payment: {
         provider_id: providerId,
         method: 'StripeAch',
       },
       payment_details: {
-        name: formFieldElement('ach_account_name').value,
-        email: formFieldElement('ach_email').value,
-        account_number: formFieldElement('ach_account_number').value,
-        routing_number: formFieldElement('ach_routing_number').value,
-        account_holder_type: formFieldElement('ach_account_holder_type').value,
-        terms: formFieldElement('ach_terms').checked,
+        name: paymentForm.getFieldValue('ach_account_name'),
+        email: paymentForm.getFieldValue('ach_email'),
+        account_number: paymentForm.getFieldValue('ach_account_number'),
+        routing_number: paymentForm.getFieldValue('ach_routing_number'),
+        account_holder_type: paymentForm.getFieldValue('ach_account_holder_type'),
+        terms: paymentForm.formFieldElement('ach_terms').checked,
       },
     }
 
-    const url = `${form.getAttribute('action')}/ach`
+    const url = `${paymentForm.form.getAttribute('action')}/ach`
 
     Rails.ajax({
       url: url,
@@ -79,7 +81,7 @@ function initStripeAch({ form, providerId }) {
         if (response.redirect_url) {
           window.location = response.redirect_url
         } else if (response.error_message) {
-          refreshForm(response.error_message)
+          paymentForm.refreshForm(response.error_message)
         } else {
           collectBankAccountForMicrodeposit(response)
         }
@@ -92,13 +94,13 @@ function initStripeAch({ form, providerId }) {
         const error = document
           .querySelector('[data-general-error-message]')
           .getAttribute('data-general-error-message')
-        showError(error)
+        paymentForm.showError(error)
       },
     })
   }
 
   async function initializeStripe() {
-    stripe = await loadStripe(apiKey())
+    stripe = await loadStripe(paymentForm.apiKey())
   }
 
   initializeStripe()

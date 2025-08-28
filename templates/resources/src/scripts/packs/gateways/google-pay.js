@@ -1,62 +1,110 @@
-import { dedicatedCartProductId, loadScript, showError, submitData } from './common'
-import { isProduction, currency, merchantCountryCode, totalPayable, wrapOuterElement } from './form'
-import {
-  allowedShippingCountries,
-  fetchShippingRates,
-  formAuthentityToken,
-  onlyExpressCheckout,
-  offerShipping,
-  setShippingRate,
-  walletsElement,
-  showWalletsError,
-} from './wallets'
+// PaymentForm instance will be passed as parameter
 import storePathUrl from '../../theme/store-path-url'
 
 /**
  * Initialize native Google Pay JS web button
- *
- * @param {object} options
- * @param {string} options.merchantId - A merchant ID is available for a production environment after approval by Google
- * @param {string} options.merchantName - Name to present on Google Pay window
- * @param {string} options.gateway - Gateway name, e.g. 'cybersource' {@link https://developers.google.com/pay/api/web/reference/request-objects#gateway}
- * @param {string} options.gatewayMerchantId - This is the merchant ID for the gateway, e.g. for CyberSource this is their merchant ID
- * @param {function} options.extractTokenCallback - Function that extracts the token from the payment data as required by the ruby gateway service class
  */
-export async function initGooglePayForm({
-  merchantId,
-  merchantName,
-  gateway,
-  gatewayMerchantId,
-  extractTokenCallback,
-}) {
-  let missingArguments = []
-  if (!merchantId) {
-    missingArguments.push('merchantId')
-  }
-  if (!merchantName) {
-    missingArguments.push('merchantName')
-  }
-  if (!gateway) {
-    missingArguments.push('gateway')
-  }
-  if (!gatewayMerchantId) {
-    missingArguments.push('gatewayMerchantId')
-  }
-  if (!extractTokenCallback || typeof extractTokenCallback !== 'function') {
-    missingArguments.push('extractTokenCallback')
-  }
-  if (missingArguments.length > 0) {
-    console.error(`Google Pay missing arguments: ${missingArguments.join(', ')}`)
-    return
-  }
-
+export class GooglePay {
   /**
-   * An initialized google.payments.api.PaymentsClient object or null if not yet set.
-   * Initialized in {@link getGooglePaymentsClient}
-   *
-   * @see {@link getGooglePaymentsClient}
+   * @param {object} options
+   * @param {PaymentForm} options.paymentForm - PaymentForm instance for accessing form data and methods
+   * @param {Wallet} options.wallet - Wallet instance for accessing wallet functionality
+   * @param {string} [options.merchantId] - A merchant ID is available for a production environment after approval by Google (defaults to paymentForm.googleMerchantId())
+   * @param {string} [options.merchantName] - Name to present on Google Pay window (defaults to paymentForm.merchantName() with fallbacks)
+   * @param {string} options.gateway - Gateway name, e.g. 'cybersource' {@link https://developers.google.com/pay/api/web/reference/request-objects#gateway}
+   * @param {string} [options.gatewayMerchantId] - This is the merchant ID for the gateway, e.g. for CyberSource this is their merchant ID (defaults to paymentForm.merchantId())
+   * @param {function} options.extractTokenCallback - Function that extracts the token from the payment data as required by the ruby gateway service class
    */
-  let paymentsClient = null
+  constructor({
+    paymentForm,
+    wallet,
+    merchantId,
+    merchantName,
+    gateway,
+    gatewayMerchantId,
+    extractTokenCallback,
+  }) {
+    let missingArguments = []
+    if (!paymentForm) {
+      missingArguments.push('paymentForm')
+    }
+    if (!wallet) {
+      missingArguments.push('wallet')
+    }
+    if (!gateway) {
+      missingArguments.push('gateway')
+    }
+    if (!extractTokenCallback || typeof extractTokenCallback !== 'function') {
+      missingArguments.push('extractTokenCallback')
+    }
+    if (missingArguments.length > 0) {
+      console.error(`Google Pay missing arguments: ${missingArguments.join(', ')}`)
+      return
+    }
+
+    this.paymentForm = paymentForm
+    this.wallet = wallet
+    this.merchantId = merchantId || paymentForm.googleMerchantId()
+    this.merchantName =
+      merchantName || paymentForm.merchantName() || paymentForm.googleMerchantName()
+    this.gateway = gateway
+    this.gatewayMerchantId = gatewayMerchantId || paymentForm.merchantId()
+    this.extractTokenCallback = extractTokenCallback
+
+    // Validate computed defaults
+    if (!this.merchantId) {
+      console.error(
+        'Google Pay missing merchantId: could not get value from paymentForm.googleMerchantId()'
+      )
+      return
+    }
+    if (!this.merchantName) {
+      console.error('Google Pay missing merchantName: could not get value from paymentForm methods')
+      return
+    }
+    if (!this.gatewayMerchantId) {
+      console.error(
+        'Google Pay missing gatewayMerchantId: could not get value from paymentForm.merchantId()'
+      )
+      return
+    }
+
+    /**
+     * An initialized google.payments.api.PaymentsClient object or null if not yet set.
+     * Initialized in {@link getGooglePaymentsClient}
+     *
+     * @see {@link getGooglePaymentsClient}
+     */
+    this.paymentsClient = null
+
+    paymentForm.loadScript({
+      url: 'https://pay.google.com/gp/p/js/pay.js',
+      onload: () => this.onGooglePayLoaded(),
+    })
+
+    if (window.StoreConnectTestMode === 'enabled') {
+      window.testGooglePayCallback = async () => {
+        this.handleWalletError({
+          error: { message: `testGooglePayCallback: put your left foot in` },
+        })
+
+        const paymentData = {
+          paymentMethodData: {
+            tokenizationData: {
+              token: JSON.stringify({ signature: 'some-value' }),
+            },
+            info: {
+              cardNetwork: 'VISA',
+              cardDetails: '1111',
+            },
+          },
+        }
+        const payload = this.extractTokenCallback(paymentData)
+        this.handleWalletError({ error: payload })
+        this.paymentForm.submitData({ payload })
+      }
+    }
+  }
 
   /**
    * Define the version of the Google Pay API referenced when creating your
@@ -64,7 +112,7 @@ export async function initGooglePayForm({
    *
    * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#PaymentDataRequest}
    */
-  const baseRequest = {
+  baseRequest = {
     apiVersion: 2,
     apiVersionMinor: 0,
   }
@@ -74,14 +122,14 @@ export async function initGooglePayForm({
    *
    * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#CardParameters}
    */
-  const allowedCardNetworks = ['AMEX', 'DISCOVER', 'INTERAC', 'JCB', 'MASTERCARD', 'VISA']
+  allowedCardNetworks = ['AMEX', 'DISCOVER', 'INTERAC', 'JCB', 'MASTERCARD', 'VISA']
 
   /**
    * Card authentication methods supported by your site and your gateway
    *
    * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#CardParameters}
    */
-  const allowedCardAuthMethods = ['PAN_ONLY', 'CRYPTOGRAM_3DS']
+  allowedCardAuthMethods = ['PAN_ONLY', 'CRYPTOGRAM_3DS']
 
   /**
    * Identify your gateway and your site's gateway merchant identifier
@@ -91,22 +139,24 @@ export async function initGooglePayForm({
    *
    * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#PaymentMethodTokenizationSpecification}
    */
-  const tokenizationSpecification = {
-    type: 'PAYMENT_GATEWAY',
-    parameters: {
-      gateway,
-      gatewayMerchantId,
-    },
+  get tokenizationSpecification() {
+    return {
+      type: 'PAYMENT_GATEWAY',
+      parameters: {
+        gateway: this.gateway,
+        gatewayMerchantId: this.gatewayMerchantId,
+      },
+    }
   }
 
-  function baseTransactionInfo() {
+  baseTransactionInfo() {
     let transactionInfo = {
       totalPriceStatus: 'FINAL',
       totalPriceLabel: 'Total',
-      currencyCode: currency(),
+      currencyCode: this.paymentForm.currency(),
     }
-    if (merchantCountryCode()) {
-      transactionInfo.countryCode = merchantCountryCode()
+    if (this.paymentForm.merchantCountryCode()) {
+      transactionInfo.countryCode = this.paymentForm.merchantCountryCode()
     }
     return transactionInfo
   }
@@ -117,9 +167,9 @@ export async function initGooglePayForm({
    * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#TransactionInfo}
    * @returns {object} transaction info, suitable for use as transactionInfo property of PaymentDataRequest
    */
-  function getGoogleTransactionInfo() {
-    return Object.assign({}, baseTransactionInfo(), {
-      totalPrice: totalPayable(),
+  getGoogleTransactionInfo() {
+    return Object.assign({}, this.baseTransactionInfo(), {
+      totalPrice: this.paymentForm.totalPayable(),
     })
   }
   /**
@@ -128,11 +178,11 @@ export async function initGooglePayForm({
    *
    * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#CardParameters}
    */
-  const baseCardPaymentMethod = {
+  baseCardPaymentMethod = {
     type: 'CARD',
     parameters: {
-      allowedAuthMethods: allowedCardAuthMethods,
-      allowedCardNetworks: allowedCardNetworks,
+      allowedAuthMethods: this.allowedCardAuthMethods,
+      allowedCardNetworks: this.allowedCardNetworks,
     },
   }
 
@@ -142,9 +192,11 @@ export async function initGooglePayForm({
    *
    * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#CardParameters}
    */
-  const cardPaymentMethod = Object.assign({}, baseCardPaymentMethod, {
-    tokenizationSpecification,
-  })
+  get cardPaymentMethod() {
+    return Object.assign({}, this.baseCardPaymentMethod, {
+      tokenizationSpecification: this.tokenizationSpecification,
+    })
+  }
 
   /**
    * Configure your site's support for payment methods supported by the Google Pay
@@ -156,9 +208,9 @@ export async function initGooglePayForm({
    *
    * @returns {object} Google Pay API version, payment methods supported by the site
    */
-  function getGoogleIsReadyToPayRequest() {
-    return Object.assign({}, baseRequest, {
-      allowedPaymentMethods: [baseCardPaymentMethod],
+  getGoogleIsReadyToPayRequest() {
+    return Object.assign({}, this.baseRequest, {
+      allowedPaymentMethods: [this.baseCardPaymentMethod],
     })
   }
 
@@ -168,18 +220,21 @@ export async function initGooglePayForm({
    * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#PaymentDataRequest}
    * @returns {object} PaymentDataRequest fields
    */
-  function getGooglePaymentDataRequest() {
-    const paymentDataRequest = Object.assign({}, baseRequest)
+  getGooglePaymentDataRequest() {
+    const paymentDataRequest = Object.assign({}, this.baseRequest)
 
-    paymentDataRequest.allowedPaymentMethods = [cardPaymentMethod]
-    paymentDataRequest.transactionInfo = getGoogleTransactionInfo()
-    paymentDataRequest.merchantInfo = { merchantId, merchantName }
+    paymentDataRequest.allowedPaymentMethods = [this.cardPaymentMethod]
+    paymentDataRequest.transactionInfo = this.getGoogleTransactionInfo()
+    paymentDataRequest.merchantInfo = {
+      merchantId: this.merchantId,
+      merchantName: this.merchantName,
+    }
 
-    if (onlyExpressCheckout()) {
+    if (this.paymentForm.onlyExpressCheckout()) {
       // Collect email address for receipt / default for account creation
       paymentDataRequest.emailRequired = true
 
-      if (offerShipping()) {
+      if (this.paymentForm.offerShipping()) {
         // Setup shipping rates etc
 
         paymentDataRequest.callbackIntents = [
@@ -188,7 +243,7 @@ export async function initGooglePayForm({
           'PAYMENT_AUTHORIZATION',
         ]
         paymentDataRequest.shippingAddressRequired = true
-        paymentDataRequest.shippingAddressParameters = shippingAddressParameters()
+        paymentDataRequest.shippingAddressParameters = this.shippingAddressParameters()
         paymentDataRequest.shippingOptionRequired = true
       }
     }
@@ -202,10 +257,10 @@ export async function initGooglePayForm({
    * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#ShippingAddressParameters}
    * @returns {object} shipping address details, suitable for use as shippingAddressParameters property of PaymentDataRequest
    */
-  function shippingAddressParameters() {
+  shippingAddressParameters() {
     return {
       phoneNumberRequired: true,
-      allowedCountryCodes: allowedShippingCountries(),
+      allowedCountryCodes: this.paymentForm.allowedShippingCountries(),
     }
   }
 
@@ -215,20 +270,21 @@ export async function initGooglePayForm({
    * @see {@link https://developers.google.com/pay/api/web/reference/client#PaymentsClient}
    * @returns {google.payments.api.PaymentsClient} Google Pay API client
    */
-  function getGooglePaymentsClient() {
-    if (paymentsClient === null) {
-      paymentsClient = new google.payments.api.PaymentsClient({
-        environment: isProduction() ? 'PRODUCTION' : 'TEST',
+  getGooglePaymentsClient() {
+    if (this.paymentsClient === null) {
+      this.paymentsClient = new google.payments.api.PaymentsClient({
+        environment: this.paymentForm.isProduction() ? 'PRODUCTION' : 'TEST',
         paymentDataCallbacks: {
-          onPaymentAuthorized: onPaymentAuthorized,
-          onPaymentDataChanged: onPaymentDataChanged,
+          onPaymentAuthorized: (paymentData) => this.onPaymentAuthorized(paymentData),
+          onPaymentDataChanged: (intermediatePaymentData) =>
+            this.onPaymentDataChanged(intermediatePaymentData),
         },
       })
     }
-    return paymentsClient
+    return this.paymentsClient
   }
 
-  async function onPaymentAuthorized(paymentData) {
+  async onPaymentAuthorized(paymentData) {
     // Sample paymentData:
     // const sample = {
     //   apiVersion: 2,
@@ -246,7 +302,7 @@ export async function initGooglePayForm({
     //     },
     //     tokenizationData: {
     //       token:
-    //         '{"signature":"MEUCIENOChmMxC7qA2b6slXA8B9Rzn/oSzlYAC0SwL3JQdRaAiEA++1hmglVOigVIsSut7hi9lvPQ+dX8guips6k9c5sHs8\\u003d","protocolVersion":"ECv1","signedMessage":"{\\"encryptedMessage\\":\\"p7nWg0fQtP9TX8oiDEClzvb4bawSjhlhZRyM0raTqp9fbJZQFU5UQP/W6WNtAGwlVB3hQvhHoPTBB6xrkfrwRMrYW1zpT6ZVrFVD9rGYCU1ioZD7CFA6id8HBMgRCw/YmrfK35Pjmge7H0d7iMSD2KqVqKx3I839uRIT5kj3hk0w2Gt/mLyY1fNbNldI8U4U4MQUTRhrDgJHkA0/cvfWEe3BiHDW0hANscTs6eI6HQWwi44rMD+f2CjfqmBVX5ELfIIftXPx4WEZEAYr9rc19ee5/NYe6PJ/j8r9fYeMmLMlcdauepwD3KGYexGV9cm8DBNoYpsj0CNxGI3dDe9RIJjgCHuT9jPEdV1+QWYo65N9BTEWdA7vZcA2eqWo8zx053SwCXiFn0iX57vbLlTh61GpIp9YM7MDccSj/LG+EpVXqyJiqrT3LqGuSA8\\\\u003d\\",\\"ephemeralPublicKey\\":\\"BOojpOcX5BJUIv7LK1ri9EexFzoz791pQo4njTYj31W8UuwUUn4W5FK+Ls52NPMvzx4yumCdaHy/YXxbWR9RiuQ\\\\u003d\\",\\"tag\\":\\"BpRVrMFQ7AQRhK+cRiR2KnBGKkBbqaG/GGtWckPp1RQ\\\\u003d\\"}"}',
+    //         '{"signature":"MEUCIENOChmMxC7qA2b6slXA8B9Rzn/oSzlYAC0SwL3JQdRaAiEA++1hmglVOigVIsSut7hi9lvPQ+dX8guips6k9c5sHs8\u003d","protocolVersion":"ECv1","signedMessage":"{\"encryptedMessage\":\"p7nWg0fQtP9TX8oiDEClzvb4bawSjhlhZRyM0raTqp9fbJZQFU5UQP/W6WNtAGwlVB3hQvhHoPTBB6xrkfrwRMrYW1zpT6ZVrFVD9rGYCU1ioZD7CFA6id8HBMgRCw/YmrfK35Pjmge7H0d7iMSD2KqVqKx3I839uRIT5kj3hk0w2Gt/mLyY1fNbNldI8U4U4MQUTRhrDgJHkA0/cvfWEe3BiHDW0hANscTs6eI6HQWwi44rMD+f2CjfqmBVX5ELfIIftXPx4WEZEAYr9rc19ee5/NYe6PJ/j8r9fYeMmLMlcdauepwD3KGYexGV9cm8DBNoYpsj0CNxGI3dDe9RIJjgCHuT9jPEdV1+QWYo65N9BTEWdA7vZcA2eqWo8zx053SwCXiFn0iX57vbLlTh61GpIp9YM7MDccSj/LG+EpVXqyJiqrT3LqGuSA8\\u003d\",\"ephemeralPublicKey\":\"BOojpOcX5BJUIv7LK1ri9EexFzoz791pQo4njTYj31W8UuwUUn4W5FK+Ls52NPMvzx4yumCdaHy/YXxbWR9RiuQ\\u003d\",\"tag\":\"BpRVrMFQ7AQRhK+cRiR2KnBGKkBbqaG/GGtWckPp1RQ\\u003d\"}"}',
     //       type: 'PAYMENT_GATEWAY',
     //     },
     //     type: 'CARD',
@@ -293,8 +349,8 @@ export async function initGooglePayForm({
         },
       },
       shipping_rate: paymentData.shippingOptionData,
-      authenticity_token: formAuthentityToken(),
-      dedicated_cart_product_id: dedicatedCartProductId, // If dedicated product page; else null
+      authenticity_token: this.paymentForm.formAuthentityToken(),
+      dedicated_cart_product_id: this.paymentForm.dedicatedCartProductId, // If dedicated product page; else null
     }
 
     const res = await fetch(storePathUrl(`/express_checkout/carts`), {
@@ -305,7 +361,7 @@ export async function initGooglePayForm({
     if (!res.ok) {
       const { error } = await res.json()
       if (error) {
-        handleWalletError({ error })
+        this.handleWalletError({ error })
         return {
           transactionState: 'ERROR',
           error: {
@@ -322,21 +378,21 @@ export async function initGooglePayForm({
     }
   }
 
-  async function onPaymentDataChanged(intermediatePaymentData) {
+  async onPaymentDataChanged(intermediatePaymentData) {
     const callbackTrigger = intermediatePaymentData.callbackTrigger
     switch (callbackTrigger) {
       case 'INITIALIZE':
       case 'SHIPPING_ADDRESS':
-        return fetchShippingOptions(intermediatePaymentData.shippingAddress)
+        return this.fetchShippingOptions(intermediatePaymentData.shippingAddress)
       case 'SHIPPING_OPTION':
-        return selectShippingOption(intermediatePaymentData.shippingOptionData)
+        return this.selectShippingOption(intermediatePaymentData.shippingOptionData)
     }
 
     return {}
   }
 
-  async function fetchShippingOptions({ countryCode, postalCode, locality, administrativeArea }) {
-    const shippingOptions = await fetchShippingRates({
+  async fetchShippingOptions({ countryCode, postalCode, locality, administrativeArea }) {
+    const shippingOptions = await this.wallet.fetchShippingRates({
       country: countryCode,
       postal_code: postalCode,
       city: locality,
@@ -354,16 +410,18 @@ export async function initGooglePayForm({
       }
     }
 
-    const response = await setShippingRate({ id: shippingOptions.defaultShippingRateId })
+    const response = await this.wallet.setShippingRate({
+      id: shippingOptions.defaultShippingRateId,
+    })
     const amount = response.amount
 
     const priceFormatter = new Intl.NumberFormat('en', {
       style: 'currency',
-      currency: currency(),
+      currency: this.paymentForm.currency(),
     })
 
     return {
-      newTransactionInfo: Object.assign({}, baseTransactionInfo(), {
+      newTransactionInfo: Object.assign({}, this.baseTransactionInfo(), {
         totalPrice: (amount / 100).toFixed(2),
       }),
       newShippingOptionParameters: {
@@ -384,15 +442,15 @@ export async function initGooglePayForm({
     }
   }
 
-  async function selectShippingOption({ id }) {
-    const response = await setShippingRate({ id })
+  async selectShippingOption({ id }) {
+    const response = await this.wallet.setShippingRate({ id })
     if (response.error) {
-      showError(response.error.message)
+      this.paymentForm.showError(response.error.message)
       return
     }
     const amount = response.amount
     return {
-      newTransactionInfo: Object.assign({}, baseTransactionInfo(), {
+      newTransactionInfo: Object.assign({}, this.baseTransactionInfo(), {
         totalPrice: (amount / 100).toFixed(2),
       }),
     }
@@ -404,18 +462,16 @@ export async function initGooglePayForm({
    * Display a Google Pay payment button after confirmation of the viewer's
    * ability to pay.
    */
-  function onGooglePayLoaded() {
-    const paymentsClient = getGooglePaymentsClient()
+  onGooglePayLoaded() {
+    const paymentsClient = this.getGooglePaymentsClient()
     paymentsClient
-      .isReadyToPay(getGoogleIsReadyToPayRequest())
-      .then(function (response) {
+      .isReadyToPay(this.getGoogleIsReadyToPayRequest())
+      .then((response) => {
         if (response.result) {
-          addGooglePayButton()
+          this.addGooglePayButton()
         }
       })
-      .catch(function (err) {
-        showError(err)
-      })
+      .catch((err) => this.paymentForm.showError(err))
   }
 
   /**
@@ -424,41 +480,41 @@ export async function initGooglePayForm({
    * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#ButtonOptions}
    * @see {@link https://developers.google.com/pay/api/web/guides/brand-guidelines}
    */
-  function addGooglePayButton() {
-    const walletsContainer = walletsElement()
+  addGooglePayButton() {
+    const walletsContainer = this.wallet.walletsElement()
     if (!walletsContainer) {
       console.error('Cannot setup Google Pay button: no wallets container found')
       return
     }
 
-    const paymentsClient = getGooglePaymentsClient()
+    const paymentsClient = this.getGooglePaymentsClient()
     const button = paymentsClient.createButton({
-      onClick: onGooglePaymentButtonClicked,
+      onClick: () => this.onGooglePaymentButtonClicked(),
       buttonColor: 'default',
       buttonSizeMode: 'fill',
     })
 
-    walletsContainer.appendChild(wrapOuterElement({ element: button, classNames: 'sc-grow' }))
+    walletsContainer.appendChild(
+      this.paymentForm.wrapOuterElement({ element: button, classNames: 'sc-grow' })
+    )
   }
 
   /**
    * Show Google Pay payment sheet when Google Pay payment button is clicked
    */
-  function onGooglePaymentButtonClicked() {
-    const paymentDataRequest = getGooglePaymentDataRequest()
-    const paymentsClient = getGooglePaymentsClient()
+  onGooglePaymentButtonClicked() {
+    const paymentDataRequest = this.getGooglePaymentDataRequest()
+    const paymentsClient = this.getGooglePaymentsClient()
     paymentsClient
       .loadPaymentData(paymentDataRequest)
-      .then(function (paymentData) {
-        processPayment(paymentData)
-      })
-      .catch(function (err) {
+      .then((paymentData) => this.processPayment(paymentData))
+      .catch((err) => {
         console.error(err)
         if (err && err.statusCode === 'CANCELED') {
           // Do nothing if user closed the Payment Request UI
           return
         }
-        showError(err)
+        this.paymentForm.showError(err)
       })
   }
 
@@ -468,48 +524,24 @@ export async function initGooglePayForm({
    * @param {object} paymentData response from Google Pay API after user approves payment
    * @see {@link https://developers.google.com/pay/api/web/reference/response-objects#PaymentData}
    */
-  function processPayment(paymentData) {
-    const payload = extractTokenCallback(paymentData)
+  processPayment(paymentData) {
+    const payload = this.extractTokenCallback(paymentData)
 
-    if (dedicatedCartProductId) {
-      payload.dedicated_cart_product_id = dedicatedCartProductId
+    if (this.paymentForm.dedicatedCartProductId) {
+      payload.dedicated_cart_product_id = this.paymentForm.dedicatedCartProductId
     }
-    submitData({ payload })
+    this.paymentForm.submitData({ payload })
   }
 
-  loadScript({
-    url: 'https://pay.google.com/gp/p/js/pay.js',
-    onload: onGooglePayLoaded,
-  })
-
-  if (window.StoreConnectTestMode === 'enabled') {
-    window.testGooglePayCallback = async () => {
-      handleWalletError({ error: { message: `testGooglePayCallback: put your left foot in` } })
-
-      const paymentData = {
-        paymentMethodData: {
-          tokenizationData: {
-            token: JSON.stringify({ signature: 'some-value' }),
-          },
-          info: {
-            cardNetwork: 'VISA',
-            cardDetails: '1111',
-          },
-        },
-      }
-      const payload = extractTokenCallback(paymentData)
-      handleWalletError({ error: payload })
-      submitData({ payload })
-    }
-  }
-
-  function handleWalletError({ error, event }) {
+  handleWalletError({ error, event }) {
     if (error) {
-      if (error.message) {
-        showWalletsError(error.message)
-      } else {
-        showWalletsError(JSON.stringify(error))
-      }
+      // Report the technical error details
+      this.paymentForm.reportError(error, { context: 'google-pay-wallet' })
+
+      // Show a generic user-friendly message
+      this.wallet.showWalletsError('Payment processing failed. Please try again.', {
+        report: false,
+      })
     }
     if (event) {
       event.reject()

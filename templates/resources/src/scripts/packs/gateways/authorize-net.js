@@ -1,5 +1,4 @@
-import { init, formFieldElement, showError, submitData, loadScript } from './common'
-import { isProduction, apiKey } from './form'
+import { PaymentForm } from './payment-form'
 import { onDomChange } from '../../theme/utils/init'
 
 onDomChange((node) => {
@@ -13,59 +12,60 @@ onDomChange((node) => {
 })
 
 function initAuthorizeNet({ form }) {
+  const paymentForm = new PaymentForm(form, {
+    onSubmit: () => createToken(paymentForm),
+  })
   const zipCode = form.dataset.zipCode
 
-  init(form, createToken)
-
   const authData = {
-    apiLoginID: apiKey(),
+    apiLoginID: paymentForm.apiKey(),
     clientKey: form.dataset.publicKey,
   }
 
-  function createToken() {
+  function createToken(paymentForm) {
     let secureData = { authData }
 
-    if (formFieldElement('card_name')) {
+    if (paymentForm.formFieldElement('card_name')) {
       secureData.cardData = {
-        fullName: formFieldElement('card_name').value,
-        cardNumber: formFieldElement('card_number').value,
-        month: formFieldElement('card_month').value,
-        year: formFieldElement('card_year').value,
-        cardCode: formFieldElement('card_verification').value,
+        fullName: paymentForm.getFieldValue('card_name'),
+        cardNumber: paymentForm.getFieldValue('card_number'),
+        month: paymentForm.getFieldValue('card_month'),
+        year: paymentForm.getFieldValue('card_year'),
+        cardCode: paymentForm.getFieldValue('card_verification'),
         zip: zipCode,
       }
     }
 
-    if (formFieldElement('ach_account_holder_type')) {
+    if (paymentForm.formFieldElement('ach_account_holder_type')) {
       secureData.bankData = {
-        accountType: formFieldElement('ach_account_holder_type').value,
-        accountNumber: formFieldElement('ach_account_number').value,
-        routingNumber: formFieldElement('ach_routing_number').value,
-        nameOnAccount: formFieldElement('ach_account_name').value,
-        bankName: formFieldElement('ach_bank_name').value,
+        accountType: paymentForm.getFieldValue('ach_account_holder_type'),
+        accountNumber: paymentForm.getFieldValue('ach_account_number'),
+        routingNumber: paymentForm.getFieldValue('ach_routing_number'),
+        nameOnAccount: paymentForm.getFieldValue('ach_account_name'),
+        bankName: paymentForm.getFieldValue('ach_bank_name'),
         echeckType: 'WEB',
       }
     }
 
-    Accept.dispatchData(secureData, createTokenCallback)
+    Accept.dispatchData(secureData, (response) => createTokenCallback(response, paymentForm))
   }
 
-  function createTokenCallback(response) {
+  function createTokenCallback(response, paymentForm) {
     if (response.messages.resultCode === 'Error') {
       const error = response.messages.message.map((obj) => obj.text).join('\n')
-      showError(error)
+      paymentForm.showError(error)
     } else {
       const payload = {
         payment_source: {
           tok_id: response.opaqueData['dataValue'],
         },
       }
-      submitData({ payload })
+      paymentForm.submitData({ payload })
     }
   }
 
-  const authorizeNetUrl = isProduction()
+  const authorizeNetUrl = paymentForm.isProduction()
     ? 'https://js.authorize.net/v1/Accept.js'
     : 'https://jstest.authorize.net/v1/Accept.js'
-  loadScript({ url: authorizeNetUrl })
+  paymentForm.loadScript({ url: authorizeNetUrl })
 }

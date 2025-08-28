@@ -1,6 +1,7 @@
-import { init, submitData, submitElement } from './common'
+import { PaymentForm } from './payment-form'
 import { onDomChange } from '../../theme/utils/init'
-import Rails from '@rails/ujs'
+
+const Rails = window.Rails
 
 // Register onDomChange handler to detect and initialize PayWay forms
 onDomChange((node) => {
@@ -15,10 +16,12 @@ onDomChange((node) => {
 
 // Internal initialization function
 function initPayWay({ form }) {
-  init(form, onSubmit)
+  const paymentForm = new PaymentForm(form, {
+    onSubmit: () => onSubmit(paymentForm),
+  })
 
-  const apiKey = form.dataset.apiKey
-  const payButton = submitElement()
+  const apiKey = paymentForm.apiKey()
+  const payButton = paymentForm.submitElement()
   let creditCardFrame = null
 
   const tokenCallback = function (err, data) {
@@ -33,7 +36,7 @@ function initPayWay({ form }) {
           singleUseTokenId: data.singleUseTokenId,
         },
       }
-      submitData({ payload })
+      paymentForm.submitData({ payload })
     }
   }
 
@@ -60,7 +63,7 @@ function initPayWay({ form }) {
     payway.createCreditCardFrame(options, createdCallback)
   }
 
-  function onSubmit() {
+  function onSubmit(paymentForm) {
     creditCardFrame.getToken(tokenCallback)
   }
 

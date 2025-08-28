@@ -1,26 +1,5 @@
-import {
-  init,
-  formFieldElement,
-  showError,
-  submitData,
-  extractAdditionalFormPayload,
-} from './common'
-import { apiKey, currency, showWallets, totalPayable } from './form'
-import {
-  onlyExpressCheckout,
-  storeName,
-  offerShipping,
-  allowedShippingCountries,
-  fetchShippingRates,
-  formAuthentityToken,
-  setShippingRate,
-  loadingShippingRates,
-  prepareProductCartWithAddToCartData,
-  removeWalletsContainer,
-  walletsElementExists,
-  walletsElementId,
-  showWalletsError,
-} from './wallets'
+import { PaymentForm } from './payment-form'
+import { Wallet } from './wallet'
 import { loadStripe } from '@stripe/stripe-js/pure'
 import storePathUrl from '../../theme/store-path-url'
 import { onDomChange } from '../../theme/utils/init'
@@ -36,16 +15,17 @@ onDomChange((node) => {
 })
 
 function initStripe({ form }) {
-  init(form, stripeCreateToken)
-
-  let dedicatedCartProductId = form.dataset.dedicatedCartProductId
+  const paymentForm = new PaymentForm(form, {
+    onSubmit: stripeCreateToken,
+  })
+  const wallet = new Wallet(paymentForm)
 
   let cardNumberElement
   let stripe
   let elements
 
   function paymentsUrl() {
-    const payload = extractAdditionalFormPayload()
+    const payload = paymentForm.extractAdditionalFormPayload()
 
     const url = new URL(form.dataset.paymentsUrl, window.location.origin)
     Object.entries(payload).forEach(([key, value]) => {
@@ -61,13 +41,13 @@ function initStripe({ form }) {
   function stripeCreateToken(_form) {
     // We're bypassing the form here because we're using Stripe Elements
     stripe
-      .createToken(cardNumberElement, { name: formFieldElement('card_name').value })
+      .createToken(cardNumberElement, { name: paymentForm.getFieldValue('card_name') })
       .then(stripeResponseHandler)
   }
 
   function stripeResponseHandler(response) {
     if (response.error) {
-      showError(response.error.message)
+      paymentForm.showError(response.error.message)
     } else {
       const token = response.token
       const payload = {
@@ -78,13 +58,13 @@ function initStripe({ form }) {
           year: token.card.exp_year,
         },
       }
-      submitData({ payload })
+      paymentForm.submitData({ payload })
     }
   }
 
   // If CC form present, initialize Stripe Elements
   async function stripeInitializeElements() {
-    if (formFieldElement('card_number')) {
+    if (paymentForm.formFieldElement('card_number')) {
       elements = stripe.elements()
 
       const root = document.querySelector(':root')
@@ -95,35 +75,35 @@ function initStripe({ form }) {
       const style = { base: { fontSize, fontFamily } }
 
       cardNumberElement = elements.create('cardNumber', {
-        placeholder: formFieldElement('card_number').dataset.placeholder,
+        placeholder: paymentForm.formFieldElement('card_number').dataset.placeholder,
         classes: { base: 'SC-Field_input SC-Field-stripe sc-expand' },
         style,
         disableLink: true,
       })
 
-      cardNumberElement.mount(`#${formFieldElement('card_number').id}`)
+      cardNumberElement.mount(`#${paymentForm.formFieldElement('card_number').id}`)
       const cardExpiryElement = elements.create('cardExpiry', {
-        placeholder: formFieldElement('card_expiry').dataset.placeholder,
+        placeholder: paymentForm.formFieldElement('card_expiry').dataset.placeholder,
         classes: { base: 'SC-Field_input SC-Field-stripe' },
         style,
       })
-      cardExpiryElement.mount(`#${formFieldElement('card_expiry').id}`)
+      cardExpiryElement.mount(`#${paymentForm.formFieldElement('card_expiry').id}`)
 
       const cardCvcElement = elements.create('cardCvc', {
-        placeholder: formFieldElement('card_verification').dataset.placeholder,
+        placeholder: paymentForm.formFieldElement('card_verification').dataset.placeholder,
         classes: { base: 'SC-Field_input SC-Field-stripe' },
         style,
       })
-      cardCvcElement.mount(`#${formFieldElement('card_verification').id}`)
+      cardCvcElement.mount(`#${paymentForm.formFieldElement('card_verification').id}`)
     }
   }
 
   function handleWalletError({ error, event }) {
     if (error) {
       if (error.message) {
-        showWalletsError(error.message)
+        wallet.showWalletsError(error.message)
       } else {
-        showWalletsError(JSON.stringify(error))
+        wallet.showWalletsError(JSON.stringify(error))
       }
     }
     if (event) {
@@ -132,15 +112,15 @@ function initStripe({ form }) {
   }
 
   function stripeInitializeWallets() {
-    if (!walletsElementExists()) {
+    if (!wallet.walletsElementExists()) {
       return
     }
 
     // Passing StripeElementsOptions; returns StripeElements
     const elements = stripe.elements({
       mode: 'payment',
-      amount: Math.round(totalPayable() * 100),
-      currency: currency().toLowerCase(),
+      amount: Math.round(paymentForm.totalPayable() * 100),
+      currency: paymentForm.currency().toLowerCase(),
     })
 
     const expressCheckoutElement = elements.create('expressCheckout', {
@@ -158,7 +138,7 @@ function initStripe({ form }) {
       paymentMethodOrder: ['applePay', 'googlePay', 'amazonPay', 'link', 'paypal'],
     })
 
-    expressCheckoutElement.mount(`#${walletsElementId()}`)
+    expressCheckoutElement.mount(`#${wallet.walletsElementId()}`)
 
     // When user starts wallet process by clicking Buy with Apple Pay or Google Pay button
     //
@@ -166,30 +146,31 @@ function initStripe({ form }) {
     expressCheckoutElement.on('click', async (event) => {
       const options = {
         business: {
-          name: storeName(),
+          name: paymentForm.storeName(),
         },
       }
 
-      if (onlyExpressCheckout()) {
+      if (paymentForm.onlyExpressCheckout()) {
         // Collect email address for receipt / default for account creation
         options.emailRequired = true
         options.billingAddressRequired = true
 
-        if (offerShipping()) {
+        if (paymentForm.offerShipping()) {
           options.phoneNumberRequired = true
           options.shippingAddressRequired = true
 
           // Wallet can indicate to customer their country is not valid
-          options.allowedShippingCountries = allowedShippingCountries()
+          options.allowedShippingCountries = paymentForm.allowedShippingCountries()
 
           // If shippingAddressRequired is true, then shippingRates is required
           // Show something to indicate we're loading them
-          options.shippingRates = loadingShippingRates()
+          options.shippingRates = wallet.loadingShippingRates()
         }
 
-        if (dedicatedCartProductId) {
-          const { amount, error } =
-            await prepareProductCartWithAddToCartData(dedicatedCartProductId)
+        if (paymentForm.dedicatedCartProductId) {
+          const { amount, error } = await wallet.prepareProductCartWithAddToCartData(
+            paymentForm.dedicatedCartProductId
+          )
           if (error) {
             handleWalletError({ error, event })
             return
@@ -204,7 +185,7 @@ function initStripe({ form }) {
     // https://docs.stripe.com/js/elements_object/express_checkout_element_shippingaddresschange_event#express_checkout_element_on_shipping_address_change
     expressCheckoutElement.on('shippingaddresschange', async (event) => {
       const { address } = event
-      const { amount, shippingRates, error } = await fetchShippingRates(address)
+      const { amount, shippingRates, error } = await wallet.fetchShippingRates(address)
       if (error) {
         handleWalletError({ error, event })
         return
@@ -218,7 +199,7 @@ function initStripe({ form }) {
 
     // https://docs.stripe.com/js/elements_object/express_checkout_element_shippingratechange_event
     expressCheckoutElement.on('shippingratechange', async (event) => {
-      const { amount, error } = await setShippingRate(event.shippingRate)
+      const { amount, error } = await wallet.setShippingRate(event.shippingRate)
       if (error) {
         handleWalletError({ error, event })
         return
@@ -231,7 +212,7 @@ function initStripe({ form }) {
     //
     // https://docs.stripe.com/js/elements_object/express_checkout_element_confirm_event
     expressCheckoutElement.on('confirm', async (event) => {
-      if (onlyExpressCheckout()) {
+      if (paymentForm.onlyExpressCheckout()) {
         const res = await fetch(storePathUrl(`/express_checkout/carts`), {
           method: 'PUT',
           headers: { 'content-type': 'application/json' },
@@ -239,8 +220,8 @@ function initStripe({ form }) {
             billing_details: event.billingDetails,
             shipping_address: event.shippingAddress,
             shipping_rate: event.shippingRate, // shouldn't have changed since last shippingratechange
-            authenticity_token: formAuthentityToken(),
-            dedicated_cart_product_id: dedicatedCartProductId,
+            authenticity_token: paymentForm.formAuthentityToken(),
+            dedicated_cart_product_id: paymentForm.dedicatedCartProductId,
           }),
         })
 
@@ -288,17 +269,17 @@ function initStripe({ form }) {
   }
 
   async function initializeStripe() {
-    stripe = await loadStripe(apiKey())
+    stripe = await loadStripe(paymentForm.apiKey())
 
     const tasks = [stripeInitializeElements()]
-    if (showWallets()) {
+    if (paymentForm.showWallets()) {
       tasks.push(stripeInitializeWallets())
     }
 
     await Promise.allSettled(tasks)
 
-    if (!showWallets()) {
-      removeWalletsContainer()
+    if (!paymentForm.showWallets()) {
+      wallet.removeWalletsContainer()
     }
   }
 
@@ -308,15 +289,18 @@ function initStripe({ form }) {
     window.testStripeExpressCheckout = async ({ dedicatedProductId, shippingRateId }) => {
       handleWalletError({ error: { message: `put your left foot in` } })
       if (dedicatedProductId) {
-        dedicatedCartProductId = dedicatedProductId // shared into common.js
+        paymentForm.dedicatedCartProductId = dedicatedProductId
 
         handleWalletError({
-          error: { message: `using dedicated cart product id: ${dedicatedCartProductId}` },
+          error: {
+            message: `using dedicated cart product id: ${paymentForm.dedicatedCartProductId}`,
+          },
         })
 
         // On wallet click, we send the 'add-to-cart' form data to the server
         // to create a dedicated cart for the product
-        const { amount, error } = await prepareProductCartWithAddToCartData(dedicatedProductId)
+        const { amount, error } =
+          await wallet.prepareProductCartWithAddToCartData(dedicatedProductId)
         if (error) {
           handleWalletError({ error })
           return
@@ -339,7 +323,7 @@ function initStripe({ form }) {
 
       handleWalletError({ error: { message: 'starting...' } })
 
-      const { shippingRates, error: error1 } = await fetchShippingRates(address)
+      const { shippingRates, error: error1 } = await wallet.fetchShippingRates(address)
       handleWalletError({ error: { message: 'fetched rates' } })
       if (error1) {
         handleWalletError({ error: error1 })
@@ -350,7 +334,7 @@ function initStripe({ form }) {
       const shippingRate = shippingRateId
         ? shippingRates.find((rate) => rate.id === shippingRateId)
         : shippingRates[0]
-      const { amount, error: error2 } = await setShippingRate(shippingRate)
+      const { amount, error: error2 } = await wallet.setShippingRate(shippingRate)
       if (error2) {
         handleWalletError({ error: error2 })
         return
@@ -362,7 +346,7 @@ function initStripe({ form }) {
         method: 'PUT',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({
-          authenticity_token: formAuthentityToken(),
+          authenticity_token: paymentForm.formAuthentityToken(),
           billing_details: {
             name: 'Test User',
             email: 'drnic@getstoreconnect.com',
@@ -373,7 +357,7 @@ function initStripe({ form }) {
             address,
           },
           shipping_rate: shippingRate,
-          dedicated_cart_product_id: dedicatedCartProductId,
+          dedicated_cart_product_id: paymentForm.dedicatedCartProductId,
         }),
       })
       if (!res.ok) {

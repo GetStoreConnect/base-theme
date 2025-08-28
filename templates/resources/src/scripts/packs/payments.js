@@ -4,7 +4,10 @@ window.StoreConnect = window.StoreConnect || {}
 
 // Update checkout summary panel
 onDomChange((node) => {
-  if (!node.querySelector('[data-checkout-summary]')) {
+  if (
+    !node.querySelector('#select-and-payment') &&
+    !node.querySelector('[data-checkout-summary]')
+  ) {
     return
   }
 
@@ -28,10 +31,17 @@ onDomChange((node) => {
     showPaymentForm(currentProviderId)
   } else {
     currentProviderId = null
-    // If there is no last used provider, we'll show the first one if it is available
+
+    // Check if current subscription has a payment provider preference
     const paymentProviders = document.querySelector("section[data-tabs='payment']")
     if (paymentProviders) {
-      if (paymentProviders.querySelector('[data-tab]')) {
+      const defaultProviderId = paymentProviders.getAttribute('data-default-payment-provider')
+
+      if (defaultProviderId && providerIdTabExists(defaultProviderId)) {
+        currentProviderId = defaultProviderId
+        showPaymentForm(currentProviderId)
+      } else if (paymentProviders.querySelector('[data-tab]')) {
+        // If there is no default provider, we'll show the first one if it is available
         currentProviderId = paymentProviders.querySelector('[data-tab]').getAttribute('data-tab')
         if (currentProviderId) {
           showPaymentForm(currentProviderId)
@@ -71,7 +81,7 @@ function showPaymentForm(providerId) {
   const trigger = document.querySelector(`[data-tab-trigger='${providerId}']`)
 
   // Store the selected payment provider for 1 day
-  Cookie.set('last-used-payment-provider', providerId, { expires: 1 })
+  Cookie.set('last-used-payment-provider', providerId, { sameSite: 'Lax', expires: 1 })
 
   if (tab) {
     tab.classList.remove('sc-hide')
