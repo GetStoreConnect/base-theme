@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../../src/scripts/packs/theme-preview.js"],
-  "sourcesContent": ["document.addEventListener('DOMContentLoaded', init)\n\nfunction init() {\n  const trigger = document.querySelector('[data-theme-preview-recents]')\n  if (trigger) {\n    trigger.addEventListener('change', activateTheme)\n  }\n}\n\nfunction activateTheme(e) {\n  const target = e.currentTarget\n\n  if (target.value) {\n    const params = new URLSearchParams(window.location.search)\n    params.delete('theme-preview')\n    params.append('theme-preview', target.value)\n    window.location.search = params\n  }\n}\n"],
-  "mappings": ";;AAAA,WAAS,iBAAiB,oBAAoB,IAAI;AAElD,WAAS,OAAO;AACd,UAAM,UAAU,SAAS,cAAc,8BAA8B;AACrE,QAAI,SAAS;AACX,cAAQ,iBAAiB,UAAU,aAAa;AAAA,IAClD;AAAA,EACF;AAEA,WAAS,cAAc,GAAG;AACxB,UAAM,SAAS,EAAE;AAEjB,QAAI,OAAO,OAAO;AAChB,YAAM,SAAS,IAAI,gBAAgB,OAAO,SAAS,MAAM;AACzD,aAAO,OAAO,eAAe;AAC7B,aAAO,OAAO,iBAAiB,OAAO,KAAK;AAC3C,aAAO,SAAS,SAAS;AAAA,IAC3B;AAAA,EACF;",
-  "names": []
-}
