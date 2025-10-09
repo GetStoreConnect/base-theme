@@ -62,6 +62,19 @@
         placeholder="{{ "checkout.gateways.form.verification_placeholder" | t }}"
         required>
     </div>
+
+    <div class="SC-Field SC-Field-small">
+      {% assign field = form.fields["billing_postal_code"] %}
+      <label for="{{ field.id }}" class="SC-Field_label">
+        {{ "checkout.gateways.form.postal_code" | t }}
+      </label>
+      <input type="text" name="{{ field.name }}" id="{{ field.id }}" value="{{ field.value }}" 
+        autocomplete="postal-code"
+        class="SC-Field_input"
+        maxlength="10"
+        size="8"
+        required>
+    </div>
   </div>
 </fieldset>
 

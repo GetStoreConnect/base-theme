@@ -49,6 +49,7 @@ endif
       <input type="text" id="{{ field_id }}" name="{{ field_name }}"
               value="{{ line }}"
               class="SC-Field_input sc-one-whole"
+              maxlength="255"
               autocomplete="{{ address_type }} address-line{{ forloop.index }}"
               {% if forloop.first %} required{% endif %}
             >
@@ -66,7 +67,7 @@ endif
     <div class="SC-Field{% if city.errors != blank %} has-error{% endif %} required">
       <label for="{{ city.id }}" class="SC-Field_label">{{ "accounts.shared.address_form.city" | t }}</label>
       <input type="text" id="{{ city.id }}" name="{{ city.name }}" value="{{ city.value }}" class="Field_input"
-            autocomplete="{{ address_type }} address-level2" required>
+            autocomplete="{{ address_type }} address-level2" maxlength="40" required>
       <span class="SC-Field_error">{{ city.errors | try: "messages" }}</span>
     </div>
   </div>

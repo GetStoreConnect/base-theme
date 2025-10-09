@@ -85,7 +85,7 @@
             {%- if order.payments.size > 0 %}:
               {%- comment %} Currency Amount {% endcomment %}
               {%- if payment.amount > 0 %}
-                <span data-currency>{{ payment.amount | money, compact: false }}</span>
+                <span data-currency>{{ payment.amount | money }}</span>
               {%- endif %}
 
               {%- comment %} And {% endcomment %}

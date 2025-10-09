@@ -1,6 +1,11 @@
 {%- default product: nil %}
 
 {%- if product.pricing.has_price? %}
+  {%- assign button_disabled = false %}
+  {% if product.master? and product.variants.size > 0 or product.bookable? %}
+    {%- assign button_disabled = true %}
+  {%- endif %}
+  
   {%- form "add-to-cart", product: product, data-cart-form: true %}
     {%# Booking %}
     {%- if product.bookable? && ! product.variants.size > 0 %}
@@ -15,10 +20,6 @@
     {% render "products/in_your_cart", compact: true, hide_image: true %}
 
     {% if product.can_add_to_cart? %}
-      {%- assign button_disabled = false %}
-      {% if product.master? and product.variants.size > 0 or product.bookable? %}
-        {%- assign button_disabled = true %}
-      {%- endif %}
       <div class="SC-AddToCart">
         {%# Quantity picker %}
         {%- if product.can_select_quantity? %}
@@ -69,7 +70,7 @@
     {%- endif %}
   {% endform %}
   {%- unless product.subscription? %}
-    {%- if product.pricing.can_purchase_with_currency? and theme_variables["products.card.hide_purchase_button"] == false %}
+    {%- if product.pricing.can_purchase_with_currency? and theme_variables["products.card.hide_purchase_button"] == false and button_disabled == false %}
       {% render "products/product/express_checkout", product: product %}
     {%- endif %}
   {%- endunless %}
