@@ -1,0 +1,7 @@
+<div class="sc-component-container"
+  {% if reload_events.size > 0 %}data-reload-events="{{ reload_events | join: ' ' }}"{% endif %}
+  data-nonce="{{ nonce }}"
+  data-token="{{ token }}"
+>
+  {{ content }}
+</div>
