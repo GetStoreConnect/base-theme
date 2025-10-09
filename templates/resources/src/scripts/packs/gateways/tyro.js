@@ -123,26 +123,26 @@ async function tyroSubmitPayment(paymentForm) {
     // by fetchPayRequest().
     processPaymentOutcome(paymentForm)
   } catch (error) {
-    handleFailedPayment({ message: error.errorMessage, error, paymentForm })
+    handleFailedPayment({ message: error.errorMessage, paymentForm })
   }
 }
 
 async function tyroWalletPaymentComplete(paymentType, error, paymentForm) {
   if (error) {
-    handleFailedPayment({ message: error.errorMessage, error, paymentForm })
+    handleFailedPayment({ message: error.errorMessage, paymentForm })
     return
   }
   try {
     processPaymentOutcome(paymentForm)
   } catch (error) {
-    handleFailedPayment({ message: error.errorMessage, error, paymentForm })
+    handleFailedPayment({ message: error.errorMessage, paymentForm })
   }
 }
 
 async function processPaymentOutcome(paymentForm) {
   const payRequest = await tyro.fetchPayRequest()
   if (payRequest.status !== 'SUCCESS') {
-    handleFailedPayment({ message: payRequest.errorMessage, error: payRequest, paymentForm })
+    handleFailedPayment({ message: payRequest.errorMessage, paymentForm })
     return
   }
 
@@ -159,18 +159,14 @@ async function processPaymentOutcome(paymentForm) {
 
 // https://docs.connect.tyro.com/app/apis/pay/error-types/
 // https://docs.connect.tyro.com/app/apis/pay/errors/
-async function handleFailedPayment({ message, error, paymentForm }) {
+async function handleFailedPayment({ message, paymentForm }) {
   let errorMessage = message
   if (!errorMessage) {
     const payRequest = await tyro.fetchPayRequest()
     errorMessage = payRequest.errorMessage
   }
 
-  if (error?.type === 'CLIENT_VALIDATION_ERROR') {
-    // Ignore these errors as they're handled by validation
-  } else {
-    paymentForm.showError(errorMessage)
-  }
+  paymentForm.showError(errorMessage)
 
   enableForm(paymentForm)
 }

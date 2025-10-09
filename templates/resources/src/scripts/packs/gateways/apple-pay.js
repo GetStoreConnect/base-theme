@@ -95,7 +95,10 @@ export class ApplePay {
         }
         const payload = this.extractTokenCallback(paymentData)
         this.handleWalletError({ error: payload })
-        this.paymentForm.submitData({ payload })
+        this.paymentForm.submitData({
+          payload,
+          handleError: (error) => this.handleWalletError({ error }),
+        })
       }
     }
   }
@@ -165,6 +168,7 @@ export class ApplePay {
           body: JSON.stringify({
             provider_id: this.providerId,
             authenticity_token: this.paymentForm.formAuthentityToken(),
+            validation_url: event.validationURL,
           }),
         })
 

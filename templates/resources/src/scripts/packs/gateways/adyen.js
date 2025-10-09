@@ -81,7 +81,13 @@ function initAdyen({ form, providerId }) {
     paymentForm.submitData({ payload, handleSuccess: card.handleAction })
   }
 
-  const initTasks = [initializeAdyenForm()]
+  const initTasks = []
+
+  // Only initialize card form if not express checkout
+  if (!paymentForm.onlyExpressCheckout()) {
+    initTasks.push(initializeAdyenForm())
+  }
+
   if (paymentForm.showWallets() && wallet.walletsElementExists()) {
     initTasks.push(setupApplePay(paymentForm, wallet))
     initTasks.push(setupGooglePay(paymentForm, wallet))

@@ -1,8 +1,10 @@
 import { PaymentForm } from './payment-form'
 import { onDomChange } from '../../theme/utils/init'
 
+const SECURE_PAY_FORM_SELECTOR = 'form[data-provider="SecurePay"]'
+
 onDomChange((node) => {
-  const forms = node.querySelectorAll('form[data-provider="SecurePay"]')
+  const forms = node.querySelectorAll(SECURE_PAY_FORM_SELECTOR)
   forms.forEach((form) => {
     const providerId = form.dataset.providerId
     if (providerId) {
@@ -35,6 +37,10 @@ function initSecurePay({ form, providerId }) {
   const paymentForm = new PaymentForm(form, {
     onSubmit: () => mySecurePayUI.tokenise(),
   })
+
+  // Check for conflicts - only blocks non-production forms
+  if (paymentForm.hasConflict({ selector: SECURE_PAY_FORM_SELECTOR })) return
+
   var mySecurePayUI
 
   // Get inputStyles from the data attribute, if available

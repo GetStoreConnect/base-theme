@@ -1,8 +1,10 @@
 import { PaymentForm } from './payment-form'
 import { onDomChange } from '../../theme/utils/init'
 
+const AUTHORIZE_NET_FORM_SELECTOR = 'form[data-provider*="AuthorizeNet"]'
+
 onDomChange((node) => {
-  const forms = node.querySelectorAll('form[data-provider*="AuthorizeNet"]')
+  const forms = node.querySelectorAll(AUTHORIZE_NET_FORM_SELECTOR)
   forms.forEach((form) => {
     const providerId = form.dataset.providerId
     if (providerId) {
@@ -15,7 +17,9 @@ function initAuthorizeNet({ form }) {
   const paymentForm = new PaymentForm(form, {
     onSubmit: () => createToken(paymentForm),
   })
-  const zipCode = form.dataset.zipCode
+
+  // Check for conflicts - only blocks non-production forms
+  if (paymentForm.hasConflict({ selector: AUTHORIZE_NET_FORM_SELECTOR })) return
 
   const authData = {
     apiLoginID: paymentForm.apiKey(),
@@ -32,7 +36,10 @@ function initAuthorizeNet({ form }) {
         month: paymentForm.getFieldValue('card_month'),
         year: paymentForm.getFieldValue('card_year'),
         cardCode: paymentForm.getFieldValue('card_verification'),
-        zip: zipCode,
+        // form.dataset.zipCode was an early implementation and is
+        // included for backwards compatibility for clients who
+        // have modified app/liquid/theme/snippets/checkout/payment_information/payment_providers/authorize_net/form.liquid
+        zip: paymentForm.getFieldValue('billing_postal_code') || form.dataset.zipCode,
       }
     }
 

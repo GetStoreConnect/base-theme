@@ -2,8 +2,10 @@ import { PaymentForm } from './payment-form'
 import { Wallet } from './wallet'
 import { onDomChange } from '../../theme/utils/init'
 
+const SQUARE_FORM_SELECTOR = 'form[data-provider="Square"]:not(.SC-GooglePay)'
+
 onDomChange((node) => {
-  const forms = node.querySelectorAll('form[data-provider="Square"]:not(.SC-GooglePay)')
+  const forms = node.querySelectorAll(SQUARE_FORM_SELECTOR)
   forms.forEach((form) => {
     const providerId = form.dataset.providerId
     if (providerId) {
@@ -16,6 +18,10 @@ async function initSquare({ form, providerId }) {
   const paymentForm = new PaymentForm(form, {
     onSubmit: () => createToken(paymentForm),
   })
+
+  // Check for conflicts - only blocks non-production forms
+  if (paymentForm.hasConflict({ selector: SQUARE_FORM_SELECTOR })) return
+
   const wallet = new Wallet(paymentForm)
 
   const firstname = form.dataset.contactFirstname
@@ -29,9 +35,8 @@ async function initSquare({ form, providerId }) {
   let card
   let payments
 
-  // Returns payment token (aka nonce)
-  async function tokenize(paymentMethod) {
-    const tokenResult = await paymentMethod.tokenize()
+  async function tokenize({ paymentMethod, verificationDetails }) {
+    const tokenResult = await paymentMethod.tokenize(verificationDetails)
 
     if (tokenResult.status === 'OK') {
       return tokenResult.token
@@ -44,13 +49,28 @@ async function initSquare({ form, providerId }) {
 
   async function createToken(paymentForm) {
     try {
-      const tokId = await tokenize(card)
-      const verificationToken = await verifyBuyer(payments, tokId)
+      const verificationDetails = {
+        amount: paymentForm.totalPayable(),
+        billingContact: {
+          givenName: firstname,
+          familyName: lastname,
+          email,
+          phone,
+          addressLines: [billingStreet],
+          city: billingCity,
+          country: billingCountry,
+        },
+        currencyCode: paymentForm.currency(),
+        intent: 'CHARGE',
+        customerInitiated: true,
+        sellerKeyedIn: false,
+      }
+
+      const tokId = await tokenize({ paymentMethod: card, verificationDetails })
 
       const payload = {
         payment_source: {
           tok_id: tokId,
-          verification_token: verificationToken,
         },
       }
       paymentForm.submitData({ payload })
@@ -61,26 +81,6 @@ async function initSquare({ form, providerId }) {
       // because Square already shows an err msg
       paymentForm.showError(null)
     }
-  }
-
-  async function verifyBuyer(payments, token) {
-    const verificationDetails = {
-      amount: paymentForm.totalPayable(),
-      billingContact: {
-        givenName: firstname,
-        familyName: lastname,
-        email: email,
-        phone: phone,
-        addressLines: [billingStreet],
-        city: billingCity,
-        country: billingCountry,
-      },
-      currencyCode: paymentForm.currency(),
-      intent: 'CHARGE',
-    }
-
-    const verificationResults = await payments.verifyBuyer(token, verificationDetails)
-    return verificationResults.token
   }
 
   const squareUrl = paymentForm.isProduction()
@@ -104,7 +104,11 @@ async function initSquare({ form, providerId }) {
           payments = window.Square.payments(applicationId, locationId)
         }
       } catch (e) {
-        Bugsnag.notify(e)
+        paymentForm.reportError(e, {
+          context: 'Square payments initialization',
+          applicationId,
+          locationId,
+        })
 
         const statusContainer = document.getElementById(`SquarePaymentStatus${providerId}`)
         statusContainer.className = 'missing-credentials'
@@ -164,13 +168,31 @@ async function initSquare({ form, providerId }) {
                     .addEventListener('click', async function (event) {
                       event.preventDefault()
 
-                      const tokId = await tokenize(googlePay)
-                      const verificationToken = await verifyBuyer(payments, tokId)
+                      const verificationDetails = {
+                        amount: paymentForm.totalPayable(),
+                        billingContact: {
+                          givenName: firstname,
+                          familyName: lastname,
+                          email: email,
+                          phone: phone,
+                          addressLines: [billingStreet],
+                          city: billingCity,
+                          country: billingCountry,
+                        },
+                        currencyCode: paymentForm.currency(),
+                        intent: 'CHARGE',
+                        customerInitiated: true,
+                        sellerKeyedIn: false,
+                      }
+
+                      const tokId = await tokenize({
+                        paymentMethod: googlePay,
+                        verificationDetails,
+                      })
 
                       const payload = {
                         payment_source: {
                           tok_id: tokId,
-                          verification_token: verificationToken,
                         },
                       }
                       paymentForm.submitData({ payload })

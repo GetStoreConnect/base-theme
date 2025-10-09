@@ -38,8 +38,7 @@ export class GooglePay {
       missingArguments.push('extractTokenCallback')
     }
     if (missingArguments.length > 0) {
-      console.error(`Google Pay missing arguments: ${missingArguments.join(', ')}`)
-      return
+      throw new Error(`👛 Google Pay missing required arguments: ${missingArguments.join(', ')}`)
     }
 
     this.paymentForm = paymentForm
@@ -52,21 +51,19 @@ export class GooglePay {
     this.extractTokenCallback = extractTokenCallback
 
     // Validate computed defaults
+    const missingDefaults = []
     if (!this.merchantId) {
-      console.error(
-        'Google Pay missing merchantId: could not get value from paymentForm.googleMerchantId()'
-      )
-      return
+      missingDefaults.push('merchantId (from paymentForm.googleMerchantId())')
     }
     if (!this.merchantName) {
-      console.error('Google Pay missing merchantName: could not get value from paymentForm methods')
-      return
+      missingDefaults.push('merchantName (from paymentForm methods)')
     }
     if (!this.gatewayMerchantId) {
-      console.error(
-        'Google Pay missing gatewayMerchantId: could not get value from paymentForm.merchantId()'
-      )
-      return
+      missingDefaults.push('gatewayMerchantId (from paymentForm.merchantId())')
+    }
+
+    if (missingDefaults.length > 0) {
+      throw new Error(`👛 Google Pay missing required configuration: ${missingDefaults.join(', ')}`)
     }
 
     /**
@@ -122,7 +119,7 @@ export class GooglePay {
    *
    * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#CardParameters}
    */
-  allowedCardNetworks = ['AMEX', 'DISCOVER', 'INTERAC', 'JCB', 'MASTERCARD', 'VISA']
+  allowedCardNetworks = ['AMEX', 'MASTERCARD', 'VISA', 'DISCOVER', 'INTERAC', 'JCB']
 
   /**
    * Card authentication methods supported by your site and your gateway
@@ -150,10 +147,15 @@ export class GooglePay {
   }
 
   baseTransactionInfo() {
+    const currency = this.paymentForm.currency()
+    if (!currency) {
+      throw new Error('👛 Google Pay requires a valid currency code')
+    }
+
     let transactionInfo = {
       totalPriceStatus: 'FINAL',
       totalPriceLabel: 'Total',
-      currencyCode: this.paymentForm.currency(),
+      currencyCode: currency,
     }
     if (this.paymentForm.merchantCountryCode()) {
       transactionInfo.countryCode = this.paymentForm.merchantCountryCode()
@@ -168,8 +170,14 @@ export class GooglePay {
    * @returns {object} transaction info, suitable for use as transactionInfo property of PaymentDataRequest
    */
   getGoogleTransactionInfo() {
+    const totalPrice = this.paymentForm.totalPayable()
+    if (totalPrice === null || totalPrice === undefined || isNaN(parseFloat(totalPrice))) {
+      throw new Error('👛 Google Pay requires a valid total price')
+    }
+
     return Object.assign({}, this.baseTransactionInfo(), {
-      totalPrice: this.paymentForm.totalPayable(),
+      // The format of the string should follow the regex format: ^[0-9]+(\.[0-9][0-9])?$
+      totalPrice: parseFloat(totalPrice).toFixed(2),
     })
   }
   /**
@@ -178,12 +186,14 @@ export class GooglePay {
    *
    * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#CardParameters}
    */
-  baseCardPaymentMethod = {
-    type: 'CARD',
-    parameters: {
-      allowedAuthMethods: this.allowedCardAuthMethods,
-      allowedCardNetworks: this.allowedCardNetworks,
-    },
+  get baseCardPaymentMethod() {
+    return {
+      type: 'CARD',
+      parameters: {
+        allowedAuthMethods: this.allowedCardAuthMethods,
+        allowedCardNetworks: this.allowedCardNetworks,
+      },
+    }
   }
 
   /**
@@ -272,14 +282,21 @@ export class GooglePay {
    */
   getGooglePaymentsClient() {
     if (this.paymentsClient === null) {
-      this.paymentsClient = new google.payments.api.PaymentsClient({
+      const clientConfig = {
         environment: this.paymentForm.isProduction() ? 'PRODUCTION' : 'TEST',
-        paymentDataCallbacks: {
+      }
+
+      // Only include paymentDataCallbacks when we have callbackIntents
+      // to avoid Symbol(includes) crashes when callbackIntents is undefined
+      if (this.paymentForm.onlyExpressCheckout() && this.paymentForm.offerShipping()) {
+        clientConfig.paymentDataCallbacks = {
           onPaymentAuthorized: (paymentData) => this.onPaymentAuthorized(paymentData),
           onPaymentDataChanged: (intermediatePaymentData) =>
             this.onPaymentDataChanged(intermediatePaymentData),
-        },
-      })
+        }
+      }
+
+      this.paymentsClient = new google.payments.api.PaymentsClient(clientConfig)
     }
     return this.paymentsClient
   }
@@ -323,29 +340,40 @@ export class GooglePay {
     //     id: 'Custom Shipping_0010k00000sbMwUDvC',
     //   },
     // }
+
+    // Validate required payment data structure
+    if (!paymentData || typeof paymentData !== 'object') {
+      throw new Error('👛 Invalid payment data received from Google Pay')
+    }
+
+    if (!paymentData.shippingAddress || typeof paymentData.shippingAddress !== 'object') {
+      throw new Error('👛 Missing or invalid shipping address from Google Pay')
+    }
+
+    const shippingAddress = paymentData.shippingAddress
     const payload = {
       billing_details: {
-        name: paymentData.shippingAddress.name,
-        email: paymentData.email,
-        phone: paymentData.shippingAddress.phoneNumber,
+        name: shippingAddress.name || '',
+        email: paymentData.email || '',
+        phone: shippingAddress.phoneNumber || '',
         address: {
-          line1: paymentData.shippingAddress.address1,
-          line2: paymentData.shippingAddress.address2,
-          city: paymentData.shippingAddress.locality,
-          state: paymentData.shippingAddress.administrativeArea,
-          postal_code: paymentData.shippingAddress.postalCode,
-          country: paymentData.shippingAddress.countryCode,
+          line1: shippingAddress.address1 || '',
+          line2: shippingAddress.address2 || '',
+          city: shippingAddress.locality || '',
+          state: shippingAddress.administrativeArea || '',
+          postal_code: shippingAddress.postalCode || '',
+          country: shippingAddress.countryCode || '',
         },
       },
       shipping_address: {
-        name: paymentData.shippingAddress.name,
+        name: shippingAddress.name || '',
         address: {
-          line1: paymentData.shippingAddress.address1,
-          line2: paymentData.shippingAddress.address2,
-          city: paymentData.shippingAddress.locality,
-          state: paymentData.shippingAddress.administrativeArea,
-          postal_code: paymentData.shippingAddress.postalCode,
-          country: paymentData.shippingAddress.countryCode,
+          line1: shippingAddress.address1 || '',
+          line2: shippingAddress.address2 || '',
+          city: shippingAddress.locality || '',
+          state: shippingAddress.administrativeArea || '',
+          postal_code: shippingAddress.postalCode || '',
+          country: shippingAddress.countryCode || '',
         },
       },
       shipping_rate: paymentData.shippingOptionData,
@@ -392,11 +420,22 @@ export class GooglePay {
   }
 
   async fetchShippingOptions({ countryCode, postalCode, locality, administrativeArea }) {
+    // Validate required shipping parameters
+    if (!countryCode) {
+      return {
+        error: {
+          message: 'Country code is required for shipping options',
+          reason: 'INVALID_SHIPPING_ADDRESS',
+          intent: 'SHIPPING_ADDRESS',
+        },
+      }
+    }
+
     const shippingOptions = await this.wallet.fetchShippingRates({
       country: countryCode,
-      postal_code: postalCode,
-      city: locality,
-      state: administrativeArea,
+      postal_code: postalCode || '',
+      city: locality || '',
+      state: administrativeArea || '',
       street: '',
     })
 
@@ -427,10 +466,12 @@ export class GooglePay {
       newShippingOptionParameters: {
         defaultSelectedOptionId: shippingOptions.defaultShippingRateId,
         shippingOptions: shippingOptions.shippingRates.map((rate) => {
-          let description = `FREE ${rate.deliveryEstimate}`
+          let description = `FREE`
           if (rate.amount > 0) {
-            const price = priceFormatter.format(rate.amount / 100)
-            description = `${price} ${rate.deliveryEstimate}`
+            description = priceFormatter.format(rate.amount / 100)
+          }
+          if (typeof rate.deliveryEstimate === 'string' && rate.deliveryEstimate.trim() !== '') {
+            description += ` - ${rate.deliveryEstimate}`
           }
           return {
             id: rate.id,
@@ -514,7 +555,7 @@ export class GooglePay {
           // Do nothing if user closed the Payment Request UI
           return
         }
-        this.paymentForm.showError(err)
+        this.wallet.showWalletsError(err)
       })
   }
 
@@ -530,7 +571,10 @@ export class GooglePay {
     if (this.paymentForm.dedicatedCartProductId) {
       payload.dedicated_cart_product_id = this.paymentForm.dedicatedCartProductId
     }
-    this.paymentForm.submitData({ payload })
+    this.paymentForm.submitData({
+      payload,
+      handleError: (error) => this.handleWalletError({ error }),
+    })
   }
 
   handleWalletError({ error, event }) {

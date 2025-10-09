@@ -9,6 +9,7 @@ function init(node) {
     mainImage = document.querySelector('[data-product-image]')
     mainVideo = document.querySelector('[data-product-video]')
     mainVideoIframe = document.querySelector('[data-product-video-iframe]')
+    mainVideoIframeContainer = document.querySelector('[data-product-video-iframe-container]')
     thumbnails = document.querySelectorAll('[data-product-thumbnail]')
 
     const container = document.querySelector('[data-product-image-container]')
@@ -42,7 +43,7 @@ function set(thumbnail) {
 
   if (thumbnail.tagName.toLowerCase() == 'video') {
     mainImage.classList.add('sc-hide')
-    mainVideoIframe.classList.add('sc-hide')
+    mainVideoIframeContainer.classList.add('sc-hide')
     transferVideoAttributes(thumbnail, mainVideo)
     mainVideo.classList.remove('sc-hide')
   } else if (
@@ -52,10 +53,10 @@ function set(thumbnail) {
     mainImage.classList.add('sc-hide')
     mainVideo.classList.add('sc-hide')
     transferYoutubeAttributes(thumbnail, mainVideoIframe)
-    mainVideoIframe.classList.remove('sc-hide')
+    mainVideoIframeContainer.classList.remove('sc-hide')
   } else {
     mainVideo.classList.add('sc-hide')
-    mainVideoIframe.classList.add('sc-hide')
+    mainVideoIframeContainer.classList.add('sc-hide')
     transferImageAttributes(thumbnail, mainImage)
     mainImage.classList.remove('sc-hide')
   }

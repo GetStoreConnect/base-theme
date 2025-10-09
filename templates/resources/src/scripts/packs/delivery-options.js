@@ -117,6 +117,31 @@ const DeliveryOptionsSelector = function (node) {
       .then((json) => {
         node.removeAttribute('data-delivery-options-pending')
         deliveryTimeSlotsNode.innerHTML = json.html
+
+        // Add event listeners for delivery window ID handling
+        const timeslotInputs = deliveryTimeSlotsNode.querySelectorAll(
+          'input[data-delivery-window-id]'
+        )
+        timeslotInputs.forEach((input) => {
+          input.addEventListener('change', (e) => {
+            if (e.target.checked) {
+              // Store the delivery window ID when a time slot is selected
+              const deliveryWindowId = e.target.getAttribute('data-delivery-window-id')
+              let hiddenInput = form.querySelector(
+                `input[name="delivery_options[${lineItemId}][delivery_window_id]"]`
+              )
+
+              if (!hiddenInput) {
+                hiddenInput = document.createElement('input')
+                hiddenInput.type = 'hidden'
+                hiddenInput.name = `delivery_options[${lineItemId}][delivery_window_id]`
+                form.appendChild(hiddenInput)
+              }
+
+              hiddenInput.value = deliveryWindowId
+            }
+          })
+        })
       })
       .catch((_) => {
         node.setAttribute('data-delivery-options-pending', true)

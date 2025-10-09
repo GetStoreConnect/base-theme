@@ -1,11 +1,17 @@
 .Traits,
 .SC-Traits {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sc-spacing-base);
   margin-bottom: var(--sc-spacing-base);
 
   &_category {
     display: flex;
     flex-direction: column;
-    gap: var(--sc-spacing-medium);
+    gap: var(--sc-spacing-small);
+  }
+
+  &_title h5 {
+    margin-bottom: 0;
   }
 }

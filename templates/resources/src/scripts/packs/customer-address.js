@@ -82,6 +82,10 @@ function configure(element) {
           if (input.labels) {
             input.labels.forEach((label) => {
               delete label.dataset.required
+              const inputContainer = label.parentElement
+              if (inputContainer) {
+                inputContainer.classList.remove('required')
+              }
             })
           }
         }

@@ -4,6 +4,9 @@ import storePathUrl from '../../theme/store-path-url'
 const Rails = window.Rails
 
 export class PaymentForm {
+  // Static registry for tracking loaded scripts
+  static loadedScripts = new Set()
+
   constructor(form, options = {}) {
     this.form = form
     this.providerName = form.dataset.provider
@@ -83,15 +86,24 @@ export class PaymentForm {
   }
 
   async loadScript({ url, onload, id }) {
-    const script = document.createElement('script')
-    script.src = url
-    if (onload) {
-      script.onload = onload
-    }
-    if (id) {
-      script.id = id
-    }
     if (this.scriptsElement()) {
+      // Check if script already loaded to prevent duplicates
+      if (PaymentForm.loadedScripts.has(url)) {
+        if (onload) onload()
+        return
+      }
+
+      // Mark as loaded
+      PaymentForm.loadedScripts.add(url)
+
+      const script = document.createElement('script')
+      script.src = url
+      if (onload) {
+        script.onload = onload
+      }
+      if (id) {
+        script.id = id
+      }
       this.scriptsElement().appendChild(script)
     } else {
       this.showError(
@@ -227,7 +239,7 @@ export class PaymentForm {
    *
    * A response from the server includes a `redirect_url` attribute if the payment was successful.
    */
-  submitData({ payload, handleSuccess }) {
+  submitData({ payload, handleSuccess, handleError } = {}) {
     this.hideError()
 
     payload.payment = payload.payment || {}
@@ -267,6 +279,10 @@ export class PaymentForm {
         } else if (response.redirect_url) {
           window.location = response.redirect_url
         } else if (response.error_message) {
+          if (handleError) {
+            handleError({ error: response.error_message })
+            return
+          }
           this.refreshForm(response.error_message)
         } else if (response.payment_response && handleSuccess) {
           handleSuccess(response.payment_response.action)
@@ -423,7 +439,23 @@ export class PaymentForm {
   }
 
   allowedShippingCountries() {
-    return JSON.parse(this.form.dataset.shippingCountries || '[]')
+    const raw = this.form.dataset.shippingCountries
+    if (!raw) return []
+
+    try {
+      const parsed = JSON.parse(raw)
+      // Ensure parsed is an array of strings
+      if (!Array.isArray(parsed) || !parsed.every((v) => typeof v === 'string')) {
+        throw new Error('shippingCountries must be a JSON array of strings')
+      }
+      return parsed
+    } catch (exception) {
+      // If JSON.parse failed due to invalid JSON, wrap and re-throw with a clearer message
+      if (exception instanceof SyntaxError) {
+        throw new Error(`shippingCountries contains invalid JSON: ${exception.message}`)
+      }
+      throw new Error(`shippingCountries must be a JSON array of strings: ${exception.message}`)
+    }
   }
 
   formAuthentityToken() {
@@ -478,5 +510,40 @@ export class PaymentForm {
     } else {
       onSubmit()
     }
+  }
+
+  // Disable this form if it is a sandbox env, and there are production forms
+  hasConflict(options = {}) {
+    const { selector } = options
+    const providerCode = this.providerName
+
+    if (this.isProduction()) {
+      return false
+    }
+
+    // For non-production forms, check if any production forms exist
+    // Use provided selector or default to forms with same provider
+    const formSelector = selector || `form[data-provider="${providerCode}"]`
+    const allForms = document.querySelectorAll(formSelector)
+
+    // Check if any other form (not this one) is in production mode
+    const hasProductionConflict = Array.from(allForms).some(
+      (form) => form !== this.form && form.dataset.apiMode === 'production'
+    )
+
+    if (hasProductionConflict) {
+      const message = `${providerCode} sandbox/test mode is disabled because production mode is already active on this page.`
+      this.showError(message)
+      this.disableForm()
+      return true
+    }
+
+    return false
+  }
+
+  // Disable the form using existing CSS classes
+  disableForm() {
+    this.form.classList.add('is-disabled', 'sc-pointer-events-none')
+    this.setPayButton(false)
   }
 }
