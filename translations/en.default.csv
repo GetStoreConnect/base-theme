@@ -51,6 +51,7 @@ accounts.contact.path,contact
 accounts.contact.phone,Phone
 accounts.contact.update,Update your contact details
 accounts.credentials.confirm_new_password,Confirm new password
+accounts.credentials.current_password,Current password
 accounts.credentials.heading,Login Details
 accounts.credentials.new_password,New password
 accounts.credentials.path,credentials
@@ -433,6 +434,7 @@ checkout.gateways.form.name_on_account,Name on account
 checkout.gateways.form.routing_number,Routing number
 checkout.gateways.form.routing_number_placeholder,0000 00000
 checkout.gateways.form.bank_name,Bank name
+checkout.gateways.form.postal_code,Postal code
 checkout.gateways.free_form.no_payment_required,No payment required
 checkout.gateways.pay_by_account_form.account_on_credit_hold,"Account is on credit hold, please contact us for information."
 checkout.gateways.pay_by_account_form.enter_purchase_order_number,Enter Purchase Order Number
@@ -673,6 +675,7 @@ sc.account_credit.remove.errors.fail,The account credit could not be removed fro
 sc.account_credit.remove.notices.success,Account Credit removed
 sc.account_points.descriptor,Account Points
 sc.accounts.confirmations.notices.already_signed_in,You are already signed in
+sc.accounts.confirmations.notices.check_email_for_instructions,"If the email is registered, you should get a confirmation email, unless it's already confirmed."
 sc.accounts.invitations.notices.already_signed_in,You are already signed in
 sc.accounts.orders.bookings.attendees.create.errors.fail,There was an error creating the attendee
 sc.accounts.orders.bookings.attendees.create.notices.success,Attendee was added
@@ -1209,6 +1212,7 @@ sc.locale.errors.messages.expired,"has expired, please request a new one"
 sc.locale.errors.messages.greater_than,must be greater than %{count}
 sc.locale.errors.messages.greater_than_or_equal_to,must be greater than or equal to %{count}
 sc.locale.errors.messages.immutable,can't be changed
+sc.locale.errors.messages.incorrect,is incorrect
 sc.locale.errors.messages.inclusion,is not included in the list
 sc.locale.errors.messages.invalid,is invalid
 sc.locale.errors.messages.less_than,must be less than %{count}
@@ -1332,6 +1336,10 @@ sc.vouchers.apply.notices.success,Voucher has been applied.
 sc.vouchers.descriptor,Voucher
 sc.vouchers.remove.errors.fail,The voucher could not be removed from your cart. Please contact support for assistance.
 sc.vouchers.remove.notices.success,Voucher removed
+sc.shipments.errors.provider_not_enabled,%{provider} shipping provider is not configured or not active
+sc.shipments.errors.not_ready_to_ship,Shipment is not ready to ship
+sc.shipments.errors.provider_shipment_id_is_shipping_rate,Provider Shipment ID references a custom Shipping Rate
+sc.shipments.errors.invalid_shipment,Shipment data is currently invalid and no changes are allowed
 search.articles.index.no_results,There are no content article results
 search.filters.apply_filters,Apply filters
 search.filters.category_placeholder,Search %{name}
@@ -1379,10 +1387,6 @@ shared.sort.sort_relevance,Relevance
 shared.variable_pricing_picker.label,Price
 shared.variable_pricing_picker.other_amount,Other Amount
 shared.variable_pricing_picker.placeholder,Amount...
-shipments.errors.provider_not_enabled,%{provider} shipping provider is not configured or not active
-shipments.errors.not_ready_to_ship,Shipment is not ready to ship
-shipments.errors.provider_shipment_id_is_shipping_rate,Provider Shipment ID references a custom Shipping Rate
-shipments.errors.invalid_shipment,Shipment data is currently invalid and no changes are allowed
 subscriptions.term_units.day,day
 subscriptions.term_units.days,%{number} days
 subscriptions.term_units.fortnight,fortnight
