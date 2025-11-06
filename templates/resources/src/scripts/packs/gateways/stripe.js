@@ -1,8 +1,9 @@
 import { PaymentForm } from './payment-form'
 import { Wallet } from './wallet'
 import { loadStripe } from '@stripe/stripe-js/pure'
-import storePathUrl from '../../theme/store-path-url'
 import { onDomChange } from '../../theme/utils/init'
+import fetchWithResponseHandler from '../../theme/utils/fetch'
+import storePathUrl from '../../theme/store-path-url'
 
 onDomChange((node) => {
   const forms = node.querySelectorAll('form[data-provider="Stripe"]')
@@ -32,10 +33,6 @@ function initStripe({ form }) {
       url.searchParams.set(key, value)
     })
     return url.toString()
-  }
-
-  function intentsUrl() {
-    return form.dataset.intentsUrl
   }
 
   function stripeCreateToken(_form) {
@@ -116,10 +113,19 @@ function initStripe({ form }) {
       return
     }
 
+    const amount = Math.round(paymentForm.totalPayable() * 100)
+
+    // Don't initialize wallets if amount is 0 (e.g., subscription update pages)
+    // Stripe requires amount to be greater than 0
+    if (amount <= 0) {
+      wallet.removeWalletsContainer()
+      return
+    }
+
     // Passing StripeElementsOptions; returns StripeElements
     const elements = stripe.elements({
       mode: 'payment',
-      amount: Math.round(paymentForm.totalPayable() * 100),
+      amount,
       currency: paymentForm.currency().toLowerCase(),
     })
 
@@ -168,11 +174,9 @@ function initStripe({ form }) {
         }
 
         if (paymentForm.dedicatedCartProductId) {
-          const { amount, error } = await wallet.prepareProductCartWithAddToCartData(
-            paymentForm.dedicatedCartProductId
-          )
-          if (error) {
-            handleWalletError({ error, event })
+          const { amount, didError } = await wallet.prepareProductCartWithAddToCartData()
+          if (didError) {
+            event.reject()
             return
           }
           elements.update({ amount })
@@ -185,16 +189,32 @@ function initStripe({ form }) {
     // https://docs.stripe.com/js/elements_object/express_checkout_element_shippingaddresschange_event#express_checkout_element_on_shipping_address_change
     expressCheckoutElement.on('shippingaddresschange', async (event) => {
       const { address } = event
-      const { amount, shippingRates, error } = await wallet.fetchShippingRates(address)
+      const { amount, shippingRates, defaultShippingRateId, error } =
+        await wallet.fetchShippingRates(address)
       if (error) {
         handleWalletError({ error, event })
         return
       }
 
-      // Price might have changed if we adjusted tax applicability
-      elements.update({ amount })
+      // Get the full cart total including default shipping rate
+      const defaultRate = shippingRates.find((rate) => rate.id === defaultShippingRateId)
+      let finalAmount = amount
+      if (defaultRate) {
+        const { amount: updatedAmount, error: setRateError } =
+          await wallet.setShippingRate(defaultRate)
+        if (!setRateError) {
+          finalAmount = updatedAmount
+        }
+      }
 
-      event.resolve({ shippingRates })
+      // Update the element with the final amount including shipping
+      elements.update({ amount: finalAmount })
+
+      // Resolve with the shipping rates
+      event.resolve({
+        shippingRates,
+        selectedShippingRate: { id: defaultShippingRateId },
+      })
     })
 
     // https://docs.stripe.com/js/elements_object/express_checkout_element_shippingratechange_event
@@ -235,37 +255,38 @@ function initStripe({ form }) {
         }
       }
 
-      const clientSecret = await fetchClientSecret()
+      try {
+        const response = await fetchWithResponseHandler(form.dataset.callbackUrl, {
+          method: 'post',
+          headers: { 'content-type': 'application/json' },
+        })
 
-      const { error } = await stripe.confirmPayment({
-        elements,
-        clientSecret,
-        confirmParams: {
-          // https://docs.stripe.com/js/payment_intents/confirm_payment#confirm_payment_intent-options-confirmParams-return_url
-          return_url: paymentsUrl(),
-        },
-      })
+        if (response.message) {
+          showError(response.message)
+          setPayButton(false)
+          return
+        }
 
-      if (error) {
+        const clientSecret = response.token.client_secret
+
+        const { error } = await stripe.confirmPayment({
+          elements,
+          clientSecret,
+          confirmParams: {
+            // https://docs.stripe.com/js/payment_intents/confirm_payment#confirm_payment_intent-options-confirmParams-return_url
+            return_url: paymentsUrl(),
+          },
+        })
+
+        if (error) {
+          handleWalletError({ error })
+        } else {
+          // Customer is redirected to the callback URL
+        }
+      } catch (error) {
         handleWalletError({ error })
-      } else {
-        // Customer is redirected to the callback URL
       }
     })
-  }
-
-  // Creates Stripe PaymentIntent and returns client_secret
-  async function fetchClientSecret() {
-    const res = await fetch(intentsUrl(), {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-      },
-    })
-
-    const { client_secret: clientSecret } = await res.json()
-
-    return clientSecret
   }
 
   async function initializeStripe() {
@@ -299,10 +320,8 @@ function initStripe({ form }) {
 
         // On wallet click, we send the 'add-to-cart' form data to the server
         // to create a dedicated cart for the product
-        const { amount, error } =
-          await wallet.prepareProductCartWithAddToCartData(dedicatedProductId)
-        if (error) {
-          handleWalletError({ error })
+        const { didError } = await wallet.prepareProductCartWithAddToCartData()
+        if (didError) {
           return
         }
       }
@@ -323,18 +342,23 @@ function initStripe({ form }) {
 
       handleWalletError({ error: { message: 'starting...' } })
 
-      const { shippingRates, error: error1 } = await wallet.fetchShippingRates(address)
+      const {
+        shippingRates,
+        defaultShippingRateId,
+        error: error1,
+      } = await wallet.fetchShippingRates(address)
       handleWalletError({ error: { message: 'fetched rates' } })
       if (error1) {
         handleWalletError({ error: error1 })
         return
       }
 
-      // Simulate shippingratechange event
+      // Simulate shippingratechange event (or use default from shippingaddresschange)
+      // Priority: 1) Test-provided shippingRateId, 2) Backend default, 3) First rate
       const shippingRate = shippingRateId
         ? shippingRates.find((rate) => rate.id === shippingRateId)
-        : shippingRates[0]
-      const { amount, error: error2 } = await wallet.setShippingRate(shippingRate)
+        : shippingRates.find((rate) => rate.id === defaultShippingRateId) || shippingRates[0]
+      const { error: error2 } = await wallet.setShippingRate(shippingRate)
       if (error2) {
         handleWalletError({ error: error2 })
         return
@@ -370,11 +394,26 @@ function initStripe({ form }) {
     }
 
     window.testStripeWalletCallback = async () => {
-      const clientSecret = await fetchClientSecret()
+      try {
+        const response = await fetchWithResponseHandler(form.dataset.callbackUrl, {
+          method: 'post',
+          headers: { 'content-type': 'application/json' },
+        })
 
-      const url = new URL(paymentsUrl())
-      url.searchParams.set('payment_intent', clientSecret)
-      window.location = url
+        if (response.message) {
+          showError(response.message)
+          setPayButton(false)
+          return
+        }
+
+        const clientSecret = response.token.client_secret
+
+        const url = new URL(paymentsUrl())
+        url.searchParams.set('payment_intent', clientSecret)
+        window.location = url
+      } catch (error) {
+        showError('Payment processing failed')
+      }
     }
   }
 }

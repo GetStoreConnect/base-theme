@@ -45,6 +45,7 @@
   {%- endif %}
 
   {%- render "orders/fulfillments", order: order %}
+  {%- render "orders/subscriptions", order: order %}
 
   {%- comment %} Shipping Notes {% endcomment %}
   {%- if order.shipping_notes != blank %}

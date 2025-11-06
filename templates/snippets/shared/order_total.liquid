@@ -198,7 +198,7 @@
       {%- comment %} Pay Balance Button {% endcomment %}
       {%- if compact == false and source_type == "order" and current_request.path != source.additional_payment_path %}
         {% unless source.checkout_step contains "pending_renewal" %}
-          {%- assign amount = source.total_payable | minus: source.total_remaining_subscriptions %}
+          {%- assign amount = source.total_payable %}
           {%- if amount > 0 %}
             {%- assign amount = amount | money %}
             <div class="SC-OrderTotal_pay_balance sc-mt-large sc-flex-row sc-justify-center">

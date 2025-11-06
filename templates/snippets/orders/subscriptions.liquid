@@ -1,0 +1,11 @@
+{%- assign subscriptions = order.subscriptions %}
+
+{%- if subscriptions.size > 0 %}
+  <section class="SC-Panel sc-mb-large">
+    <header class="SC-Panel_header SC-Panel_header-border">
+      <h2 class="SC-Panel_header_heading">{{ "accounts.orders.subscriptions.heading" | t }}</h2>
+    </header>
+    {% render 'account/subscriptions/subscriptions', subscriptions: subscriptions, hide_order: true %}
+  </section>
+{%- endif %}
+

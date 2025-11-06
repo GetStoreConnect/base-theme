@@ -134,7 +134,7 @@
         {{ "checkout.customer_information.buttons.next" | t }}
       {% endif %}
     {% endcapture %}
-    <input type="submit" value="{{ button_text | strip_newlines }}" class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small" data-customer-info-submit />
+    <input type="submit" value="{{ button_text | strip }}" class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small" data-customer-info-submit />
   </div>
 
   {% if current_cart.quotable? %}

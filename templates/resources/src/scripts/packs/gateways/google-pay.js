@@ -167,17 +167,13 @@ export class GooglePay {
    * Provide Google Pay API with a payment amount, currency, and amount status
    *
    * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#TransactionInfo}
+   * @param {number} amount - Amount in cents
    * @returns {object} transaction info, suitable for use as transactionInfo property of PaymentDataRequest
    */
-  getGoogleTransactionInfo() {
-    const totalPrice = this.paymentForm.totalPayable()
-    if (totalPrice === null || totalPrice === undefined || isNaN(parseFloat(totalPrice))) {
-      throw new Error('👛 Google Pay requires a valid total price')
-    }
-
+  getGoogleTransactionInfo({ amount }) {
     return Object.assign({}, this.baseTransactionInfo(), {
       // The format of the string should follow the regex format: ^[0-9]+(\.[0-9][0-9])?$
-      totalPrice: parseFloat(totalPrice).toFixed(2),
+      totalPrice: (amount / 100).toFixed(2),
     })
   }
   /**
@@ -228,13 +224,14 @@ export class GooglePay {
    * Configure support for the Google Pay API
    *
    * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#PaymentDataRequest}
+   * @param {number} [amount] - Optional amount in cents to override paymentForm.totalPayable()
    * @returns {object} PaymentDataRequest fields
    */
-  getGooglePaymentDataRequest() {
+  getGooglePaymentDataRequest({ amount }) {
     const paymentDataRequest = Object.assign({}, this.baseRequest)
 
     paymentDataRequest.allowedPaymentMethods = [this.cardPaymentMethod]
-    paymentDataRequest.transactionInfo = this.getGoogleTransactionInfo()
+    paymentDataRequest.transactionInfo = this.getGoogleTransactionInfo({ amount })
     paymentDataRequest.merchantInfo = {
       merchantId: this.merchantId,
       merchantName: this.merchantName,
@@ -543,8 +540,13 @@ export class GooglePay {
   /**
    * Show Google Pay payment sheet when Google Pay payment button is clicked
    */
-  onGooglePaymentButtonClicked() {
-    const paymentDataRequest = this.getGooglePaymentDataRequest()
+  async onGooglePaymentButtonClicked() {
+    const { amount, didError } = await this.wallet.prepareProductCartWithAddToCartData()
+    if (didError) {
+      return
+    }
+
+    const paymentDataRequest = this.getGooglePaymentDataRequest({ amount })
     const paymentsClient = this.getGooglePaymentsClient()
     paymentsClient
       .loadPaymentData(paymentDataRequest)

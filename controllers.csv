@@ -147,3 +147,4 @@ sitemap,show
 product_categories,index
 product_categories,show
 vouchers,show
+voucher_activations,create

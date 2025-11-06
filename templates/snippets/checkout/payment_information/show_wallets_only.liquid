@@ -9,6 +9,8 @@
         {% case payment_provider.code %}
         {% when "Adyen" %}
           {% render "checkout/payment_information/payment_providers/adyen_form", payment_provider: payment_provider, only_express_checkout: true %}
+        {% when "Afterpay" %}
+          {% render "checkout/payment_information/payment_providers/afterpay_form", payment_provider: payment_provider, only_express_checkout: true %}
         {% when "CyberSource" %}
           {% render "checkout/payment_information/payment_providers/cyber_source_form", payment_provider: payment_provider, only_express_checkout: true %}
         {% when "Stripe" %}
