@@ -37,6 +37,8 @@
           {% render "checkout/payment_information/payment_providers/adyen_form", payment_provider: payment_provider %}
         {% when "AdyenAch" %}
           {% render "checkout/payment_information/payment_providers/adyen_ach_form", payment_provider: payment_provider %}
+        {% when "Afterpay" %}
+          {% render "checkout/payment_information/payment_providers/afterpay_form", payment_provider: payment_provider, hide_wallet: true %}
         {% when "AuthorizeNet" %}
           {% render "checkout/payment_information/payment_providers/authorize_net_form", payment_provider: payment_provider %}
         {% when "AuthorizeNetAch" %}

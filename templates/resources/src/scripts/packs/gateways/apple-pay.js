@@ -121,7 +121,7 @@ export class ApplePay {
   /**
    * Create Apple Pay payment request
    */
-  createPaymentRequest() {
+  createPaymentRequest(amount) {
     const paymentRequest = {
       countryCode: this.paymentForm.merchantCountryCode() || 'US',
       currencyCode: this.paymentForm.currency(),
@@ -129,7 +129,7 @@ export class ApplePay {
       merchantCapabilities: this.merchantCapabilities,
       total: {
         label: this.merchantName,
-        amount: this.paymentForm.totalPayable(),
+        amount: (amount / 100).toFixed(2),
         type: 'final',
       },
     }
@@ -153,8 +153,13 @@ export class ApplePay {
   /**
    * Handle Apple Pay button click
    */
-  onApplePayButtonClicked() {
-    const paymentRequest = this.createPaymentRequest()
+  async onApplePayButtonClicked() {
+    const { amount, didError } = await this.wallet.prepareProductCartWithAddToCartData()
+    if (didError) {
+      return
+    }
+
+    const paymentRequest = this.createPaymentRequest(amount)
     const session = new ApplePaySession(this.applePayVersion, paymentRequest)
 
     session.onvalidatemerchant = async (event) => {

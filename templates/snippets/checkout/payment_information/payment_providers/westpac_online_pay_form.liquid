@@ -2,6 +2,7 @@
 {%- assign provider = payment_provider.code %}
 {%- assign form_id = provider | append: "PaymentForm" | append: provider_id %}
 {%- assign button_id = provider | append: "PaymentButton" | append: provider_id %}
+{%- assign button_label = 'checkout.gateways.form.pay_now' | t %}
 {%- assign wallets_container_id = provider | append: "WalletsContainer" | append: provider_id %}
 {%- assign script_block_id = provider | append: "ScriptBlock" | append: provider_id %}
 {%- assign payment_error_id = provider | append: "PaymentError" | append: provider_id %}
@@ -17,19 +18,12 @@
   {%- assign payment_error_id = payment_error_id | append: "Product" | append: dedicated_cart_product_id %}
 {% endif %}
 
-{%- assign total_subscriptions = current_cart.total_subscriptions %}
-{%- if current_order %}
-  {%- assign total_subscriptions = current_order.total_subscriptions %}
-{%- endif %}
-
 <div id="{{ script_block_id }}"></div>
 
-{%- if total_subscriptions == 0 and current_subscription == blank %}
-  <div id="{{ wallets_container_id }}" class="SC-Fieldset">
-    <div data-ref="wallet-buttons" class="SC-Field sc-flex-col-unless-wide sc-flex-equal-width"></div>
-    <div data-ref="wallet-error" class="SC-Field SC-Alert sc-hide"></div>
-  </div>
-{%- endif %}
+<div id="{{ wallets_container_id }}" class="SC-Fieldset">
+  <div data-ref="wallet-buttons" class="SC-Field sc-flex-col-unless-wide sc-flex-equal-width"></div>
+  <div data-ref="wallet-error" class="SC-Field SC-Alert sc-hide"></div>
+</div>
 
 {%- form "payment", provider: payment_provider, class: "SC-Panel",
             id: form_id,
@@ -46,7 +40,7 @@
     {% render "checkout/payment_information/additional_info", form: form %}
 
     <input type="submit"
-      value="{{ 'checkout.gateways.form.pay_now' | t }}"
+      value="{{ button_label }}"
       id="{{ button_id }}"
       class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small"
       data-disable-with="{{ 'checkout.payment.processing' | t }}"

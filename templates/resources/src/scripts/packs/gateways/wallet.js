@@ -64,9 +64,12 @@ export class Wallet {
     this.paymentForm.showError(error, options)
   }
 
-  async prepareProductCartWithAddToCartData(dedicatedCartProductId) {
-    if (!dedicatedCartProductId) {
-      return
+  async prepareProductCartWithAddToCartData() {
+    if (!this.paymentForm.dedicatedCartProductId) {
+      return {
+        amount: Math.round(this.paymentForm.totalPayable() * 100),
+        didError: false,
+      }
     }
 
     const res = await fetch(storePathUrl(`/express_checkout/carts`), {
@@ -75,21 +78,28 @@ export class Wallet {
       body: JSON.stringify({
         authenticity_token: this.paymentForm.formAuthentityToken(),
         add_to_cart_form_data: this.addToCartFormData(),
-        dedicated_cart_product_id: dedicatedCartProductId,
+        dedicated_cart_product_id: this.paymentForm.dedicatedCartProductId,
       }),
     })
 
     if (!res.ok) {
+      let errorMessage
       try {
-        return await res.json() // Expects {error:{message: "..."}}
+        const errorResponse = await res.json()
+        errorMessage =
+          errorResponse.error?.message || 'An error has occurred, please try again shortly.'
       } catch {
-        return { error: { message: 'An error has occurred, please try again shortly.' } }
+        errorMessage = 'An error has occurred, please try again shortly.'
       }
+
+      this.showWalletsError(errorMessage)
+      return { amount: null, didError: true }
     }
 
     const response = await res.json()
     return {
       amount: Math.round(response.cart.amount * 100),
+      didError: false,
     }
   }
 
@@ -243,7 +253,7 @@ export function loadingShippingRates() {
   throw new Error('loadingShippingRates should now be called as a method on a Wallet instance')
 }
 
-export function prepareProductCartWithAddToCartData(dedicatedCartProductId) {
+export function prepareProductCartWithAddToCartData() {
   throw new Error(
     'prepareProductCartWithAddToCartData should now be called as a method on a Wallet instance'
   )
