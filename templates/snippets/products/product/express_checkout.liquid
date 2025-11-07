@@ -13,12 +13,6 @@
                 only_express_checkout: true,
                 dedicated_cart_product_id: product.id
           %}
-        {% when "Afterpay" %}
-          {% render "checkout/payment_information/payment_providers/afterpay_form",
-                payment_provider: payment_provider,
-                only_express_checkout: true,
-                dedicated_cart_product_id: product.id
-          %}
         {% when "CyberSource" %}
           {% render "checkout/payment_information/payment_providers/cyber_source_form",
                 payment_provider: payment_provider,
