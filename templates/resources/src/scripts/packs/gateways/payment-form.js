@@ -438,6 +438,10 @@ export class PaymentForm {
     return this.form.dataset.offerShipping === 'true'
   }
 
+  requiresContactInfo() {
+    return this.form.dataset.requiresContactInfo === 'true'
+  }
+
   allowedShippingCountries() {
     const raw = this.form.dataset.shippingCountries
     if (!raw) return []
@@ -458,8 +462,22 @@ export class PaymentForm {
     }
   }
 
-  formAuthentityToken() {
-    return this.form.querySelector("input[name='authenticity_token']")?.value
+  /**
+   * Get internationalized string from data attributes
+   * @param {string} key - The i18n key in dot notation (e.g., 'wallets.free', 'errors.error_occurred')
+   * @returns {string} Translated string
+   */
+  i18n(key) {
+    // Convert 'wallets.free' or 'errors.error_occurred' to camelCase
+    const words = key.split(/[._]/)
+    const camelKey = words
+      .map((word, index) => (index === 0 ? word : word.charAt(0).toUpperCase() + word.slice(1)))
+      .join('')
+
+    // Prefix with 'i18n' and capitalize first letter
+    const datasetKey = 'i18n' + camelKey.charAt(0).toUpperCase() + camelKey.slice(1)
+
+    return this.form.dataset[datasetKey]
   }
 
   /**

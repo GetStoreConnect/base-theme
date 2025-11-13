@@ -362,12 +362,14 @@ bundles.single_choice.filters.brand,Brand
 bundles.single_choice.filters.feature_type,%{name} type
 bundles.single_choice.filters.title,Filters
 cart.buttons.checkout,Checkout
+cart.buttons.continuing,Continuing...
 cart.buttons.request_quote,Request Quote
 cart.empty_msg,Your cart is empty
 cart.header,Shopping Cart
 cart.links.clear_cart,Empty Cart
 cart.links.continue_shopping,Continue shopping
 checkout.accept_terms.accept_terms_and_conditions,Accept Terms & Conditions
+checkout.accept_terms.continuing,Continuing...
 checkout.accept_terms.header,Accept Terms
 checkout.accept_terms.next,Next
 checkout.account_credits.apply,Apply
@@ -380,6 +382,7 @@ checkout.customer_information.billing_address.billing_address_same_as_shipping_a
 checkout.customer_information.billing_address.edit,Edit
 checkout.customer_information.billing_address.heading,Billing Address
 checkout.customer_information.buttons.finish_quote,Submit Quote Request
+checkout.customer_information.buttons.continuing,Continuing...
 checkout.customer_information.buttons.next,Continue
 checkout.customer_information.form.company_name,Company name (if applicable)
 checkout.customer_information.form.company_name_hint,You can edit your company name in your account settings
@@ -457,6 +460,14 @@ checkout.gateways.stripe_ach_form.email,Email
 checkout.gateways.stripe_ach_form.individual,Individual
 checkout.gateways.stripe_ach_form.pay_now,Authorize Now
 checkout.gateways.stripe_ach_form.routing_number,Routing Number
+checkout.gateways.errors.error_occurred,"An error has occurred, please try again shortly."
+checkout.gateways.errors.payment_failed,Payment processing failed. Please try again.
+checkout.gateways.errors.cart_failed,Failed to prepare cart. Please try again.
+checkout.gateways.wallets.loading,Loading...
+checkout.gateways.wallets.no_shipping_required,No shipping required
+checkout.gateways.wallets.free,FREE
+checkout.gateways.apple_pay.setup_failed,Apple Pay setup failed. Please try another payment method.
+checkout.gateways.apple_pay.email_required,Email address is required but was not provided by Apple Pay
 checkout.payment.error,"Sorry, an error occurred while trying to process the payment. Please try again later."
 checkout.payment.header,Payment
 checkout.payment.provider_misconfigured,"Sorry, but there seems to be a problem with the selected payment provider. Please contact support."
@@ -472,6 +483,7 @@ checkout.shipping.click_and_collect.out_of_stock,Out of Stock
 checkout.shipping.collection_time.header,When do you expect to collect your order?
 checkout.shipping.collection_time.placeholder,Est. collection date
 checkout.shipping.form.click_and_collect,Click & Collect
+checkout.shipping.form.continuing,Continuing...
 checkout.shipping.form.next,Next
 checkout.shipping.form.shipping,Shipping
 checkout.shipping.shipping_notes.header,Shipping Instructions
@@ -819,7 +831,6 @@ sc.checkout.payment.create.errors.no_saved_card,Payment failed. No saved card fo
 sc.checkout.payment.create.errors.points.insufficient_balance,You do not have enough points to complete this order.
 sc.checkout.payment.create.errors.points.not_permitted,You are not allowed to use the account points for this account
 sc.checkout.payment.create.errors.unauthorized,"Unable to authenticate, please check the payment provider's credentials."
-sc.checkout.payment.finalize_order.notices.order_processing_text,Order is still processing
 sc.checkout.payment.shared.errors.api_auth_error,Error authorizing with API
 sc.checkout.payment.shared.errors.during_checkout,"Something went wrong, please try again later!"
 sc.checkout.payment.shared.errors.invalid_provider,Unsupported Payment Method

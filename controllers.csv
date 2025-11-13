@@ -25,6 +25,7 @@ async/inbound_webhooks/bringg,create
 async/inbound_webhooks/easypost,create
 async/inbound_webhooks/ship24,create
 async/inbound_webhooks/ship_engine,create
+async/inbound_webhooks/shippit,create
 auth/as_customer_sessions,create
 auth/as_customer_sessions,metadata
 auth/as_customer_sessions,new
@@ -85,7 +86,6 @@ checkout/orders,order
 checkout/payment_callback,create
 checkout/steps/payment,create
 checkout/steps/payment,edit
-checkout/steps/payment,finalize_order
 checkout/steps/payment,show
 checkout/steps/payment,update
 checkout/payments,ach

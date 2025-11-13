@@ -6,6 +6,7 @@
 {%- endif %}
 
 <a href="{{ current_store.checkout_path }}"
-   data-sc-checkout-btn class="{{ class }}">
+   data-sc-checkout-btn class="{{ class }}"
+   data-disable-with="{{ 'cart.buttons.continuing' | t }}">
   {{ btn_txt }}
 </a>

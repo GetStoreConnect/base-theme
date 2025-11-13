@@ -1,4 +1,5 @@
 // PaymentForm instance will be passed as parameter
+import fetchWithResponseHandler from '../../theme/utils/fetch'
 import storePathUrl from '../../theme/store-path-url'
 
 /**
@@ -66,41 +67,6 @@ export class ApplePay {
 
     // Initialize Apple Pay
     this.checkApplePayAvailability()
-
-    // Test mode support
-    if (window.StoreConnectTestMode === 'enabled') {
-      window.testApplePayCallback = async () => {
-        this.handleWalletError({
-          error: { message: `testApplePayCallback: put your right foot in` },
-        })
-
-        const paymentData = {
-          token: {
-            paymentData: {
-              data: 'test-payment-data',
-              signature: 'test-signature',
-              header: {
-                ephemeralPublicKey: 'test-key',
-                publicKeyHash: 'test-hash',
-                transactionId: 'test-transaction',
-              },
-            },
-            paymentMethod: {
-              displayName: 'Visa •••• 1234',
-              network: 'Visa',
-              type: 'debit',
-            },
-            transactionIdentifier: 'test-transaction-id',
-          },
-        }
-        const payload = this.extractTokenCallback(paymentData)
-        this.handleWalletError({ error: payload })
-        this.paymentForm.submitData({
-          payload,
-          handleError: (error) => this.handleWalletError({ error }),
-        })
-      }
-    }
   }
 
   /**
@@ -135,14 +101,19 @@ export class ApplePay {
     }
 
     if (this.paymentForm.onlyExpressCheckout()) {
-      if (this.paymentForm.offerShipping()) {
+      if (this.paymentForm.requiresContactInfo()) {
+        // Collect contact fields for customer information (billing/contact)
         paymentRequest.requiredShippingContactFields = ['name', 'phone', 'email', 'postalAddress']
-        paymentRequest.shippingType = 'shipping'
 
-        // Set allowed shipping countries
-        const allowedCountries = this.paymentForm.allowedShippingCountries()
-        if (allowedCountries && allowedCountries.length > 0) {
-          paymentRequest.supportedCountries = allowedCountries
+        if (this.paymentForm.offerShipping()) {
+          // For physical products, setup shipping
+          paymentRequest.shippingType = 'shipping'
+
+          // Set allowed shipping countries
+          const allowedCountries = this.paymentForm.allowedShippingCountries()
+          if (allowedCountries && allowedCountries.length > 0) {
+            paymentRequest.supportedCountries = allowedCountries
+          }
         }
       }
     }
@@ -154,53 +125,77 @@ export class ApplePay {
    * Handle Apple Pay button click
    */
   async onApplePayButtonClicked() {
-    const { amount, didError } = await this.wallet.prepareProductCartWithAddToCartData()
-    if (didError) {
-      return
-    }
-
-    const paymentRequest = this.createPaymentRequest(amount)
+    // IMPORTANT: Create ApplePaySession synchronously to maintain user gesture context
+    // Use current total; will be updated if cart preparation changes the amount
+    const initialAmount = Math.round(this.paymentForm.totalPayable() * 100)
+    const paymentRequest = this.createPaymentRequest(initialAmount)
     const session = new ApplePaySession(this.applePayVersion, paymentRequest)
+
+    // Prepare dedicated cart asynchronously after session creation
+    if (this.paymentForm.dedicatedCartProductId) {
+      // Don't await here - let it run in background and handle errors in callbacks
+      this.wallet
+        .prepareProductCartWithAddToCartData()
+        .then(({ amount, didError }) => {
+          if (didError) {
+            session.abort()
+            return
+          }
+          // Store the prepared amount for later use
+          session._preparedAmount = amount
+        })
+        .catch((error) => {
+          console.error('Failed to prepare cart:', error)
+          session.abort()
+          this.wallet.showWalletsError(this.paymentForm.i18n('errors.cart_failed'))
+        })
+    }
 
     session.onvalidatemerchant = async (event) => {
       try {
         // Validate merchant with Apple Pay servers
-        const response = await fetch(storePathUrl('/checkout/apple_pay_verifications'), {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            provider_id: this.providerId,
-            authenticity_token: this.paymentForm.formAuthentityToken(),
-            validation_url: event.validationURL,
-          }),
-        })
+        const merchantSession = await fetchWithResponseHandler(
+          storePathUrl('/checkout/apple_pay_verifications'),
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              provider_id: this.providerId,
+              validation_url: event.validationURL,
+            }),
+          }
+        )
 
-        if (!response.ok) {
-          const errorData = await response.json()
-          throw new Error(errorData.error || 'Merchant validation failed')
-        }
-
-        const merchantSession = await response.json()
         session.completeMerchantValidation(merchantSession)
       } catch (error) {
         console.error('Apple Pay merchant validation error:', error)
         session.abort()
         this.wallet.showWalletsError(
-          error.message || 'Apple Pay setup failed. Please try another payment method.'
+          error.message || this.paymentForm.i18n('apple_pay.setup_failed')
         )
       }
     }
 
     session.onshippingcontactselected = async (event) => {
+      // For virtual products, provide a $0 dummy rate to collect address for contact info
       if (!this.paymentForm.offerShipping()) {
+        // Use prepared amount if available, otherwise use current total
+        const amount = session._preparedAmount || Math.round(this.paymentForm.totalPayable() * 100)
         session.completeShippingContactSelection({
           status: ApplePaySession.STATUS_SUCCESS,
-          newShippingMethods: [],
+          newShippingMethods: [
+            {
+              label: this.paymentForm.i18n('wallets.no_shipping_required'),
+              amount: '0.00',
+              detail: '',
+              identifier: 'virtual-product-no-shipping',
+            },
+          ],
           newTotal: {
             label: this.merchantName,
-            amount: this.paymentForm.totalPayable(),
+            amount: (amount / 100).toFixed(2),
             type: 'final',
           },
         })
@@ -304,7 +299,7 @@ export class ApplePay {
         if (this.paymentForm.onlyExpressCheckout()) {
           // Validate that we have required email address
           if (!paymentData.shippingContact.emailAddress) {
-            throw new Error('Email address is required but was not provided by Apple Pay')
+            throw new Error(this.paymentForm.i18n('apple_pay.email_required'))
           }
 
           // Build shipping address first
@@ -333,23 +328,19 @@ export class ApplePay {
             billing_details,
             shipping_address,
             shipping_rate: { id: session._selectedShippingMethodId },
-            authenticity_token: this.paymentForm.formAuthentityToken(),
             dedicated_cart_product_id: this.paymentForm.dedicatedCartProductId,
           }
 
-          const res = await fetch(storePathUrl(`/express_checkout/carts`), {
-            method: 'PUT',
-            headers: { 'content-type': 'application/json' },
-            body: JSON.stringify(payload),
-          })
-
-          if (!res.ok) {
-            const { error } = await res.json()
-            if (error) {
-              this.handleWalletError({ error })
-              session.completePayment(ApplePaySession.STATUS_FAILURE)
-              return
-            }
+          try {
+            await fetchWithResponseHandler(storePathUrl(`/express_checkout/carts`), {
+              method: 'PUT',
+              headers: { 'content-type': 'application/json' },
+              body: JSON.stringify(payload),
+            })
+          } catch (error) {
+            this.handleWalletError({ error })
+            session.completePayment(ApplePaySession.STATUS_FAILURE)
+            return
           }
         }
 

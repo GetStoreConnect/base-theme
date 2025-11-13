@@ -5,7 +5,7 @@
   {% if product.master? and product.variants.size > 0 or product.bookable? %}
     {%- assign button_disabled = true %}
   {%- endif %}
-  
+
   {%- form "add-to-cart", product: product, data-cart-form: true %}
     {%# Booking %}
     {%- if product.bookable? && ! product.variants.size > 0 %}
@@ -69,8 +69,8 @@
       </div>
     {%- endif %}
   {% endform %}
-  {%- if product.pricing.can_purchase_with_currency? and theme_variables["products.card.hide_purchase_button"] == false and button_disabled == false %}
-    {% render "products/product/express_checkout", product: product %}
+  {%- if product.pricing.can_purchase_with_currency? and theme_variables["products.card.hide_purchase_button"] == false %}
+    {% render "products/product/express_checkout", product: product, wallet_disabled: button_disabled %}
   {%- endif %}
 {%- else %}
   <div class="sc-shade-neutral sc-mb-small">

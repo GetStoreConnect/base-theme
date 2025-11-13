@@ -6,6 +6,7 @@
 {%- assign script_block_id = provider | append: "ScriptBlock" | append: provider_id %}
 {%- assign payment_error_id = provider | append: "PaymentError" | append: provider_id %}
 
+{%- default wallet_disabled: false %}
 {%- default only_express_checkout: false %}
 {%- default dedicated_cart_product_id: nil %}
 {%# Need unique IDs for per-product Wallets; since Cart dropdown is on same page %}
@@ -25,7 +26,7 @@
 <div id="{{ script_block_id }}"></div>
 
 {%- if total_subscriptions == 0 and current_subscription == blank %}
-  <div id="{{ wallets_container_id }}" class="SC-Fieldset">
+  <div id="{{ wallets_container_id }}" data-click-blocker="{% if wallet_disabled %}not-allowed{% endif %}" class="SC-Fieldset">
     <div data-ref="wallet-buttons" class="SC-Field sc-flex-col-unless-wide sc-flex-equal-width"></div>
     <div data-ref="wallet-error" class="SC-Field SC-Alert sc-hide"></div>
   </div>

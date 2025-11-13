@@ -74,7 +74,8 @@
     <input type="submit"
       value="{{ "checkout.shipping.form.next" | t }}"
       class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small"
-      data-fulfilment-button disabled type="button">
+      data-fulfilment-button disabled
+      data-disable-with="{{ 'checkout.shipping.form.continuing' | t }}">
   </div>
 
   {% if current_store.accept_terms_enabled? %}
