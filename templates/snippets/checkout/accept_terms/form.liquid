@@ -49,9 +49,10 @@
     </label>
   </div>
 
-  <input type="submit" type="button"
+  <input type="submit"
     value="{{ "checkout.accept_terms.next" | t }}"
-    class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small">
+    class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small"
+    data-disable-with="{{ 'checkout.accept_terms.continuing' | t }}">
 </div>
 
 <div class="SC-Panel_header is-disabled">

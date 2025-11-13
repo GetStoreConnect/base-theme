@@ -1,3 +1,4 @@
+import fetchWithResponseHandler from '../../theme/utils/fetch'
 import storePathUrl from '../../theme/store-path-url'
 
 export class Wallet {
@@ -72,34 +73,23 @@ export class Wallet {
       }
     }
 
-    const res = await fetch(storePathUrl(`/express_checkout/carts`), {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({
-        authenticity_token: this.paymentForm.formAuthentityToken(),
-        add_to_cart_form_data: this.addToCartFormData(),
-        dedicated_cart_product_id: this.paymentForm.dedicatedCartProductId,
-      }),
-    })
+    try {
+      const response = await fetchWithResponseHandler(storePathUrl(`/express_checkout/carts`), {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          add_to_cart_form_data: this.addToCartFormData(),
+          dedicated_cart_product_id: this.paymentForm.dedicatedCartProductId,
+        }),
+      })
 
-    if (!res.ok) {
-      let errorMessage
-      try {
-        const errorResponse = await res.json()
-        errorMessage =
-          errorResponse.error?.message || 'An error has occurred, please try again shortly.'
-      } catch {
-        errorMessage = 'An error has occurred, please try again shortly.'
+      return {
+        amount: Math.round(response.cart.amount * 100),
+        didError: false,
       }
-
-      this.showWalletsError(errorMessage)
+    } catch (error) {
+      this.showWalletsError(error.message || this.paymentForm.i18n('errors.error_occurred'))
       return { amount: null, didError: true }
-    }
-
-    const response = await res.json()
-    return {
-      amount: Math.round(response.cart.amount * 100),
-      didError: false,
     }
   }
 
@@ -108,82 +98,77 @@ export class Wallet {
   async fetchShippingRates(address) {
     let params = {
       address,
-      authenticity_token: this.paymentForm.formAuthentityToken(),
     }
     if (this.paymentForm.dedicatedCartProductId) {
       params.dedicated_cart_product_id = this.paymentForm.dedicatedCartProductId
       params.add_to_cart_form_data = this.addToCartFormData()
     }
-    const res = await fetch(storePathUrl(`/express_checkout/shipping_methods`), {
-      method: 'PUT',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify(params),
-    })
 
-    if (!res.ok) {
-      try {
-        return await res.json() // Expects {error:{message: "..."}}
-      } catch {
-        return { error: { message: 'An error has occurred, please try again shortly.' } }
-      }
-    }
-
-    const response = await res.json()
-
-    let defaultShippingRate = response.shipping.rates.find((rate) => rate.default)
-
-    // Sort the rates by amount, but ensure defaultShippingRate is included in the final list
-    // Max 9 cheapest shipping rates for Stripe
-    const shippingRates = response.shipping.rates
-      .sort((a, b) => {
-        if (a.default) return -1
-        if (b.default) return 1
-        return a.amount - b.amount
-      })
-      .slice(0, 9)
-
-    // Default to the cheapest rate if no .default specified above
-    if (!defaultShippingRate) {
-      defaultShippingRate = shippingRates[0]
-    }
-
-    // Map to ApplePay format id, amount, displayName
-    return {
-      amount: Math.round(response.cart.amount * 100),
-      defaultShippingRateId: defaultShippingRate.id,
-      shippingRates: shippingRates.map((rate) => {
-        return {
-          id: rate.id,
-          amount: Math.round(rate.amount * 100),
-          displayName: rate.label,
-          deliveryEstimate: rate.description,
+    try {
+      const response = await fetchWithResponseHandler(
+        storePathUrl(`/express_checkout/shipping_methods`),
+        {
+          method: 'PUT',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify(params),
         }
-      }),
+      )
+
+      let defaultShippingRate = response.shipping.rates.find((rate) => rate.default)
+
+      // Sort the rates by amount, but ensure defaultShippingRate is included in the final list
+      // Max 9 cheapest shipping rates for Stripe
+      const shippingRates = response.shipping.rates
+        .sort((a, b) => {
+          if (a.default) return -1
+          if (b.default) return 1
+          return a.amount - b.amount
+        })
+        .slice(0, 9)
+
+      // Default to the cheapest rate if no .default specified above
+      if (!defaultShippingRate) {
+        defaultShippingRate = shippingRates[0]
+      }
+
+      // Map to ApplePay format id, amount, displayName
+      return {
+        amount: Math.round(response.cart.amount * 100),
+        defaultShippingRateId: defaultShippingRate.id,
+        shippingRates: shippingRates.map((rate) => {
+          return {
+            id: rate.id,
+            amount: Math.round(rate.amount * 100),
+            displayName: rate.label,
+            deliveryEstimate: rate.description,
+          }
+        }),
+      }
+    } catch (error) {
+      return {
+        error: { message: error.message || this.paymentForm.i18n('errors.error_occurred') },
+      }
     }
   }
 
   async setShippingRate(shippingRate) {
-    const res = await fetch(storePathUrl(`/express_checkout/carts`), {
-      method: 'PUT',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({
-        authenticity_token: this.paymentForm.formAuthentityToken(),
-        dedicated_cart_product_id: this.paymentForm.dedicatedCartProductId,
-        shipping_rate: shippingRate,
-      }),
-    })
+    try {
+      const response = await fetchWithResponseHandler(storePathUrl(`/express_checkout/carts`), {
+        method: 'PUT',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          dedicated_cart_product_id: this.paymentForm.dedicatedCartProductId,
+          shipping_rate: shippingRate,
+        }),
+      })
 
-    if (!res.ok) {
-      try {
-        return await res.json() // Expects {error:{message: "..."}}
-      } catch {
-        return { error: { message: 'An error has occurred, please try again shortly.' } }
+      return {
+        amount: Math.round(response.cart.amount * 100),
       }
-    }
-
-    const response = await res.json()
-    return {
-      amount: Math.round(response.cart.amount * 100),
+    } catch (error) {
+      return {
+        error: { message: error.message || this.paymentForm.i18n('errors.error_occurred') },
+      }
     }
   }
 
@@ -191,7 +176,7 @@ export class Wallet {
     return [
       {
         id: 'loading',
-        displayName: 'Loading...',
+        displayName: this.paymentForm.i18n('wallets.loading'),
         amount: 0,
       },
     ]

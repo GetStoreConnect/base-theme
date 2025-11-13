@@ -6,6 +6,7 @@
 
 window.StoreConnect = window.StoreConnect || {}
 window.StoreConnect.ObserverCallbacks = window.StoreConnect.ObserverCallbacks || []
+window.StoreConnect.DataAttrChangeCallbacks = window.StoreConnect.DataAttrChangeCallbacks || []
 
 document.addEventListener('DOMContentLoaded', establishObserver)
 
@@ -13,24 +14,47 @@ export function onDomChange(initCallback) {
   window.StoreConnect.ObserverCallbacks.push(initCallback)
 }
 
+export function onDataAttrChange(attrChangeCallback) {
+  window.StoreConnect.DataAttrChangeCallbacks.push(attrChangeCallback)
+}
+
 function establishObserver() {
   if (window.StoreConnect.Observer) return
 
   window.StoreConnect.Observer = new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
-      mutation.addedNodes.forEach((node) => {
-        if (node.nodeType === Node.ELEMENT_NODE) {
-          runCallbacks(node, 'mutation')
-        }
-      })
+      if (mutation.type === 'childList') {
+        mutation.addedNodes.forEach((node) => {
+          if (node.nodeType === Node.ELEMENT_NODE) {
+            runCallbacks(node, 'mutation')
+          }
+        })
+      } else if (mutation.type === 'attributes') {
+        runAttrChangeCallbacks(mutation.target, mutation.attributeName, mutation.oldValue)
+      }
     })
   })
 
-  window.StoreConnect.Observer.observe(document.body, { childList: true, subtree: true })
+  window.StoreConnect.Observer.observe(document.body, {
+    childList: true,
+    subtree: true,
+    attributes: true,
+    attributeOldValue: true,
+  })
 
   runCallbacks(document, 'initial load')
 }
 
 function runCallbacks(node, _context) {
   window.StoreConnect.ObserverCallbacks.forEach((callback) => callback(node))
+}
+
+function runAttrChangeCallbacks(node, attributeName, oldValue) {
+  // Only trigger callbacks for data-* attributes
+  if (!attributeName.startsWith('data-')) return
+
+  const newValue = node.getAttribute(attributeName)
+  window.StoreConnect.DataAttrChangeCallbacks.forEach((callback) =>
+    callback(node, attributeName, oldValue, newValue)
+  )
 }

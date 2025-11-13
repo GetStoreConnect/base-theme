@@ -35,9 +35,7 @@ function initPaypal({ form, providerId }) {
         .Buttons({
           style: { layout: 'horizontal' },
           createOrder: function () {
-            const SETEC_URL = paymentForm.callbackUrl()
-
-            return fetch(SETEC_URL, {
+            return fetch(paymentForm.callbackUrl(), {
               method: 'post',
               headers: {
                 'content-type': 'application/json',

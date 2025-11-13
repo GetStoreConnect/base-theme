@@ -17,10 +17,16 @@ const BookingSelector = function (node) {
   let autoJump = false
   let highlightTimeoutId
   let lastMonthSelected
+  let submitButtons, walletContainers
 
   start()
 
   function start() {
+    // Cache button and wallet container references
+    const form = node.closest('form')
+    submitButtons = form.querySelectorAll('input[type="submit"]')
+    walletContainers = document.querySelectorAll('[data-click-blocker]')
+
     const locations = [...node.querySelectorAll('[data-bookable-location]')]
     let srtDate = getStartDate()
     let endDate = getEndDate()
@@ -111,12 +117,9 @@ const BookingSelector = function (node) {
     // Sets selected values to hidden inputs
     ;[...node.querySelectorAll('[data-booking-timeslot]')].map((timeslot) => {
       timeslot.addEventListener('change', (event) => {
-        const buyNow = form.querySelector('[data-buy-now]')
-        const addToCart = form.querySelector('[data-add-to-cart]')
         const qtyPickers = form.querySelectorAll('[data-qty-picker]')
 
-        if (addToCart) addToCart.removeAttribute('disabled')
-        if (buyNow) buyNow.removeAttribute('disabled')
+        disableAddToCartButtons(false)
         locationInput.value = event.target.dataset.location
         startDateInput.value = event.target.dataset.start
         endDateInput.value = event.target.dataset.end
@@ -193,8 +196,6 @@ const BookingSelector = function (node) {
 
   function filterAvailabilities(startDate, endDate, locationId) {
     const locations = node.querySelector('[data-bookable-locations]')
-    const addToCart = node.closest('form').querySelector('[data-add-to-cart]')
-    const buyNow = node.closest('form').querySelector('[data-buy-now]')
     const slots = node.querySelector('[data-booking-timeslots]')
     const availabilitiesUrl = slots.dataset.bookingAvailabilitiesUrl
     const availabilitiesPartial = slots.dataset.bookingAvailabilitiesPartial
@@ -211,8 +212,7 @@ const BookingSelector = function (node) {
 
     loader.on()
     locations.setAttribute('disabled', true)
-    if (addToCart) addToCart.setAttribute('disabled', true)
-    if (buyNow) buyNow.setAttribute('disabled', true)
+    disableAddToCartButtons(true)
     slots.scrollTop = 0
 
     fetchAvailabilities(endpoint)
@@ -335,6 +335,15 @@ const BookingSelector = function (node) {
   function retrieveVariable(key) {
     const params = new URLSearchParams(window.location.search)
     return params.get(key)
+  }
+
+  function disableAddToCartButtons(bool) {
+    submitButtons.forEach((input) => {
+      input.disabled = bool
+    })
+    walletContainers.forEach((element) => {
+      element.dataset.clickBlocker = bool ? 'not-allowed' : 'false'
+    })
   }
 
   function handleClosestLinks() {
