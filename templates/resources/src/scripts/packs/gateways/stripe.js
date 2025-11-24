@@ -1,7 +1,7 @@
 import { PaymentForm } from './payment-form'
+import { onDomChange } from '../../theme/utils/init'
 import { Wallet } from './wallet'
 import { loadStripe } from '@stripe/stripe-js/pure'
-import { onDomChange } from '../../theme/utils/init'
 import fetchWithResponseHandler from '../../theme/utils/fetch'
 import storePathUrl from '../../theme/store-path-url'
 

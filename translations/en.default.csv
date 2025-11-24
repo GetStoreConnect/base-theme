@@ -354,9 +354,26 @@ bundles.form.bundle_includes,Your bundle includes
 bundles.form.loading_error,"Sorry, an error occurred loading the data"
 bundles.form.optional_addons,Optional add-ons
 bundles.form.updating,Updating...
+bundles.form.adding_to_cart,Adding to cart...
+bundles.product.choose_variant,Choose variant:
 bundles.product.choose_from_variants,Choose from %{count} variants
 bundles.product.quantity_x,%{quantity} x
+bundles.product.free_quantity_included,First %{quantity} included
+bundles.product.or_more,(or more)
+bundles.product.previous_price,Was %{price}
+bundles.product.earn_points,Earn %{points} points
+bundles.product.per_item,per item
+bundles.product.quantity_included,%{quantity} x included
+bundles.product.quantity,Quantity
+bundles.product.all_included_free,All %{quantity} included free
+bundles.product.free_and_chargeable,"Free %{free_quantity}, %{chargeable_quantity} charged"
+bundles.subscription.price_per_term,%{price} per %{term}
+bundles.subscription.per_term,per %{term}
 bundles.single_choice.add_to_bundle,Add to bundle
+bundles.single_choice.remove,Remove
+bundles.single_choice.choose,Choose
+bundles.single_choice.edit,Edit
+bundles.single_choice.choose_a_group,Choose a %{group}
 bundles.single_choice.bundled_product.choose_from_options,Choose from %{count} options
 bundles.single_choice.filters.brand,Brand
 bundles.single_choice.filters.feature_type,%{name} type
@@ -417,6 +434,7 @@ checkout.delivery_options.timeslot_prompt,Choose your preferred delivery time
 checkout.gateways.form.card_name,Name on card
 checkout.gateways.form.card_number,Card number
 checkout.gateways.form.card_number_placeholder,0000 0000 0000 0000
+checkout.gateways.form.choose_plan,Choose a plan
 checkout.gateways.form.errors.invalid,Card is not valid
 checkout.gateways.form.expiry,Card Expiry
 checkout.gateways.form.expiry_month,Expiry month
@@ -439,7 +457,11 @@ checkout.gateways.form.routing_number,Routing number
 checkout.gateways.form.routing_number_placeholder,0000 00000
 checkout.gateways.form.bank_name,Bank name
 checkout.gateways.form.postal_code,Postal code
+checkout.gateways.afterpay.description_html,<p><strong>Interest free</strong> when you <strong>pay</strong> it in 4.</p>
+checkout.gateways.afterpay.terms_html,"<p style=""margin-top: 1rem;"">Afterpay late fees, eligibility criteria and terms & conditions apply. Visit <a class=""SC-Link"" target=""_blank"" href=""https://www.afterpay.com/en-AU/terms-of-service"">afterpay.com</a> for full terms.</p>"
 checkout.gateways.free_form.no_payment_required,No payment required
+checkout.gateways.latitude.description_html,"<img width=""1030"" height=""200"" style=""max-width: 18rem; height: auto;"" src=""https://resources.latitudefinancial.com/img/interest-free/logos/lfs-lock-up.svg""><p><strong>Enjoy Now. Pay Later.</strong></p><p>Flexible Latitude interest Free plans to suit your needs.<p><p>We're here to help you get what you need. With plans from 6-24 months, Latitude has a range of Interest Free offers that work for you.</p><p>You will be redirected to Latitude checkout to complete your order.</p>"
+checkout.gateways.latitude.terms_html,"<p style=""margin-top: 1rem;"">Before continuing, you agree to our <a class=""SC-Link"" target=""_blank"" href=""https://www.latitudefinancial.com.au/terms-and-conditions/"">Terms & Conditions</a>.</p>"
 checkout.gateways.pay_by_account_form.account_on_credit_hold,"Account is on credit hold, please contact us for information."
 checkout.gateways.pay_by_account_form.enter_purchase_order_number,Enter Purchase Order Number
 checkout.gateways.pay_by_account_form.pay_now,Pay Now
@@ -470,7 +492,6 @@ checkout.gateways.apple_pay.setup_failed,Apple Pay setup failed. Please try anot
 checkout.gateways.apple_pay.email_required,Email address is required but was not provided by Apple Pay
 checkout.payment.error,"Sorry, an error occurred while trying to process the payment. Please try again later."
 checkout.payment.header,Payment
-checkout.payment.provider_misconfigured,"Sorry, but there seems to be a problem with the selected payment provider. Please contact support."
 checkout.payment.processing,Processing...
 checkout.points.insufficient_balance,You do not have enough points to complete this order
 checkout.points.requires_login,You must be logged in to pay with points
@@ -833,7 +854,9 @@ sc.checkout.payment.create.errors.points.not_permitted,You are not allowed to us
 sc.checkout.payment.create.errors.unauthorized,"Unable to authenticate, please check the payment provider's credentials."
 sc.checkout.payment.shared.errors.api_auth_error,Error authorizing with API
 sc.checkout.payment.shared.errors.during_checkout,"Something went wrong, please try again later!"
+sc.checkout.payment.shared.errors.invalid_country,Country code %{country} is not supported by this payment provider
 sc.checkout.payment.shared.errors.invalid_provider,Unsupported Payment Method
+sc.checkout.payment.shared.errors.phone_too_long,Phone number %{phone} is too long for this payment provider (maximum %{max_length} characters)
 sc.checkout.payment.shared.errors.updating_subscription,We were unable to update your payment details!
 sc.checkout.payment.shared.errors.verifying_payment,We were unable to verify your payment!
 sc.checkout.shipping.click_and_collect.out_of_stock,Out of Stock at %{location}

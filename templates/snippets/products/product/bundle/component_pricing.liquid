@@ -1,0 +1,93 @@
+{%- assign product = component.component_product %}
+{%- assign component_pricing = component.component_pricing %}
+{%- assign has_free_quantity = component.has_free_quantity? %}
+{%- assign bundle = bundle | default: current_product %}
+
+{%- assign has_component_pricing = component.has_component_pricing? %}
+
+{%- assign pricing = product.pricing %}
+
+<div data-component-pricing="{{ component.id }}">
+  {%- if bundle.bundle_price_strategy == 'component_price' %}
+    {%- if has_free_quantity %}
+      <div class="free-quantity-info sc-font-small sc-color-success">
+        {{ "bundles.product.free_quantity_included" | t: quantity: component.free_quantity }}
+      </div>
+    {%- endif %}
+
+    {%# Component price %}
+    <div class="component-price">
+      {%- if has_component_pricing  %}
+        {%# Special bundle pricing %}
+        {%- if component_pricing.on_sale? and component_pricing.sale_price != component_pricing.unit_price %}
+          <div class="sc-mb-tiny sc-font-small">{{ component_pricing.sale_price | money }}</div>
+          {%- assign previous_price = component_pricing.unit_price | money %}
+          <div class="sc-color-sale sc-font-tiny"> {{ "bundles.product.previous_price" | t: price: previous_price }}</div>
+        {%- else %}
+          <div class="sc-mb-tiny sc-font-small">{{ component_pricing.unit_price | money }}</div>
+        {%- endif %}
+        
+        {%# Variable pricing indicator %}
+        {%- if component_pricing.enable_variable_pricing? %}
+          <span class="variable-pricing-indicator sc-font-small sc-shade-light">
+            {{ "bundles.product.or_more" | t }}
+          </span>
+        {%- endif %}
+
+      {%- else %}
+        {%# Standard product pricing %}
+        {%- if pricing and pricing.has_price? %}
+          {%# Check if component is completely free %}
+          {%- assign is_completely_free = false %}
+          {%- if component.free_quantity and component.default_quantity %}
+            {%- if component.free_quantity >= component.default_quantity %}
+              {%- assign is_completely_free = true %}
+            {%- endif %}
+          {%- endif %}
+          
+          {%- unless is_completely_free %}
+            {%- if pricing.on_sale? and pricing.sale_price != pricing.price %}
+              <div class="sc-mb-tiny sc-font-small">{{ pricing.sale_price | money }}</div>
+              {%- assign previous_price = pricing.price | money %}
+              <div class="sc-color-sale sc-font-tiny"> {{ "bundles.product.previous_price" | t: price: previous_price }}</div>
+            {%- else %}
+              <span class="price">{{ pricing.price | money }}</span>
+            {%- endif %}
+          {%- else %}
+            <div class="free-component-indicator sc-font-small sc-color-success">
+              {{ "products.pricing.free" | t }}
+            </div>
+          {%- endunless %}
+        {%- endif %}
+      {%- endif %}
+    </div>
+
+     {%# Points for component %}
+    {%- assign points = 0 %}
+    {%- if component_pricing and component_pricing.earn_points %}
+      {%- assign points = component_pricing.earn_points %}
+    {%- elsif pricing and pricing.points %}
+      {%- assign points = pricing.points %}
+    {%- endif %}
+    
+    {%- if points > 0 %}
+      <div class="component-points sc-font-small sc-shade-light">
+        {{ "bundles.product.earn_points" | t: points: points }}
+      </div>
+    {%- endif %}
+
+    {%# Quantity-based pricing note %}
+    {%- unless component.max_quantity == 1 %}
+      <div class="quantity-pricing-note sc-font-small sc-shade-light">
+        {{ "bundles.product.per_item" | t }}
+      </div>
+    {%- endunless %}
+
+  {%- else %}
+    {%# Flat pricing - no individual component prices shown %}
+    <div class="flat-pricing-note sc-font-small sc-shade-light">
+      {{ "bundles.product.quantity_included" | t: quantity: component.default_quantity }}
+    </div>
+  {%- endif %}
+
+</div>

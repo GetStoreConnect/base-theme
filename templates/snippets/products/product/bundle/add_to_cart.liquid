@@ -1,0 +1,53 @@
+{%- assign bundle = bundle | default: current_product %}
+
+<div data-bundle-add-to-cart data-bundle-id="{{ bundle.id }}">
+  <div data-bundle-validation-errors>
+  </div>
+
+  {%# Custom forms (if any) %}
+  {%- if bundle.custom_forms.size > 0 %}
+    <div class="bundle-custom-forms sc-mb">
+      {% render "custom_forms/forms",
+                 custom_forms: bundle.custom_forms,
+                 product: bundle %}
+    </div>
+  {%- endif %}
+
+  <form class="bundle-add-to-cart-form"
+        data-bundle-form="{{ bundle.id }}"
+        method="post">
+
+    <input type="hidden" name="bundle_id" value="{{ bundle.id }}">
+    <input type="hidden" name="bundle_type" value="v2">
+
+    {%# Bundle configuration data (populated by JavaScript) %}
+    <input type="hidden"
+           name="bundle_configuration"
+           data-bundle-configuration
+           value="">
+
+    <div class="add-to-cart-controls">
+
+      {%- render "shared/quantity_picker",
+          style_class: "SC-QuantityPicker-large sc-mr-small",
+          min: 1,
+          max: bundle.maximum_quantity,
+          default: 1,
+          field_name: "quantity",
+          field_id: "bundle_quantity" %}
+
+      <button type="submit"
+              class="SC-Button SC-Button-primary sc-mb"
+              data-bundle-add-to-cart-button>
+
+        <span class="button-text" data-button-text>
+          {{ "bundles.form.add_bundle_to_cart" | t }}
+        </span>
+
+        <span class="button-loading sc-hide" data-button-loading>
+          {{ "bundles.form.adding_to_cart" | t }}
+        </span>
+      </button>
+    </div>
+  </form>
+</div>

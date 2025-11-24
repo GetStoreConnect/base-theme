@@ -45,8 +45,6 @@
           {% render "checkout/payment_information/payment_providers/authorize_net_ach_form", payment_provider: payment_provider %}
         {% when "Bambora" %}
           {% render "checkout/payment_information/payment_providers/bambora_form", payment_provider: payment_provider %}
-        {% when "Bosch" %}
-          {% render "checkout/payment_information/payment_providers/bosch_form", payment_provider: payment_provider %}
         {% when "Braintree" %}
           {% render "checkout/payment_information/payment_providers/braintree_form", payment_provider: payment_provider %}
         {% when "Cboss" %}
@@ -59,6 +57,8 @@
           {% render "checkout/payment_information/payment_providers/eway_v2_form", payment_provider: payment_provider %}
         {% when "PayLater" %}
           {% render "checkout/payment_information/payment_providers/pay_later_form", payment_provider: payment_provider %}
+        {% when "Latitude" %}
+          {% render "checkout/payment_information/payment_providers/latitude_form", payment_provider: payment_provider %}
         {% when "Paypal" %}
           {% render "checkout/payment_information/payment_providers/paypal_form", payment_provider: payment_provider %}
         {% when "PayWay" %}
