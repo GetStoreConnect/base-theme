@@ -1,7 +1,8 @@
-{%- cache "product", items: [current_product, current_store, current_customer, current_cart] %}
+  {%- cache "product", items: [current_product, current_store, current_customer, current_cart] %}
   <div data-remote-target="product" class="sc-pos-relative">
     {%- render "shared/loader" %}
-    {%- assign is_bundle = current_product.bundle_lead? %}
+    {%- assign is_cpq_bundle = current_product.bundle_lead? %}
+    {%- assign is_bundle = current_product.is_bundle? %}
 
     <div>
       <div class="sc-container sc-me" id="SC-product-{{ current_product.slug }}">
@@ -75,22 +76,40 @@
             </header>
 
             {%# Bundle configuration %}
+
             {%- if is_bundle %}
-              {%- require "scripts/bundle.js" -%}
-              {%- require "scripts/quantity-picker.js" -%}
+              {%- if is_cpq_bundle %}
+                {%- comment -%} Existing CPQ Implementation {%- endcomment -%}
+                {%- require "scripts/bundle.js" -%}
+                {%- require "scripts/quantity-picker.js" -%}
 
-              {%# Price %}
-              {% if current_product.pricing.has_price? %}
-                <div data-bundle-price></div>
-              {% endif %}
+                {%# CPQ Price %}
+                {% if current_product.pricing.has_price? %}
+                  <div data-bundle-price></div>
+                {% endif %}
 
-              {%# Product options %}
-              <section id="SC-BundleProducts" class="sc-pos-relative" style="min-height: 300px">
-                <div data-bundle="{{ current_product.id }}" class="sc-flex-col sc-gap">
-                  {%- render "shared/loader", active: true %}
-                  {{ "products.show.loading_bundles" | t }}
+                {%# CPQ Product options %}
+                <section id="SC-BundleProducts" class="sc-pos-relative" style="min-height: 300px">
+                  <div data-bundle="{{ current_product.id }}" data-bundle-type="cpq" class="sc-flex-col sc-gap">
+                    {%- render "shared/loader", active: true %}
+                    {{ "products.show.loading_bundles" | t }}
+                  </div>
+                </section>
+              {%- else %}
+                {%- comment -%} Bundle V2 Implementation {%- endcomment -%}
+                {%- require "scripts/bundle-v2.js" -%}
+                {%- require "scripts/quantity-picker.js" -%}
+
+                <div data-bundle-price>
+                  {%- render "products/product/bundle/pricing_display", product: current_product %}
                 </div>
-              </section>
+
+                <section id="SC-BundleProducts" class="sc-pos-relative">
+                  <div data-bundle="{{ current_product.id }}" data-bundle-type="v2" class="sc-flex-col sc-gap">
+                    {%- render "products/product/bundle/bundle_configurator", product: current_product %}
+                  </div>
+                </section>
+              {%- endif %}
             {%- else %}
               {%# Delivery and pickup %}
               <div class="sc-mb">
@@ -110,7 +129,13 @@
         </section>
 
         {%- if is_bundle %}
-          <div data-bundle-anchor-variants></div>
+          {%- if is_cpq_bundle %}
+            <div data-bundle-anchor-variants></div>
+          {%- else %}
+            <div data-bundle-anchor-variants>
+              {% render "products/product/bundle/anchor_variants", product: current_product %}
+            </div>
+          {%- endif %}
         {%- else %}
           <div class="sc-mb-spacious" class="SC-ProductContentBlocks" id="SC-ProductContentBlocks">
             {%# Features %}

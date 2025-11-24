@@ -93,7 +93,6 @@ checkout/payments,complete
 checkout/payments,create
 checkout/payments,intents
 checkout/payments,postback
-checkout/payments,prepare_form_data
 checkout/payments,status
 checkout/payments,update
 checkout/promotion,update

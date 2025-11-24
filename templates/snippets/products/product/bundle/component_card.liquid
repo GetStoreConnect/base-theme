@@ -1,0 +1,75 @@
+{%- assign product = component.component_product %}
+{%- assign anchor_product = component.anchor_product %}
+{%- assign component_id = component.id %}
+
+<div class="SC-ProductListCard sc-font-small bundle-component-card"
+     data-component="{{ component_id }}"
+     data-component-id="{{ component_id }}"
+     data-component-included="{{ component.included_by_default? }}"
+     data-variants-size="{{ product.variants.size }}"
+     data-default-quantity="{{ component.default_quantity }}"
+     data-product="{{ product.id }}"
+     data-product-name="{{ product.name }}"
+     data-free-quantity="{{ component.free_quantity | default: 0 }}"
+     data-component-required="{{ component.required? }}"
+     data-bundle-flat-price="{{ anchor_product.bundle_price_strategy == 'flat_price' }}"
+     data-unit-price="{{ component.component_unit_price | default: 0 }}">
+
+  {%# Component image %}
+  {%- if product.images.size > 0 %}
+    <div class="SC-ProductListCard_image sc-mr-medium">
+      <img src="{{ product.images.first.small_url }}"
+           loading="lazy"
+           width="60"
+           alt="{{ product.name }}"
+           data-component-image>
+    </div>
+  {%- endif %}
+
+  <span class="SC-ProductListCard_detail">
+    {%# Component title %}
+    <div class="SC-ProductListCard_detail_headline">
+      {{ product.name }}
+      {%- if component.required? and component.included_by_default? == false %}
+        <span class="required-indicator sc-color-error">*</span>
+      {%- endif %}
+    </div>
+
+    {%# Component pricing %}
+    {%- unless product.variant_options.size > 0 %}
+      <div class="SC-ProductListCard_detail_subheadline" data-component-price="{{ component_id }}">
+        {% render "products/product/bundle/component_pricing", component: component, bundle: current_product %}
+      </div>
+    {%- endunless %}
+
+    {%# Component variants (if any) %}
+    {%- if product.variants.size > 0 %}
+      <div class="component-variants" data-component-variants="{{ component_id }}">
+        {% render "products/product/bundle/component_variants",
+                   product: product,
+                   component: component %}
+      </div>
+    {%- endif %}
+
+    {%# Quantity picker - using shared partial like CPQ %}
+    {%- unless component.max_quantity == 1 and component.min_quantity == 1 %}
+      <div class="component-quantity-controls" data-component-quantity="{{ component_id }}">
+        {%- assign min_qty = component.min_quantity %}
+        {%- assign max_qty = component.max_quantity %}
+        {%- assign current_qty = component.default_quantity %}
+
+        {%# Wrap in form to prevent quantity-picker.js null form errors %}
+        <form class="bundle-v2-quantity-form" data-submit-on-change="false">
+          {%- render "shared/quantity_picker",
+              style_class: "SC-QuantityPicker-large",
+              min: min_qty,
+              max: max_qty,
+              default: current_qty,
+              field_name: "component_quantity[{{ component_id }}]",
+              field_id: "component_quantity_{{ component_id }}",
+              data: "data-component-quantity='{{ component_id }}' data-component-id='{{ component_id }}'" %}
+        </form>
+      </div>
+    {%- endunless %}
+  </span>
+</div>

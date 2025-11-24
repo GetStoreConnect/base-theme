@@ -1,6 +1,6 @@
 import { PaymentForm } from './payment-form'
-import { Wallet } from './wallet'
 import { onDomChange } from '../../theme/utils/init'
+import { Wallet } from './wallet'
 import { GooglePay } from './google-pay'
 import { ApplePay } from './apple-pay'
 

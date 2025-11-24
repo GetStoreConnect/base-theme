@@ -27,6 +27,12 @@
                 dedicated_cart_product_id: product.id,
                 wallet_disabled: wallet_disabled
           %}
+        {% when "Eway" %}
+          {% render "checkout/payment_information/payment_providers/eway_form",
+                payment_provider: payment_provider,
+                only_express_checkout: true,
+                dedicated_cart_product_id: product.id
+          %}
         {% when "Stripe" %}
           {% render "checkout/payment_information/payment_providers/stripe_form",
                 payment_provider: payment_provider,
@@ -41,6 +47,9 @@
                 dedicated_cart_product_id: product.id,
                 wallet_disabled: wallet_disabled
           %}
+        {% else %}
+          <p>Missing payment method - set it up now in <code>app/liquid/theme/snippets/products/product/express_checkout.liquid</code></p>
+          <p>payment_provider.code = <code>{{ payment_provider.code }}</code></p>
         {% endcase %}
       </div>
     {% endif %}
