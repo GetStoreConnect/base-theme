@@ -1,7 +1,7 @@
 import storePathUrl from '../theme/store-path-url'
-import fetchWithResponseHandler from '../theme/utils/fetch'
+import { postForm } from '../theme/utils/fetch'
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', async function () {
   if (document.querySelector('body[data-customer-metadata]')) {
     const data = {
       timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
@@ -9,14 +9,11 @@ document.addEventListener('DOMContentLoaded', function () {
       screen_resolution: `${window.screen.width * window.devicePixelRatio} X ${window.screen.height * window.devicePixelRatio}`,
     }
 
-    fetchWithResponseHandler(storePathUrl('/cart/customer_metadata'), {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: new URLSearchParams(data).toString(),
-    }).then((_response) => {
+    try {
+      await postForm(storePathUrl('/cart/customer_metadata'), data)
       document.body.removeAttribute('data-customer-metadata')
-    })
+    } catch (error) {
+      console.error('Error submitting customer metadata:', error)
+    }
   }
 })

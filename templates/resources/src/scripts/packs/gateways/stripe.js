@@ -1,8 +1,8 @@
 import { PaymentForm } from './payment-form'
+import { onDomChange } from '../../theme/utils/init'
 import { Wallet } from './wallet'
 import { loadStripe } from '@stripe/stripe-js/pure'
-import { onDomChange } from '../../theme/utils/init'
-import fetchWithResponseHandler from '../../theme/utils/fetch'
+import { postJSON, putJSON } from '../../theme/utils/fetch'
 import storePathUrl from '../../theme/store-path-url'
 
 onDomChange((node) => {
@@ -161,16 +161,29 @@ function initStripe({ form }) {
         options.emailRequired = true
         options.billingAddressRequired = true
 
-        if (paymentForm.offerShipping()) {
+        if (paymentForm.requiresContactInfo()) {
+          // Collect phone and shipping address for customer information
           options.phoneNumberRequired = true
           options.shippingAddressRequired = true
 
-          // Wallet can indicate to customer their country is not valid
-          options.allowedShippingCountries = paymentForm.allowedShippingCountries()
+          if (paymentForm.offerShipping()) {
+            // For physical products, setup shipping rates
+            // Wallet can indicate to customer their country is not valid
+            options.allowedShippingCountries = paymentForm.allowedShippingCountries()
 
-          // If shippingAddressRequired is true, then shippingRates is required
-          // Show something to indicate we're loading them
-          options.shippingRates = wallet.loadingShippingRates()
+            // If shippingAddressRequired is true, then shippingRates is required
+            // Show something to indicate we're loading them
+            options.shippingRates = wallet.loadingShippingRates()
+          } else {
+            // For virtual products, provide a $0 dummy rate to collect address for contact info
+            options.shippingRates = [
+              {
+                id: 'virtual-product-no-shipping',
+                displayName: paymentForm.i18n('wallets.no_shipping_required'),
+                amount: 0,
+              },
+            ]
+          }
         }
 
         if (paymentForm.dedicatedCartProductId) {
@@ -188,6 +201,23 @@ function initStripe({ form }) {
 
     // https://docs.stripe.com/js/elements_object/express_checkout_element_shippingaddresschange_event#express_checkout_element_on_shipping_address_change
     expressCheckoutElement.on('shippingaddresschange', async (event) => {
+      // For virtual products, just validate the address without fetching shipping rates
+      if (!paymentForm.offerShipping()) {
+        const amount = Math.round(paymentForm.totalPayable() * 100)
+        elements.update({ amount })
+        event.resolve({
+          shippingRates: [
+            {
+              id: 'virtual-product-no-shipping',
+              displayName: paymentForm.i18n('wallets.no_shipping_required'),
+              amount: 0,
+            },
+          ],
+          selectedShippingRate: { id: 'virtual-product-no-shipping' },
+        })
+        return
+      }
+
       const { address } = event
       const { amount, shippingRates, defaultShippingRateId, error } =
         await wallet.fetchShippingRates(address)
@@ -233,33 +263,22 @@ function initStripe({ form }) {
     // https://docs.stripe.com/js/elements_object/express_checkout_element_confirm_event
     expressCheckoutElement.on('confirm', async (event) => {
       if (paymentForm.onlyExpressCheckout()) {
-        const res = await fetch(storePathUrl(`/express_checkout/carts`), {
-          method: 'PUT',
-          headers: { 'content-type': 'application/json' },
-          body: JSON.stringify({
+        try {
+          await putJSON(storePathUrl(`/express_checkout/carts`), {
             billing_details: event.billingDetails,
             shipping_address: event.shippingAddress,
             shipping_rate: event.shippingRate, // shouldn't have changed since last shippingratechange
-            authenticity_token: paymentForm.formAuthentityToken(),
             dedicated_cart_product_id: paymentForm.dedicatedCartProductId,
-          }),
-        })
-
-        if (!res.ok) {
-          const { error } = await res.json()
-          if (error) {
-            handleWalletError({ error })
-            event.paymentFailed({ reason: 'fail' }) // NOTE: there's also 'invalid_shipping_address' but we're not using it
-            return
-          }
+          })
+        } catch (error) {
+          handleWalletError({ error })
+          event.paymentFailed({ reason: 'fail' }) // NOTE: there's also 'invalid_shipping_address' but we're not using it
+          return
         }
       }
 
       try {
-        const response = await fetchWithResponseHandler(form.dataset.callbackUrl, {
-          method: 'post',
-          headers: { 'content-type': 'application/json' },
-        })
+        const response = await postJSON(paymentForm.paymentSessionUrl(), {})
 
         if (response.message) {
           showError(response.message)
@@ -281,7 +300,7 @@ function initStripe({ form }) {
         if (error) {
           handleWalletError({ error })
         } else {
-          // Customer is redirected to the callback URL
+          // Customer is redirected to the payment session URL
         }
       } catch (error) {
         handleWalletError({ error })
@@ -326,8 +345,8 @@ function initStripe({ form }) {
         }
       }
 
-      // Disable the /cart form as it can be accidentally submitted
-      document.querySelectorAll('form[action="/cart"]').forEach((form) => {
+      // Disable the cart form as it can be accidentally submitted
+      document.querySelectorAll('form[data-cart-form]').forEach((form) => {
         form.removeAttribute('action')
       })
 
@@ -366,11 +385,8 @@ function initStripe({ form }) {
 
       // Simulate confirm event (payment)
       // https://docs.stripe.com/js/elements_object/express_checkout_element_confirm_event
-      const res = await fetch(storePathUrl(`/express_checkout/carts`), {
-        method: 'PUT',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({
-          authenticity_token: paymentForm.formAuthentityToken(),
+      try {
+        await putJSON(storePathUrl(`/express_checkout/carts`), {
           billing_details: {
             name: 'Test User',
             email: 'drnic@getstoreconnect.com',
@@ -382,10 +398,8 @@ function initStripe({ form }) {
           },
           shipping_rate: shippingRate,
           dedicated_cart_product_id: paymentForm.dedicatedCartProductId,
-        }),
-      })
-      if (!res.ok) {
-        const { error } = await res.json()
+        })
+      } catch (error) {
         handleWalletError({ error })
         return
       }
@@ -395,10 +409,7 @@ function initStripe({ form }) {
 
     window.testStripeWalletCallback = async () => {
       try {
-        const response = await fetchWithResponseHandler(form.dataset.callbackUrl, {
-          method: 'post',
-          headers: { 'content-type': 'application/json' },
-        })
+        const response = await postJSON(paymentForm.paymentSessionUrl(), {})
 
         if (response.message) {
           showError(response.message)

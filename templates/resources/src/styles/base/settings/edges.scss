@@ -1,3 +1,5 @@
+@use 'sass:map';
+
 /**
  * DEPRECATED: Use /settings/border.scss
  */
@@ -11,8 +13,8 @@ $edges: (
   ),
 ) !default;
 
-@if (map-has-key($core_override, 'edges') == true) {
-  $edges: map-extend($edges, map-get($core_override, 'edges'), true);
+@if (map.has-key($core_override, 'edges') == true) {
+  $edges: map-extend($edges, map.get($core_override, 'edges'), true);
 }
 
 @function edges($keys...) {

@@ -5,16 +5,14 @@ import { onDomChange } from '../../theme/utils/init'
 onDomChange((node) => {
   const forms = node.querySelectorAll('form[data-provider="Paypal"]')
   forms.forEach((form) => {
-    const providerId = form.dataset.providerId
-    if (providerId) {
-      initPaypal({ form, providerId })
-    }
+    initPaypal({ form })
   })
 })
 
-function initPaypal({ form, providerId }) {
+function initPaypal({ form }) {
   const paymentForm = new PaymentForm(form, {
     setPayButtonCallback: (payButton, enabled) => setPayButton(payButton, enabled, paymentForm),
+    legacySubmitElementId: `PaypalPaymentButton`,
   })
 
   function setPayButton(payButton, enabled, paymentForm) {
@@ -29,15 +27,17 @@ function initPaypal({ form, providerId }) {
     }
   }
 
+  let buttonContainer = paymentForm.refElement('paypal-button-container', {
+    legacyId: `paypal-button-container${paymentForm.providerId}`,
+  })
+
   loadScript({ clientId: paymentForm.apiKey(), currency: paymentForm.currency() })
     .then((paypal) => {
       paypal
         .Buttons({
           style: { layout: 'horizontal' },
           createOrder: function () {
-            const SETEC_URL = paymentForm.callbackUrl()
-
-            return fetch(SETEC_URL, {
+            return fetch(paymentForm.paymentSessionUrl(), {
               method: 'post',
               headers: {
                 'content-type': 'application/json',
@@ -54,21 +54,19 @@ function initPaypal({ form, providerId }) {
               })
           },
           onApprove: function (data, _actions) {
-            paymentForm.prepareSubmit(() => {
-              const payload = {
-                payment_source: {
-                  tok_id: data.orderID,
-                },
-              }
-              paymentForm.submitData({ payload })
-            })
+            const payload = {
+              payment_source: {
+                tok_id: data.orderID,
+              },
+            }
+            paymentForm.submitData({ payload })
           },
           onError: function (err) {
             // false is passed to showError not to replace existing error message if any
             paymentForm.showError(err, { replace: false })
           },
         })
-        .render(`#paypal-button-container${providerId}`)
+        .render(`#${buttonContainer.id}`)
         .catch((error) => {
           console.error('failed to render the PayPal Buttons', error)
         })

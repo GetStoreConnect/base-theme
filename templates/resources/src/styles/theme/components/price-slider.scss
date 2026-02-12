@@ -1,3 +1,5 @@
+@use 'sass:map';
+
 $PriceSlider: (
   'height': 40px,
   'line': (
@@ -30,8 +32,8 @@ $PriceSlider: (
   ),
 ) !default;
 
-@if (map-has-key($override, 'PriceSlider') == true) {
-  $PriceSlider: map-extend($PriceSlider, map-get($override, 'PriceSlider'), true);
+@if (map.has-key($override, 'PriceSlider') == true) {
+  $PriceSlider: map-extend($PriceSlider, map.get($override, 'PriceSlider'), true);
 }
 
 @function PriceSlider($keys...) {

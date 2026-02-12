@@ -1,3 +1,5 @@
+@use 'sass:map';
+
 $Link: (
   'color': (
     'resting': color('primary'),
@@ -9,8 +11,8 @@ $Link: (
   ),
 ) !default;
 
-@if (map-has-key($override, 'Link') == true) {
-  $Link: map-extend($Link, map-get($override, 'Link'), true);
+@if (map.has-key($override, 'Link') == true) {
+  $Link: map-extend($Link, map.get($override, 'Link'), true);
 }
 
 @function Link($keys...) {

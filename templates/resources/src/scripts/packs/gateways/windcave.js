@@ -19,7 +19,7 @@ function initWindcave({ form }) {
   })
 
   function onClick(paymentForm) {
-    fetch(paymentForm.callbackUrl(), {
+    fetch(paymentForm.paymentSessionUrl(), {
       method: 'post',
       headers: {
         'content-type': 'application/json',

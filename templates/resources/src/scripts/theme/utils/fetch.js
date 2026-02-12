@@ -1,4 +1,4 @@
-export default function fetchWithResponseHandler(url, options) {
+export default async function fetchWithResponseHandler(url, options) {
   const method = options.method ? options.method.toUpperCase() : 'GET'
 
   if (method !== 'GET' && method !== 'HEAD') {
@@ -12,21 +12,61 @@ export default function fetchWithResponseHandler(url, options) {
     }
   }
 
-  return fetch(url, options).then((response) => {
-    if (!response.ok) {
-      throw new Error('Network response was not ok: ' + response.statusText)
-    }
+  const response = await fetch(url, options)
 
-    const contentType = response.headers.get('Content-Type')
+  if (!response.ok) {
+    throw new Error('Network response was not ok: ' + response.statusText)
+  }
 
-    if (contentType.includes('application/json')) {
-      return response.json()
-    } else if (contentType.includes('text/javascript')) {
-      return response.text().then((script) => (0, eval)(script))
-    } else if (contentType.includes('text/html')) {
-      return response.text()
-    } else {
-      return response.blob()
-    }
+  const contentType = response.headers.get('Content-Type')
+
+  if (contentType.includes('application/json')) {
+    return response.json()
+  } else if (contentType.includes('text/javascript')) {
+    const script = await response.text()
+    return (0, eval)(script)
+  } else if (contentType.includes('text/html')) {
+    return response.text()
+  } else {
+    return response.blob()
+  }
+}
+
+export function postJSON(url, data) {
+  return fetchWithResponseHandler(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  })
+}
+
+export function putJSON(url, data) {
+  return fetchWithResponseHandler(url, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  })
+}
+
+export function getJSON(url) {
+  return fetchWithResponseHandler(url, {
+    method: 'GET',
+    headers: { Accept: 'application/json' },
+  })
+}
+
+export function postForm(url, data) {
+  return fetchWithResponseHandler(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams(data).toString(),
+  })
+}
+
+export function patchForm(url, data) {
+  return fetchWithResponseHandler(url, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams(data).toString(),
   })
 }

@@ -1,3 +1,5 @@
+@use 'sass:map';
+
 :root {
   --sc-input-height: 44px;
   --sc-input-border-radius: 8px;
@@ -39,8 +41,8 @@ $Field: (
   ),
 ) !default;
 
-@if (map-has-key($override, 'Field') == true) {
-  $Field: map-extend($Field, map-get($override, 'Field'), true);
+@if (map.has-key($override, 'Field') == true) {
+  $Field: map-extend($Field, map.get($override, 'Field'), true);
 }
 
 @function Field($keys...) {

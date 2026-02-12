@@ -1,3 +1,5 @@
+@use 'sass:map';
+
 $BannerOverlay: (
   'bg':
     linear-gradient(
@@ -15,8 +17,8 @@ $BannerOverlay: (
   ),
 ) !default;
 
-@if (map-has-key($override, 'BannerOverlay') == true) {
-  $BannerOverlay: map-extend($BannerOverlay, map-get($override, 'BannerOverlay'), true);
+@if (map.has-key($override, 'BannerOverlay') == true) {
+  $BannerOverlay: map-extend($BannerOverlay, map.get($override, 'BannerOverlay'), true);
 }
 
 @function BannerOverlay($keys...) {

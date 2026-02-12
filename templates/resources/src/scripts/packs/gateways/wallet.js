@@ -1,3 +1,4 @@
+import { postJSON, putJSON } from '../../theme/utils/fetch'
 import storePathUrl from '../../theme/store-path-url'
 
 export class Wallet {
@@ -5,31 +6,46 @@ export class Wallet {
     this.paymentForm = paymentForm
   }
 
-  walletsContainerId() {
-    return `${this.paymentForm.providerName}WalletsContainer${this.paymentForm.elementProviderId()}`
-  }
-
   walletsContainer() {
-    const container = document.getElementById(this.walletsContainerId())
-    if (!container) {
-      this.paymentForm.reportError(
-        `Cannot setup wallets: no wallets container element found #${this.walletsContainerId()}`,
-        { containerId: this.walletsContainerId() }
-      )
-    }
-    return container
+    return this.paymentForm.refElement('wallets-container', { legacyId: this.walletsContainerId() })
   }
 
+  /**
+   * Returns the ID of the wallet buttons element, generating one if needed.
+   * This is required for some payment SDKs (e.g., Stripe Elements) that need
+   * an ID selector to mount to.
+   */
   walletsElementId() {
-    return `${this.paymentForm.providerName}WalletsCheckout${this.paymentForm.elementProviderId()}`
+    const element = this.walletsElement()
+    if (!element) return null
+
+    // If element already has an ID (from legacy Liquid or previous generation), return it
+    if (element.id) {
+      return element.id
+    }
+
+    // Generate a unique ID for this element (for data-ref approach)
+    const uniqueId = `${this.paymentForm.providerName}-wallet-${this.paymentForm.providerId}-${Date.now()}`
+    element.id = uniqueId
+    return uniqueId
+  }
+
+  /**
+   * Helper to query for data-ref within the wallets container.
+   * @private
+   */
+  // TODO: use PaymentForm refElement but relative to walletsContainer()
+  // Perhaps refElement goes into global helper
+  _refElement(refName) {
+    return this.walletsContainer()?.querySelector(`[data-ref="${refName}"]`)
   }
 
   walletsElementExists() {
-    const container = document.getElementById(this.walletsContainerId())
+    const container = this.walletsContainer()
     if (!container) {
       return false
     }
-    const element = container.querySelector('[data-ref="wallet-buttons"]')
+    const element = this._refElement('wallet-buttons')
     if (!element) {
       return false
     }
@@ -37,10 +53,11 @@ export class Wallet {
   }
 
   walletsElement() {
-    const walletsElement = this.walletsContainer().querySelector('[data-ref="wallet-buttons"]')
+    // Always query using data-ref (works for both new and legacy approaches)
+    const walletsElement = this._refElement('wallet-buttons')
     if (!walletsElement) {
       this.paymentForm.reportError(
-        `Cannot setup wallets: no wallets container element found #${this.walletsContainerId()} [data-ref="wallet-buttons"]`,
+        `Cannot setup wallets: no wallet buttons element found [data-ref="wallet-buttons"] in container #${this.walletsContainerId()}`,
         { containerId: this.walletsContainerId() }
       )
     }
@@ -48,10 +65,11 @@ export class Wallet {
   }
 
   walletsErrorElement() {
-    let walletsErrorElement = this.walletsContainer().querySelector('[data-ref="wallet-error"]')
+    // Always query using data-ref (works for both new and legacy approaches)
+    let walletsErrorElement = this._refElement('wallet-error')
     if (!walletsErrorElement) {
       this.paymentForm.reportError(
-        `Cannot setup wallets: no wallets error element found #${this.walletsContainerId()} [data-ref="wallet-error"]`,
+        `Cannot setup wallets: no wallet error element found [data-ref="wallet-error"] in container #${this.walletsContainerId()}`,
         { containerId: this.walletsContainerId() }
       )
       walletsErrorElement = this.paymentForm.errorElement()
@@ -72,34 +90,19 @@ export class Wallet {
       }
     }
 
-    const res = await fetch(storePathUrl(`/express_checkout/carts`), {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({
-        authenticity_token: this.paymentForm.formAuthentityToken(),
+    try {
+      const response = await postJSON(storePathUrl(`/express_checkout/carts`), {
         add_to_cart_form_data: this.addToCartFormData(),
         dedicated_cart_product_id: this.paymentForm.dedicatedCartProductId,
-      }),
-    })
+      })
 
-    if (!res.ok) {
-      let errorMessage
-      try {
-        const errorResponse = await res.json()
-        errorMessage =
-          errorResponse.error?.message || 'An error has occurred, please try again shortly.'
-      } catch {
-        errorMessage = 'An error has occurred, please try again shortly.'
+      return {
+        amount: Math.round(response.cart.amount * 100),
+        didError: false,
       }
-
-      this.showWalletsError(errorMessage)
+    } catch (error) {
+      this.showWalletsError(error.message || this.paymentForm.i18n('errors.error_occurred'))
       return { amount: null, didError: true }
-    }
-
-    const response = await res.json()
-    return {
-      amount: Math.round(response.cart.amount * 100),
-      didError: false,
     }
   }
 
@@ -108,82 +111,66 @@ export class Wallet {
   async fetchShippingRates(address) {
     let params = {
       address,
-      authenticity_token: this.paymentForm.formAuthentityToken(),
     }
     if (this.paymentForm.dedicatedCartProductId) {
       params.dedicated_cart_product_id = this.paymentForm.dedicatedCartProductId
       params.add_to_cart_form_data = this.addToCartFormData()
     }
-    const res = await fetch(storePathUrl(`/express_checkout/shipping_methods`), {
-      method: 'PUT',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify(params),
-    })
 
-    if (!res.ok) {
-      try {
-        return await res.json() // Expects {error:{message: "..."}}
-      } catch {
-        return { error: { message: 'An error has occurred, please try again shortly.' } }
+    try {
+      const response = await putJSON(storePathUrl(`/express_checkout/shipping_methods`), params)
+
+      let defaultShippingRate = response.shipping.rates.find((rate) => rate.default)
+
+      // Sort the rates by amount, but ensure defaultShippingRate is included in the final list
+      // Max 9 cheapest shipping rates for Stripe
+      const shippingRates = response.shipping.rates
+        .sort((a, b) => {
+          if (a.default) return -1
+          if (b.default) return 1
+          return a.amount - b.amount
+        })
+        .slice(0, 9)
+
+      // Default to the cheapest rate if no .default specified above
+      if (!defaultShippingRate) {
+        defaultShippingRate = shippingRates[0]
       }
-    }
 
-    const response = await res.json()
-
-    let defaultShippingRate = response.shipping.rates.find((rate) => rate.default)
-
-    // Sort the rates by amount, but ensure defaultShippingRate is included in the final list
-    // Max 9 cheapest shipping rates for Stripe
-    const shippingRates = response.shipping.rates
-      .sort((a, b) => {
-        if (a.default) return -1
-        if (b.default) return 1
-        return a.amount - b.amount
-      })
-      .slice(0, 9)
-
-    // Default to the cheapest rate if no .default specified above
-    if (!defaultShippingRate) {
-      defaultShippingRate = shippingRates[0]
-    }
-
-    // Map to ApplePay format id, amount, displayName
-    return {
-      amount: Math.round(response.cart.amount * 100),
-      defaultShippingRateId: defaultShippingRate.id,
-      shippingRates: shippingRates.map((rate) => {
-        return {
-          id: rate.id,
-          amount: Math.round(rate.amount * 100),
-          displayName: rate.label,
-          deliveryEstimate: rate.description,
-        }
-      }),
+      // Map to ApplePay format id, amount, displayName
+      return {
+        amount: Math.round(response.cart.amount * 100),
+        defaultShippingRateId: defaultShippingRate.id,
+        shippingRates: shippingRates.map((rate) => {
+          return {
+            id: rate.id,
+            amount: Math.round(rate.amount * 100),
+            displayName: rate.label,
+            deliveryEstimate: rate.description,
+          }
+        }),
+      }
+    } catch (error) {
+      return {
+        error: { message: error.message || this.paymentForm.i18n('errors.error_occurred') },
+      }
     }
   }
 
   async setShippingRate(shippingRate) {
-    const res = await fetch(storePathUrl(`/express_checkout/carts`), {
-      method: 'PUT',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({
-        authenticity_token: this.paymentForm.formAuthentityToken(),
+    try {
+      const response = await putJSON(storePathUrl(`/express_checkout/carts`), {
         dedicated_cart_product_id: this.paymentForm.dedicatedCartProductId,
         shipping_rate: shippingRate,
-      }),
-    })
+      })
 
-    if (!res.ok) {
-      try {
-        return await res.json() // Expects {error:{message: "..."}}
-      } catch {
-        return { error: { message: 'An error has occurred, please try again shortly.' } }
+      return {
+        amount: Math.round(response.cart.amount * 100),
       }
-    }
-
-    const response = await res.json()
-    return {
-      amount: Math.round(response.cart.amount * 100),
+    } catch (error) {
+      return {
+        error: { message: error.message || this.paymentForm.i18n('errors.error_occurred') },
+      }
     }
   }
 
@@ -191,7 +178,7 @@ export class Wallet {
     return [
       {
         id: 'loading',
-        displayName: 'Loading...',
+        displayName: this.paymentForm.i18n('wallets.loading'),
         amount: 0,
       },
     ]
@@ -216,11 +203,24 @@ export class Wallet {
   }
 
   removeWalletsContainer() {
-    const id = `${this.paymentForm.providerName}WalletsContainer${this.paymentForm.providerId}`
-    const walletsContainer = document.getElementById(id)
+    const walletsContainer = this.walletsContainer()
     if (walletsContainer) {
       walletsContainer.remove()
     }
+  }
+
+  // ============================================================================
+  // LEGACY METHODS - For backward compatibility with old Liquid templates
+  // ============================================================================
+
+  /**
+   * Returns the ID used for legacy Liquid templates that explicitly set IDs.
+   * LEGACY: This is only used as a fallback for payment providers that haven't
+   * been migrated to use data-ref attributes. Returns IDs like "StripeWalletsContainerpp-1".
+   * @private
+   */
+  walletsContainerId() {
+    return `${this.paymentForm.providerName}WalletsContainer${this.paymentForm.elementProviderId()}`
   }
 }
 

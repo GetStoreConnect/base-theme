@@ -1,3 +1,5 @@
+@use 'sass:map';
+
 $Tag: (
   'padding': spacing('tiny') spacing('medium'),
   'color': white,
@@ -7,8 +9,8 @@ $Tag: (
   ),
 ) !default;
 
-@if (map-has-key($override, 'Tag') == true) {
-  $Tag: map-extend($Tag, map-get($override, 'Tag'), true);
+@if (map.has-key($override, 'Tag') == true) {
+  $Tag: map-extend($Tag, map.get($override, 'Tag'), true);
 }
 
 @function Tag($keys...) {

@@ -1,5 +1,5 @@
 import Litepicker from 'litepicker'
-import { formatDate } from '../theme/utils/date'
+import { formatDate, addDays, subtractDays, DAYS_PER_WEEK } from '../theme/utils/date'
 import Loader from '../theme/loader'
 import { onDomChange } from '../theme/utils/init'
 
@@ -17,10 +17,16 @@ const BookingSelector = function (node) {
   let autoJump = false
   let highlightTimeoutId
   let lastMonthSelected
+  let submitButtons, walletContainers
 
   start()
 
   function start() {
+    // Cache button and wallet container references
+    const form = node.closest('form')
+    submitButtons = form.querySelectorAll('input[type="submit"]')
+    walletContainers = document.querySelectorAll('[data-click-blocker]')
+
     const locations = [...node.querySelectorAll('[data-bookable-location]')]
     let srtDate = getStartDate()
     let endDate = getEndDate()
@@ -32,15 +38,13 @@ const BookingSelector = function (node) {
     if (!srtDate || !endDate) {
       srtDate =
         srtDate ||
-        (endDate
-          ? formatDate(Date.parse(endDate) - 7 * 24 * 60 * 60 * 1000)
-          : formatDate(Date.now()))
-      endDate = endDate || formatDate(Date.parse(srtDate) + 7 * 24 * 60 * 60 * 1000)
+        (endDate ? formatDate(subtractDays(endDate, DAYS_PER_WEEK)) : formatDate(Date.now()))
+      endDate = endDate || formatDate(addDays(srtDate, DAYS_PER_WEEK))
     }
 
     if (srtDate > endDate) {
       const start = Date.parse(srtDate)
-      endDate = formatDate(start + 7 * 24 * 60 * 60 * 1000)
+      endDate = formatDate(addDays(start, DAYS_PER_WEEK))
     }
     storeDates(srtDate, endDate)
 
@@ -111,12 +115,9 @@ const BookingSelector = function (node) {
     // Sets selected values to hidden inputs
     ;[...node.querySelectorAll('[data-booking-timeslot]')].map((timeslot) => {
       timeslot.addEventListener('change', (event) => {
-        const buyNow = form.querySelector('[data-buy-now]')
-        const addToCart = form.querySelector('[data-add-to-cart]')
         const qtyPickers = form.querySelectorAll('[data-qty-picker]')
 
-        if (addToCart) addToCart.removeAttribute('disabled')
-        if (buyNow) buyNow.removeAttribute('disabled')
+        disableAddToCartButtons(false)
         locationInput.value = event.target.dataset.location
         startDateInput.value = event.target.dataset.start
         endDateInput.value = event.target.dataset.end
@@ -193,8 +194,6 @@ const BookingSelector = function (node) {
 
   function filterAvailabilities(startDate, endDate, locationId) {
     const locations = node.querySelector('[data-bookable-locations]')
-    const addToCart = node.closest('form').querySelector('[data-add-to-cart]')
-    const buyNow = node.closest('form').querySelector('[data-buy-now]')
     const slots = node.querySelector('[data-booking-timeslots]')
     const availabilitiesUrl = slots.dataset.bookingAvailabilitiesUrl
     const availabilitiesPartial = slots.dataset.bookingAvailabilitiesPartial
@@ -211,8 +210,7 @@ const BookingSelector = function (node) {
 
     loader.on()
     locations.setAttribute('disabled', true)
-    if (addToCart) addToCart.setAttribute('disabled', true)
-    if (buyNow) buyNow.setAttribute('disabled', true)
+    disableAddToCartButtons(true)
     slots.scrollTop = 0
 
     fetchAvailabilities(endpoint)
@@ -337,6 +335,15 @@ const BookingSelector = function (node) {
     return params.get(key)
   }
 
+  function disableAddToCartButtons(bool) {
+    submitButtons.forEach((input) => {
+      input.disabled = bool
+    })
+    walletContainers.forEach((element) => {
+      element.dataset.clickBlocker = bool ? 'not-allowed' : 'false'
+    })
+  }
+
   function handleClosestLinks() {
     const jumpLinks = [...node.querySelectorAll('[data-booking-jump]')]
     jumpLinks.forEach((trigger) =>
@@ -346,10 +353,10 @@ const BookingSelector = function (node) {
 
         if (direction == 'back') {
           end = Date.parse(event.target.getAttribute('data-booking-jump'))
-          start = end - 7 * 24 * 60 * 60 * 1000
+          start = subtractDays(end, DAYS_PER_WEEK)
         } else {
           start = Date.parse(event.target.getAttribute('data-booking-jump'))
-          end = start + 7 * 24 * 60 * 60 * 1000
+          end = addDays(start, DAYS_PER_WEEK)
         }
 
         picker.setDateRange(start, end, true)

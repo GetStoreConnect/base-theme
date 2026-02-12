@@ -6,6 +6,7 @@ onDomChange(init)
 window.addEventListener('popstate', popVariantPathFromHistory)
 
 let clearButton, resetButton, selectionPrompt, variantSelector
+let submitButtons, walletContainers
 
 function init(node) {
   const variantOptions = [...node.querySelectorAll('[data-variant-option]')]
@@ -17,6 +18,9 @@ function init(node) {
   clearButton = variantSelector.querySelector('[data-variant-clear-button]')
   resetButton = variantSelector.querySelector('[data-variant-reset-button]')
   selectionPrompt = variantSelector.querySelector('[data-variant-selection-prompt]')
+
+  submitButtons = document.querySelectorAll('form[data-cart-form] input[type="submit"]')
+  walletContainers = document.querySelectorAll('[data-click-blocker]')
 
   // Event listeners
   variantOptions.map((option) => {
@@ -34,6 +38,7 @@ function init(node) {
   if (clearButton) {
     clearButton.addEventListener('click', () => {
       clearSelectedOptions()
+      disableAddToCartButtons(true)
       if (resetButton) resetButton.classList.remove('is-hidden')
       if (selectionPrompt) selectionPrompt.classList.remove('is-hidden')
     })
@@ -91,6 +96,7 @@ function configureOptions(target = null) {
   const selectedProduct = checkForSelectedProduct(selectedOptions)
   if (selectedProduct) {
     load(selectedProduct.path)
+    disableAddToCartButtons(false)
   } else {
     if (resetButton) resetButton.classList.remove('is-hidden')
     if (selectionPrompt) selectionPrompt.classList.add('is-hidden')
@@ -130,6 +136,15 @@ function clearSelectedOptions() {
         disable(option, false)
       })
   }
+}
+
+function disableAddToCartButtons(bool) {
+  submitButtons.forEach((input) => {
+    disable(input, bool)
+  })
+  walletContainers.forEach((element) => {
+    element.dataset.clickBlocker = bool ? 'not-allowed' : 'false'
+  })
 }
 
 function resetSelectedOptions() {

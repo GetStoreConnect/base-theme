@@ -27,6 +27,14 @@ module.exports = {
   sourcemap: process.env.NODE_ENV !== 'production',
   plugins: [
     sassPlugin({
+      // TODO: Migrate from @import to @use/@forward module system.
+      // Currently, files rely on @import making variables/functions globally
+      // available (e.g., breadcrumb.scss uses color(), spacing(), mixins without
+      // importing them - they're available because core.scss imported them earlier).
+      // With @use, each file must explicitly declare its dependencies with namespaces.
+      // The if-function deprecation can't be fixed until this migration is done
+      // because meta.if() requires @use namespaces to work.
+      silenceDeprecations: ['import', 'if-function'],
       async transform(source) {
         const result = await postcss(postcssConfig.plugins).process(source, {
           from: 'undefined',

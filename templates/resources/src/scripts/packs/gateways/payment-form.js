@@ -1,12 +1,10 @@
-import fetchWithResponseHandler from '../../theme/utils/fetch'
+import { postJSON } from '../../theme/utils/fetch'
 import storePathUrl from '../../theme/store-path-url'
+import { loadScript as loadExternalScript } from '../../theme/load-script'
 
 const Rails = window.Rails
 
 export class PaymentForm {
-  // Static registry for tracking loaded scripts
-  static loadedScripts = new Set()
-
   constructor(form, options = {}) {
     this.form = form
     this.providerName = form.dataset.provider
@@ -14,6 +12,7 @@ export class PaymentForm {
     this.dedicatedCartProductId = form.dataset.dedicatedCartProductId
     this.onSubmit = options.onSubmit
     this.setPayButtonCallback = options.setPayButtonCallback
+    this.legacySubmitElementId = options.legacySubmitElementId
 
     this._setupForm()
     if (this.onSubmit) {
@@ -45,27 +44,92 @@ export class PaymentForm {
     )
   }
 
-  elementProviderId() {
-    if (this.dedicatedCartProductId) {
-      return `${this.providerId}Product${this.dedicatedCartProductId}`
-    }
-    return this.providerId
+  /**
+   * Returns the outer container element for this payment provider form.
+   */
+  containerElement() {
+    return this.form.closest('[data-provider-container]')
   }
 
+  /**
+   * Returns the payment error display element.
+   * Prefers data-ref="payment-error" but falls back to legacy ID-based lookup.
+   */
   errorElement() {
-    const errorElement = document.getElementById(
-      `${this.providerName}PaymentError${this.elementProviderId()}`
-    )
-    if (!errorElement) {
-      console.warn(
-        `Provider '${this.providerName}' does not have a #${this.providerName}PaymentError${this.elementProviderId()} div container`
-      )
-    }
-    return errorElement
+    return this.refElement('payment-error', 'PaymentError')
   }
 
-  scriptsElement() {
-    return document.getElementById(`${this.providerName}ScriptBlock${this.elementProviderId()}`)
+  /**
+   * Returns the payment form submit button element.
+   * Prefers data-ref="submit-button" but falls back to legacy ID-based lookup.
+   */
+  submitElement() {
+    if (this.legacySubmitElementId) {
+      return this.refElement('submit-button', { legacyId: this.legacySubmitElementId })
+    } else {
+      return this.refElement('submit-button', 'PaymentButton')
+    }
+  }
+
+  /**
+   * Returns an element by data-ref attribute within the provider container.
+   * This is useful for provider-specific UI elements like card field containers.
+   * @param {string} refName - The value of the data-ref attribute to search for
+   * @param {string|object} [legacyNameOrOptions] - Optional legacy ID (string) or options object
+   * @param {object} [options] - Options object when legacy name is provided
+   * @param {boolean} [options.required=true] - If true, throws an error when element is not found
+   * @param {boolean} [options.legacyId] - If set, declares legacy element ID to look for.
+   * @returns {Element|null} The element with the specified data-ref, or null if not found
+   * @throws {Error} When required is true and element is not found
+   */
+  refElement(refName, legacyNameOrOptions, options) {
+    // Handle flexible arguments
+    let legacyName, opts
+
+    if (typeof legacyNameOrOptions === 'object') {
+      // Called as: refElement('name', { required: true })
+      legacyName = null
+      opts = legacyNameOrOptions || {}
+    } else {
+      // Called as: refElement('name', 'Legacy', { required: true })
+      // or: refElement('name', 'Legacy')
+      legacyName = legacyNameOrOptions
+      opts = options || {}
+    }
+
+    const { required = true } = opts
+
+    const container = this.containerElement()
+    const refSelector = `[data-ref="${refName}"]`
+    let element = container?.querySelector(refSelector)
+
+    // Fall back to legacy ID if provided and element not found
+    let legacyId = `${this.providerName}${legacyName}${this.elementProviderId()}`
+    if (opts.legacyId) {
+      legacyId = opts.legacyId
+      legacyName = opts.legacyId
+    }
+    if (legacyName) {
+      if (!element) {
+        element = document.getElementById(legacyId)
+
+        // TODO: client needs a deprecation warning/report and link to documentation
+      }
+    }
+
+    // Some code, or 3rd party libs, expect a DOM to have an id, so provide all
+    // with a unique id.
+    if (element && !element.id) {
+      element.id = `${this.providerName}-${refName}-${this.elementProviderId()}`
+    }
+
+    // Throw error if required element is missing
+    if (required && !element) {
+      const legacyInfo = legacyName ? ` (legacy: ${legacyId})` : ''
+      throw new Error(`Required element not found in theme: data-ref="${refName}"${legacyInfo}`)
+    }
+
+    return element
   }
 
   formFieldElement(name) {
@@ -81,61 +145,37 @@ export class PaymentForm {
     return element.value
   }
 
-  submitElement() {
-    return document.getElementById(`${this.providerName}PaymentButton${this.providerId}`)
-  }
-
-  async loadScript({ url, onload, id }) {
-    if (this.scriptsElement()) {
-      // Check if script already loaded to prevent duplicates
-      if (PaymentForm.loadedScripts.has(url)) {
-        if (onload) onload()
-        return
-      }
-
-      // Mark as loaded
-      PaymentForm.loadedScripts.add(url)
-
-      const script = document.createElement('script')
-      script.src = url
-      if (onload) {
-        script.onload = onload
-      }
-      if (id) {
-        script.id = id
-      }
-      this.scriptsElement().appendChild(script)
-    } else {
-      this.showError(
-        `Missing #${this.providerName}ScriptBlock${this.elementProviderId()} div container`
-      )
+  async loadScript({ url, onload, id, attributes }) {
+    // Use an explicit scripts container if available, otherwise fall back to document head
+    let scriptBlock = this.refElement('script-block', 'ScriptBlock', { required: false })
+    if (!scriptBlock) {
+      scriptBlock = document.getElementsByTagName('head')[0]
     }
+
+    await loadExternalScript({ url, onload, id, attributes, container: scriptBlock })
   }
 
   setPayButton(enabled) {
     // Support both boolean parameter and named argument { enabled: boolean }
     const isEnabled = typeof enabled === 'object' ? enabled.enabled : enabled
     const payButton = this.submitElement()
-
     if (this.setPayButtonCallback) {
       this.setPayButtonCallback(payButton, isEnabled)
       return
     }
 
-    if (payButton) {
-      const originalText = payButton.getAttribute('data-enable-with')
+    const originalText = payButton.getAttribute('data-enable-with')
 
-      setTimeout(() => {
-        if (payButton.disabled == isEnabled) {
-          payButton.disabled = !isEnabled
-          if (payButton.tagName === 'INPUT') {
-            payButton.value = originalText
-          } else {
-            payButton.innerHTML = originalText
-          }
+    setTimeout(() => {
+      if (payButton.disabled == isEnabled) {
+        payButton.disabled = !isEnabled
+        if (payButton.tagName === 'INPUT') {
+          payButton.value = originalText
+        } else {
+          payButton.innerHTML = originalText
         }
-      }, 100)
-    }
+      }
+    }, 100)
   }
 
   /**
@@ -188,7 +228,9 @@ export class PaymentForm {
       report = true,
       metadata = {},
     } = options
-    this.setPayButton(true)
+    if (!this.onlyExpressCheckout()) {
+      this.setPayButton(true)
+    }
 
     // Report error if requested
     if (report) {
@@ -254,6 +296,7 @@ export class PaymentForm {
 
     // Bypass the form action if the checkout URL is specified in the payload.
     const checkoutUrl = payload.url ? payload.url : this.form.getAttribute('action')
+
     Rails.ajax({
       url: checkoutUrl,
       type: formMethod || payload.method,
@@ -349,11 +392,12 @@ export class PaymentForm {
     }
 
     this.setPayButton(true)
+    document.dispatchEvent(new CustomEvent('store-connect.payment-processing-end'))
   }
 
   // Form data utility functions
-  callbackUrl() {
-    return this.form.dataset.callbackUrl
+  paymentSessionUrl() {
+    return this.form.dataset.paymentSessionUrl
   }
 
   apiKey() {
@@ -438,6 +482,14 @@ export class PaymentForm {
     return this.form.dataset.offerShipping === 'true'
   }
 
+  requiresContactInfo() {
+    return this.form.dataset.requiresContactInfo === 'true'
+  }
+
+  saveCustomerTokenOnly() {
+    return this.form.dataset.saveCustomerTokenOnly === 'true'
+  }
+
   allowedShippingCountries() {
     const raw = this.form.dataset.shippingCountries
     if (!raw) return []
@@ -458,8 +510,22 @@ export class PaymentForm {
     }
   }
 
-  formAuthentityToken() {
-    return this.form.querySelector("input[name='authenticity_token']")?.value
+  /**
+   * Get internationalized string from data attributes
+   * @param {string} key - The i18n key in dot notation (e.g., 'wallets.free', 'errors.error_occurred')
+   * @returns {string} Translated string
+   */
+  i18n(key) {
+    // Convert 'wallets.free' or 'errors.error_occurred' to camelCase
+    const words = key.split(/[._]/)
+    const camelKey = words
+      .map((word, index) => (index === 0 ? word : word.charAt(0).toUpperCase() + word.slice(1)))
+      .join('')
+
+    // Prefix with 'i18n' and capitalize first letter
+    const datasetKey = 'i18n' + camelKey.charAt(0).toUpperCase() + camelKey.slice(1)
+
+    return this.form.dataset[datasetKey]
   }
 
   /**
@@ -492,21 +558,16 @@ export class PaymentForm {
     this.form.appendChild(input)
   }
 
-  cacheFormParamsAndOnSubmit(onSubmit) {
+  async cacheFormParamsAndOnSubmit(onSubmit) {
     const payload = this.extractAdditionalFormPayload()
 
     if (Object.keys(payload).length > 0) {
-      fetchWithResponseHandler(storePathUrl('/cache_form_params'), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      })
-        .then(() => {
-          onSubmit()
-        })
-        .catch((error) => {
-          console.error('Error caching questions:', error)
-        })
+      try {
+        await postJSON(storePathUrl('/cache_form_params'), payload)
+        onSubmit()
+      } catch (error) {
+        console.error('Error caching questions:', error)
+      }
     } else {
       onSubmit()
     }
@@ -545,5 +606,22 @@ export class PaymentForm {
   disableForm() {
     this.form.classList.add('is-disabled', 'sc-pointer-events-none')
     this.setPayButton(false)
+  }
+
+  // ============================================================================
+  // LEGACY METHODS - For backward compatibility with old Liquid templates
+  // ============================================================================
+
+  /**
+   * Returns the provider ID suffix used for legacy ID construction.
+   * LEGACY: This is only used for backward compatibility with old Liquid templates
+   * that explicitly construct IDs like "StripePaymentFormpp-1Product123".
+   * @private
+   */
+  elementProviderId() {
+    if (this.dedicatedCartProductId) {
+      return `${this.providerId}Product${this.dedicatedCartProductId}`
+    }
+    return this.providerId
   }
 }

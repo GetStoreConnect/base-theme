@@ -16,8 +16,8 @@ function initCboss({ form }) {
 
   paymentForm.addHiddenField({ name: 'ClientAccount', value: form.dataset.clientAccount })
   paymentForm.addHiddenField({ name: 'OriginatorID', value: form.dataset.originatorId })
-  paymentForm.addHiddenField({ name: 'SuccessfulURL', value: form.dataset.callbackUrl })
-  paymentForm.addHiddenField({ name: 'UnsuccessfulURL', value: form.dataset.callbackUrl })
+  paymentForm.addHiddenField({ name: 'SuccessfulURL', value: paymentForm.paymentSessionUrl() })
+  paymentForm.addHiddenField({ name: 'UnsuccessfulURL', value: paymentForm.paymentSessionUrl() })
   paymentForm.addHiddenField({ name: 'FirstName', value: form.dataset.firstName })
   paymentForm.addHiddenField({ name: 'LastName', value: form.dataset.lastName })
   paymentForm.addHiddenField({

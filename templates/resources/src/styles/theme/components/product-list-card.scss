@@ -11,6 +11,20 @@
   font-size: var(--sc-font-small);
 
   /**
+   * Unavailable component styling
+   */
+  &.bundle-component-unavailable {
+    opacity: 0.5;
+    pointer-events: none;
+    position: relative;
+
+    .SC-ProductListCard_image img,
+    .ProductListCard_image img {
+      filter: grayscale(100%);
+    }
+  }
+
+  /**
    * Image
    */
 

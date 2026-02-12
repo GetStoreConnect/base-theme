@@ -1,10 +1,12 @@
+@use 'sass:map';
+
 $Notice: (
   'bg': color('primary', $l: 95%),
   'color': color('primary', $l: 50%),
 ) !default;
 
-@if (map-has-key($override, 'Notice') == true) {
-  $Notice: map-extend($Notice, map-get($override, 'Notice'), true);
+@if (map.has-key($override, 'Notice') == true) {
+  $Notice: map-extend($Notice, map.get($override, 'Notice'), true);
 }
 
 @function Notice($keys...) {

@@ -1,27 +1,23 @@
 import AdyenCheckout from '@adyen/adyen-web'
 import '@adyen/adyen-web/dist/adyen.css'
 import { PaymentForm } from './payment-form'
-import { Wallet } from './wallet'
 import { onDomChange } from '../../theme/utils/init'
+import { Wallet } from './wallet'
 import { GooglePay } from './google-pay'
 import { ApplePay } from './apple-pay'
 
 onDomChange((node) => {
   const forms = node.querySelectorAll('form[data-provider="Adyen"]')
   forms.forEach((form) => {
-    const providerId = form.dataset.providerId
-    if (providerId) {
-      initAdyen({ form, providerId })
-    }
+    initAdyen({ form })
   })
 })
 
-function initAdyen({ form, providerId }) {
+function initAdyen({ form }) {
   const paymentForm = new PaymentForm(form, {
     onSubmit: () => onSubmit(paymentForm),
   })
   const wallet = new Wallet(paymentForm)
-  const mountElementId = `AdyenFieldset${providerId}`
 
   const clientKey = form.dataset.apiClient
   const environment = paymentForm.isProduction() ? 'live' : 'test'
@@ -49,6 +45,8 @@ function initAdyen({ form, providerId }) {
   }
 
   async function initializeAdyenForm() {
+    const mountElement = paymentForm.refElement('card-fields', 'Fieldset')
+
     const checkout = await AdyenCheckout(configuration)
     try {
       card = checkout
@@ -58,7 +56,7 @@ function initAdyen({ form, providerId }) {
           billingAddressRequired: false,
           onChange: handleOnChange,
         })
-        .mount(`#${mountElementId}`)
+        .mount(`#${mountElement.id}`)
     } catch (error) {
       console.error('Error initializing Adyen card component:', error)
     }

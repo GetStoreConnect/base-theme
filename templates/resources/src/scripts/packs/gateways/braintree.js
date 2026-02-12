@@ -1,6 +1,7 @@
 import { PaymentForm } from './payment-form'
+import { Wallet } from './wallet'
 import { onDomChange } from '../../theme/utils/init'
-import fetchWithResponseHandler from '../../theme/utils/fetch'
+import { postJSON } from '../../theme/utils/fetch'
 
 const braintree = require('braintree-web')
 
@@ -32,19 +33,19 @@ async function initBraintree({ form, providerId }) {
   const billingPostalCode = form.dataset.billingPostalCode
 
   // Get a client token from the server
-  fetchWithResponseHandler(paymentForm.callbackUrl(), {
-    method: 'post',
-    headers: {
-      'content-type': 'application/json',
-    },
-  }).then((json) => {
+  try {
+    const json = await postJSON(paymentForm.paymentSessionUrl(), {})
+
     if (json.message) {
       paymentForm.showError(json.message)
       return
     }
 
     initializeClient(json.token)
-  })
+  } catch (error) {
+    console.error('Braintree initialization error:', error)
+    paymentForm.showError('Failed to initialize payment')
+  }
 
   function initializeClient(token) {
     braintree.client
@@ -202,6 +203,7 @@ async function initBraintree({ form, providerId }) {
 
   // Google Pay
   if (paymentForm.showWallets()) {
+    const wallet = new Wallet(paymentForm)
     let googlePay
     const environment = paymentForm.isProduction() ? 'PRODUCTION' : 'TEST'
 
@@ -249,10 +251,10 @@ async function initBraintree({ form, providerId }) {
 
     const googleMerchantId = paymentForm.form.dataset.merchantId
     const googleMerchantEnabled = googleMerchantId && googleMerchantId.length > 0
-    const container = document.getElementById(`BraintreeWalletsContainer${providerId}`)
+    const container = wallet.walletsContainer()
 
     if (container && googleMerchantEnabled) {
-      fetch(paymentForm.callbackUrl(), {
+      fetch(paymentForm.paymentSessionUrl(), {
         method: 'post',
         headers: {
           'content-type': 'application/json',
@@ -296,7 +298,6 @@ async function initBraintree({ form, providerId }) {
                   buttonColor: 'default',
                   buttonType: 'long',
                   onClick: submitPaymentRequest,
-                  id: `BraintreeGooglePayButton${providerId}`,
                   allowedPaymentMethods: [],
                 })
 
@@ -307,7 +308,7 @@ async function initBraintree({ form, providerId }) {
               paymentForm.showError(err)
             })
         })
-    } else {
+    } else if (container) {
       container.remove()
     }
   }

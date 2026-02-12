@@ -1,3 +1,5 @@
+@use 'sass:map';
+
 $spacing: (
   'micro': 3px,
   'tiny': 5px,
@@ -10,8 +12,8 @@ $spacing: (
   'huge': 80px,
 ) !default;
 
-@if (map-has-key($core_override, 'spacing') == true) {
-  $spacing: map-extend($spacing, map-get($core_override, 'spacing'), true);
+@if (map.has-key($core_override, 'spacing') == true) {
+  $spacing: map-extend($spacing, map.get($core_override, 'spacing'), true);
 }
 
 :root {
