@@ -2,10 +2,24 @@
 
 {%- unless subscription == blank %}
   {%- assign status = "accounts.subscriptions.status.enum." | append: subscription.status | t  %}
-  {%- assign subheading = "accounts.subscriptions.show.status" | t, subscription_status: status %}
+  {%- assign subheading = "accounts.subscriptions.show.status" | t: subscription_status: status %}
   {%- render "shared/page_header", heading: subscription.product.name, sub_heading: subheading %}
 
   {% if current_customer != blank %}
+    {%- comment %} Pay Now Button {% endcomment %}
+    {%- if subscription.can_pay_now? %}
+      <div class="sc-mb-medium">
+        <a href="{{ subscription.new_payment_path }}" class="SC-Button SC-Button-primary SC-Button-large">
+          {{ "accounts.subscriptions.show.pay_now" | t }} {{ subscription.total_payable_amount | money }}
+        </a>
+        {%- if subscription.payment_overdue? %}
+          <div class="sc-mt-small sc-color-error sc-font-bold">
+            {{ "accounts.subscriptions.show.payment_overdue_notice" | t }}
+          </div>
+        {%- endif %}
+      </div>
+    {%- endif %}
+
     {%- if subscription.cancellable? %}
       <button
         class="SC-Link sc-mb-small"
@@ -93,7 +107,7 @@
   <div class="SC-Grid" data-general-error-message="{{ "checkout.payment.error" | t }}"></div>
 
   {%- comment %} Payment details {% endcomment %}
-  <section class="SC-Panel">
+  <section class="SC-Panel" id="payment-details">
     <header class="SC-Panel_header SC-Panel_header-border">
       <h4 class="SC-Panel_header_heading">
         {{ "accounts.subscriptions.show.payment_details" | t }}
@@ -104,13 +118,13 @@
       <div class="sc-mb-small">
         {{ subscription.payment_method }}<br/>
         {%- if subscription.payment_source_identifier != blank %}
-          {{ "accounts.subscriptions.show.payment_source_identifier" | t, identifier: subscription.payment_source_identifier }}<br>
+          {{ "accounts.subscriptions.show.payment_source_identifier" | t: identifier: subscription.payment_source_identifier }}<br>
         {%- endif %}
         {%- if subscription.payment_source_expires_at != blank %}
         {%- capture expires_at %}
           {% render "shared/date", timestamp: subscription.payment_source_expires_at, time_style: "none" %}
         {%- endcapture %}
-        {{ "accounts.subscriptions.show.payment_source_expires_at" | t, expires_at: expires_at }}
+        {{ "accounts.subscriptions.show.payment_source_expires_at" | t: expires_at: expires_at }}
         {%- endif %}
       </div>
     {%- endif %}
@@ -130,4 +144,11 @@
       </div>
     {%- endif %}
   </section>
+
+  <script>
+    if (window.location.hash === '#payment-details') {
+      var form = document.querySelector('[data-payment-details-forms]');
+      if (form) form.classList.remove('sc-hide');
+    }
+  </script>
 {%- endunless %}
