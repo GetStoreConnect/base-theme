@@ -1,0 +1,24 @@
+{%- liquid
+
+  if store_variables["content_security_policy_type"] == "enforce"
+    assign header_type = "Content-Security-Policy"
+  else
+    assign header_type = "Content-Security-Policy-Report-Only"
+  endif
+
+  assign csp_value = store_variables["content_security_policy"]
+
+  if csp_value == blank
+    # Default CSP policy (report-only mode):
+    # - Allows remote scripts (*) and inline JavaScript ('unsafe-inline')
+    # - Restricts unsafe JavaScript (no 'unsafe-eval')
+    # - Restricts form submissions (to self)
+    # - Restricts objects ('none')
+    # Note: Set content_security_policy_type to "enforce" to enable blocking mode
+    assign csp_value = "default-src 'self'; script-src 'self' 'unsafe-inline' *; style-src 'self' 'unsafe-inline' *; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' *; media-src 'self' *; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
+  else
+    # Have to unescape to avoid HTML encoding the quotes in the value
+    assign csp_value = csp_value | unescape
+  endif
+  header name: header_type, value: csp_value
+-%}

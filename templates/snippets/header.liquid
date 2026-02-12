@@ -41,7 +41,7 @@
         <div class="SC-Header_inner_right">
           <ul class="SC-Menu tier1 end sc-justify-end" id="SC-HeaderMenuSecondary">
             {%- render "header/dropdown/account" %}
-            {%- render "header/dropdown/cart" %}
+            {%- component "cart-menu", reload: "sc.cart-updated sc.voucher-applied sc.voucher-removed" %}
           </ul>
         </div>
       </div>

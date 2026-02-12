@@ -1,7 +1,7 @@
 {%- if current_customer and current_customer.can_use_account_credit? %}
   {%- assign usable_credits = current_account.account_credits | where: "usable?", true %}
   {%- if usable_credits.size > 0 %}
-    <section class="SC-Card SC-Card-floating sc-mb-large" data-spec-checkout-account-credits>
+    <section class="SC-Card SC-Card-floating sc-mb-large sc-wider-card-spacing" data-spec-checkout-account-credits>
       <h4 class="sc-mb-small">{{ "checkout.account_credits.heading" | t }}</h4>
 
       {%- form "apply-account-credit" %}

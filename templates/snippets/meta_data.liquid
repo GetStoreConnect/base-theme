@@ -9,11 +9,24 @@
   if current_product != blank
     # Product
     assign image = current_product.social_image | default: current_product.image
-    if current_product.pricing.hide_price?
-      assign price = current_product.pricing.hide_price_text
-    else
-      assign price = current_product.pricing.price
+
+    if current_product.master? and current_product.variants.any?
+      assign min_price = current_product.pricing.price_range.first
+      if min_price != blank and min_price > 0
+        assign price = min_price
+      endif
     endif
+
+    if price == blank
+      if current_product.pricing.on_sale? and current_product.pricing.sale_price > 0
+        assign price = current_product.pricing.sale_price
+      else
+        assign price = current_product.pricing.original_price
+      endif
+    endif
+
+    assign price = price | number, precision: 2
+
   elsif current_product_category != blank
     # Product Category
     assign image = current_product_category.social_image | default: current_product_category.image

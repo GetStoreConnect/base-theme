@@ -70,7 +70,8 @@
         {%- endif %}
         {%- comment %} Bundles {% endcomment %}
         {%- if cart_item.in_bundle? %}
-          {%- if extended %}
+          {%- comment %} Only show Edit Bundle link if bundle doesn't have bookable components {% endcomment %}
+          {%- if extended and cart_item.bundle_has_bookable_components? == false and cart_item.has_nested_bundle_items? == false %}
           <a href="{{ cart_item.edit_bundle_path }}" class="SC-Link sc-font-small">
             {{ "cart_items.links.edit_bundle" | t }}
           </a>
@@ -81,12 +82,43 @@
           <ul class="sc-m-none sc-pl-base sc-font-tiny sc-shade-dark">
             {%- assign quantity_of_bundles = cart_item.quantity %}
             {%- for bundle_item in cart_item.bundle_items %}
-              {%- unless bundle_item.bundle_lead? %}
+              {%- comment %} Skip the bundle lead itself {% endcomment %}
+              {%- if bundle_item.bundle_lead? %}
+                {%- continue %}
+              {%- endif %}
+
+              {%- comment %} Check if this item is a nested bundle (bundle_anchor with its own children) {% endcomment %}
+              {%- assign is_nested_bundle = false %}
+              {%- if bundle_item.product.bundle_anchor? %}
+                {%- assign is_nested_bundle = true %}
+              {%- endif %}
+
+              {%- if is_nested_bundle %}
                 <li>
                   {{ bundle_item.quantity | divided_by: quantity_of_bundles }}
                   {{ bundle_item.product.name }}
+                  {%- comment %} Show nested bundle's components {% endcomment %}
+                  <ul class="sc-m-none sc-pl-base sc-font-tiny sc-shade-dark sc-mt-micro">
+                    {%- for nested_item in bundle_item.bundle_items %}
+                      <li>
+                        {{ nested_item.quantity | divided_by: quantity_of_bundles }}
+                        {{ nested_item.product.name }}
+                      </li>
+                    {%- endfor %}
+                  </ul>
                 </li>
-              {%- endunless %}
+              {%- else %}
+                <li>
+                  {{ bundle_item.quantity | divided_by: quantity_of_bundles }}
+                  {{ bundle_item.product.name }}
+                  {%- comment %} Show booking details for bookable components {% endcomment %}
+                  {%- if bundle_item.product.bookable? and bundle_item.bookable_event != blank %}
+                    <div class="sc-mt-micro sc-shade-neutral">
+                      {%- render "shared/cart_items/booking_details", bookable_event: bundle_item.bookable_event, extended: false %}
+                    </div>
+                  {%- endif %}
+                </li>
+              {%- endif %}
             {%- endfor %}
           </ul>
         {%- endif %}

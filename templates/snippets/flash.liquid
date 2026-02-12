@@ -1,17 +1,15 @@
 <div data-flash-container>
-  {%- if current_flash and current_flash.notice != blank %}
-    <div class="sc-container sc-mt">
-      <div class="SC-Notice" data-notice>
-        {{ current_flash.notice }}
-      </div>
+  <div class="sc-container sc-mt {% unless current_flash and current_flash.notice != blank %}sc-hide{% endunless %}">
+    <div class="SC-Notice" data-notice>
+      {{ current_flash | try: "notice" }}
     </div>
-  {%- endif %}
+  </div>
 
-  {%- if current_flash and current_flash.alert != blank %}
-    <div class="sc-container sc-mt">
-      <div class="SC-Notice SC-Notice-alert" data-alert>
-        {{ current_flash.alert }}
-      </div>
+  <div class="sc-container sc-mt {% unless current_flash and current_flash.alert != blank %}sc-hide{% endunless %}">
+    <div class="SC-Notice SC-Notice-alert" data-alert>
+      {{ current_flash | try: "alert" }}
     </div>
-  {%- endif %}
+  </div>
 </div>
+
+{%- require "scripts/flash.js" %}
