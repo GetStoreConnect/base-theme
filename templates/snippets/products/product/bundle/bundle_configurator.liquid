@@ -1,0 +1,124 @@
+{%- assign bundle = product | default: current_product %}
+
+{%- assign required_groups = bundle.required_component_groups %}
+{%- assign optional_groups = bundle.optional_component_groups %}
+{%- assign optional_components = bundle.product_components | where: "required?", false | where: "in_group?", false %}
+
+{% render "shared/flash" %}
+
+<section data-bundle-product 
+         data-store-currency="{{ current_store.currency_code }}"
+         data-bundle-price-strategy="{{ bundle.bundle_price_strategy }}"
+         {% if bundle_identifier %}data-bundle-config="{{ bundle_config_param }}"{% endif %}
+         {% if bundle_identifier %}data-bundle-identifier="{{ bundle_identifier }}"{% endif %}>
+  <h4 class="sc-font-small sc-shade-dark sc-mb-small">
+    {{ "bundles.bundle.includes" | t }}
+  </h4>
+  <div class="sc-flex-col sc-gap-medium sc-ps-medium sc-pe-medium sc-shadow-2 sc-border-radius">
+    {%# Required Individual Components (ungrouped) %}
+    {%- assign ungrouped_required = bundle.product_components | where: "required?", true | where: "in_group?", false %}
+    {%- if ungrouped_required.size > 0 %}
+      {%- for component in ungrouped_required %}
+        {% render "products/product/bundle/component_card",
+                   component: component,
+                   bundle: bundle,
+                   component_type: "required" %}
+      {%- endfor %}
+    {%- endif %}
+
+    {%- for group in required_groups %}
+      {% render "products/product/bundle/component_group",
+                 group: group,
+                 bundle: bundle,
+                 group_type: "required" %}
+    {%- endfor %}
+  </div>
+</section>
+
+{%- comment -%} Include nested bundle modal for nested bundle configuration {%- endcomment -%}
+{%- if bundle.has_nested_bundles? -%}
+  {%- comment -%} Load nested bundle JavaScript {%- endcomment -%}
+  {%- require "scripts/bundle-nested.js" -%}
+
+  {% render "products/product/bundle/nested_bundle_modal" %}
+
+  {%# Nested Bundle Summary Template - Used by JS script to create nested bundle summary %}
+  <template data-nested-summary-template>
+    <div data-nested-summary-container>
+      <small class="sc-display-block sc-font-small sc-mt-small">{{ "bundles.nested.includes" | t }}</small>
+      <ul class="sc-mt-tiny sc-mb-tiny sc-font-tiny sc-ps-large" data-nested-items-list>
+        {%# Items will be inserted here by JavaScript %}
+      </ul>
+    </div>
+  </template>
+
+  {%# Nested Bundle Summary Item Template - Individual list item %}
+  <template data-nested-item-template>
+    <li>
+      <span data-template-quantity></span>
+      <span data-template-item-name></span>
+    </li>
+  </template>
+{%- endif -%}
+
+{%# Optional add-ons section %}
+{%- if optional_groups.size > 0 or optional_components.size > 0 %}
+  <section>
+    <h4 class="sc-mb-small sc-font-small sc-shade-dark">
+      {{ "bundles.form.optional_addons" | t }}
+    </h4>
+    <div class="sc-flex-col sc-gap-medium sc-ps-medium sc-pe-medium sc-shadow-2 sc-border-radius">
+      {%# Optional Individual Components (ungrouped) %}
+      {%- assign ungrouped_optional = optional_components %}
+      {%- if ungrouped_optional.size > 0 %}
+        {%- for component in ungrouped_optional %}
+          {% render "products/product/bundle/component_card",
+                     component: component,
+                     bundle: bundle,
+                     component_type: "optional" %}
+        {%- endfor %}
+      {%- endif %}
+
+      {%# Optional Component Groups %}
+      {%- for group in optional_groups %}
+        {% render "products/product/bundle/component_group",
+                    group: group,
+                    bundle: bundle,
+                    group_type: "optional" %}
+      {%- endfor %}
+    </div>
+  </section>
+{%- endif %}
+
+
+{%# Error Item Template - Used by JS to create individual error messages %}
+<template data-error-item-template>
+  <li></li>
+</template>
+
+{%# Component Card Template - Used by JS script to create component cards %}
+<template data-component-card-template>
+  <div class="selected-component-card sc-mb-small">
+    <div class="SC-ProductListCard sc-font-small">
+      <div class="SC-ProductListCard_image sc-mr-medium" data-template-image-container>
+        <img data-template-image loading="lazy" width="60" alt="">
+      </div>
+      <div class="SC-ProductListCard_detail sc-me-small">
+        <div class="SC-ProductListCard_detail_headline" data-template-name></div>
+        <div class="SC-ProductListCard_detail_subheadline" data-template-price data-free-label="{{ 'bundles.product.free' | t }}"></div>
+      </div>
+      <div class="SC-ProductListCard_actions">
+        <button
+          class="sc-font-small sc-font-bold sc-pe-small sc-ps-medium sc-color-error sc-border-radius sc-hover-bg-error-subtle"
+          data-template-remove
+          type="button">
+          {{ "bundles.single_choice.remove" | t }}
+        </button>
+      </div>
+    </div>
+  </div>
+</template>
+
+{% render "products/product/bundle/add_to_cart",
+          bundle: bundle,
+          bundle_identifier: bundle_identifier %}

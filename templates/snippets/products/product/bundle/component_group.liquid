@@ -1,0 +1,39 @@
+{%- assign components = group.components %}
+{%- assign is_single_choice = group.max_components == 1 %}
+{%- assign group_id = group.id %}
+
+<div data-component-group="{{ group_id }}"
+     data-max-components="{{ group.max_components }}"
+     data-min-components="{{ group.min_components }}"
+     data-max-group-quantity="{{ group.max_group_quantity }}"
+     data-min-group-quantity="{{ group.min_group_quantity }}"
+     data-group-required="{{ group.required? }}"
+     data-is-single-choice="{{ is_single_choice }}"
+     data-display-name="{{ group.display_name }}">
+
+  {%# Single choice components (radio buttons) %}
+  {%- if is_single_choice %}
+    {%- assign bundle_context = bundle | default: current_product -%}
+    {% render "products/product/bundle/single_choice_group",
+               group: group,
+               components: components,
+               bundle: bundle_context %}
+
+  {%# Multi-select components (checkboxes/quantity) %}
+  {%- else %}
+    <div class="component-group-multi-select">
+      {%- for component in components %}
+        {% render "products/product/bundle/component_card",
+                   component: component,
+                   bundle: bundle,
+                   component_type: group_type,
+                   group: group %}
+      {%- endfor %}
+    </div>
+  {%- endif %}
+
+  {%# Group validation errors %}
+  <div data-group-errors="{{ group_id }}">
+    {%- comment -%} Error messages will be populated via JavaScript {%- endcomment -%}
+  </div>
+</div>

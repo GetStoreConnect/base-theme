@@ -1,0 +1,49 @@
+{%- default product: nil %}
+{% unless product == blank %}
+  {%- if product.master? and product.variants.any? %}
+    {%- comment -%} Generate ProductGroup for master with variants {%- endcomment %}
+    {%- liquid
+      assign variant_type_names = product.variant_types | pluck: "name" | sort
+      assign all_variants = product.variants | depaginate
+    -%}
+    <script type="application/ld+json">
+      {
+        "@context": "http://schema.org/",
+        "@type": "ProductGroup",
+        "@id": "{{ product.slug }}",
+        "productGroupID": "{{ product.id }}",
+        "variesBy": [
+          {%- for variant_type_name in variant_type_names %}
+            {
+              "@type": "DefinedTerm",
+              "name": "https://schema.org/{{ variant_type_name | downcase }}"
+            }{% unless forloop.last %},{% endunless %}
+          {%- endfor %}
+        ],
+        "hasVariant": [
+          {%- for variant in all_variants %}
+            {
+              "@context": "http://schema.org/",
+              "@type": "Product",
+              "isVariantOf": {
+                "@id": "{{ product.slug }}",
+                "productGroupID": "{{ product.id }}"
+              },
+              {% render "products/product/_product_data", product: variant %}
+            }{% unless forloop.last %},{% endunless %}
+          {%- endfor %}
+        ],
+        {% render "products/product/_product_data", product: product %}
+      }
+    </script>
+  {%- else %}
+    {%- comment -%} Generate single Product for non-master or master without variants {%- endcomment %}
+    <script type="application/ld+json">
+      {
+        "@context": "http://schema.org/",
+        "@type": "Product",
+        {% render "products/product/_product_data", product: product %}
+      }
+    </script>
+  {%- endif %}
+{% endunless %}

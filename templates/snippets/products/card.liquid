@@ -64,6 +64,10 @@
           <span class="SC-ProductCard_price_item">
             {{ product.pricing.hide_price_text }}
           </span>
+        {%- elsif product.bundle_anchor? %}
+          <span class="SC-ProductCard_price_item">
+            {{ product.initial_bundle_total | money }}
+          </span>
         {%- elsif product.pricing.has_price? %}
 
           {%- comment %} Currency Price {% endcomment %}

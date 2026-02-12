@@ -1,0 +1,50 @@
+{%- comment -%}
+  Reusable quantity picker for bundle components
+  
+  Parameters:
+  - component: ProductComponent object
+  - style_class: CSS class for the quantity picker (optional, defaults to SC-QuantityPicker-large)
+  - context: "modal" or "card" to determine appropriate styling
+{%- endcomment -%}
+
+{%- default style_class: "SC-QuantityPicker-large", context: "card" -%}
+
+{%- assign component_id = component.id %}
+{%- assign from_component_group = component.in_group? %}
+
+{%- if component.can_edit_quantity? %}
+  <div class="component-quantity-controls{% if context == "modal" %} sc-mt-small{% endif %}" data-component-quantity="{{ component.id }}">
+    {%- assign min_qty = component.min_quantity %}
+    {%- assign max_qty = component.max_quantity %}
+    {%- assign current_qty = component.default_quantity %}
+    {%- assign available_stock = component.component_product.total_available_to_sell %}
+
+    {%# Cap max quantity by available stock %}
+    {%- if max_qty and available_stock < max_qty %}
+      {%- assign max_qty = available_stock %}
+    {%- elsif max_qty == blank and available_stock > 0 %}
+      {%- assign max_qty = available_stock %}
+    {%- endif %}
+
+    {%# Use smaller style for modal context %}
+    {%- if context == "modal" %}
+      {%- assign style_class = "SC-QuantityPicker-small" %}
+      {%- assign min_qty = component.min_quantity | at_least: 1 %}
+      {%# Force min quantity to be at least 1 for modal context (Selecting inside a component group) - Removal of product component is outside of the modal%}
+    {%- endif %}
+
+    {%# Wrap in form to prevent quantity-picker.js null form errors %}
+    <form data-bundle-quantity-form data-submit-on-change="false">
+      {%- render "shared/quantity_picker",
+          style_class: style_class,
+          min: min_qty,
+          max: max_qty,
+          default: current_qty,
+          field_name: "component_quantity[{{ component_id }}]",
+          field_id: "component_quantity_{{ component_id }}",
+          data: "data-component-quantity='{{ component_id }}'
+                 data-quantity-picker-component-id='{{ component_id }}'
+                 data-from-component-group='{{ from_component_group }}'" %}
+    </form>
+  </div>
+{%- endif %}
