@@ -1,0 +1,26 @@
+{%- assign button_label = 'checkout.gateways.form.choose_plan' | t %}
+
+<div data-provider-container="{{ payment_provider.code }}">
+  {%- form "payment", provider: payment_provider, class: "SC-Panel" %}
+
+    {% if payment_provider.description_content == blank %}
+      {{ 'checkout.gateways.latitude.description_html' | t }}
+    {% else %}
+      {{ payment_provider.description_content }}
+    {% endif %}
+
+    {% render "checkout/payment_information/additional_info", form: form %}
+
+    <fieldset class="SC-Fieldset">
+      <div class="SC-Field">
+        {% render "checkout/payment_information/submit_button", button_label: button_label %}
+      </div>
+    </fieldset>
+
+    {% render "checkout/payment_information/payment_error" %}
+
+    {{ 'checkout.gateways.latitude.terms_html' | t }}
+  {%- endform %}
+
+  {%- require 'scripts/gateways/latitude.js' %}
+</div>

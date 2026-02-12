@@ -78,4 +78,4 @@
   </div>
 </fieldset>
 
-<div id="{{ payment_provider.code }}PaymentError{{ payment_provider.id }}" class="SC-Field SC-Alert sc-hide"></div>
+{% render "checkout/payment_information/payment_error" %}

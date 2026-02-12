@@ -1,28 +1,19 @@
-{%- assign provider_id = payment_provider.id %}
-{%- assign provider = payment_provider.code %}
-{%- assign button_id = provider | append: "PaymentButton" %}
+<div data-provider-container="{{ payment_provider.code }}">
+  <div data-ref="script-block"></div>
 
-{%- form "payment", provider: payment_provider, class: "SC-Panel" %}
+  {%- form "payment", provider: payment_provider, class: "SC-Panel" %}
 
-  <div id="PaypalScriptBlock{{ provider_id }}"></div>
-  <div id="PaypalPaymentBlock{{ provider_id }}"></div>
+    {{ payment_provider.description_content }}
 
-  {{ payment_provider.description_content }}
+    <div data-ref="paypal-button-container"></div>
 
-  <div id="PaypalPaymentError{{ provider_id }}" class="SC-Field SC-Alert sc-hide"></div>
+    {%# submit_button hidden so payment-form.js can still find it even though it does nothing %}
+    {% render "checkout/payment_information/submit_button", hidden: true %}
 
-  <div id="PaypalButton{{ provider_id }}">
-    <div id="paypal-button-container{{ provider_id }}"></div>
-  </div>
+    {% render "checkout/payment_information/payment_error" %}
 
-  <input type="submit"
-    value="{{ 'checkout.gateways.form.notices.processing' | t }}"
-    id="{{ button_id }}"
-    class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small sc-hide"
-    data-disable-with="{{ 'checkout.payment.processing' | t }}"
-    data-payment-info-submit />
-
-  {% render "checkout/payment_information/additional_info", form: form %}
-{%- endform %}
+    {% render "checkout/payment_information/additional_info", form: form %}
+  {%- endform %}
+</div>
 
 {%- require 'scripts/gateways/paypal.js' %}

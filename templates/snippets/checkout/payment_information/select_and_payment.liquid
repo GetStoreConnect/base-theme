@@ -37,14 +37,14 @@
           {% render "checkout/payment_information/payment_providers/adyen_form", payment_provider: payment_provider %}
         {% when "AdyenAch" %}
           {% render "checkout/payment_information/payment_providers/adyen_ach_form", payment_provider: payment_provider %}
+        {% when "Afterpay" %}
+          {% render "checkout/payment_information/payment_providers/afterpay_form", payment_provider: payment_provider, hide_wallet: true %}
         {% when "AuthorizeNet" %}
           {% render "checkout/payment_information/payment_providers/authorize_net_form", payment_provider: payment_provider %}
         {% when "AuthorizeNetAch" %}
           {% render "checkout/payment_information/payment_providers/authorize_net_ach_form", payment_provider: payment_provider %}
         {% when "Bambora" %}
           {% render "checkout/payment_information/payment_providers/bambora_form", payment_provider: payment_provider %}
-        {% when "Bosch" %}
-          {% render "checkout/payment_information/payment_providers/bosch_form", payment_provider: payment_provider %}
         {% when "Braintree" %}
           {% render "checkout/payment_information/payment_providers/braintree_form", payment_provider: payment_provider %}
         {% when "Cboss" %}
@@ -55,8 +55,16 @@
           {% render "checkout/payment_information/payment_providers/eway_form", payment_provider: payment_provider %}
         {% when "EwayV2" %}
           {% render "checkout/payment_information/payment_providers/eway_v2_form", payment_provider: payment_provider %}
+        {% when "Flywire" %}
+          {% render "checkout/payment_information/payment_providers/flywire_form", payment_provider: payment_provider %}
         {% when "PayLater" %}
           {% render "checkout/payment_information/payment_providers/pay_later_form", payment_provider: payment_provider %}
+        {% when "Latitude" %}
+          {% render "checkout/payment_information/payment_providers/latitude_form", payment_provider: payment_provider %}
+        {% when "Nmi" %}
+          {% render "checkout/payment_information/payment_providers/nmi_form", payment_provider: payment_provider %}
+        {% when "NmiAch" %}
+          {% render "checkout/payment_information/payment_providers/nmi_ach_form", payment_provider: payment_provider %}
         {% when "Paypal" %}
           {% render "checkout/payment_information/payment_providers/paypal_form", payment_provider: payment_provider %}
         {% when "PayWay" %}
@@ -79,8 +87,8 @@
           {% render "checkout/payment_information/payment_providers/westpac_online_pay_form", payment_provider: payment_provider %}
         {% when "Windcave" %}
           {% render "checkout/payment_information/payment_providers/windcave_form", payment_provider: payment_provider %}
-        {% when "Zippay" %}
-          {% render "checkout/payment_information/payment_providers/zippay_form", payment_provider: payment_provider %}
+        {% when "ZippayAu" %}
+          {% render "checkout/payment_information/payment_providers/zippay_au_form", payment_provider: payment_provider %}
         {% else %}
           <p>Missing payment method - set it up now in <code>app/liquid/theme/snippets/checkout/payment_information/select_and_payment.liquid</code></p>
           <p>payment_provider.code = <code>{{ payment_provider.code }}</code></p>

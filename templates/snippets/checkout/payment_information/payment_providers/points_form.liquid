@@ -1,12 +1,10 @@
+{% assign button_label = 'checkout.gateways.points_form.pay_now' | t %}
+
 {%- form "payment-not-required", type: "points",
             id: "PointsPaymentForm",
             class: "SC-Panel" %}
 
-  <input type="submit"
-    value="{{ 'checkout.gateways.points_form.pay_now' | t }}"
-    class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small"
-    data-disable-with="{{ 'checkout.payment.processing' | t }}"
-    data-payment-info-submit />
+  {% render "checkout/payment_information/submit_button", button_label: button_label %}
 
   {% render "checkout/payment_information/additional_info", form: form %}
 {%- endform %}

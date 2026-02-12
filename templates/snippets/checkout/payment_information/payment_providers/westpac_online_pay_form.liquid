@@ -1,56 +1,33 @@
-{%- assign provider_id = payment_provider.id %}
-{%- assign provider = payment_provider.code %}
-{%- assign form_id = provider | append: "PaymentForm" | append: provider_id %}
-{%- assign button_id = provider | append: "PaymentButton" | append: provider_id %}
-{%- assign button_label = 'checkout.gateways.form.pay_now' | t %}
-{%- assign wallets_container_id = provider | append: "WalletsContainer" | append: provider_id %}
-{%- assign script_block_id = provider | append: "ScriptBlock" | append: provider_id %}
-{%- assign payment_error_id = provider | append: "PaymentError" | append: provider_id %}
-
 {%- default only_express_checkout: false %}
 {%- default dedicated_cart_product_id: nil %}
-{%# Need unique IDs for per-product Wallets; since Cart dropdown is on same page %}
-{%- if dedicated_cart_product_id != blank %}
-  {%- assign form_id = form_id | append: "Product" | append: dedicated_cart_product_id %}
-  {%- assign button_id = button_id | append: "Product" | append: dedicated_cart_product_id %}
-  {%- assign wallets_container_id = wallets_container_id | append: "Product" | append: dedicated_cart_product_id %}
-  {%- assign script_block_id = script_block_id | append: "Product" | append: dedicated_cart_product_id %}
-  {%- assign payment_error_id = payment_error_id | append: "Product" | append: dedicated_cart_product_id %}
-{% endif %}
+{%- default wallet_disabled: false %}
 
-<div id="{{ script_block_id }}"></div>
+<div data-provider-container="{{ payment_provider.code }}">
+  <div data-ref="script-block"></div>
 
-<div id="{{ wallets_container_id }}" class="SC-Fieldset">
-  <div data-ref="wallet-buttons" class="SC-Field sc-flex-col-unless-wide sc-flex-equal-width"></div>
-  <div data-ref="wallet-error" class="SC-Field SC-Alert sc-hide"></div>
+  <div data-ref="wallets-container" class="SC-Fieldset" data-click-blocker="{% if wallet_disabled %}not-allowed{% endif %}">
+    <div data-ref="wallet-buttons" class="SC-Field sc-flex-col-unless-wide sc-flex-equal-width"></div>
+    <div data-ref="wallet-error" class="SC-Field SC-Alert sc-hide"></div>
+  </div>
+
+  {%- form "payment", provider: payment_provider, class: "SC-Panel",
+              only-express-checkout: only_express_checkout,
+              dedicated-cart-product-id: dedicated_cart_product_id,
+              data-cart-product-id: dedicated_cart_product_id
+             %}
+    {% unless only_express_checkout %}
+      {{ payment_provider.description_content }}
+
+      {% render "checkout/payment_information/payment_providers/westpac_online_pay/form",
+              form: form, payment_provider: payment_provider  %}
+
+      {% render "checkout/payment_information/additional_info", form: form %}
+
+      {% render "checkout/payment_information/submit_button", disabled: true %}
+    {% endunless %}
+
+    {% render "checkout/payment_information/payment_error" %}
+  {% endform -%}
 </div>
-
-{%- form "payment", provider: payment_provider, class: "SC-Panel",
-            id: form_id,
-            only-express-checkout: only_express_checkout,
-            dedicated-cart-product-id: dedicated_cart_product_id,
-            data-cart-product-id: dedicated_cart_product_id
-           %}
-  {% unless only_express_checkout %}
-    {{ payment_provider.description_content }}
-
-    {% render "checkout/payment_information/payment_providers/westpac_online_pay/form",
-            form: form, provider_id: provider_id  %}
-
-    {% render "checkout/payment_information/additional_info", form: form %}
-
-    <input type="submit"
-      value="{{ button_label }}"
-      id="{{ button_id }}"
-      class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small"
-      data-disable-with="{{ 'checkout.payment.processing' | t }}"
-      data-payment-info-submit
-      disabled />
-  {% endunless %}
-
-  <div id="{{ payment_error_id }}"
-    class="SC-Field SC-Alert sc-mt-small sc-hide"
-    data-placeholder="{{ "checkout.gateways.form.errors.invalid" | t }}"></div>
-{% endform -%}
 
 {%- require 'scripts/gateways/westpac-online-pay.js' %}

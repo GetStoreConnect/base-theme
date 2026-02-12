@@ -1,26 +1,38 @@
-{%- assign provider_id = payment_provider.id %}
-{%- assign provider = payment_provider.code %}
-{%- assign button_id = provider | append: "PaymentButton" | append: provider_id %}
 {%- assign button_label = 'checkout.gateways.form.pay_now' | t %}
-
 {%- if current_subscription %}
   {%- assign button_label = 'accounts.subscriptions.show.submit_update_button_label' | t %}
 {%- endif %}
 
-{%- form "payment", provider: payment_provider, class: "SC-Panel" %}
+{%- default only_express_checkout: false %}
+{%- default dedicated_cart_product_id: nil %}
+{%- default wallet_disabled: false %}
 
-  {{ payment_provider.description_content }}
+<div data-provider-container="{{ payment_provider.code }}">
+  <div data-ref="script-block"></div>
 
-  {% render "checkout/payment_information/payment_providers/eway/form", form: form, payment_provider: payment_provider %}
+  <div data-ref="wallets-container" class="SC-Fieldset" data-click-blocker="{% if wallet_disabled %}not-allowed{% endif %}">
+    <div data-ref="wallet-buttons" class="SC-Field sc-flex-col-unless-wide sc-flex-equal-width"></div>
+    <div data-ref="wallet-error" class="SC-Field SC-Alert sc-hide"></div>
+  </div>
 
-  <input type="submit"
-    value="{{ button_label }}"
-    id="{{ button_id }}"
-    class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small"
-    data-disable-with="{{ 'checkout.payment.processing' | t }}"
-    data-payment-info-submit />
+  {%- form "payment", provider: payment_provider,
+              only-express-checkout: only_express_checkout,
+              dedicated-cart-product-id: dedicated_cart_product_id,
+              data-cart-product-id: dedicated_cart_product_id,
+              class: "SC-Panel" %}
 
-  {% render "checkout/payment_information/additional_info", form: form %}
-{%- endform %}
+    {% unless only_express_checkout %}
+      {{ payment_provider.description_content }}
 
-{%- require 'scripts/gateways/eway.js' %}
+      {% render "checkout/payment_information/payment_providers/eway/form", form: form, payment_provider: payment_provider %}
+
+      {% render "checkout/payment_information/submit_button", button_label: button_label %}
+
+      {% render "checkout/payment_information/additional_info", form: form %}
+    {% endunless %}
+
+    {% render "checkout/payment_information/payment_error" %}
+  {%- endform %}
+
+  {%- require 'scripts/gateways/eway.js' %}
+</div>

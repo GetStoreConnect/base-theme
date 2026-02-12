@@ -1,4 +1,4 @@
-<div id="StripeAchScriptBlock{{ provider_id }}"></div>
+<div data-ref="script-block"></div>
 <fieldset class="SC-Fieldset sc-mb">
   <div class="SC-Field">
     {% assign field = form.fields["ach_account_name"] %}
@@ -55,4 +55,4 @@
   </div>
 </fieldset>
 
-<div id="StripeAchPaymentError{{ provider_id }}" class="SC-Field SC-Alert sc-hide"></div>
+{% render "checkout/payment_information/payment_error" %}

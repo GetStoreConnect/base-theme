@@ -1,23 +1,16 @@
-{%- assign provider_id = payment_provider.id %}
-{%- assign provider = payment_provider.code %}
-{%- assign button_id = provider | append: "PaymentButton" | append: provider_id %}
+<div data-provider-container="{{ payment_provider.code }}">
+  {%- form "payment", provider: payment_provider, class: "SC-Panel" %}
 
-{%- form "payment", provider: payment_provider, class: "SC-Panel" %}
+    {{ payment_provider.description_content }}
 
-  {{ payment_provider.description_content }}
+    {% render "checkout/payment_information/payment_providers/stripe/ach_form",
+        form: form,
+        payment_provider: payment_provider %}
 
-  {% render "checkout/payment_information/payment_providers/stripe/ach_form",
-      form: form,
-      provider_id: provider_id %}
+    {% render "checkout/payment_information/submit_button", button_label: 'checkout.gateways.stripe_ach_form.pay_now' | t %}
 
-  <input type="submit"
-    value="{{ 'checkout.gateways.stripe_ach_form.pay_now' | t }}"
-    id="{{ button_id }}"
-    class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small"
-    data-disable-with="{{ 'checkout.payment.processing' | t }}"
-    data-payment-info-submit />
+    {% render "checkout/payment_information/additional_info", form: form %}
+  {%- endform %}
 
-  {% render "checkout/payment_information/additional_info", form: form %}
-{%- endform %}
-
-{%- require 'scripts/gateways/stripe-ach.js' %}
+  {%- require 'scripts/gateways/stripe-ach.js' %}
+</div>

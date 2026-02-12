@@ -1,24 +1,18 @@
-{%- assign provider_id = payment_provider.id %}
-{%- assign provider = payment_provider.code %}
-{%- assign button_id = provider | append: "PaymentButton" | append: provider_id %}
+<div data-provider-container="{{ payment_provider.code }}">
+  {%- form "payment", provider: payment_provider, class: "SC-Panel",
+              data-input-styles: '{"backgroundColor":"transparent","label":{"font":{"family":"-apple-system, BlinkMacSystemFont, sans-serif","size":"16px","color":"#4d4d4d"}},"input":{"font":{"family":"-apple-system, BlinkMacSystemFont, sans-serif","size":"15px"}}}' %}
 
-{%- form "payment", provider: payment_provider, class: "SC-Panel",
-            data-input-styles: '{"backgroundColor":"transparent","label":{"font":{"family":"-apple-system, BlinkMacSystemFont, sans-serif","size":"16px","color":"#4d4d4d"}},"input":{"font":{"family":"-apple-system, BlinkMacSystemFont, sans-serif","size":"15px"}}}' %}
+    {{ payment_provider.description_content }}
 
-  {{ payment_provider.description_content }}
+    <div data-ref="script-block"></div>
+    <div data-ref="card-container"></div>
 
-  <div id="SecurePayScriptBlock{{ provider_id }}"></div>
-  <div id="SecurePayContainer{{ provider_id }}"></div>
-  <div id="SecurePayPaymentError{{ provider_id }}" class="Field Alert sc-hide"></div>
+    {% render "checkout/payment_information/payment_error" %}
 
-  <input type="submit"
-    value="{{ 'checkout.gateways.form.pay_now' | t }}"
-    id="{{ button_id }}"
-    class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small"
-    data-disable-with="{{ 'checkout.payment.processing' | t }}"
-    data-payment-info-submit />
+    {% render "checkout/payment_information/submit_button", disabled: true %}
 
-  {% render "checkout/payment_information/additional_info", form: form %}
-{%- endform %}
+    {% render "checkout/payment_information/additional_info", form: form %}
+  {%- endform %}
 
-{%- require 'scripts/gateways/secure-pay.js' %}
+  {%- require 'scripts/gateways/secure-pay.js' %}
+</div>

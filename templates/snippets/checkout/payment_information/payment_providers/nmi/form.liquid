@@ -1,0 +1,56 @@
+<style>
+  .SC-Field-nmi .SC-Field_input {
+    display: flex;
+    align-items: center;
+  }
+</style>
+
+<fieldset class="SC-Fieldset">
+  <div class="SC-Field SC-Field-nmi">
+    {% assign field = form.fields["card_number"] %}
+    <label for="{{ field.id }}" class="SC-Field_label">
+      {{ "checkout.gateways.form.card_number" | t }}
+    </label>
+    {%- comment -%} Div placeholder - Collect.js injects iframe here {%- endcomment -%}
+    <div id="{{ field.id }}" class="SC-Field_input sc-expand flex align-items-center"
+         data-placeholder="{{ "checkout.gateways.form.card_number_placeholder" | t }}">
+    </div>
+    <span class="SC-Field_error sc-hide" data-field-error="card_number"></span>
+  </div>
+
+  <div class="SC-Field">
+    {% assign field = form.fields["card_name"] %}
+    <label for="{{ field.id }}" class="SC-Field_label">
+      {{ "checkout.gateways.form.card_name" | t }}
+    </label>
+    {%- comment -%} Regular input - name is not tokenized {%- endcomment -%}
+    <input type="text" name="{{ field.name }}" id="{{ field.id }}"
+           class="SC-Field_input sc-expand"
+           autocomplete="cc-name"
+           required>
+    <span class="SC-Field_error sc-hide" data-field-error="card_name"></span>
+  </div>
+
+  <div class="SC-Fieldset_row">
+    <div class="SC-Field SC-Field-nmi">
+      {% assign field = form.fields["card_expiry"] %}
+      <label for="{{ field.id }}" class="SC-Field_label">
+        {{ "checkout.gateways.form.expiry" | t }}
+      </label>
+      <div id="{{ field.id }}" class="SC-Field_input flex align-items-center"
+           data-placeholder="{{ "checkout.gateways.form.expiry_placeholder_short" | t }}">
+      </div>
+      <span class="SC-Field_error sc-hide" data-field-error="card_expiry"></span>
+    </div>
+    <div class="SC-Field SC-Field-nmi">
+      {% assign field = form.fields["card_verification"] %}
+      <label for="{{ field.id }}" class="SC-Field_label">
+        {{ "checkout.gateways.form.verification" | t }}
+      </label>
+      <div id="{{ field.id }}"  class="SC-Field_input flex align-items-center" data-placeholder="***"></div>
+      <span class="SC-Field_error sc-hide" data-field-error="card_verification"></span>
+    </div>
+  </div>
+</fieldset>
+
+{% render "checkout/payment_information/payment_error" %}
