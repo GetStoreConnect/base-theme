@@ -1,0 +1,57 @@
+{%- if component == blank or component.component_product == blank -%}
+  {%- comment -%} Skip if no component or product {%- endcomment -%}
+{%- else -%}
+  {%- assign nested_bundle = component.component_product -%}
+  {%- assign component_id = component.id -%}
+  
+  <div class="SC-ProductListCard sc-font-small"
+       data-component-id="{{ component_id }}" 
+       data-nested-bundle="{{ nested_bundle.id }}"
+       data-product="{{ nested_bundle.id }}"
+       data-product-name="{{ nested_bundle.name | escape }}"
+       data-component-required="{{ component.required? }}"
+       data-min-quantity="{{ component.min_quantity | default: 1 }}"
+       data-max-quantity="{{ component.max_quantity | default: 1 }}"
+       data-default-quantity="{{ component.default_quantity | default: 0 }}">
+    
+    <div class="SC-ProductListCard_image sc-mr-medium">
+      {%- if nested_bundle.image != blank -%}
+        <img src="{{ nested_bundle.image.thumb_url }}" 
+             alt="{{ nested_bundle.name | escape }}" 
+             width="60"
+             loading="lazy">
+      {%- else -%}
+        {%- render "shared/placeholder_image", width: 200 -%}
+      {%- endif -%}
+    </div>
+    
+    <span class="SC-ProductListCard_detail">
+      {%# Component title %}
+      <div class="SC-ProductListCard_detail_headline">
+        {{ nested_bundle.name }}
+      </div>
+
+      <div class="SC-ProductListCard_detail_subheadline" data-nested-pricing="{{ component_id }}"></div>
+
+      <div data-nested-status="{{ component_id }}">
+        {{ 'bundles.nested_bundle.not_configured' | t }}
+      </div>
+      
+      <div data-nested-summary="{{ component_id }}" class="sc-hide">
+        {%- comment -%} Will be populated by JavaScript when configured {%- endcomment -%}
+      </div>
+      
+      <div>
+        <button type="button" 
+                class="SC-Link SC-Link-subtle sc-mt-small"
+                data-configure-button-text="{{ 'bundles.nested_bundle.configure_bundle' | t }}"
+                data-reconfigure-button-text="{{ 'bundles.nested_bundle.reconfigure_bundle' | t }}"
+                data-configure-nested-parent-bundle-id="{{ component_id }}"
+                data-bundle-product="{{ nested_bundle.id }}"
+                data-bundle-name="{{ nested_bundle.name | escape }}">
+          {{ 'bundles.nested_bundle.configure_bundle' | t }}
+        </button>
+      </div>
+    </span>
+  </div>
+{%- endif -%}

@@ -1,3 +1,5 @@
+@use 'sass:map';
+
 /**
  * DEPRECATED
  */
@@ -40,8 +42,8 @@ $Search: (
   ),
 ) !default;
 
-@if (map-has-key($override, 'Search') == true) {
-  $Search: map-extend($Search, map-get($override, 'Search'), true);
+@if (map.has-key($override, 'Search') == true) {
+  $Search: map-extend($Search, map.get($override, 'Search'), true);
 }
 
 @function Search($keys...) {

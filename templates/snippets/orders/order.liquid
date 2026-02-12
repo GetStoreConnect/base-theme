@@ -45,6 +45,7 @@
   {%- endif %}
 
   {%- render "orders/fulfillments", order: order %}
+  {%- render "orders/subscriptions", order: order %}
 
   {%- comment %} Shipping Notes {% endcomment %}
   {%- if order.shipping_notes != blank %}
@@ -76,6 +77,8 @@
             {%- if payment.status != "success" %}
               {%- assign payment_status = " - " | append: status_message %}
             {%- endif %}
+
+            {%- render "shared/icons/wallet-icon", payment: payment %}
 
             {%- if payment.account_credit_path != blank %}
               <a href="{{ payment.account_credit_path }}" class="SC-Link">{{ payment.description | append: payment_status }}</a>

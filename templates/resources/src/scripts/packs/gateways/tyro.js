@@ -1,6 +1,6 @@
 import { PaymentForm } from './payment-form'
 import { onDomChange } from '../../theme/utils/init'
-import fetchWithResponseHandler from '../../theme/utils/fetch'
+import { postJSON } from '../../theme/utils/fetch'
 
 onDomChange((node) => {
   const forms = node.querySelectorAll('form[data-provider="Tyro"]')
@@ -18,18 +18,15 @@ let paySecret
 let tyro
 let tyroForm
 
-function initTyro({ form }) {
+async function initTyro({ form }) {
   const paymentForm = new PaymentForm(form, {
     onSubmit: () => tyroSubmitPayment(paymentForm),
   })
   paymentForm.setPayButton(false)
 
-  fetchWithResponseHandler(paymentForm.callbackUrl(), {
-    method: 'post',
-    headers: {
-      'content-type': 'application/json',
-    },
-  }).then((json) => {
+  try {
+    const json = await postJSON(paymentForm.paymentSessionUrl(), {})
+
     if (json.message) {
       paymentForm.showError(json.message)
       return
@@ -39,7 +36,10 @@ function initTyro({ form }) {
     paySecret = json.token.paySecret
 
     initializeTyro(paymentForm)
-  })
+  } catch (error) {
+    console.error('Tyro initialization error:', error)
+    paymentForm.showError('Failed to initialize payment')
+  }
 }
 
 async function initializeTyro(paymentForm) {
@@ -77,6 +77,10 @@ async function initializeTyro(paymentForm) {
         },
         googlePay: {
           enabled: paymentForm.showWallets(),
+          merchantInfo: {
+            merchantName: paymentForm.googleMerchantName(),
+            merchantId: paymentForm.googleMerchantId(),
+          },
         },
         creditCardForm: {
           enabled: true,

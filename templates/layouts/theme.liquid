@@ -19,6 +19,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {{ csrf_meta_tags }}
     {{ csp_meta_tag }}
+    {%- render "content_security_policy_header" %}
     {%- render "meta_data", title: title, meta_keywords: meta_keywords, meta_description: meta_description %}
 
     {%- comment -%} Styles {%- endcomment -%}

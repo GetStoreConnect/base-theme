@@ -32,7 +32,9 @@ async function initWestpacOnlinePay({ form }) {
   paymentForm.loadScript({
     url: paymentForm.scriptUrl(),
     onload: () => {
-      paymentForm.setPayButton(true)
+      if (!paymentForm.onlyExpressCheckout()) {
+        paymentForm.setPayButton(true)
+      }
     },
   })
 

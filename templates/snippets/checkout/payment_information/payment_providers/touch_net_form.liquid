@@ -1,24 +1,14 @@
-{%- assign provider_id = payment_provider.id %}
-{%- assign provider = payment_provider.code %}
-{%- assign button_id = provider | append: "PaymentButton" | append: provider_id %}
+<div data-provider-container="{{ payment_provider.code }}">
+  {%- form "payment", provider: payment_provider %}
+    {{ payment_provider.description_content }}
 
-{%- form "payment", provider: payment_provider %}
-  {{ payment_provider.description_content }}
+    {% render "checkout/payment_information/payment_error" %}
 
-  <div id="{{ provider }}PaymentError{{ provider_id }}"
-    class="SC-Field SC-Alert sc-hide"
-    data-placeholder="{{ "checkout.gateways.form.errors.invalid" | t }}"></div>
+    {% render "checkout/payment_information/additional_info", form: form %}
 
-  {% render "checkout/payment_information/additional_info", form: form %}
+    {% render "checkout/payment_information/submit_button" %}
 
-  <input type="submit"
-         value="{{ 'checkout.gateways.form.pay_now' | t }}"
-         id="{{ button_id }}"
-         class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small"
-         data-disable-with="{{ 'checkout.payment.processing' | t }}"
-         data-payment-info-submit
-         disabled />
-
-{% endform -%}
+  {% endform -%}
+</div>
 
 {%- require 'scripts/gateways/touch_net.js' %}

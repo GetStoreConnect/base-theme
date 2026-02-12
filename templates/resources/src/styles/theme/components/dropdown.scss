@@ -1,3 +1,5 @@
+@use 'sass:map';
+
 $Dropdown: (
   'button': (
     'weight': var(--sc-font-bold),
@@ -11,8 +13,8 @@ $Dropdown: (
   ),
 ) !default;
 
-@if (map-has-key($override, 'Dropdown') == true) {
-  $Dropdown: map-extend($Dropdown, map-get($override, 'Dropdown'), true);
+@if (map.has-key($override, 'Dropdown') == true) {
+  $Dropdown: map-extend($Dropdown, map.get($override, 'Dropdown'), true);
 }
 
 @function Dropdown($keys...) {

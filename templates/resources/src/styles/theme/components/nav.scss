@@ -1,3 +1,5 @@
+@use 'sass:map';
+
 /**
  * DEPRECATED: Use menu.scss
  */
@@ -13,8 +15,8 @@ $Nav: (
   @return deep-map-get($Nav, $keys...);
 }
 
-@if (map-has-key($override, 'Nav') == true) {
-  $Nav: map-extend($Nav, map-get($override, 'Nav'), true);
+@if (map.has-key($override, 'Nav') == true) {
+  $Nav: map-extend($Nav, map.get($override, 'Nav'), true);
 }
 
 @mixin dropdown {

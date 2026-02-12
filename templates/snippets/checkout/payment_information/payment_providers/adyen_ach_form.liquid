@@ -1,28 +1,18 @@
-{%- assign provider_id = payment_provider.id %}
-{%- assign provider = payment_provider.code %}
-{%- assign button_id = provider | append: "PaymentButton" | append: provider_id %}
+<div data-provider-container="{{ payment_provider.code }}">
+  <div data-ref="script-block"></div>
 
-{%- form "payment", provider: payment_provider, class: "SC-Panel" %}
-  <div id="{{ provider }}ScriptBlock{{ provider_id }}"></div>
+  {%- form "payment", provider: payment_provider, class: "SC-Panel" %}
+    {{ payment_provider.description_content }}
 
-  {{ payment_provider.description_content }}
+    <fieldset data-ref="card-fields" class="SC-Fieldset sc-mb"></fieldset>
 
-  <fieldset id="{{ provider }}Fieldset{{ provider_id }}" class="SC-Fieldset sc-mb">
-  </fieldset>
+    {% render "checkout/payment_information/payment_error" %}
 
-  <div id="{{ provider }}PaymentError{{ provider_id }}"
-    class="SC-Field SC-Alert sc-hide"
-    data-placeholder="{{ "checkout.gateways.form.errors.invalid" | t }}"></div>
+    {% render "checkout/payment_information/submit_button" %}
 
-  <input type="submit"
-    value="{{ 'checkout.gateways.form.pay_now' | t }}"
-    id="{{ button_id }}"
-    class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small"
-    data-disable-with="{{ 'checkout.payment.processing' | t }}"
-    data-payment-info-submit />
+    {% render "checkout/payment_information/additional_info", form: form %}
+  {%- endform %}
 
- {% render "checkout/payment_information/additional_info", form: form %}
-{%- endform %}
-
-{%- require 'scripts/gateways/adyen-ach.js' %}
-{%- require 'styles/gateways/adyen-ach.css' %}
+  {%- require 'scripts/gateways/adyen-ach.js' %}
+  {%- require 'styles/gateways/adyen-ach.css' %}
+</div>

@@ -1,3 +1,5 @@
+@use 'sass:map';
+
 $LinkList: (
   'spacing': spacing('base'),
   'item': (
@@ -21,8 +23,8 @@ $LinkList: (
   ),
 ) !default;
 
-@if (map-has-key($override, 'LinkList') == true) {
-  $LinkList: map-extend($LinkList, map-get($override, 'LinkList'), true);
+@if (map.has-key($override, 'LinkList') == true) {
+  $LinkList: map-extend($LinkList, map.get($override, 'LinkList'), true);
 }
 
 @function LinkList($keys...) {

@@ -1,6 +1,6 @@
 import { PaymentForm } from './payment-form'
-import { Wallet } from './wallet'
 import { onDomChange } from '../../theme/utils/init'
+import { Wallet } from './wallet'
 import { GooglePay } from './google-pay'
 import { ApplePay } from './apple-pay'
 
@@ -117,7 +117,7 @@ async function submitPaymentForm(paymentForm) {
 async function initializeCaptureContext(paymentForm) {
   // Get a capture context token from the server
   try {
-    const response = await fetch(paymentForm.callbackUrl(), {
+    const response = await fetch(paymentForm.paymentSessionUrl(), {
       method: 'post',
       headers: {
         'content-type': 'application/json',

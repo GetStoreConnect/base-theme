@@ -1,3 +1,5 @@
+@use 'sass:map';
+
 $Breadcrumb: (
   'hide-on-mobile': false,
   'spacing': 0,
@@ -22,8 +24,8 @@ $Breadcrumb: (
   ),
 ) !default;
 
-@if (map-has-key($override, 'Breadcrumb') == true) {
-  $Breadcrumb: map-extend($Breadcrumb, map-get($override, 'Breadcrumb'), true);
+@if (map.has-key($override, 'Breadcrumb') == true) {
+  $Breadcrumb: map-extend($Breadcrumb, map.get($override, 'Breadcrumb'), true);
 }
 
 @function Breadcrumb($keys...) {

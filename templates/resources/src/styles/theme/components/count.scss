@@ -1,15 +1,17 @@
+@use 'sass:map';
+
 $Count: (
   'bg': color('primary'),
   'color': white,
   'size': 22px,
 ) !default;
 
-@if (map-has-key($override, 'Count') == true) {
-  $Count: map-extend($Count, map-get($override, 'Count'), true);
+@if (map.has-key($override, 'Count') == true) {
+  $Count: map-extend($Count, map.get($override, 'Count'), true);
 }
 
 @function Count($key) {
-  @return map-get($Count, $key);
+  @return map.get($Count, $key);
 }
 
 .SC-Count,

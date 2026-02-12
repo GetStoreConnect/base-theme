@@ -6,7 +6,7 @@
       <a href="{{ product.path }}" class="SC-Button SC-Button-secondary SC-Button-expanded" data-js-buy-now="true">
         {{ "shared.product_buttons.check_availability" | t }}
       </a>
-    {%- elsif product.bundle_lead? %}
+    {%- elsif product.is_bundle? %}
       <a href="{{ product.path }}" class="SC-Button SC-Button-secondary SC-Button-expanded" data-js-buy-now="true">
         {{ "shared.product_buttons.configure_bundle" | t }}
       </a>

@@ -1,3 +1,5 @@
+@use 'sass:map';
+
 /**
  * DEPRECATED
  */
@@ -41,8 +43,8 @@ $PageHeader: (
     ),
 ) !default;
 
-@if (map-has-key($override, 'PageHeader') == true) {
-  $PageHeader: map-extend($PageHeader, map-get($override, 'PageHeader'), true);
+@if (map.has-key($override, 'PageHeader') == true) {
+  $PageHeader: map-extend($PageHeader, map.get($override, 'PageHeader'), true);
 }
 
 @function PageHeader($keys...) {

@@ -1,0 +1,61 @@
+<div class="SC-Modal SC-Modal--nested-bundle sc-hide" data-nested-modal>
+  <section class="SC-Modal_inner" style="max-width: 1000px; top: 5%;">
+    {%- comment -%} Header {%- endcomment -%}
+    <header class="SC-Modal_inner_header sc-ps-large sc-pt-large sc-pb-small">
+      <h2 class="sc-m-none">
+        {{ "bundles.nested.configure" | t }}: <span data-modal-bundle-name></span>
+      </h2>
+    </header>
+    
+    {%- comment -%} Body {%- endcomment -%}
+    <div class="SC-Modal_inner_body lg sc-m-none sc-p-medium" data-modal-body>
+      {%- comment -%} Loading state {%- endcomment -%}
+      <div class="sc-flex sc-flex-col sc-align-items-center sc-justify-center sc-p-large"
+          data-modal-loading
+          style="min-height: 300px;">
+        <div class="loading-spinner sc-mb-base"></div>
+        <p class="sc-shade-light">{{ "bundles.nested.loading" | t }}</p>
+      </div>
+      
+      {%- comment -%} Configurator content {%- endcomment -%}
+      <div class="sc-hide" data-nested-bundle-configurator data-store-currency="{{ current_store.currency_code }}">
+        {%- comment -%} Nested bundle configurator will be loaded here via AJAX {%- endcomment -%}
+      </div>
+
+      {%- comment -%} Error state {%- endcomment -%}
+      <div class="sc-hide sc-text-center sc-p-large sc-color-error" data-modal-error>
+        <p class="sc-mb-base">{{ "bundles.nested.load_error" | t }}</p>
+      </div>
+    </div>
+    
+    {%- comment -%} Footer with pricing and actions {%- endcomment -%}
+    <footer class="SC-Modal_inner_footer sc-ps-large">
+      <div class="nested-bundle-pricing">
+        <span class="sc-font-bold sc-shade-dark">{{ "bundles.nested.bundle_total" | t }}:</span>
+        <span class="sc-font-large sc-font-bold" data-modal-bundle-total>$0.00</span>
+
+        <div class="sc-hide sc-mt-tiny sc-font-small sc-color-error" data-modal-validation>
+          <span data-validation-message></span>
+        </div>
+      </div>
+      
+      <div class="sc-flex sc-gap-small">
+        <button type="button"
+                class="SC-Button SC-Button-secondary"
+                data-cancel-nested-bundle>
+          {{ "bundles.nested.cancel" | t }}
+        </button>
+
+        <button type="button"
+                class="SC-Button SC-Button-primary"
+                data-save-nested-bundle
+                disabled>
+          {{ "bundles.nested.save_return" | t }}
+        </button>
+      </div>
+    </footer>
+  </section>
+
+  {%- comment -%} Overlay background {%- endcomment -%}
+  <div class="SC-Modal_overlay SC-Modal_overlay--dark-blur" data-modal-backdrop></div>
+</div>

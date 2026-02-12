@@ -1,10 +1,12 @@
+@use 'sass:map';
+
 $Alert: (
   'bg': #f9d1cc,
   'color': color('error'),
 ) !default;
 
-@if (map-has-key($override, 'Alert') == true) {
-  $Alert: map-extend($Alert, map-get($override, 'Alert'), true);
+@if (map.has-key($override, 'Alert') == true) {
+  $Alert: map-extend($Alert, map.get($override, 'Alert'), true);
 }
 
 @function Alert($keys...) {

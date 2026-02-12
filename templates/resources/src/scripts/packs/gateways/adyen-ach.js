@@ -22,7 +22,7 @@ function initAdyenAch({ form, providerId }) {
   const clientKey = form.dataset.apiClient
   const clientOpts = form.dataset.clientOpts ? JSON.parse(form.dataset.clientOpts) : {}
 
-  const mountElementId = `AdyenAchFieldset${providerId}`
+  const mountElement = paymentForm.refElement('card-fields', 'Fieldset')
 
   let data
   let card
@@ -50,7 +50,7 @@ function initAdyenAch({ form, providerId }) {
         billingAddressRequired: false,
         onChange: handleOnChange,
       })
-      .mount(`#${mountElementId}`)
+      .mount(`#${mountElement.id}`)
   }
 
   function onSubmit(paymentForm) {

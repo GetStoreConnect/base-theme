@@ -1,4 +1,4 @@
-<div id="{{ payment_provider.code }}ScriptBlock{{ payment_provider.id }}"></div>
+<div data-ref="script-block"></div>
 
 <fieldset class="SC-Fieldset EwayForm">
   <div class="SC-Field">
@@ -76,4 +76,4 @@
   </div>
 </fieldset>
 
-<div id="{{ payment_provider.code }}PaymentError{{ payment_provider.id }}" class="SC-Field SC-Alert sc-hide"></div>
+{% render "checkout/payment_information/payment_error" %}

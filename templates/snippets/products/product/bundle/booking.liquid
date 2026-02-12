@@ -1,0 +1,15 @@
+{%- default product: nil, component: nil %}
+
+{%- require "scripts/bundle-booking.js" -%}
+
+{%- assign component_id = component.id | default: "" %}
+
+{%# Hidden inputs for bundle booking (component-scoped) %}
+<input type="hidden" name="component_booking[{{ component_id }}][product_bookable_location_id]" data-component-booking-location="{{ component_id }}">
+<input type="hidden" name="component_booking[{{ component_id }}][booking_start]" data-component-booking-start="{{ component_id }}">
+<input type="hidden" name="component_booking[{{ component_id }}][booking_end]" data-component-booking-end="{{ component_id }}">
+
+{%- render "products/product/booking_detail", 
+    product: product, 
+    component_id: component_id,
+    radio_name: "component-bookable-location-#{component_id}" %}

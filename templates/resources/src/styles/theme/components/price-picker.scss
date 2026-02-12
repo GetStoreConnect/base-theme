@@ -82,6 +82,17 @@
       display: block;
     }
 
+    &.is-error {
+      border: 1px solid color('error') !important;
+      box-shadow: none !important;
+
+      // Disable blue outline ONLY in error state
+      &:focus {
+        outline: none !important;
+        box-shadow: none !important;
+      }
+    }
+
     // Modifier: Large
 
     .SC-PricePicker-large &,

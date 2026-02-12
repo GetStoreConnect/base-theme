@@ -1,0 +1,111 @@
+{%- assign group_id = group.id %}
+
+<div class="single-choice-group" data-single-choice-group="{{ group_id }}">
+  {%# Choose option button - matching CPQ structure %}
+  <div class="sc-pos-relative" data-feature-option="{{ group_id }}">
+    <div class="SC-ProductListCard">
+      <span class="SC-ProductListCard_detail sc-me-small">
+        <div class="SC-ProductListCard_detail_headline" data-feature-headline="{{ group.display_name }}">
+          {{ group.display_name }}
+        </div>
+        <div class="SC-ProductListCard_detail_subheadline" data-feature-subheadline="{{ "bundles.single_choice.bundled_product.choose_from_options" | t: count: components.size }}">
+          {{ "bundles.single_choice.bundled_product.choose_from_options" | t: count: components.size }}
+        </div>
+      </span>
+      <span class="sc-ms-small">
+        <button
+          class="sc-font-small sc-font-bold sc-pe-small sc-ps-medium sc-color-primary sc-border-radius sc-hover-bg-primary-subtle"
+          data-modal-trigger="{{ group_id }}"
+          data-add="{{ "bundles.single_choice.choose" | t }}"
+          data-edit="{{ "bundles.single_choice.edit" | t }}"
+          type="button">
+          <span>{{ "bundles.single_choice.choose" | t }}</span> {{ group.display_name }}
+        </button>
+      </span>
+    </div>
+  </div>
+
+  {%# Modal for component selection - matching CPQ structure %}
+  <div class="SC-Modal" data-modal="{{ group_id }}">
+    <section class="SC-Modal_inner" style="max-width: 1000px;">
+      <header class="SC-Modal_inner_header sc-ps-large sc-pt-large sc-pb-small">
+        <h2 class="sc-m-none">{{ "bundles.single_choice.choose_a_group" | t: group: group.display_name | default: "Component" }}</h2>
+      </header>
+      <div class="SC-Modal_inner_body sc-m-none sc-p-none">
+        <section class="SC-Grid">
+          <div class="SC-Grid_main">
+            <div data-bundle-filterable class="sc-pt-small sc-pb-base sc-ps-large" style="max-height: 500px; overflow-y: auto;">
+
+              {%- for component in components %}
+                {%- assign product = component.component_product %}
+                {%- assign is_purchaseable = product.can_purchase? %}
+
+                <div class="SC-OptionCard{% unless is_purchaseable %} bundle-component-unavailable{% endunless %}" 
+                     data-component-option="{{ component.id }}"
+                     data-product="{{ product.id }}"
+                     data-free-quantity="{{ component.free_quantity | default: 0 }}"
+                     data-default-quantity="{{ component.default_quantity | default: 1 }}"
+                     data-product-name="{{ product.name }}"
+                     data-unit-price="{{ component.component_unit_price | default: 0 }}"
+                     data-purchaseable="{{ is_purchaseable }}">
+                  <label class="SC-OptionCard_label sc-flex sc-ps-base sc-pe-base sc-pt-small sc-pb-small{% unless is_purchaseable %} sc-disabled{% endunless %}">
+                    <div class="sc-mr-base">
+                      <input type="radio"
+                             name="single_choice_{{ group_id }}"
+                             value="{{ component.id }}"
+                             data-component-radio="{{ component.id }}"
+                             class="SC-OptionCard_input"
+                             {% unless is_purchaseable %}disabled{% endunless %}>
+                    </div>
+
+                    <div class="SC-ProductListCard sc-font-small sc-pos-relative sc-mb-small">
+                      {%- if product.images.size > 0 %}
+                        <div class="SC-ProductListCard_image sc-mr-medium">
+                          <img src="{{ product.images.first.small_url }}"
+                               loading="lazy"
+                               width="60"
+                               alt="{{ product.name }}">
+                        </div>
+                      {%- endif %}
+
+                      <div class="SC-ProductListCard_detail sc-me-small">
+                        <div class="SC-ProductListCard_detail_headline">
+                          {{ product.name }}
+                        </div>
+                        {%- unless is_purchaseable %}
+                          <div class="sc-color-error sc-font-small sc-mb-small">
+                            {{ "bundles.component.unavailable" | t }}
+                          </div>
+                        {%- endunless %}
+                        {%- if product.summary_content %}
+                          <div class="SC-ProductListCard_detail_description sc-font-small sc-shade-light">
+                            {{ product.summary_content | truncate: 80 }}
+                          </div>
+                        {%- endif %}
+                        <div class="SC-ProductListCard_detail_subheadline">
+                          {%- render "products/product/bundle/component_pricing", component: component, bundle: bundle %}
+                        </div>
+
+                        {%# Add quantity picker for components that support variable quantities %}
+                        {% render "products/product/bundle/component_quantity_picker", 
+                                   component: component, 
+                                   context: "modal" %}
+                      </div>
+                    </div>
+                  </label>
+                </div>
+              {%- endfor %}
+
+            </div>
+          </div>
+        </section>
+      </div>
+      <footer class="SC-Modal_inner_footer sc-ps-large">
+        <button data-add-option-to-bundle data-modal-trigger="{{ group_id }}" class="SC-Button SC-Button-primary" type="submit" disabled>
+          {{ "bundles.single_choice.add_to_bundle" | t }}
+        </button>
+      </footer>
+    </section>
+    <div class="SC-Modal_overlay" data-modal-trigger="{{ group_id }}"></div>
+  </div>
+</div>

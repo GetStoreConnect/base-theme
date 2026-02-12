@@ -1,4 +1,4 @@
-import fetchWithResponseHandler from '../theme/utils/fetch'
+import { postForm } from '../theme/utils/fetch'
 import storePath from '../theme/store-path-url'
 import { onDomChange } from '../theme/utils/init'
 
@@ -93,43 +93,29 @@ function configure(element) {
     })
   }
 
-  function updateRequired(country_id) {
-    fetchWithResponseHandler(storePath('/checkout/required_fields'), {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: new URLSearchParams({
+  async function updateRequired(country_id) {
+    try {
+      const data = await postForm(storePath('/checkout/required_fields'), {
         country_id: country_id,
         billing_same_as_shipping: billing_same_as_shipping(),
-      }).toString(),
-    })
-      .then((data) => {
-        updateRequiredFields(data)
       })
-      .catch((error) => {
-        console.error('Error updating required fields:', error)
-      })
+      updateRequiredFields(data)
+    } catch (error) {
+      console.error('Error updating required fields:', error)
+    }
   }
 
-  function updateStates(id) {
+  async function updateStates(id) {
     if (id === '') {
       return false
     }
 
-    fetchWithResponseHandler(storePath('/checkout/find_states'), {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: new URLSearchParams({ country_id: id }).toString(),
-    })
-      .then((data) => {
-        buildStatesDropdown(data)
-      })
-      .catch((error) => {
-        console.error('Error updating states:', error)
-      })
+    try {
+      const data = await postForm(storePath('/checkout/find_states'), { country_id: id })
+      buildStatesDropdown(data)
+    } catch (error) {
+      console.error('Error updating states:', error)
+    }
   }
 
   function buildStatesDropdown(data) {

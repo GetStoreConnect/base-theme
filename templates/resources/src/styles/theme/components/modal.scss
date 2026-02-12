@@ -72,5 +72,32 @@
     @include pin-all-sides(fixed);
     cursor: pointer;
     background: shade($a: 0.8);
+
+    &--dark-blur {
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(2px);
+    }
+  }
+
+  /**
+   * Modifier: Nested Bundle Modal
+   */
+
+  &--nested-bundle {
+    .SC-Modal_inner_footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .SC-Modal_inner_body {
+      height: 50vh;
+      overflow: auto;
+
+      &.lg {
+        height: 70vh;
+      }
+    }
   }
 }

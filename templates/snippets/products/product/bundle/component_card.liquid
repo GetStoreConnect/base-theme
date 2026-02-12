@@ -1,0 +1,110 @@
+{%- assign product = component.component_product %}
+{%- assign anchor_product = component.anchor_product %}
+{%- assign component_id = component.id %}
+{%- assign bundle = bundle | default: current_product %}
+{%- assign is_purchaseable = product.can_purchase? %}
+
+{%- comment -%} Check if this component is a nested bundle {%- endcomment -%}
+{%- if product.bundle_anchor? -%}
+  {%- comment -%} Render nested bundle card instead of regular component card {%- endcomment -%}
+  {% render "products/product/bundle/nested_bundle_card", component: component, context: "card" %}
+{%- else -%}
+
+  <div class="SC-ProductListCard sc-font-small bundle-component-card{% unless is_purchaseable %} bundle-component-unavailable{% endunless %}"
+      data-component="{{ component_id }}"
+      data-component-id="{{ component_id }}"
+      data-component-included="{{ component.included_by_default? }}"
+      data-variants-size="{{ product.variants.size }}"
+      data-default-quantity="{{ component.default_quantity }}"
+      data-product="{{ product.id }}"
+      data-product-name="{{ product.name }}"
+      data-free-quantity="{{ component.free_quantity | default: 0 }}"
+      data-component-required="{{ component.required? }}"
+      data-unit-price="{{ component.component_unit_price | default: 0 }}"
+      data-purchaseable="{{ is_purchaseable }}">
+
+    {%# Component image %}
+    {%- if product.images.size > 0 %}
+      <div class="SC-ProductListCard_image sc-mr-medium">
+        <img src="{{ product.images.first.small_url }}"
+            loading="lazy"
+            width="60"
+            alt="{{ product.name }}"
+            data-component-image>
+      </div>
+    {%- endif %}
+
+    <span class="SC-ProductListCard_detail">
+      {%# Component title %}
+      <div class="SC-ProductListCard_detail_headline">
+        {{ product.name }}
+        {%- if component.required? and component.included_by_default? == false %}
+          <span class="required-indicator sc-color-error">*</span>
+        {%- endif %}
+      </div>
+
+      {%# Component availability status %}
+      {%- unless is_purchaseable %}
+        <div class="sc-color-error sc-font-small sc-mb-small">
+          {{ "bundles.component.unavailable" | t }}
+        </div>
+      {%- else %}
+        {%# Component stock status %}
+        {%- assign available_stock = product.total_available_to_sell %}
+        {%- assign min_required = component.min_quantity | default: 0 %}
+        {%- if available_stock == 0 %}
+          <div class="sc-color-error sc-font-small sc-mb-small">
+            {{ "bundles.stock.out_of_stock" | t }}
+          </div>
+        {%- elsif available_stock < min_required %}
+          <div class="sc-color-primary sc-font-small sc-mb-small">
+            {{ "bundles.stock.insufficient_stock" | t }}: {{ "bundles.stock.has_only" | t: available: available_stock, required: min_required }}
+          </div>
+        {%- elsif component.max_quantity and available_stock < component.max_quantity %}
+          <div class="sc-color-primary sc-font-small sc-mb-small">
+            {{ "bundles.stock.limited_availability" | t }}: {{ "bundles.stock.max_available" | t: max: available_stock }}
+          </div>
+        {%- endif %}
+      {%- endunless %}
+
+    {%# Component pricing %}
+    {%- unless product.variant_options.size > 0 %}
+      <div class="SC-ProductListCard_detail_subheadline" data-component-price="{{ component_id }}">
+        {% render "products/product/bundle/component_pricing", component: component, bundle: bundle %}
+      </div>
+    {%- endunless %}
+
+    {%# Component variants (if any) %}
+    {%- if product.variants.size > 0 %}
+      <div class="component-variants" data-component-variants="{{ component_id }}">
+        {% render "products/product/bundle/component_variants",
+                   product: product,
+                   component: component %}
+      </div>
+    {%- endif %}
+
+    {%# Booking interface for bookable components %}
+    {%- if product.bookable? %}
+      <div class="component-booking"
+           data-component-booking="{{ component_id }}"
+           data-required-error-message="{{ "bundles.component.booking_required_error_message" | t: product_name: product.name }}">
+        <div class="sc-mb-small">
+          <strong class="sc-color-primary sc-font-small">{{ "bundles.component.booking_required" | t }}</strong>
+        </div>
+        <div class="sc-font-small sc-color-muted sc-mb-small">
+          {{ "bundles.component.select_time_place" | t }}
+        </div>
+        
+        {%# Render booking interface with component context %}
+        {% render "products/product/bundle/booking", product: product, component: component %}
+      </div>
+    {%- endif %}
+
+    {%# Quantity picker - using reusable partial %}
+    {% render "products/product/bundle/component_quantity_picker",
+               component: component,
+               context: "card" %}
+    </span>
+  </div>
+
+{%- endif -%}

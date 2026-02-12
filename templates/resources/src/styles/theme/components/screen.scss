@@ -1,3 +1,5 @@
+@use 'sass:map';
+
 $Screen: (
   'bg': white,
   'color': currentColor,
@@ -7,8 +9,8 @@ $Screen: (
   ),
 ) !default;
 
-@if (map-has-key($override, 'Screen') == true) {
-  $Screen: map-extend($Screen, map-get($override, 'Screen'), true);
+@if (map.has-key($override, 'Screen') == true) {
+  $Screen: map-extend($Screen, map.get($override, 'Screen'), true);
 }
 
 @function Screen($keys...) {

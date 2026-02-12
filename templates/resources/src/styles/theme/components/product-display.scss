@@ -1,14 +1,16 @@
+@use 'sass:map';
+
 $ProductDisplay: (
   'max-image-width': 600px,
   'max-details-width': 500px,
 ) !default;
 
-@if (map-has-key($override, 'ProductDisplay') == true) {
-  $ProductDisplay: map-extend($ProductDisplay, map-get($override, 'ProductDisplay'), true);
+@if (map.has-key($override, 'ProductDisplay') == true) {
+  $ProductDisplay: map-extend($ProductDisplay, map.get($override, 'ProductDisplay'), true);
 }
 
 @function ProductDisplay($key) {
-  @return map-get($ProductDisplay, $key);
+  @return map.get($ProductDisplay, $key);
 }
 
 .SC-ProductDisplay,

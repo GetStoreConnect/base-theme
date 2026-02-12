@@ -1,3 +1,6 @@
+@use 'sass:color';
+@use 'sass:map';
+
 /**
  * Must be provided as HSL colours. We separate
  * hue, saturation, lightness, and alpha values
@@ -14,16 +17,16 @@ $colors: (
   'bonus': hsl(212, 100%, 50%),
 ) !default;
 
-@if (map-has-key($core_override, 'colors') == true) {
-  $colors: map-extend($colors, map-get($core_override, 'colors'), true);
+@if (map.has-key($core_override, 'colors') == true) {
+  $colors: map-extend($colors, map.get($core_override, 'colors'), true);
 }
 
 :root {
   @each $key, $value in $colors {
     --sc-color-#{$key}: #{$value};
-    --sc-color-#{$key}-h: #{hue($value)};
-    --sc-color-#{$key}-s: #{saturation($value)};
-    --sc-color-#{$key}-l: #{lightness($value)};
+    --sc-color-#{$key}-h: #{color.channel($value, 'hue')};
+    --sc-color-#{$key}-s: #{color.channel($value, 'saturation')};
+    --sc-color-#{$key}-l: #{color.channel($value, 'lightness')};
   }
 }
 
@@ -35,7 +38,7 @@ $colors: (
  */
 
 @function color($key, $lighten: false, $darken: false, $s: false, $l: false, $a: 1) {
-  $color: map-get($colors, $key);
+  $color: map.get($colors, $key);
   $hue: var(--sc-color-#{$key}-h);
   $saturation: var(--sc-color-#{$key}-s);
   $lightness: var(--sc-color-#{$key}-l);

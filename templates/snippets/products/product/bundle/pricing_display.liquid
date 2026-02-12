@@ -1,0 +1,50 @@
+{%- assign bundle = product %}
+{%- assign pricing = bundle.pricing %}
+
+<div data-bundle-pricing>
+  <div>
+    {%- if bundle.bundle_price_strategy == 'flat_price' %}
+      <div>
+        {%- if pricing.on_sale? %}
+          <div class="sc-mb-tiny sc-font-large onsale" data-bundle-total="{{ pricing.sale_price }}">{{ pricing.sale_price | money }}</div>
+          {%- assign previous_price = pricing.price | money %}
+          <div class="sc-color-sale sc-font-base"> {{ "bundles.product.previous_price" | t: price: previous_price }}</div>
+        {%- else %}
+          <span class="sc-mb-tiny sc-font-large pricingprice" data-bundle-total="{{ pricing.price }}">{{ pricing.price | money }}</span>
+        {%- endif %}
+      </div>
+    {%- elsif bundle.bundle_price_strategy == 'component_price' %}
+      <div data-calculated-price>
+        <span class="sc-mb-tiny sc-font-large" data-bundle-total="{{ bundle.initial_bundle_total }}">
+          {{ bundle.initial_bundle_total | money }}
+        </span>
+      </div>
+    {%- else %}
+      <div>
+        <span class="price" data-bundle-total>{{ pricing.price | money }}</span>
+      </div>
+    {%- endif %}
+  </div>
+
+  {%- if bundle.subscription? %}
+    <div class="subscription-pricing sc-mt-small">
+      <div class="sc-font-small sc-shade-light">
+        {%- if bundle.bundle_price_strategy == 'flat_price' %}
+          {{ "bundles.subscription.price_per_term" | t: price: pricing.subscription_price | money, term: bundle.subscription_term_unit }}
+        {%- else %}
+          <span data-subscription-total>
+            {{ bundle.calculated_subscription_total | default: pricing.subscription_price | money }}
+          </span> {{ "bundles.subscription.per_term" | t: term: bundle.subscription_term_unit }}
+        {%- endif %}
+      </div>
+    </div>
+  {%- endif %}
+
+  {%- if pricing.points > 0 %}
+    <div class="points-display sc-mt-small">
+      <div class="sc-font-small sc-shade-light">
+        {{ "bundles.product.earn_points" | t: points: pricing.points }}
+      </div>
+    </div>
+  {%- endif %}
+</div>

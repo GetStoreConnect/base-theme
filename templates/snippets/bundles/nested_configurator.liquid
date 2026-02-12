@@ -1,0 +1,100 @@
+{%- comment -%}
+  Nested Bundle Configurator Partial
+  
+  This renders a complete bundle configurator within a nested modal context.
+  It's essentially the same as the main bundle configurator but with some
+  modifications for the nested context.
+  
+  Parameters:
+  - nested_bundle: The nested bundle product
+  - parent_bundle_id: ID of the parent bundle
+  - component_id: ID of the component this nested bundle represents
+{%- endcomment -%}
+
+{%- require "scripts/bundle-v2.js" -%}
+{%- require "scripts/quantity-picker.js" -%}
+
+{%- assign required_groups = nested_bundle.required_component_groups -%}
+{%- assign optional_groups = nested_bundle.optional_component_groups -%}
+{%- assign optional_components = nested_bundle.product_components | where: "required?", false | where: "in_group?", false -%}
+
+<div class="nested-bundle-configurator-content" 
+     data-nested-bundle-id="{{ nested_bundle.id }}"
+     data-parent-bundle-id="{{ parent_bundle_id }}"
+     data-component-id="{{ component_id }}">
+  
+  {%- comment -%} Bundle pricing container - Required for bundle-v2.js initialization {%- endcomment -%}
+  <div data-bundle-pricing>
+    {%# The nested bundle price is rendered in the modal footer %}
+    <span class="sc-hide" data-bundle-total="{{ nested_bundle.initial_bundle_total | default: 0 }}"></span>
+  </div>
+  
+  {%- comment -%} Bundle product wrapper - Required for bundle-v2.js {%- endcomment -%}
+  <section data-bundle-product data-store-currency="{{ current_store.currency_code }}">
+
+    <div class="nested-bundle-components sc-flex-col sc-gap-medium">
+
+      {%# Required Individual Components (ungrouped) %}
+      {%- assign ungrouped_required = nested_bundle.product_components | where: "required?", true | where: "in_group?", false -%}
+      {%- if ungrouped_required.size > 0 -%}
+        <div class="sc-p-medium sc-shadow-2 sc-border-radius sc-border">
+          <h5 class="sc-font-small sc-font-medium sc-mb-small sc-shade-dark">Required Components</h5>
+          <div class="components-grid sc-flex-col sc-gap-small">
+            {%- for component in ungrouped_required -%}
+              {% render "products/product/bundle/component_card",
+                        component: component,
+                        bundle: nested_bundle,
+                        component_type: "required",
+                        context: "nested" %}
+            {%- endfor -%}
+          </div>
+        </div>
+      {%- endif -%}
+
+      {%# Required Component Groups %}
+      {%- for group in required_groups -%}
+        <div class="sc-p-medium sc-shadow-2 sc-border-radius sc-border">
+          {% render "products/product/bundle/component_group",
+                    group: group,
+                    bundle: nested_bundle,
+                    group_type: "required",
+                    context: "nested" %}
+        </div>
+      {%- endfor -%}
+
+      {%# Optional Individual Components %}
+      {%- if optional_components.size > 0 -%}
+        <div class="sc-p-medium sc-shadow-2 sc-border-radius sc-border">
+          <h5 class="sc-font-small sc-font-medium sc-mb-small sc-shade-dark">Optional Add-ons</h5>
+          <div class="components-grid sc-flex-col sc-gap-small">
+            {%- for component in optional_components -%}
+              {% render "products/product/bundle/component_card",
+                        component: component,
+                        bundle: nested_bundle,
+                        component_type: "optional",
+                        context: "nested" %}
+            {%- endfor -%}
+          </div>
+        </div>
+      {%- endif -%}
+
+      {%# Optional Component Groups %}
+      {%- if optional_groups.size > 0 -%}
+        <div class="sc-p-medium sc-shadow-2 sc-border-radius sc-border">
+          {%- for group in optional_groups -%}
+            {% render "products/product/bundle/component_group",
+                      group: group,
+                      bundle: nested_bundle,
+                      group_type: "optional",
+                      context: "nested" %}
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+
+    </div>
+
+    <div class="SC-Notice SC-Notice-alert sc-mb sc-mt sc-hide" data-bundle-validation-errors>
+      <ul data-bundle-validation-errors-list></ul>
+    </div>
+  </section>
+</div>

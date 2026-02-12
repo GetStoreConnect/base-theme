@@ -1,0 +1,17 @@
+<div data-provider-container="{{ payment_provider.code }}">
+  <div data-ref="script-block"></div>
+
+  {%- assign button_label = 'checkout.gateways.form.pay_now' | t %}
+
+  {%- form "payment", provider: payment_provider, class: "SC-Panel" %}
+    {{ payment_provider.description_content }}
+
+    {% render "checkout/payment_information/payment_providers/nmi/form", form: form, payment_provider: payment_provider %}
+
+    {% render "checkout/payment_information/additional_info", form: form %}
+
+    {% render "checkout/payment_information/submit_button", button_label: button_label %}
+  {%- endform %}
+
+  {%- require 'scripts/gateways/nmi.js' %}
+</div>

@@ -1,3 +1,5 @@
+@use 'sass:map';
+
 // Sizes match app/models/medium.rb named sizes
 
 $image: (
@@ -9,8 +11,8 @@ $image: (
   'massive': 2048px,
 ) !default;
 
-@if (map-has-key($core_override, 'image') == true) {
-  $image: map-extend($image, map-get($core_override, 'image'), true);
+@if (map.has-key($core_override, 'image') == true) {
+  $image: map-extend($image, map.get($core_override, 'image'), true);
 }
 
 @function image($key) {

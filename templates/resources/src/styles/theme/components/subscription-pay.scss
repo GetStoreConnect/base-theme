@@ -1,0 +1,34 @@
+/**
+ * Subscription Pay Owing Page
+ * Most styling uses existing SC-* utility and component classes
+ */
+
+// Saved payment method highlight box
+.SC-PaymentMethodBox {
+  border-width: 2px;
+}
+
+// Product thumbnail in order summary
+.SC-ProductThumbnail {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+}
+
+// Status badge variants (using SC-Label base styles)
+.SC-StatusBadge {
+  &-active {
+    background: color('success', $lighten: 50%);
+    color: color('success');
+  }
+
+  &-delinquent {
+    background: color('error', $lighten: 50%);
+    color: color('error');
+  }
+
+  &-default {
+    background: color('warning', $lighten: 50%);
+    color: color('warning');
+  }
+}

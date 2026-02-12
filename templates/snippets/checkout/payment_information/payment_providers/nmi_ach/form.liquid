@@ -1,0 +1,67 @@
+<style>
+  .SC-Field-nmi-ach .SC-Field_input {
+    display: flex;
+    align-items: center;
+  }
+</style>
+
+<fieldset class="SC-Fieldset">
+  <div class="SC-Field">
+    {% assign field = form.fields["ach_account_holder_type"] %}
+    <label for="{{ field.id }}" class="SC-Field_label">
+      {{ "checkout.gateways.form.account_holder_type" | t }}
+    </label>
+    <select name="{{ field.name }}" id="{{ field.id }}" class="SC-Field_input sc-expand" required>
+      <option value="personal">{{ "checkout.gateways.form.account_holder_types.personal" | t }}</option>
+      <option value="business">{{ "checkout.gateways.form.account_holder_types.business" | t }}</option>
+    </select>
+  </div>
+
+  <div class="SC-Field">
+    {% assign field = form.fields["ach_account_type"] %}
+    <label for="{{ field.id }}" class="SC-Field_label">
+      {{ "checkout.gateways.form.account_type" | t }}
+    </label>
+    <select name="{{ field.name }}" id="{{ field.id }}" class="SC-Field_input sc-expand" required>
+      <option value="checking">{{ "checkout.gateways.form.account_types.checking" | t }}</option>
+      <option value="savings">{{ "checkout.gateways.form.account_types.savings" | t }}</option>
+    </select>
+  </div>
+
+  <div class="SC-Field SC-Field-nmi-ach">
+    {% assign field = form.fields["ach_routing_number"] %}
+    <label for="{{ field.id }}" class="SC-Field_label">
+      {{ "checkout.gateways.form.routing_number" | t }}
+    </label>
+    {%- comment -%} Div placeholder - Collect.js injects iframe here {%- endcomment -%}
+    <div id="{{ field.id }}" class="SC-Field_input sc-expand flex align-items-center"
+         data-placeholder="{{ "checkout.gateways.form.routing_number_placeholder" | t }}">
+    </div>
+    <span class="SC-Field_error sc-hide" data-field-error="ach_routing_number"></span>
+  </div>
+
+  <div class="SC-Field SC-Field-nmi-ach">
+    {% assign field = form.fields["ach_account_number"] %}
+    <label for="{{ field.id }}" class="SC-Field_label">
+      {{ "checkout.gateways.form.account_number" | t }}
+    </label>
+    {%- comment -%} Div placeholder - Collect.js injects iframe here {%- endcomment -%}
+    <div id="{{ field.id }}" class="SC-Field_input sc-expand flex align-items-center"
+         data-placeholder="{{ "checkout.gateways.form.account_number_placeholder" | t }}">
+    </div>
+    <span class="SC-Field_error sc-hide" data-field-error="ach_account_number"></span>
+  </div>
+
+  <div class="SC-Field SC-Field-nmi-ach">
+    {% assign field = form.fields["ach_account_name"] %}
+    <label for="{{ field.id }}" class="SC-Field_label">
+      {{ "checkout.gateways.form.name_on_account" | t }}
+    </label>
+    {%- comment -%} Div placeholder - Collect.js injects iframe here {%- endcomment -%}
+    <div id="{{ field.id }}" class="SC-Field_input sc-expand flex align-items-center">
+    </div>
+    <span class="SC-Field_error sc-hide" data-field-error="ach_account_name"></span>
+  </div>
+</fieldset>
+
+{% render "checkout/payment_information/payment_error" %}

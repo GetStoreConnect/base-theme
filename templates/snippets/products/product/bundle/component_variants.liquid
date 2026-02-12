@@ -1,0 +1,28 @@
+{%- assign component_id = component.id %}
+
+{%- if product.variants.size > 0 %}
+  <div class="SC-BundleProduct_detail_variants" data-component-variants="{{ component_id }}">
+    <label class="variants-label sc-font-small sc-shade-dark sc-mb-small">
+      {{ "bundles.product.choose_variant" | t }}
+    </label>
+
+    {%- for option in product.variant_options %}
+      <div class="SC-Variant">
+        <input type="radio"
+               name="component_variant[{{ component_id }}]"
+               value="{{ option.variant.id }}"
+               id="variant_{{ component_id }}_{{ option.variant.id }}"
+               class="SC-Variant_input"
+               data-component-variant="{{ component_id }}"
+               data-variant-price="{{ option.variant.pricing.price }}">
+        <label for="variant_{{ component_id }}_{{ option.variant.id }}"
+               class="SC-Variant_label">
+          {{ option.variant.name }}
+          {%- if option.variant.pricing.price and option.variant.pricing.price > 0 and component.anchor_product.bundle_price_strategy != 'flat_price' %}
+            <span class="variant-price"> - {{ option.variant.pricing.price | money }}</span>
+          {%- endif %}
+        </label>
+      </div>
+    {%- endfor %}
+  </div>
+{%- endif %}

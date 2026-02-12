@@ -1,3 +1,5 @@
+@use 'sass:map';
+
 $vertical-rhythm: (
   'compact': (
     'mobile': spacing('small'),
@@ -13,8 +15,8 @@ $vertical-rhythm: (
   ),
 ) !default;
 
-@if (map-has-key($core_override, 'vertical-rhythm') == true) {
-  $vertical-rhythm: map-extend($vertical-rhythm, map-get($core_override, 'vertical-rhythm'), true);
+@if (map.has-key($core_override, 'vertical-rhythm') == true) {
+  $vertical-rhythm: map-extend($vertical-rhythm, map.get($core_override, 'vertical-rhythm'), true);
 }
 
 @function vertical-rhythm($keys...) {

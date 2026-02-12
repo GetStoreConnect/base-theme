@@ -1,0 +1,27 @@
+{%- render "shared/page_header", heading: "t.accounts.carts.index.heading" %}
+{%- if current_customer.carts.size > 0 %}
+  {%- paginate current_customer.carts by 10 %}
+    <table class="sc-mb-spacious">
+      <tr>
+        <th>{{ "accounts.carts.index.date" | t }}</th>
+        <th>{{ "accounts.carts.index.items" | t }}</th>
+      </tr>
+
+      {% for cart in current_customer.carts %}
+        <tr>
+          {% capture is_current %}
+            {% if cart.id == current_cart.id %}
+              {{ "accounts.carts.index.current" | t }}
+            {% endif %}
+          {% endcapture %}
+
+          <td data-th="{{ "accounts.carts.index.date" | t }}"><a href="{{ cart.select_path }}" data-method="put" rel="nofollow">{% render "shared/date", timestamp: cart.created_at %}</a>{{ is_current }}</td>
+          <td data-th="{{ "accounts.carts.index.items" | t }}">{{ cart.item_count }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+    {%- render 'shared/pagination-nav', paginate: paginate %}
+  {%- endpaginate %}
+{%- else %}
+  <div class="sc-shade-neutral">{{ "accounts.carts.index.no_carts" | t }}</div>
+{%- endif %}

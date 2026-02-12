@@ -6,10 +6,7 @@ const SECURE_PAY_FORM_SELECTOR = 'form[data-provider="SecurePay"]'
 onDomChange((node) => {
   const forms = node.querySelectorAll(SECURE_PAY_FORM_SELECTOR)
   forms.forEach((form) => {
-    const providerId = form.dataset.providerId
-    if (providerId) {
-      initSecurePay({ form, providerId })
-    }
+    initSecurePay({ form })
   })
 })
 
@@ -33,7 +30,7 @@ function defaultInputStyles() {
   }
 }
 
-function initSecurePay({ form, providerId }) {
+function initSecurePay({ form }) {
   const paymentForm = new PaymentForm(form, {
     onSubmit: () => mySecurePayUI.tokenise(),
   })
@@ -48,7 +45,9 @@ function initSecurePay({ form, providerId }) {
     ? JSON.parse(form.dataset.inputStyles)
     : defaultInputStyles()
 
-  const scriptId = `SecurePayScript${providerId}`
+  const cardContainer = paymentForm.refElement('card-container', 'Container')
+
+  const scriptId = `SecurePayScript${paymentForm.providerId}`
 
   var securepayUiUrl = paymentForm.isProduction()
     ? 'https://payments.auspost.net.au/v3/ui/client/securepay-ui.min.js'
@@ -79,7 +78,10 @@ function initSecurePay({ form, providerId }) {
 
       function initStyles() {
         // this removes border around the iframe object
-        form.getElementsByClassName('securepay-ui-iframe')[0].classList.add('sc-border-none')
+        const iframeElement = cardContainer.querySelector('.securepay-ui-iframe')
+        if (iframeElement) {
+          iframeElement.classList.add('sc-border-none')
+        }
       }
 
       function loadComplete() {
@@ -88,8 +90,8 @@ function initSecurePay({ form, providerId }) {
       }
 
       mySecurePayUI = new securePayUI.init({
-        containerId: `SecurePayContainer${providerId}`,
-        scriptId: scriptId,
+        containerId: cardContainer.id,
+        scriptId,
         clientId: paymentForm.apiKey(),
         merchantCode,
         card: {

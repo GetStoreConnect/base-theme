@@ -1,3 +1,5 @@
+@use 'sass:map';
+
 $ProductCard: (
   'image-aspect-ratio': unset,
   'align-headlines': true,
@@ -28,8 +30,8 @@ $ProductCard: (
   ),
 );
 
-@if (map-has-key($override, 'ProductCard') == true) {
-  $ProductCard: map-extend($ProductCard, map-get($override, 'ProductCard'), true);
+@if (map.has-key($override, 'ProductCard') == true) {
+  $ProductCard: map-extend($ProductCard, map.get($override, 'ProductCard'), true);
 }
 
 @function ProductCard($keys...) {

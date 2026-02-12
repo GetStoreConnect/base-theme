@@ -1,0 +1,178 @@
+{%- default subscription: current_subscription %}
+
+<div class="SC-Panel_header">
+  <div class="SC-Panel_header_heading">
+    {{ 'sc.accounts.subscriptions.payment.title' | t }}
+  </div>
+</div>
+{% if subscription.payment_overdue? %}
+  <div class="sc-mb-medium sc-shade-neutral">
+    {{ 'sc.accounts.subscriptions.payment.description' | t }}
+  </div>
+{% else %}
+  {% assign early_payment_description = 'sc.accounts.subscriptions.payment.description_early_payment' | t %}
+  {% if early_payment_description != blank %}
+    <div class="sc-mb-medium sc-shade-neutral">
+      {{ early_payment_description }}
+    </div>
+  {% endif %}
+{% endif %}
+
+{% comment %} Two Column Layout: Payment + Order Summary {% endcomment %}
+<div class="SC-Grid">
+    {% comment %} Left Column - Payment {% endcomment %}
+    <div class="SC-Grid_main">
+      <section class="SC-Panel sc-mb-medium">
+
+        {%- form "subscription-payment", subscription: subscription %}
+
+          {% if subscription.has_saved_payment_details? %}
+            {% comment %} Saved Payment Method Box {% endcomment %}
+            <div class="SC-Notice sc-mb-medium sc-border-primary SC-PaymentMethodBox">
+              <div class="sc-font-bold sc-mb-tiny">{{ subscription.payment_method }}</div>
+              {% if subscription.payment_source_identifier %}
+                <div class="sc-shade-neutral sc-mb-micro">
+                  {{ subscription.payment_source_identifier }}
+                </div>
+              {% endif %}
+              {% if subscription.payment_source_expires_at %}
+                <div class="sc-shade-neutral sc-font-small">
+                  {%- capture expires_at -%}{{ subscription.payment_source_expires_at | date: "%m/%Y" }}{%- endcapture -%}
+                  {{ 'sc.accounts.subscriptions.payment.payment_source_expires_at' | t: expires_at: expires_at }}
+                </div>
+              {% endif %}
+            </div>
+
+            {% comment %} Update Payment Link {% endcomment %}
+            <div class="SC-Notice SC-Notice-compact sc-mb-medium">
+              {{ 'sc.accounts.subscriptions.payment.need_different_payment' | t }}
+              <a href="{{ subscription.path }}#payment-details" class="SC-Link">
+                {{ 'sc.accounts.subscriptions.payment.update_payment_details_link' | t }}
+              </a>
+            </div>
+
+            {% comment %} Submit Button {% endcomment %}
+            <button type="submit" class="SC-Button SC-Button-primary SC-Button-large SC-Button-block sc-mb-medium" id="submit-button">
+              {{ 'sc.accounts.subscriptions.payment.complete_payment' | t }} {{ subscription.total_payable_amount | money }}
+            </button>
+
+            {% comment %} Important Notes {% endcomment %}
+            <div class="sc-font-small sc-shade-neutral sc-border-top sc-pt-medium">
+              <p class="sc-mb-small">{{ 'sc.accounts.subscriptions.payment.note_immediate_processing' | t }}</p>
+              {% if subscription.type == 'fixed' %}
+                <p class="sc-mb-small">{{ 'sc.accounts.subscriptions.payment.note_fixed_term_schedule' | t }}</p>
+              {% endif %}
+            </div>
+          {% else %}
+            {% comment %} No Saved Payment Details Warning {% endcomment %}
+            <div class="SC-Notice SC-Notice-alert sc-mb-medium">
+              <strong class="sc-display-block sc-mb-tiny">
+                {{ 'sc.accounts.subscriptions.payment.payment_details_required' | t }}
+              </strong>
+              {% if subscription.payment_source_identifier %}
+                <p class="sc-mb-small">{{ 'sc.accounts.subscriptions.payment.payment_details_expired' | t }}</p>
+              {% else %}
+                <p class="sc-mb-small">{{ 'sc.accounts.subscriptions.payment.please_add_payment_details' | t }}</p>
+              {% endif %}
+              <a href="{{ subscription.path }}#payment-details" class="SC-Button SC-Button-primary sc-mt-small">
+                {{ 'sc.accounts.subscriptions.payment.update_payment_details_button' | t }}
+              </a>
+            </div>
+          {% endif %}
+        {%- endform %}
+      </section>
+    </div>
+
+    {% comment %} Right Column - Order Summary {% endcomment %}
+    <div class="SC-Grid_summary">
+      <aside class="SC-Panel sc-mb-spacious">
+        <header class="SC-Panel_header">
+          <h3 class="SC-Panel_header_heading">
+            {{ 'sc.accounts.subscriptions.payment.order_summary' | t }}
+          </h3>
+        </header>
+
+        <div class="sc-mb-medium">
+          {% if subscription.product.images.first %}
+            <div class="sc-mb-small">
+              <img
+                src="{{ subscription.product.images.first | img_url: '100x100' }}"
+                alt="{{ subscription.product.name }}"
+                class="sc-border sc-border-radius SC-ProductThumbnail">
+            </div>
+          {% endif %}
+          <div class="sc-font-base sc-font-bold">
+            {{ subscription.product.name }}
+          </div>
+        </div>
+
+        <div class="sc-mb-medium sc-border-top sc-pt-medium">
+          <div class="SC-OrderTotal_line sc-mb-small">
+            <div class="SC-OrderTotal_line_label">
+              {{ 'sc.accounts.subscriptions.payment.status' | t }}:
+            </div>
+            <div class="SC-OrderTotal_line_total">
+              <span class="SC-Label SC-Label-small SC-StatusBadge {% if subscription.status == 'active' %}SC-StatusBadge-active{% elsif subscription.status == 'delinquent' %}SC-StatusBadge-delinquent{% else %}SC-StatusBadge-default{% endif %}">
+                {{ subscription.status | capitalize }}
+              </span>
+            </div>
+          </div>
+
+          {% if subscription.next_due_date %}
+            <div class="SC-OrderTotal_line sc-mb-small">
+              <div class="SC-OrderTotal_line_label">
+                {{ 'sc.accounts.subscriptions.payment.billing_date' | t }}:
+              </div>
+              <div class="SC-OrderTotal_line_total">
+                {{ subscription.next_due_date | date: "%B %d, %Y" }}
+              </div>
+            </div>
+          {% endif %}
+
+          {% if subscription.payment_overdue? %}
+            <div class="SC-OrderTotal_line">
+              <div class="SC-OrderTotal_line_label">
+                {{ 'sc.accounts.subscriptions.payment.payment_status' | t }}:
+              </div>
+              <div class="SC-OrderTotal_line_total sc-color-error sc-font-bold">
+                {{ 'sc.accounts.subscriptions.payment.overdue' | t }}
+              </div>
+            </div>
+          {% endif %}
+        </div>
+
+        {% comment %} Payment Breakdown {% endcomment %}
+        <div class="SC-OrderTotal">
+          <div class="SC-OrderTotal_line">
+            <div class="SC-OrderTotal_line_label">
+              <div>{{ 'sc.accounts.subscriptions.payment.installment' | t }}</div>
+              <div class="sc-font-tiny sc-shade-neutral">
+                {{ 'sc.accounts.subscriptions.payment.due_date' | t }}: {{ subscription.next_due_date | date: "%B %d, %Y" }}
+              </div>
+            </div>
+            <div class="SC-OrderTotal_line_total">
+              {{ subscription.total_payable_amount | money }}
+            </div>
+          </div>
+
+          {% comment %} Total Amount {% endcomment %}
+          <div class="SC-OrderTotal_line sc-font-base sc-mt-small sc-shade-darkest">
+            <div class="SC-OrderTotal_line_label">
+              {{ 'sc.accounts.subscriptions.payment.total_amount' | t }}
+            </div>
+            <div class="SC-OrderTotal_line_total">
+              {{ subscription.total_payable_amount | money }}
+            </div>
+          </div>
+        </div>
+
+        {% comment %} Original Order Link {% endcomment %}
+        {% if subscription.order %}
+          <div class="sc-mt-medium sc-font-tiny sc-shade-neutral sc-border-top sc-pt-medium">
+            {{ 'sc.accounts.subscriptions.payment.original_order' | t }}:
+            <a href="{{ subscription.order.path }}" class="SC-Link">{{ subscription.order.reference }}</a>
+          </div>
+        {% endif %}
+      </aside>
+    </div>
+  </div>

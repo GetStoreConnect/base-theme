@@ -1,8 +1,6 @@
 import { PaymentForm } from './payment-form'
 import { onDomChange } from '../../theme/utils/init'
 
-const Rails = window.Rails
-
 // Register onDomChange handler to detect and initialize PayWay forms
 onDomChange((node) => {
   const forms = node.querySelectorAll('form[data-provider="PayWay"]')
@@ -21,15 +19,11 @@ function initPayWay({ form }) {
   })
 
   const apiKey = paymentForm.apiKey()
-  const payButton = paymentForm.submitElement()
   let creditCardFrame = null
 
   const tokenCallback = function (err, data) {
     if (err) {
-      Rails.enableElement(payButton)
-      const div = document.getElementById(`PayWayPaymentError${providerId}`)
-
-      div.innerHTML = 'Invalid: ' + err.message
+      paymentForm.showError('Invalid: ' + err.message)
     } else {
       const payload = {
         paymentSource: {
@@ -52,10 +46,10 @@ function initPayWay({ form }) {
     publishableApiKey: apiKey,
     tokenMode: 'callback',
     onValid: function () {
-      Rails.enableElement(payButton)
+      paymentForm.setPayButton(true)
     },
     onInvalid: function () {
-      Rails.disableElement(payButton)
+      paymentForm.setPayButton(false)
     },
   }
 
@@ -63,7 +57,7 @@ function initPayWay({ form }) {
     payway.createCreditCardFrame(options, createdCallback)
   }
 
-  function onSubmit(paymentForm) {
+  function onSubmit() {
     creditCardFrame.getToken(tokenCallback)
   }
 

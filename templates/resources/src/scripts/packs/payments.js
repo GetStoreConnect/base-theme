@@ -95,8 +95,14 @@ function showPaymentForm(providerId) {
 // providerId may be null if there is no payment provider selected
 // e.g. vouchers/credit covers the entire order
 function activateSurcharge(providerId) {
-  const totalPayableElem = document.querySelector('[data-order-cart-total-payable]')
-  const totalTaxElem = document.querySelector('[data-order-tax-amount]')
+  // Prefer the checkout summary block as the source of truth for totals.
+  const summary = document.querySelector('[data-checkout-summary]')
+  const totalPayableElem =
+    summary?.querySelector('[data-order-cart-total-payable]') ||
+    document.querySelector('[data-order-cart-total-payable]')
+  const totalTaxElem =
+    summary?.querySelector('[data-order-tax-amount]') ||
+    document.querySelector('[data-order-tax-amount]')
 
   document.querySelectorAll(`[data-surcharge-id]`).forEach((elem) => elem.classList.add('sc-hide'))
 
@@ -133,3 +139,18 @@ function setTotalTax(amount) {
     elem.innerHTML = amount
   })
 }
+
+function disablePaymentTabs() {
+  document.querySelectorAll('[data-tab-trigger]').forEach((tab) => {
+    tab.disabled = true
+  })
+}
+
+function enablePaymentTabs() {
+  document.querySelectorAll('[data-tab-trigger]').forEach((tab) => {
+    tab.disabled = false
+  })
+}
+
+document.addEventListener('store-connect.payment-processing-start', disablePaymentTabs)
+document.addEventListener('store-connect.payment-processing-end', enablePaymentTabs)

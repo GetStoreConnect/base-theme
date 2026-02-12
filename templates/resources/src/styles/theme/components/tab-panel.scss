@@ -1,3 +1,5 @@
+@use 'sass:map';
+
 /**
  * Deprecated
  */
@@ -54,8 +56,8 @@ $TabPanel: (
   ),
 ) !default;
 
-@if (map-has-key($override, 'TabPanel') == true) {
-  $TabPanel: map-extend($TabPanel, map-get($override, 'TabPanel'), true);
+@if (map.has-key($override, 'TabPanel') == true) {
+  $TabPanel: map-extend($TabPanel, map.get($override, 'TabPanel'), true);
 }
 
 @function TabPanel($keys...) {

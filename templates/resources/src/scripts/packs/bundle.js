@@ -1,25 +1,22 @@
 import initBundleFilters from '../theme/bundle-filters'
 import storePathUrl from '../theme/store-path-url'
-import fetchWithResponseHandler from '../theme/utils/fetch'
+import { postForm, patchForm } from '../theme/utils/fetch'
 import { onDomChange } from '../theme/utils/init'
 
 onDomChange(init)
 
-function init(node) {
+async function init(node) {
   const container = node.querySelector('[data-bundle]')
 
   if (container) {
     const bundleId = container.getAttribute('data-bundle')
 
-    fetchWithResponseHandler(storePathUrl('/cpq/bundles'), {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: new URLSearchParams({ lead_product_sfid: bundleId }).toString(),
-    })
-      .then(() => setup(container, bundleId))
-      .catch((error) => console.error('Fetch error:', error))
+    try {
+      await postForm(storePathUrl('/cpq/bundles'), { lead_product_sfid: bundleId })
+      setup(container, bundleId)
+    } catch (error) {
+      console.error('Fetch error:', error)
+    }
   }
 }
 
@@ -123,7 +120,13 @@ function setup(container, bundleId) {
     })
   }
 
-  function addOrUpdateProductOption(productId, featureId, qty, isSingleOption, onSuccessCallback) {
+  async function addOrUpdateProductOption(
+    productId,
+    featureId,
+    qty,
+    isSingleOption,
+    onSuccessCallback
+  ) {
     const button = document.querySelector('[data-bundle-add-to-cart]')
     const payload = generatePayload(productId, featureId, qty, isSingleOption)
 
@@ -132,18 +135,15 @@ function setup(container, bundleId) {
       button.value = button.dataset.loading
     }
 
-    fetchWithResponseHandler(
-      storePathUrl(`/cpq/bundles/${bundleId}/product_options/${productId}`),
-      {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: payload,
-      }
-    )
-      .then(() => onSuccessCallback())
-      .catch((error) => console.error('Fetch error:', error))
+    try {
+      await patchForm(
+        storePathUrl(`/cpq/bundles/${bundleId}/product_options/${productId}`),
+        payload
+      )
+      onSuccessCallback()
+    } catch (error) {
+      console.error('Fetch error:', error)
+    }
   }
 
   function chooseFeatureOption(form, productId) {
@@ -229,7 +229,7 @@ function setup(container, bundleId) {
       : optionCard.querySelector('[data-single-option-heading]').innerText
   }
 
-  function chooseProductVariant(e) {
+  async function chooseProductVariant(e) {
     const id = e.target.form.id
     const featureId = e.target.form.querySelector('[data-feature]').value
     const price = e.target.getAttribute('data-price')
@@ -241,19 +241,14 @@ function setup(container, bundleId) {
       clearOption.checked = false
     }
 
-    fetchWithResponseHandler(storePathUrl(`/cpq/bundles/${bundleId}/product_options/${id}`), {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: payload,
-    })
-      .then(() => {
-        if (priceEl) {
-          priceEl.innerText = price
-        }
-      })
-      .catch((error) => console.error('Fetch error:', error))
+    try {
+      await patchForm(storePathUrl(`/cpq/bundles/${bundleId}/product_options/${id}`), payload)
+      if (priceEl) {
+        priceEl.innerText = price
+      }
+    } catch (error) {
+      console.error('Fetch error:', error)
+    }
   }
 
   function updateQuantity(e) {

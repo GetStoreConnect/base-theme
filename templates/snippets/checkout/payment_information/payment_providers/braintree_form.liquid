@@ -1,66 +1,58 @@
-{%- assign provider_id = payment_provider.id %}
-{%- assign provider = payment_provider.code %}
-{%- assign button_id = provider | append: "PaymentButton" | append: provider_id %}
-
 {%- assign total_subscriptions = current_cart.total_subscriptions %}
 {%- if current_order %}
   {%- assign total_subscriptions = current_order.total_subscriptions %}
 {%- endif %}
+{%- default wallet_disabled: false %}
 
-{%- if total_subscriptions == 0 and current_subscription == blank %}
-  <div id="{{ provider }}WalletsContainer{{ provider_id }}" class="sc-mb"></div>
-{%- endif %}
+<div data-provider-container="{{ payment_provider.code }}">
+  {%- if total_subscriptions == 0 and current_subscription == blank %}
+    <div data-ref="wallets-container" class="sc-mb" data-click-blocker="{% if wallet_disabled %}not-allowed{% endif %}"></div>
+  {%- endif %}
 
-{%- form "payment", provider: payment_provider, class: "SC-Panel" %}
+  {%- form "payment", provider: payment_provider, class: "SC-Panel" %}
 
-  {{ payment_provider.description_content }}
+    {{ payment_provider.description_content }}
 
-  <div id="{{ provider }}ScriptBlock{{ provider_id }}"></div>
+    <div data-ref="script-block"></div>
 
-  <fieldset class="SC-Fieldset">
-    <div class="SC-Field sc-mb-small">
-      {% assign field = form.fields["card_number"] %}
-      <label class="Field_label" for="{{ field.id }}">
-        {{ "checkout.gateways.form.card_number" | t }}
-      </label>
-      <div class="SC-Field_input" id="{{ field.id }}"
-        data-placeholder="{{ "checkout.gateways.form.card_number_placeholder" | t }}"></div>
-    </div>
-
-    <div class="SC-Fieldset_row">
-      <div class="SC-Field SC-Field-small">
-        {% assign field = form.fields["card_expiry"] %}
-        <label class="SC-Field_label" for="{{ field.id }}">
-          {{ "checkout.gateways.form.expiry" | t }}
+    <fieldset class="SC-Fieldset">
+      <div class="SC-Field sc-mb-small">
+        {% assign field = form.fields["card_number"] %}
+        <label class="Field_label" for="{{ field.id }}">
+          {{ "checkout.gateways.form.card_number" | t }}
         </label>
         <div class="SC-Field_input" id="{{ field.id }}"
-          data-placeholder="{{ "checkout.gateways.form.expiry_placeholder" | t }}"></div>
+          data-placeholder="{{ "checkout.gateways.form.card_number_placeholder" | t }}"></div>
       </div>
 
-      <div class="SC-Field SC-Field-small">
-        {% assign field = form.fields["card_verification"] %}
-        <label class="SC-Field_label" for="{{ field.id }}">
-          {{ "checkout.gateways.form.verification" | t }}
-        </label>
-        <div class="SC-Field_input" id="{{ field.id }}"
-          data-placeholder="{{ "checkout.gateways.form.verification_placeholder" | t }}"></div>
+      <div class="SC-Fieldset_row">
+        <div class="SC-Field SC-Field-small">
+          {% assign field = form.fields["card_expiry"] %}
+          <label class="SC-Field_label" for="{{ field.id }}">
+            {{ "checkout.gateways.form.expiry" | t }}
+          </label>
+          <div class="SC-Field_input" id="{{ field.id }}"
+            data-placeholder="{{ "checkout.gateways.form.expiry_placeholder" | t }}"></div>
+        </div>
+
+        <div class="SC-Field SC-Field-small">
+          {% assign field = form.fields["card_verification"] %}
+          <label class="SC-Field_label" for="{{ field.id }}">
+            {{ "checkout.gateways.form.verification" | t }}
+          </label>
+          <div class="SC-Field_input" id="{{ field.id }}"
+            data-placeholder="{{ "checkout.gateways.form.verification_placeholder" | t }}"></div>
+        </div>
       </div>
-    </div>
-  </fieldset>
+    </fieldset>
 
-  <div id="{{ provider }}PaymentError{{ provider_id }}"
-    class="SC-Field SC-Alert sc-hide"
-    data-placeholder="{{ "checkout.gateways.form.errors.invalid" | t }}"></div>
+    {% render "checkout/payment_information/payment_error" %}
 
-  <input type="submit"
-    value="{{ 'checkout.gateways.form.pay_now' | t }}"
-    id="{{ button_id }}"
-    class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small"
-    data-disable-with="{{ 'checkout.payment.processing' | t }}"
-    data-payment-info-submit />
+    {% render "checkout/payment_information/submit_button" %}
 
-  {% render "checkout/payment_information/additional_info", form: form %}
-{%- endform %}
+    {% render "checkout/payment_information/additional_info", form: form %}
+  {%- endform %}
 
-<script src="https://pay.google.com/gp/p/js/pay.js"></script>
-{%- require 'scripts/gateways/braintree.js' %}
+  <script src="https://pay.google.com/gp/p/js/pay.js"></script>
+  {%- require 'scripts/gateways/braintree.js' %}
+</div>

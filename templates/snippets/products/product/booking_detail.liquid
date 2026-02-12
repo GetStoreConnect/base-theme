@@ -1,0 +1,73 @@
+{%- default product: nil, component_id: nil, radio_name: "bookable-location" %}
+
+{%# 
+  # Shared booking UI component. Used by both regular product booking and bundle booking
+  
+  # Parameters:
+  # - product: Product object with booking capabilities
+  # - component_id: Optional component ID for bundle context
+  # - radio_name: Name for the location radio input group
+%}
+
+{%- assign is_bundle_context = component_id != nil %}
+
+<section class="SC-Booking{% if is_bundle_context %} component-booking-section{% endif %}" 
+         data-booking 
+         data-id="{{ product.id }}"
+         {% if is_bundle_context %}data-component-id="{{ component_id }}"{% endif %}>
+  <menu class="SC-Booking_filters sc-shadow sc-border-light">
+    <div class="SC-DropdownPicker sc-border-right">
+      <button type="button" data-booking-dates>
+        <label>{{ "products.booking.dates" | t }}</label>
+        <span></span>
+        <span class="sc-pointer-events-inherit">
+          {%- render "icons/chevron", width: 11 %}
+        </span>
+      </button>
+    </div>
+
+    <div class="SC-DropdownPicker">
+      <button type="button" data-bookable-locations data-dropdown-trigger>
+        <label>{{ "products.booking.location" | t }}</label>
+        <span>{{ "products.booking.all_locations" | t }}</span>
+        <span class="sc-pointer-events-inherit ">
+          {%- render "icons/chevron", width: 11 %}
+        </span>
+      </button>
+      <menu data-dropdown-target>
+        <label data-dropdown-option>
+          <input
+            type="radio"
+            name="{{ radio_name }}"
+            class="sc-hide"
+            data-bookable-location
+            {% if is_bundle_context %}data-component-id="{{ component_id }}"{% endif %}
+            data-name="{{ "products.booking.all_locations" | t }}"/>
+          {{ "products.booking.all_locations" | t }}
+        </label>
+        {%- for product_bookable_location in product.product_bookable_locations %}
+          <label data-dropdown-option>
+            <input
+              type="radio"
+              name="{{ radio_name }}"
+              class="sc-hide"
+              {% if current_request.params["booking-location-id"] == product_bookable_location.id %}checked{% endif %}
+              value="{{ product_bookable_location.id }}"
+              data-bookable-location
+              {% if is_bundle_context %}data-component-id="{{ component_id }}"{% endif %}
+              data-name="{{ product_bookable_location.bookable_location.name }}"
+              data-timezone="{{ product_bookable_location.bookable_location.timezone }}"/>
+              {{ product_bookable_location.bookable_location.name }}
+          </label>
+        {%- endfor %}
+      </menu>
+    </div>
+
+  </menu>
+  <div class="SC-Booking_availabilities" 
+       data-booking-timeslots 
+       {% if is_bundle_context %}data-component-id="{{ component_id }}"{% endif %}
+       data-booking-availabilities-url="{{ current_store.booking_availabilities_path }}" 
+       data-booking-availabilities-partial="availabilities"
+       data-booking-fetch-error="{{ "sc.errors.unexpected" | t }}"></div>
+</section>

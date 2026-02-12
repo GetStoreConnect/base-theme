@@ -1,5 +1,5 @@
 {%- if current_store.has_promotions? %}
-  <section class="SC-Card SC-Card-floating sc-mb-large">
+  <section class="SC-Card SC-Card-floating sc-mb-large sc-wider-card-spacing">
     <h4 class="sc-mb-small">{{ "checkout.promo_codes.heading" | t }}</h4>
     {% form "apply-promo-code", data-spec-checkout-promo-code: true %}
       {% render "form_errors", errors: form.errors -%}

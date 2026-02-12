@@ -28,6 +28,55 @@ function init(node) {
   })
 }
 
+function validateInput(input) {
+  if (input.dataset.validationAttached) return
+  input.dataset.validationAttached = 'true'
+
+  const errorBox = document.querySelector(`[data-error-for="${input.name}"]`)
+
+  input.addEventListener('input', () => {
+    const min = input.min ? Number(input.min) : null
+    const max = input.max ? Number(input.max) : null
+    const value = Number(input.value)
+
+    const hasMin = !isNaN(min) && min !== null
+    const hasMax = !isNaN(max) && max !== null
+
+    let hasError = false
+
+    if (hasMin && hasMax) {
+      if (value < min || value > max) hasError = true
+    } else if (hasMin) {
+      if (value < min) hasError = true
+    } else if (hasMax) {
+      if (value > max) hasError = true
+    }
+
+    let finalMessage = ''
+    if (hasError) {
+      let message = ''
+
+      if (hasMin && hasMax) {
+        message = input.dataset.errorBetween
+      } else if (hasMin) {
+        message = input.dataset.errorAtLeast
+      } else if (hasMax) {
+        message = input.dataset.errorAtMost
+      }
+
+      finalMessage = input.dataset.errorMessage.replace('%{message}', message)
+    }
+
+    input.classList.toggle('is-error', hasError)
+    input.setCustomValidity(finalMessage)
+
+    if (errorBox) {
+      errorBox.classList.toggle('has-error', hasError)
+      errorBox.textContent = finalMessage
+    }
+  })
+}
+
 function set(e, picker) {
   const input = picker.querySelector('[data-price-picker-input]')
 
@@ -41,6 +90,7 @@ function manualEntry(picker) {
   const input = picker.querySelector('[data-price-picker-input]')
 
   input.classList.add('is-active')
+  validateInput(input)
   input.focus()
   picker.querySelector('[data-price-picker-trigger]').classList.add('is-hidden')
   close(picker)

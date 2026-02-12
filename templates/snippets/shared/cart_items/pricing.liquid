@@ -56,7 +56,7 @@
       <div class="sc-mb-tiny sc-font-{% if large %}large{% else %}small{%- endif -%}" data-line-item-amount>
         {%- comment %} Currency Price {% endcomment %}
         {%- if pricing.use_currency? %}
-          <span data-currency>{{ pricing.checkout_price | money }}</span>
+          <span data-currency>{{ pricing.price_excl_tax | money }}</span>
         {%- endif %}
 
         {%- comment %} Points Price {% endcomment %}

@@ -1,4 +1,5 @@
 import { onDomChange } from './utils/init'
+import storePathUrl from './store-path-url'
 
 const ComponentReloader = (() => {
   const handlers = new Map()
@@ -27,10 +28,11 @@ const ComponentReloader = (() => {
 
   function ensureListener(eventName) {
     if (handlers.has(eventName)) return
-    const handler = () => {
+    const handler = (event) => {
       document.querySelectorAll(`[data-reload-events~="${eventName}"]`).forEach((container) => {
         scheduleReload(container)
       })
+      handleFlash(event)
     }
     document.addEventListener(eventName, handler)
     handlers.set(eventName, handler)
@@ -60,9 +62,10 @@ const ComponentReloader = (() => {
 
   function reloadComponent(container, nonce, token) {
     inflight.add(container)
-    fetch(`/async/component/${nonce}`, {
+    fetch(storePathUrl(`/async/component/${nonce}`), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      credentials: 'same-origin',
       body: JSON.stringify({ token }),
     })
       .then((res) => {
@@ -84,6 +87,35 @@ const ComponentReloader = (() => {
       .finally(() => {
         inflight.delete(container)
       })
+  }
+
+  function handleFlash(event) {
+    const data = event?.detail?.data || {}
+    let alert, notice
+
+    if (data.alert) alert = data.alert
+    if (data.notice) notice = data.notice
+    if (data.flash) {
+      // flash can be an array of [type, message] pairs or an object with type: message
+      if (Array.isArray(data.flash)) {
+        data.flash.forEach(([type, message]) => {
+          if (type === 'alert') alert = message
+          if (type === 'notice') notice = message
+        })
+      } else if (typeof data.flash === 'object' && data.flash !== null) {
+        Object.entries(data.flash).forEach(([type, message]) => {
+          if (type === 'alert') alert = message
+          if (type === 'notice') notice = message
+        })
+      }
+    }
+
+    if (alert) {
+      document.dispatchEvent(new CustomEvent('sc.alert', { detail: { message: alert } }))
+    }
+    if (notice) {
+      document.dispatchEvent(new CustomEvent('sc.notice', { detail: { message: notice } }))
+    }
   }
 
   return { registerFrom }

@@ -1,0 +1,14 @@
+{%- default disabled: false %}
+{%- default hidden: false %}
+{%- default button_label: blank %}
+{% if button_label == blank %}
+  {% assign button_label = 'checkout.gateways.form.pay_now' | t %}
+{% endif %}
+
+<input type="submit"
+  value="{{ button_label }}"
+  data-ref="submit-button"
+  class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small{% if hidden %} sc-hide{% endif %}"
+  data-disable-with="{{ 'checkout.payment.processing' | t }}"
+  data-payment-info-submit
+  {% if disabled %}disabled{% endif %} />

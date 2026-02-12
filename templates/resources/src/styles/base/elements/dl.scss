@@ -1,3 +1,5 @@
+@use 'sass:map';
+
 $dl: (
   'bg': transparent,
   'bg-offset': shade('lightest'),
@@ -14,8 +16,8 @@ $dl: (
   ),
 ) !default;
 
-@if (map-has-key($core_override, 'dl') == true) {
-  $dl: map-extend($dl, map-get($core_override, 'dl'), true);
+@if (map.has-key($core_override, 'dl') == true) {
+  $dl: map-extend($dl, map.get($core_override, 'dl'), true);
 }
 
 @function dl($keys...) {

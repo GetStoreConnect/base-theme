@@ -1,0 +1,12 @@
+{%- comment %}
+  Renders a wallet icon (Apple Pay or Google Pay) based on the payment's wallet_type.
+
+  Usage:
+    {% render "shared/icons/wallet-icon", payment: payment %}
+{%- endcomment %}
+
+{%- if payment.wallet_type == "Apple Pay" %}
+  {%- render "shared/icons/apple-pay", style_class: "sc-wallet-icon" %}
+{%- elsif payment.wallet_type == "Google Pay" %}
+  {%- render "shared/icons/google-pay", style_class: "sc-wallet-icon" %}
+{%- endif %}

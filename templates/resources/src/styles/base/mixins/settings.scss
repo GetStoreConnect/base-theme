@@ -1,3 +1,7 @@
+@use 'sass:color';
+@use 'sass:map';
+@use 'sass:meta';
+
 /**
  * Create CSS custom properties
  */
@@ -16,7 +20,7 @@
       // of settings.
 
       @if $settings {
-        $value: map-get($map_of_settings, $setting);
+        $value: map.get($map_of_settings, $setting);
       }
 
       // Else we return the value directly from the map
@@ -28,7 +32,7 @@
       // When settings are nested we under a group we
       // prefix the CSS variable with the group name.
 
-      @if type-of($value) == map {
+      @if meta.type-of($value) == map {
         $nested_settings: $value;
 
         @each $nested_setting, $nested_value in $nested_settings {
@@ -43,10 +47,10 @@
       // colour setting.
 
       @if $separate_hsla {
-        --sc-#{$prefix}-#{$setting}-h: #{hue($value)};
-        --sc-#{$prefix}-#{$setting}-s: #{saturation($value)};
-        --sc-#{$prefix}-#{$setting}-l: #{lightness($value)};
-        --sc-#{$prefix}-#{$setting}-a: #{alpha($value)};
+        --sc-#{$prefix}-#{$setting}-h: #{color.channel($value, 'hue')};
+        --sc-#{$prefix}-#{$setting}-s: #{color.channel($value, 'saturation')};
+        --sc-#{$prefix}-#{$setting}-l: #{color.channel($value, 'lightness')};
+        --sc-#{$prefix}-#{$setting}-a: #{color.alpha($value)};
       }
     }
   }
@@ -69,23 +73,23 @@
 @mixin set-adaptive-prop($prop, $props) {
   @if $props != unset {
     // Expects a map of breakpoints
-    @if type-of($props) == 'map' {
+    @if meta.type-of($props) == 'map' {
       // Set mobile
-      @if map-has-key($props, 'mobile') {
-        #{$prop}: map-get($props, 'mobile');
+      @if map.has-key($props, 'mobile') {
+        #{$prop}: map.get($props, 'mobile');
       }
 
       // Set tablet
-      @if map-has-key($props, 'tablet') {
+      @if map.has-key($props, 'tablet') {
         @include medium-and-up {
-          #{$prop}: map-get($props, 'tablet');
+          #{$prop}: map.get($props, 'tablet');
         }
       }
 
       // Set desktop
-      @if map-has-key($props, 'desktop') {
+      @if map.has-key($props, 'desktop') {
         @include small-and-up {
-          #{$prop}: map-get($props, 'desktop');
+          #{$prop}: map.get($props, 'desktop');
         }
       }
     }
@@ -104,43 +108,43 @@
 @mixin set-state-prop($prop, $map_of_states) {
   @if $map_of_states != unset {
     // Expects a map of states
-    @if type-of($map_of_states) == 'map' {
+    @if meta.type-of($map_of_states) == 'map' {
       // Resting state
-      @if map-has-key($map_of_states, 'resting') {
-        #{$prop}: map-get($map_of_states, 'resting');
+      @if map.has-key($map_of_states, 'resting') {
+        #{$prop}: map.get($map_of_states, 'resting');
       }
 
       // Focus state
-      @if map-has-key($map_of_states, 'focus') {
+      @if map.has-key($map_of_states, 'focus') {
         &:focus {
-          #{$prop}: map-get($map_of_states, 'focus');
+          #{$prop}: map.get($map_of_states, 'focus');
         }
       }
 
       // Hover state
-      @if map-has-key($map_of_states, 'hover') {
+      @if map.has-key($map_of_states, 'hover') {
         &:hover {
-          #{$prop}: map-get($map_of_states, 'hover');
+          #{$prop}: map.get($map_of_states, 'hover');
         }
-      } @else if map-has-key($map_of_states, 'resting') {
+      } @else if map.has-key($map_of_states, 'resting') {
         // Use resting state for hover as fallback
         &:hover {
-          #{$prop}: map-get($map_of_states, 'resting');
+          #{$prop}: map.get($map_of_states, 'resting');
         }
       }
 
       // Active state
-      @if map-has-key($map_of_states, 'active') {
+      @if map.has-key($map_of_states, 'active') {
         &.is-active,
         .is-active & {
-          #{$prop}: map-get($map_of_states, 'active');
+          #{$prop}: map.get($map_of_states, 'active');
         }
       }
 
       // Checked state
-      @if map-has-key($map_of_states, 'checked') {
+      @if map.has-key($map_of_states, 'checked') {
         &:checked {
-          #{$prop}: map-get($map_of_states, 'checked');
+          #{$prop}: map.get($map_of_states, 'checked');
         }
       }
     }

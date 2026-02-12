@@ -1,57 +1,49 @@
-{%- assign provider_id = payment_provider.id %}
-{%- assign provider = payment_provider.code %}
-{%- assign button_id = provider | append: "PaymentButton" | append: provider_id %}
+<div data-provider-container="{{ payment_provider.code }}">
+  <div data-ref="script-block"></div>
 
-{%- form "payment", provider: payment_provider, class: "SC-Panel" %}
+  {%- form "payment", provider: payment_provider, class: "SC-Panel" %}
 
-  {{ payment_provider.description_content }}
+    {{ payment_provider.description_content }}
 
-  <div id="{{ provider }}ScriptBlock{{ provider_id }}"></div>
-  <div id="{{ provider }}PaymentBlock{{ provider_id }}"></div>
-
-  <fieldset id="BamboraForm{{ provider_id }}" class="SC-Fieldset BamboraForm">
-    <div class="SC-Field SC-Field-bambora">
-      {% assign field = form.fields["card_number"] %}
-      <label class="Field_label" for="{{ field.id }}">
-        {{ "checkout.gateways.form.card_number" | t }}
-      </label>
-      <div class="SC-Field_input" id="{{ field.id }}"></div>
-      <label class="help-block" for="{{ field.id }}" id="{{ field.id }}-error"></label>
-    </div>
-    <div class="SC-Fieldset_row">
+    <fieldset data-ref="card-fields" class="SC-Fieldset BamboraForm">
       <div class="SC-Field SC-Field-bambora">
-        {% assign field = form.fields["card_expiry"] %}
-        <label class="SC-Field_label" for="{{ field.id }}">
-          {{ "checkout.gateways.form.expiry_month" | t }}
+        {% assign field = form.fields["card_number"] %}
+        <label class="Field_label" for="{{ field.id }}">
+          {{ "checkout.gateways.form.card_number" | t }}
         </label>
         <div class="SC-Field_input" id="{{ field.id }}"></div>
         <label class="help-block" for="{{ field.id }}" id="{{ field.id }}-error"></label>
       </div>
-      <div class="SC-Field SC-Field-bambora">
-        {% assign field = form.fields["card_verification"] %}
-        <label class="SC-Field_label"
-                for="{{ field.id }}"
-                style="width: 120px">
-          {{ "checkout.gateways.form.verification" | t }}
-        </label>
-        <div class="SC-Field_input"
-              id="{{ field.id }}"
-              style="width: 80px"></div>
-        <label class="help-block" for="card-cvv" id="{{ field.id }}-error"></label>
+      <div class="SC-Fieldset_row">
+        <div class="SC-Field SC-Field-bambora">
+          {% assign field = form.fields["card_expiry"] %}
+          <label class="SC-Field_label" for="{{ field.id }}">
+            {{ "checkout.gateways.form.expiry_month" | t }}
+          </label>
+          <div class="SC-Field_input" id="{{ field.id }}"></div>
+          <label class="help-block" for="{{ field.id }}" id="{{ field.id }}-error"></label>
+        </div>
+        <div class="SC-Field SC-Field-bambora">
+          {% assign field = form.fields["card_verification"] %}
+          <label class="SC-Field_label"
+                  for="{{ field.id }}"
+                  style="width: 120px">
+            {{ "checkout.gateways.form.verification" | t }}
+          </label>
+          <div class="SC-Field_input"
+                id="{{ field.id }}"
+                style="width: 80px"></div>
+          <label class="help-block" for="card-cvv" id="{{ field.id }}-error"></label>
+        </div>
       </div>
-    </div>
-  </fieldset>
+    </fieldset>
 
-  <div id="{{ provider }}PaymentError{{ provider_id }}" class="SC-Field SC-Alert sc-hide"></div>
+    {% render "checkout/payment_information/payment_error" %}
 
-  <input type="submit"
-    value="{{ 'checkout.gateways.form.pay_now' | t }}"
-    id="{{ button_id }}"
-    class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small"
-    data-disable-with="{{ 'checkout.payment.processing' | t }}"
-    data-payment-info-submit />
+    {% render "checkout/payment_information/additional_info", form: form %}
 
-  {% render "checkout/payment_information/additional_info", form: form %}
-{%- endform %}
+    {% render "checkout/payment_information/submit_button" %}
+  {%- endform %}
+</div>
 
 {%- require 'scripts/gateways/bambora.js' %}

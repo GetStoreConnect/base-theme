@@ -142,6 +142,11 @@
             {%- if source.total_payable_points > 0 %}
               <span data-points>{{ source.total_payable_points | points }}</span>
             {%- endif %}
+
+            {%- comment %} Nothing to pay {% endcomment %}
+            {%- unless source.total_payable > 0 or source.total_payable_points > 0 %}
+              {{ 0 | money }}
+            {%- endunless %}
           </div>
         </div>
       {%- endif %}

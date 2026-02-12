@@ -1,4 +1,5 @@
 // PaymentForm instance will be passed as parameter
+import { putJSON } from '../../theme/utils/fetch'
 import storePathUrl from '../../theme/store-path-url'
 
 /**
@@ -79,28 +80,7 @@ export class GooglePay {
       onload: () => this.onGooglePayLoaded(),
     })
 
-    if (window.StoreConnectTestMode === 'enabled') {
-      window.testGooglePayCallback = async () => {
-        this.handleWalletError({
-          error: { message: `testGooglePayCallback: put your left foot in` },
-        })
-
-        const paymentData = {
-          paymentMethodData: {
-            tokenizationData: {
-              token: JSON.stringify({ signature: 'some-value' }),
-            },
-            info: {
-              cardNetwork: 'VISA',
-              cardDetails: '1111',
-            },
-          },
-        }
-        const payload = this.extractTokenCallback(paymentData)
-        this.handleWalletError({ error: payload })
-        this.paymentForm.submitData({ payload })
-      }
-    }
+    this.setupTestMode()
   }
 
   /**
@@ -241,16 +221,17 @@ export class GooglePay {
       // Collect email address for receipt / default for account creation
       paymentDataRequest.emailRequired = true
 
-      if (this.paymentForm.offerShipping()) {
-        // Setup shipping rates etc
+      if (this.paymentForm.requiresContactInfo()) {
+        // Collect shipping address for customer information (billing/contact)
+        paymentDataRequest.shippingAddressRequired = true
+        paymentDataRequest.shippingAddressParameters = this.shippingAddressParameters()
 
+        // Setup shipping options for both physical and virtual products
         paymentDataRequest.callbackIntents = [
           'SHIPPING_ADDRESS',
           'SHIPPING_OPTION',
           'PAYMENT_AUTHORIZATION',
         ]
-        paymentDataRequest.shippingAddressRequired = true
-        paymentDataRequest.shippingAddressParameters = this.shippingAddressParameters()
         paymentDataRequest.shippingOptionRequired = true
       }
     }
@@ -285,7 +266,7 @@ export class GooglePay {
 
       // Only include paymentDataCallbacks when we have callbackIntents
       // to avoid Symbol(includes) crashes when callbackIntents is undefined
-      if (this.paymentForm.onlyExpressCheckout() && this.paymentForm.offerShipping()) {
+      if (this.paymentForm.onlyExpressCheckout() && this.paymentForm.requiresContactInfo()) {
         clientConfig.paymentDataCallbacks = {
           onPaymentAuthorized: (paymentData) => this.onPaymentAuthorized(paymentData),
           onPaymentDataChanged: (intermediatePaymentData) =>
@@ -343,7 +324,11 @@ export class GooglePay {
       throw new Error('👛 Invalid payment data received from Google Pay')
     }
 
-    if (!paymentData.shippingAddress || typeof paymentData.shippingAddress !== 'object') {
+    // Only require shipping address when collecting contact info
+    if (
+      this.paymentForm.requiresContactInfo() &&
+      (!paymentData.shippingAddress || typeof paymentData.shippingAddress !== 'object')
+    ) {
       throw new Error('👛 Missing or invalid shipping address from Google Pay')
     }
 
@@ -374,27 +359,20 @@ export class GooglePay {
         },
       },
       shipping_rate: paymentData.shippingOptionData,
-      authenticity_token: this.paymentForm.formAuthentityToken(),
       dedicated_cart_product_id: this.paymentForm.dedicatedCartProductId, // If dedicated product page; else null
     }
 
-    const res = await fetch(storePathUrl(`/express_checkout/carts`), {
-      method: 'PUT',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify(payload),
-    })
-    if (!res.ok) {
-      const { error } = await res.json()
-      if (error) {
-        this.handleWalletError({ error })
-        return {
-          transactionState: 'ERROR',
-          error: {
-            reason: 'PAYMENT_DATA_INVALID',
-            message: error.message,
-            intent: 'PAYMENT_AUTHORIZATION',
-          },
-        }
+    try {
+      await putJSON(storePathUrl(`/express_checkout/carts`), payload)
+    } catch (error) {
+      this.handleWalletError({ error })
+      return {
+        transactionState: 'ERROR',
+        error: {
+          reason: 'PAYMENT_DATA_INVALID',
+          message: error.message || this.paymentForm.i18n('errors.payment_failed'),
+          intent: 'PAYMENT_AUTHORIZATION',
+        },
       }
     }
 
@@ -424,6 +402,26 @@ export class GooglePay {
           message: 'Country code is required for shipping options',
           reason: 'INVALID_SHIPPING_ADDRESS',
           intent: 'SHIPPING_ADDRESS',
+        },
+      }
+    }
+
+    // For virtual products, provide a $0 dummy rate to collect address for contact info
+    if (!this.paymentForm.offerShipping()) {
+      const amount = Math.round(this.paymentForm.totalPayable() * 100)
+      return {
+        newTransactionInfo: Object.assign({}, this.baseTransactionInfo(), {
+          totalPrice: (amount / 100).toFixed(2),
+        }),
+        newShippingOptionParameters: {
+          defaultSelectedOptionId: 'virtual-product-no-shipping',
+          shippingOptions: [
+            {
+              id: 'virtual-product-no-shipping',
+              label: this.paymentForm.i18n('wallets.no_shipping_required'),
+              description: this.paymentForm.i18n('wallets.free'),
+            },
+          ],
         },
       }
     }
@@ -463,7 +461,7 @@ export class GooglePay {
       newShippingOptionParameters: {
         defaultSelectedOptionId: shippingOptions.defaultShippingRateId,
         shippingOptions: shippingOptions.shippingRates.map((rate) => {
-          let description = `FREE`
+          let description = this.paymentForm.i18n('wallets.free')
           if (rate.amount > 0) {
             description = priceFormatter.format(rate.amount / 100)
           }
@@ -509,7 +507,7 @@ export class GooglePay {
           this.addGooglePayButton()
         }
       })
-      .catch((err) => this.paymentForm.showError(err))
+      .catch((err) => console.log(err))
   }
 
   /**
@@ -557,7 +555,6 @@ export class GooglePay {
           // Do nothing if user closed the Payment Request UI
           return
         }
-        this.wallet.showWalletsError(err)
       })
   }
 
@@ -585,12 +582,141 @@ export class GooglePay {
       this.paymentForm.reportError(error, { context: 'google-pay-wallet' })
 
       // Show a generic user-friendly message
-      this.wallet.showWalletsError('Payment processing failed. Please try again.', {
+      this.wallet.showWalletsError(this.paymentForm.i18n('errors.payment_failed'), {
         report: false,
       })
     }
     if (event) {
       event.reject()
+    }
+  }
+
+  /**
+   * Setup test mode callback for automated testing
+   * @private
+   */
+  setupTestMode() {
+    if (window.StoreConnectTestMode === 'enabled') {
+      window.testGooglePayCallback = async ({ dedicatedProductId, shippingRateId } = {}) => {
+        this.handleWalletError({
+          error: { message: `put your left foot in` },
+        })
+
+        // Step 1: Prepare dedicated cart if needed
+        if (dedicatedProductId) {
+          this.paymentForm.dedicatedCartProductId = dedicatedProductId
+        }
+
+        if (this.paymentForm.dedicatedCartProductId) {
+          this.handleWalletError({
+            error: {
+              message: `using dedicated cart product id: ${this.paymentForm.dedicatedCartProductId}`,
+            },
+          })
+
+          // On wallet click, we send the 'add-to-cart' form data to the server
+          // to create a dedicated cart for the product
+          const { didError } = await this.wallet.prepareProductCartWithAddToCartData()
+          if (didError) {
+            return
+          }
+        }
+
+        // Step 2: Simulate shipping address for customer information
+        const shippingAddress = {
+          name: 'Test User',
+          phoneNumber: '+61412345678',
+          emailAddress: 'test@example.com',
+          address1: '123 Test St',
+          locality: 'Sydney',
+          administrativeArea: 'NSW',
+          postalCode: '2000',
+          countryCode: 'AU',
+        }
+
+        // Step 3: Conditionally fetch/set shipping rates for physical products
+        let selectedShippingRateId = null
+        if (this.paymentForm.offerShipping()) {
+          const shippingOptions = await this.wallet.fetchShippingRates({
+            country: 'AU',
+            postal_code: '2000',
+            city: 'Sydney',
+            state: 'NSW',
+            street: '123 Test St',
+          })
+
+          if (shippingOptions.error) {
+            this.handleWalletError({ error: shippingOptions.error })
+            return
+          }
+
+          selectedShippingRateId = shippingRateId || shippingOptions.defaultShippingRateId
+          const { error: setRateError } = await this.wallet.setShippingRate({
+            id: selectedShippingRateId,
+          })
+          if (setRateError) {
+            this.handleWalletError({ error: setRateError })
+            return
+          }
+        }
+
+        // Step 4: Call PUT /express_checkout/carts with customer info (matching Stripe pattern)
+        const cartPayload = {
+          billing_details: {
+            name: shippingAddress.name,
+            email: shippingAddress.emailAddress,
+            phone: shippingAddress.phoneNumber,
+            address: {
+              line1: shippingAddress.address1,
+              city: shippingAddress.locality,
+              state: shippingAddress.administrativeArea,
+              postal_code: shippingAddress.postalCode,
+              country: shippingAddress.countryCode,
+            },
+          },
+          shipping_address: {
+            name: shippingAddress.name,
+            address: {
+              line1: shippingAddress.address1,
+              city: shippingAddress.locality,
+              state: shippingAddress.administrativeArea,
+              postal_code: shippingAddress.postalCode,
+              country: shippingAddress.countryCode,
+            },
+          },
+          dedicated_cart_product_id: this.paymentForm.dedicatedCartProductId,
+        }
+
+        if (selectedShippingRateId) {
+          cartPayload.shipping_rate = { id: selectedShippingRateId }
+        }
+
+        try {
+          await putJSON(storePathUrl(`/express_checkout/carts`), cartPayload)
+        } catch (error) {
+          this.handleWalletError({ error })
+          return
+        }
+
+        // Step 5: Proceed with payment token submission
+        const paymentData = {
+          paymentMethodData: {
+            tokenizationData: {
+              token: JSON.stringify({ signature: 'some-value' }),
+            },
+            info: {
+              cardNetwork: 'VISA',
+              cardDetails: '1111',
+            },
+          },
+        }
+        const payload = this.extractTokenCallback(paymentData)
+        if (this.paymentForm.dedicatedCartProductId) {
+          payload.dedicated_cart_product_id = this.paymentForm.dedicatedCartProductId
+        }
+        this.handleWalletError({ error: payload })
+        this.paymentForm.submitData({ payload })
+      }
     }
   }
 }

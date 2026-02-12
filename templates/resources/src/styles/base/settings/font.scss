@@ -1,3 +1,6 @@
+@use 'sass:list';
+@use 'sass:map';
+
 :root {
   --sc-font-family: -apple-system, BlinkMacSystemFont, sans-serif;
   --sc-font-tiny: 14px;
@@ -42,14 +45,14 @@ $font-settings: (
     )
 ) !default;
 
-@if (map-has-key($core_override, 'font') == true) {
-  $font-settings: map-extend($font-settings, map-get($core_override, 'font'), true);
+@if (map.has-key($core_override, 'font') == true) {
+  $font-settings: map-extend($font-settings, map.get($core_override, 'font'), true);
 }
 
 @function font($keys...) {
-  @if length($keys) == 1 {
-    @return var(--sc-font-#{nth($keys, 1)});
+  @if list.length($keys) == 1 {
+    @return var(--sc-font-#{list.nth($keys, 1)});
   } @else {
-    @return var(--sc-font-#{nth($keys, 2)});
+    @return var(--sc-font-#{list.nth($keys, 2)});
   }
 }

@@ -1,3 +1,5 @@
+@use 'sass:map';
+
 $breakpoints: (
   'small': 576px,
   'medium': 768px,
@@ -14,8 +16,8 @@ $bp: (
   hg: 1700px,
 ) !default;
 
-@if (map-has-key($core_override, 'breakpoints') == true) {
-  $breakpoints: map-extend($breakpoints, map-get($core_override, 'breakpoints'), true);
+@if (map.has-key($core_override, 'breakpoints') == true) {
+  $breakpoints: map-extend($breakpoints, map.get($core_override, 'breakpoints'), true);
 }
 
 @function breakpoint($key) {

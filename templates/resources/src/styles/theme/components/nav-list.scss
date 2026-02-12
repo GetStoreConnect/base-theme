@@ -1,3 +1,5 @@
+@use 'sass:map';
+
 /**
  * DEPRECATED: Use menu.scss
  */
@@ -13,8 +15,8 @@ $NavList: (
   @return deep-map-get($NavList, $keys...);
 }
 
-@if (map-has-key($override, 'NavList') == true) {
-  $NavList: map-extend($NavList, map-get($override, 'NavList'), true);
+@if (map.has-key($override, 'NavList') == true) {
+  $NavList: map-extend($NavList, map.get($override, 'NavList'), true);
 }
 
 .SC-NavList,

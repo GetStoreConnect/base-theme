@@ -20,8 +20,6 @@
     {%- assign defaultPrice = pricing.sale_price | default: pricing.original_price -%}
   {%- endif -%}
 
-  {%- require "scripts/price-picker.js" -%}
-
   <div class="SC-PricePicker {{ style_class }}" data-price-picker>
     <button
       class="SC-PricePicker_trigger{% if show_picker == false %} is-hidden{% endif %}"
@@ -35,16 +33,23 @@
       {%- render "icons/chevron" %}
     </button>
 
+    {% assign formatted_min = pricing.variable_pricing_min_amount | money %}
+    {% assign formatted_max = pricing.variable_pricing_max_amount | money %}
     <input type="number"
       name="{{ field_name }}"
       id="{{ field.id }}"
-      min="{{ pricing.price }}"
+      min="{{ pricing.variable_pricing_min_amount  }}"
+      max="{{ pricing.variable_pricing_max_amount }}"
       value="{{ defaultPrice }}"
       class="SC-PricePicker_input{% if show_picker == false %} is-active{% endif %}"
       placeholder="{{ "shared.variable_pricing_picker.placeholder" | t }}"
       data-price-picker-input
       {{ data }}
       step=".01"
+      data-error-message="{{ "sc.cart.add.errors.not_within_price_range" | t }}"
+      data-error-at-least="{{ 'sc.cart.add.errors.price_range.at_least' | t: min: formatted_min }}"
+      data-error-at-most="{{ 'sc.cart.add.errors.price_range.at_most' | t:  max: formatted_max}}"
+      data-error-between="{{ 'sc.cart.add.errors.price_range.between' | t: min: formatted_min, max: formatted_max }}"
     />
 
     <ul class="SC-PricePicker_list" data-price-picker-list aria-hidden="true">

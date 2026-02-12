@@ -27,13 +27,13 @@
           {% render "checkout/accept_terms/form", form: form %}
         {%- endform %}
       {%- when "payment_information" %}
-        {% render "checkout/payment_information/page" %}
+        {% component "checkout/payment_information/page", reload: "sc.voucher-applied sc.voucher-removed" %}
       {%- endcase %}
     </div>
     <div class="SC-Grid_summary">
       {% render "orders/order_summary", source: current_cart %}
       {% render "checkout/account_credit" %}
-      {% render "checkout/vouchers" %}
+      {% component "checkout/vouchers", reload: "sc.voucher-applied sc.voucher-removed" %}
       {% render "checkout/promo_code" %}
     </div>
   </div>

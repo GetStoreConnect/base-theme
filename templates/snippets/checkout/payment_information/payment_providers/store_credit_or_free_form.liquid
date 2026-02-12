@@ -1,4 +1,6 @@
 {%- default type: "store-credit" %}
+{% assign button_label = 'checkout.gateways.store_credit_form.purchase' | t %}
+
 {%- if current_cart.applied_credits.size > 0 %}
   <p>{{ "checkout.gateways.store_credit_form.paying_with_account_credit" | t }}</p>
 {%- endif %}
@@ -15,11 +17,7 @@
               id: "FreePaymentForm",
               class: "SC-Panel" %}
 
-  <input type="submit"
-    value="{{ 'checkout.gateways.store_credit_form.purchase' | t }}"
-    class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small"
-    data-disable-with="{{ 'checkout.payment.processing' | t }}"
-    data-payment-info-submit />
+  {% render "checkout/payment_information/submit_button", button_label: button_label %}
 
   {% render "checkout/payment_information/additional_info", form: form %}
 {%- endform %}

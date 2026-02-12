@@ -1,3 +1,5 @@
+@use 'sass:map';
+
 /**
  * DEPRECATED: Use menu.scss
  */
@@ -9,8 +11,8 @@ $NavLink: (
   ),
 ) !default;
 
-@if (map-has-key($override, 'NavLink') == true) {
-  $NavLink: map-extend($NavLink, map-get($override, 'NavLink'), true);
+@if (map.has-key($override, 'NavLink') == true) {
+  $NavLink: map-extend($NavLink, map.get($override, 'NavLink'), true);
 }
 
 @function NavLink($keys...) {

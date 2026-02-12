@@ -1,3 +1,5 @@
+@use 'sass:map';
+
 $Navbar: (
   'bg': transparent,
 ) !default;
@@ -6,8 +8,8 @@ $Navbar: (
   @return deep-map-get($Navbar, $key);
 }
 
-@if (map-has-key($override, 'Navbar') == true) {
-  $Navbar: map-extend($Navbar, map-get($override, 'Navbar'), true);
+@if (map.has-key($override, 'Navbar') == true) {
+  $Navbar: map-extend($Navbar, map.get($override, 'Navbar'), true);
 }
 
 .SC-Navbar,
