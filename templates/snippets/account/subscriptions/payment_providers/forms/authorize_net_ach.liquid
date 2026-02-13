@@ -1,0 +1,14 @@
+{%- assign provider_id = payment_provider.id %}
+{%- assign provider = payment_provider.code %}
+{%- assign button_id = provider | append: "PaymentButton" | append: provider_id %}
+
+<div id="{{ provider }}ScriptBlock{{ provider_id }}"></div>
+
+{% render "checkout/payment_information/payment_providers/authorize_net_ach/form", form: form, payment_provider: payment_provider %}
+
+<input id="{{ button_id }}" type="submit" class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small"
+  data-disable-with="{{ 'checkout.payment.processing' | t }}"
+  data-payment-info-submit
+  value="{{ "accounts.subscriptions.show.submit_update_button_label" | t }}" />
+
+{%- require 'scripts/gateways/authorize-net.js' %}
