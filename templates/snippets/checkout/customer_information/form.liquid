@@ -135,7 +135,7 @@
       {% endif %}
     {% endcapture %}
 
-    <input type="submit" value="{{ button_text | strip }}"
+    <input type="submit" value="{{ button_text | strip_newlines }}"
       class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small"
       data-customer-info-submit
       data-disable-with="{{ 'checkout.customer_information.buttons.continuing' | t }}">
