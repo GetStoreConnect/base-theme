@@ -9,19 +9,12 @@
         {% case payment_provider.code %}
         {% when "Adyen" %}
           {% render "checkout/payment_information/payment_providers/adyen_form", payment_provider: payment_provider, only_express_checkout: true %}
-        {% when "Afterpay" %}
-          {% render "checkout/payment_information/payment_providers/afterpay_form", payment_provider: payment_provider, only_express_checkout: true %}
         {% when "CyberSource" %}
           {% render "checkout/payment_information/payment_providers/cyber_source_form", payment_provider: payment_provider, only_express_checkout: true %}
-        {% when "Eway" %}
-          {% render "checkout/payment_information/payment_providers/eway_form", payment_provider: payment_provider, only_express_checkout: true %}
         {% when "Stripe" %}
           {% render "checkout/payment_information/payment_providers/stripe_form", payment_provider: payment_provider, only_express_checkout: true %}
         {% when "WestpacOnlinePay" %}
           {% render "checkout/payment_information/payment_providers/westpac_online_pay_form", payment_provider: payment_provider, only_express_checkout: true %}
-        {% else %}
-          <p>Missing payment method - set it up now in <code>app/liquid/theme/snippets/checkout/payment_information/show_wallets_only.liquid</code></p>
-          <p>payment_provider.code = <code>{{ payment_provider.code }}</code></p>
         {% endcase %}
       </div>
     {% endif %}

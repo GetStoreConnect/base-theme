@@ -1,3 +1,5 @@
+<div id="{{ payment_provider.code }}ScriptBlock{{ payment_provider.id }}"></div>
+
 <fieldset class="SC-Fieldset EwayForm">
   <div class="SC-Field">
     {% assign field = form.fields["card_number"] %}
@@ -73,3 +75,5 @@
     </div>
   </div>
 </fieldset>
+
+<div id="{{ payment_provider.code }}PaymentError{{ payment_provider.id }}" class="SC-Field SC-Alert sc-hide"></div>

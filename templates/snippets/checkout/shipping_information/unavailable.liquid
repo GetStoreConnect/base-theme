@@ -55,7 +55,7 @@
       </div>
     </div>
     <div>
-      <a href="{{ cart_item.delete_path }}?redirect_to=/checkout/shipping_information/edit"
+      <a href="{{ cart_item.delete_path }}?redirect_to={{ current_request.path }}"
           rel="nofollow" data-method="delete" class="SC-Link sc-ml-base">Remove</a>
     </div>
   </div>

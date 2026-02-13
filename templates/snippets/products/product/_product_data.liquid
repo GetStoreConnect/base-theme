@@ -1,0 +1,73 @@
+{%- comment -%}
+  # Reusable snippet for product structured data
+  # Parameters:
+  #   product: Product object (required)
+  #   include_offers: Boolean, whether to include offers (default: true)
+  #   omit_price: Boolean, whether to omit price field (default: false)
+{%- endcomment -%}
+{%- unless product == blank %}
+  "name": "{{ product.name }}",
+  "sku": "{{ product.product_code }}",
+  {%- if product.upc %}
+  "gtin": "0{{ product.upc }}",
+  {%- endif %}
+  {%- if product.brand %}
+    "brand": {
+      "@type": "Brand",
+      "name": "{{ product.brand.name }}"
+    },
+  {%- endif %}
+  {%- assign images = product.images %}
+  {%- if product.master %}
+    {%- if images.size > 0 %}
+      {%- assign images = images | concat: product.master.images | uniq %}
+    {% else %}
+      {%- assign images = product.master.images %}
+    {%- endif %}
+  {%- endif %}
+  {%- if images.size > 0 %}
+    "image": {{ images | pluck: "huge_url" | json }},
+  {%- endif %}
+  "offers": {
+    "@type": "Offer",
+    {%- if product.condition == 'new' %}
+      "itemCondition": "http://schema.org/NewCondition",
+    {%- else %}
+      "itemCondition": "http://schema.org/UsedCondition",
+    {%- endif %}
+    {%- if product.track_inventory? and product.out_of_stock? %}
+      "availability": "http://schema.org/OutOfStock",
+    {%- else %}
+      "availability": "http://schema.org/InStock",
+    {%- endif %}
+    {%- comment -%}
+      Handle price range (master product with variants) or
+      single price (master product without variants or variant product)
+    {%- endcomment %}
+    {%- if product.master? and product.variants.any? %}
+      {%- liquid
+        assign price_range = product.pricing.price_range
+        assign min_price = price_range.first
+        assign max_price = price_range.last
+      -%}
+      {%- if min_price != blank and max_price != blank and min_price > 0 and max_price > 0 %}
+        {%- if min_price == max_price %}
+          "price": "{{ min_price | number, precision: 2 }}",
+        {%- else %}
+          "lowPrice": "{{ min_price | number, precision: 2 }}",
+          "highPrice": "{{ max_price | number, precision: 2 }}",
+        {%- endif %}
+      {%- endif %}  
+    {%- else %}
+      {%- if product.pricing.on_sale? and product.pricing.sale_price > 0 %}
+        {%- assign price = product.pricing.sale_price %}
+      {%- else %}
+        {%- assign price = product.pricing.original_price %}
+      {%- endif %}
+      "price": "{{ price | number, precision: 2 }}",
+    {%- endif %}
+    "priceCurrency": "{{ current_store.currency_code }}",
+    "url": "{{ product.url }}"
+  },
+  "description": "{{- product.search_description }}"
+{%- endunless %}

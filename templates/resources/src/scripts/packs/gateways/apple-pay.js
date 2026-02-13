@@ -164,6 +164,7 @@ export class ApplePay {
             body: JSON.stringify({
               provider_id: this.providerId,
               validation_url: event.validationURL,
+              domain: window.location.hostname,
             }),
           }
         )

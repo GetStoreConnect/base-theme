@@ -4,31 +4,20 @@ import { onDomChange } from '../theme/utils/init'
 
 onDomChange(init)
 
-/* Separating handlers for different events */
-/* To Do: Remove function after resolving DOM events on variants */
-function init(node) {
-  menuTriggers(node)
-}
-
-window.addEventListener('resize', () => menuTriggers(document))
-
 /**
  * Initialise event listeners
  */
 
-function menuTriggers(scope) {
-  const triggers = [...scope.querySelectorAll('[data-menu-init]')]
-  const backBtns = [...scope.querySelectorAll('[data-menu-x]')]
-
-  triggers.forEach((btn) => btn.removeEventListener('click', open))
-  backBtns.forEach((btn) => btn.removeEventListener('click', close))
+function init(node) {
+  const triggers = [...node.querySelectorAll('[data-menu-init]')]
+  const backBtns = [...node.querySelectorAll('[data-menu-x]')]
 
   backBtns.map((btn) => btn.addEventListener('click', close))
 
   // Desktop events
   if (largeAndUp()) {
     triggers.map((trigger) => {
-      hoverintent(trigger.closest('.SC-Menu_wrapper'), show, hide)
+      hoverintent(trigger.closest('li'), show, hide)
     })
   }
 

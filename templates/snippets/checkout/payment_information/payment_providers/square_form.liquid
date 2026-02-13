@@ -1,27 +1,22 @@
 {%- assign provider_id = payment_provider.id %}
 {%- assign provider = payment_provider.code %}
 {%- assign button_id = provider | append: "PaymentButton" | append: provider_id %}
-{%- assign button_label = 'checkout.gateways.form.pay_now' | t %}
 {%- assign payment_error_id = provider | append: "PaymentError" | append: provider_id %}
 
-{%- if current_subscription %}
-  {%- assign button_label = 'accounts.subscriptions.show.submit_update_button_label'| t %}
-{%- endif %}
-
 <style>
-  .square-apple-pay-button {
-    height: 48px;
-    width: 300px;
-    display: inline-block;
-    -webkit-appearance: -apple-pay-button;
-    -apple-pay-button-type: plain;
-    -apple-pay-button-style: black;
-  }
+   .square-apple-pay-button {
+      height: 48px;
+      width: 300px;
+      display: inline-block;
+      -webkit-appearance: -apple-pay-button;
+      -apple-pay-button-type: plain;
+      -apple-pay-button-style: black;
+    }
 
-  .gpay-card-info-container {
-    height: 48px;
-    width: 300px;
-  }
+    .gpay-card-info-container {
+      height: 48px;
+      width: 300px;
+    }
 </style>
 
 <div id="{{ provider }}WalletsContainer{{ provider_id }}" class="sc-mb">
@@ -49,7 +44,7 @@
 
   <input type="submit"
     id="{{ button_id }}"
-    value="{{ button_label }}"
+    value="{{ 'checkout.gateways.form.pay_now' | t }}"
     class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small"
     data-disable-with="{{ 'checkout.payment.processing' | t }}"
     data-payment-info-submit />

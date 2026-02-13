@@ -69,9 +69,11 @@
       </div>
     {%- endif %}
   {% endform %}
-  {%- if product.pricing.can_purchase_with_currency? and theme_variables["products.card.hide_purchase_button"] == false %}
-    {% render "products/product/express_checkout", product: product, wallet_disabled: button_disabled %}
-  {%- endif %}
+  {%- unless product.subscription? %}
+    {%- if product.pricing.can_purchase_with_currency? and theme_variables["products.card.hide_purchase_button"] == false %}
+      {% render "products/product/express_checkout", product: product, wallet_disabled: button_disabled %}
+    {%- endif %}
+  {%- endunless %}
 {%- else %}
   <div class="sc-shade-neutral sc-mb-small">
     {{ product.unavailable_text }}

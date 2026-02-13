@@ -1,7 +1,0 @@
-{%- assign bundle = product | default: current_product %}
-
-{%- if bundle.variants.size > 0 %}
-  <div data-bundle-anchor-variants>
-    {% render "products/product/variant_selector", product: bundle %}
-  </div>
-{%- endif %}

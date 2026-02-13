@@ -1,8 +1,4 @@
 Controller,Action
-accounts,create
-accounts,missing_details
-accounts,register
-accounts,show
 accounts/attendees,create
 accounts/attendees,update
 accounts/orders,reorder
@@ -12,12 +8,15 @@ accounts/subscriptions,index
 accounts/subscriptions,show
 accounts/subscriptions,threeds_callback
 accounts/subscriptions,update
+accounts,create
+accounts,register
+accounts,show
+accounts,missing_details
 additional_payments,ach
 additional_payments,create
 additional_payments,postback
 additional_payments,show
 helpers/availabilities,index
-async/components,load
 helpers/custom_form_answers,show
 helpers/custom_form_answers,update
 helpers/delivery_options,index
@@ -25,7 +24,6 @@ async/inbound_webhooks/bringg,create
 async/inbound_webhooks/easypost,create
 async/inbound_webhooks/ship24,create
 async/inbound_webhooks/ship_engine,create
-async/inbound_webhooks/shippit,create
 auth/as_customer_sessions,create
 auth/as_customer_sessions,metadata
 auth/as_customer_sessions,new
@@ -33,6 +31,10 @@ auth/confirmations,create
 auth/confirmations,new
 auth/confirmations,pending
 auth/confirmations,show
+auth/saml_sessions,create
+auth/saml_sessions,metadata
+auth/saml_sessions,new
+auth/saml_sessions,saml_configuration
 auth/experience_cloud_sessions,create
 auth/experience_cloud_sessions,metadata
 auth/experience_cloud_sessions,new
@@ -53,10 +55,6 @@ auth/passwords,create
 auth/passwords,edit
 auth/passwords,new
 auth/passwords,update
-auth/saml_sessions,create
-auth/saml_sessions,metadata
-auth/saml_sessions,new
-auth/saml_sessions,saml_configuration
 auth/sessions,create
 auth/sessions,destroy
 auth/sessions,new
@@ -67,7 +65,6 @@ carts,show
 carts,update
 carts,add
 cache_form_params,create
-cart_items,destroy
 checkout/steps/terms,create
 checkout/steps/terms,edit
 checkout/steps/terms,show
@@ -86,14 +83,16 @@ checkout/orders,order
 checkout/payment_callback,create
 checkout/steps/payment,create
 checkout/steps/payment,edit
+checkout/steps/payment,finalize_order
 checkout/steps/payment,show
 checkout/steps/payment,update
 checkout/payments,ach
 checkout/payments,complete
+checkout/payments,postback
 checkout/payments,create
 checkout/payments,intents
-checkout/payments,postback
 checkout/payments,status
+checkout/payments,prepare_form_data
 checkout/payments,update
 checkout/promotion,update
 checkout/steps/shipping,create
@@ -117,6 +116,7 @@ express_checkout/shipping_methods,update
 form_submission,create
 geolocations,create
 geolocations,destroy
+cart_items,destroy
 locations,index
 locations,show
 merchant_feeds,facebook
@@ -146,4 +146,3 @@ sitemap,show
 product_categories,index
 product_categories,show
 vouchers,show
-voucher_activations,create

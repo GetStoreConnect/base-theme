@@ -51,7 +51,6 @@ accounts.contact.path,contact
 accounts.contact.phone,Phone
 accounts.contact.update,Update your contact details
 accounts.credentials.confirm_new_password,Confirm new password
-accounts.credentials.current_password,Current password
 accounts.credentials.heading,Login Details
 accounts.credentials.new_password,New password
 accounts.credentials.path,credentials
@@ -100,7 +99,6 @@ accounts.orders.fulfillments.status.enum.info_received,Info received
 accounts.orders.fulfillments.status.enum.failed_attempt,Failed attempt
 accounts.orders.fulfillments.status.enum.available_for_pickup,Available for pickup
 accounts.orders.fulfillments.status.enum.exception,Exception
-accounts.orders.subscriptions.heading,Subscriptions
 accounts.orders.index.currency_and_points_connector,and
 accounts.orders.index.date,Date
 accounts.orders.index.heading,Orders
@@ -354,26 +352,9 @@ bundles.form.bundle_includes,Your bundle includes
 bundles.form.loading_error,"Sorry, an error occurred loading the data"
 bundles.form.optional_addons,Optional add-ons
 bundles.form.updating,Updating...
-bundles.form.adding_to_cart,Adding to cart...
-bundles.product.choose_variant,Choose variant:
 bundles.product.choose_from_variants,Choose from %{count} variants
 bundles.product.quantity_x,%{quantity} x
-bundles.product.free_quantity_included,First %{quantity} included
-bundles.product.or_more,(or more)
-bundles.product.previous_price,Was %{price}
-bundles.product.earn_points,Earn %{points} points
-bundles.product.per_item,per item
-bundles.product.quantity_included,%{quantity} x included
-bundles.product.quantity,Quantity
-bundles.product.all_included_free,All %{quantity} included free
-bundles.product.free_and_chargeable,"Free %{free_quantity}, %{chargeable_quantity} charged"
-bundles.subscription.price_per_term,%{price} per %{term}
-bundles.subscription.per_term,per %{term}
 bundles.single_choice.add_to_bundle,Add to bundle
-bundles.single_choice.remove,Remove
-bundles.single_choice.choose,Choose
-bundles.single_choice.edit,Edit
-bundles.single_choice.choose_a_group,Choose a %{group}
 bundles.single_choice.bundled_product.choose_from_options,Choose from %{count} options
 bundles.single_choice.filters.brand,Brand
 bundles.single_choice.filters.feature_type,%{name} type
@@ -402,7 +383,7 @@ checkout.customer_information.buttons.finish_quote,Submit Quote Request
 checkout.customer_information.buttons.continuing,Continuing...
 checkout.customer_information.buttons.next,Continue
 checkout.customer_information.form.company_name,Company name (if applicable)
-checkout.customer_information.form.company_name_hint,You can edit your company name in your account settings
+checkout.customer_information.form.company_name_hint,You can edit your comapny name in your account settings
 checkout.customer_information.form.email_address,Email address
 checkout.customer_information.form.email_address_confirmation,Confirm email address
 checkout.customer_information.form.email_address_explanation,(for your order confirmation)
@@ -434,7 +415,6 @@ checkout.delivery_options.timeslot_prompt,Choose your preferred delivery time
 checkout.gateways.form.card_name,Name on card
 checkout.gateways.form.card_number,Card number
 checkout.gateways.form.card_number_placeholder,0000 0000 0000 0000
-checkout.gateways.form.choose_plan,Choose a plan
 checkout.gateways.form.errors.invalid,Card is not valid
 checkout.gateways.form.expiry,Card Expiry
 checkout.gateways.form.expiry_month,Expiry month
@@ -457,11 +437,7 @@ checkout.gateways.form.routing_number,Routing number
 checkout.gateways.form.routing_number_placeholder,0000 00000
 checkout.gateways.form.bank_name,Bank name
 checkout.gateways.form.postal_code,Postal code
-checkout.gateways.afterpay.description_html,<p><strong>Interest free</strong> when you <strong>pay</strong> it in 4.</p>
-checkout.gateways.afterpay.terms_html,"<p style=""margin-top: 1rem;"">Afterpay late fees, eligibility criteria and terms & conditions apply. Visit <a class=""SC-Link"" target=""_blank"" href=""https://www.afterpay.com/en-AU/terms-of-service"">afterpay.com</a> for full terms.</p>"
 checkout.gateways.free_form.no_payment_required,No payment required
-checkout.gateways.latitude.description_html,"<img width=""1030"" height=""200"" style=""max-width: 18rem; height: auto;"" src=""https://resources.latitudefinancial.com/img/interest-free/logos/lfs-lock-up.svg""><p><strong>Enjoy Now. Pay Later.</strong></p><p>Flexible Latitude interest Free plans to suit your needs.<p><p>We're here to help you get what you need. With plans from 6-24 months, Latitude has a range of Interest Free offers that work for you.</p><p>You will be redirected to Latitude checkout to complete your order.</p>"
-checkout.gateways.latitude.terms_html,"<p style=""margin-top: 1rem;"">Before continuing, you agree to our <a class=""SC-Link"" target=""_blank"" href=""https://www.latitudefinancial.com.au/terms-and-conditions/"">Terms & Conditions</a>.</p>"
 checkout.gateways.pay_by_account_form.account_on_credit_hold,"Account is on credit hold, please contact us for information."
 checkout.gateways.pay_by_account_form.enter_purchase_order_number,Enter Purchase Order Number
 checkout.gateways.pay_by_account_form.pay_now,Pay Now
@@ -492,6 +468,7 @@ checkout.gateways.apple_pay.setup_failed,Apple Pay setup failed. Please try anot
 checkout.gateways.apple_pay.email_required,Email address is required but was not provided by Apple Pay
 checkout.payment.error,"Sorry, an error occurred while trying to process the payment. Please try again later."
 checkout.payment.header,Payment
+checkout.payment.provider_misconfigured,"Sorry, but there seems to be a problem with the selected payment provider. Please contact support."
 checkout.payment.processing,Processing...
 checkout.points.insufficient_balance,You do not have enough points to complete this order
 checkout.points.requires_login,You must be logged in to pay with points
@@ -709,7 +686,6 @@ sc.account_credit.remove.errors.fail,The account credit could not be removed fro
 sc.account_credit.remove.notices.success,Account Credit removed
 sc.account_points.descriptor,Account Points
 sc.accounts.confirmations.notices.already_signed_in,You are already signed in
-sc.accounts.confirmations.notices.check_email_for_instructions,"If the email is registered, you should get a confirmation email, unless it's already confirmed."
 sc.accounts.invitations.notices.already_signed_in,You are already signed in
 sc.accounts.orders.bookings.attendees.create.errors.fail,There was an error creating the attendee
 sc.accounts.orders.bookings.attendees.create.notices.success,Attendee was added
@@ -852,6 +828,7 @@ sc.checkout.payment.create.errors.no_saved_card,Payment failed. No saved card fo
 sc.checkout.payment.create.errors.points.insufficient_balance,You do not have enough points to complete this order.
 sc.checkout.payment.create.errors.points.not_permitted,You are not allowed to use the account points for this account
 sc.checkout.payment.create.errors.unauthorized,"Unable to authenticate, please check the payment provider's credentials."
+sc.checkout.payment.finalize_order.notices.order_processing_text,Order is still processing
 sc.checkout.payment.shared.errors.api_auth_error,Error authorizing with API
 sc.checkout.payment.shared.errors.during_checkout,"Something went wrong, please try again later!"
 sc.checkout.payment.shared.errors.invalid_country,Country code %{country} is not supported by this payment provider
@@ -1247,7 +1224,6 @@ sc.locale.errors.messages.expired,"has expired, please request a new one"
 sc.locale.errors.messages.greater_than,must be greater than %{count}
 sc.locale.errors.messages.greater_than_or_equal_to,must be greater than or equal to %{count}
 sc.locale.errors.messages.immutable,can't be changed
-sc.locale.errors.messages.incorrect,is incorrect
 sc.locale.errors.messages.inclusion,is not included in the list
 sc.locale.errors.messages.invalid,is invalid
 sc.locale.errors.messages.less_than,must be less than %{count}
@@ -1331,7 +1307,6 @@ sc.orders.reorder.notices.could_not_add_some,Could not add some order items from
 sc.orders.reorder.notices.success,Order items from order %{reference} have been added to your cart.
 sc.page.errors.not_found,That page was not found.
 sc.page.errors.requires_membership,You do not have the required membership level to access this page. Requires: %{membership_required}.
-sc.product.discontinued_name,(Discontinued) %{name}
 sc.product_category.errors.not_found,That page was not found.
 sc.products.add_to_cart.errors.select_option,Please select an option...
 sc.products.add_to_cart.errors.unable_to_complete,"We were unable to complete your purchase, please contact support."
@@ -1371,27 +1346,6 @@ sc.vouchers.apply.notices.success,Voucher has been applied.
 sc.vouchers.descriptor,Voucher
 sc.vouchers.remove.errors.fail,The voucher could not be removed from your cart. Please contact support for assistance.
 sc.vouchers.remove.notices.success,Voucher removed
-sc.vouchers.activation.errors.notice.status_not_for_activation,This voucher cannot be activated. Unexpected status.
-sc.vouchers.activation.errors.notice.status_already_active,This voucher is already active.
-sc.vouchers.activation.errors.notice.status_cancelled,This voucher is cancelled.
-sc.vouchers.activation.errors.notice.status_locked,This voucher is locked.
-sc.vouchers.activation.errors.notice.passed_activation_period,This voucher can no longer be activated.
-sc.vouchers.activation.errors.notice.voucher_expired,This voucher has expired.
-sc.vouchers.activation.errors.notice.invalid_code,The activation code you entered is incorrect.
-sc.vouchers.activation.errors.notice.not_found,Voucher record could not be found.
-sc.vouchers.activation.errors.notice.no_activation_code_supplied,Please enter an activation code.
-sc.vouchers.activation.errors.log.status_not_for_activation,Unexpected status for activation.
-sc.vouchers.activation.errors.log.status_already_active,Cannot activate already active Voucher.
-sc.vouchers.activation.errors.log.status_cancelled,Cannot activate cancelled voucher.
-sc.vouchers.activation.errors.log.status_locked,Cannot activate locked voucher.
-sc.vouchers.activation.errors.log.passed_activation_period,Voucher activation window has passed.
-sc.vouchers.activation.errors.log.voucher_expired,Voucher has expired.
-sc.vouchers.activation.errors.log.invalid_code,Activation code did not match.
-sc.vouchers.activation.success,Successfully activated voucher
-sc.shipments.errors.provider_not_enabled,%{provider} shipping provider is not configured or not active
-sc.shipments.errors.not_ready_to_ship,Shipment is not ready to ship
-sc.shipments.errors.provider_shipment_id_is_shipping_rate,Provider Shipment ID references a custom Shipping Rate
-sc.shipments.errors.invalid_shipment,Shipment data is currently invalid and no changes are allowed
 search.articles.index.no_results,There are no content article results
 search.filters.apply_filters,Apply filters
 search.filters.category_placeholder,Search %{name}
@@ -1439,6 +1393,10 @@ shared.sort.sort_relevance,Relevance
 shared.variable_pricing_picker.label,Price
 shared.variable_pricing_picker.other_amount,Other Amount
 shared.variable_pricing_picker.placeholder,Amount...
+shipments.errors.provider_not_enabled,%{provider} shipping provider is not configured or not active
+shipments.errors.not_ready_to_ship,Shipment is not ready to ship
+shipments.errors.provider_shipment_id_is_shipping_rate,Provider Shipment ID references a custom Shipping Rate
+shipments.errors.invalid_shipment,Shipment data is currently invalid and no changes are allowed
 subscriptions.term_units.day,day
 subscriptions.term_units.days,%{number} days
 subscriptions.term_units.fortnight,fortnight
@@ -1453,11 +1411,7 @@ vouchers.show.expires,Expires
 vouchers.show.form.code,Enter voucher code
 vouchers.show.form.heading,Check another code
 vouchers.show.form.submit,Check
-vouchers.show.activation_form.activation_code,Enter activation code
-vouchers.show.activation_form.heading,Activate Voucher
-vouchers.show.activation_form.submit,Activate
-vouchers.show.heading,Voucher Balance
-vouchers.show.check_voucher_heading,Check Voucher Balance
+vouchers.show.heading,Check Voucher Balance
 vouchers.show.no_expiry,Does not expire
 vouchers.show.not_found,Voucher not found
 vouchers.show.orders.date,Date
