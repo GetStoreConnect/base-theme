@@ -31,7 +31,7 @@
         {%- render "search/filters/sort_dropdown" %}
       </menu>
 
-      {%- if current_product_category.introduction_content != blank %}
+      {%- if current_product_category.introduction_content %}
         <div class="SC-ProductCategoryIntroduction sc-rich-text">
           {{ current_product_category.introduction_content }}
         </div>
@@ -41,7 +41,7 @@
         {%- render "products/results", allow_comparisons: true %}
       </div>
 
-      {%- if current_product_category.information_content != blank %}
+      {%- if current_product_category.information_content %}
         <div class="SC-ProductCategoryInformation sc-rich-text">
           {{ current_product_category.information_content }}
         </div>
