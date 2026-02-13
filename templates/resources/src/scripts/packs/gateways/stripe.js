@@ -1,9 +1,9 @@
 import { PaymentForm } from './payment-form'
-import { onDomChange } from '../../theme/utils/init'
 import { Wallet } from './wallet'
 import { loadStripe } from '@stripe/stripe-js/pure'
 import fetchWithResponseHandler from '../../theme/utils/fetch'
 import storePathUrl from '../../theme/store-path-url'
+import { onDomChange } from '../../theme/utils/init'
 
 onDomChange((node) => {
   const forms = node.querySelectorAll('form[data-provider="Stripe"]')
@@ -33,6 +33,10 @@ function initStripe({ form }) {
       url.searchParams.set(key, value)
     })
     return url.toString()
+  }
+
+  function intentsUrl() {
+    return form.dataset.intentsUrl
   }
 
   function stripeCreateToken(_form) {
@@ -113,19 +117,10 @@ function initStripe({ form }) {
       return
     }
 
-    const amount = Math.round(paymentForm.totalPayable() * 100)
-
-    // Don't initialize wallets if amount is 0 (e.g., subscription update pages)
-    // Stripe requires amount to be greater than 0
-    if (amount <= 0) {
-      wallet.removeWalletsContainer()
-      return
-    }
-
     // Passing StripeElementsOptions; returns StripeElements
     const elements = stripe.elements({
       mode: 'payment',
-      amount,
+      amount: Math.round(paymentForm.totalPayable() * 100),
       currency: paymentForm.currency().toLowerCase(),
     })
 
@@ -281,38 +276,37 @@ function initStripe({ form }) {
         }
       }
 
-      try {
-        const response = await fetchWithResponseHandler(form.dataset.callbackUrl, {
-          method: 'post',
-          headers: { 'content-type': 'application/json' },
-        })
+      const clientSecret = await fetchClientSecret()
 
-        if (response.message) {
-          showError(response.message)
-          setPayButton(false)
-          return
-        }
+      const { error } = await stripe.confirmPayment({
+        elements,
+        clientSecret,
+        confirmParams: {
+          // https://docs.stripe.com/js/payment_intents/confirm_payment#confirm_payment_intent-options-confirmParams-return_url
+          return_url: paymentsUrl(),
+        },
+      })
 
-        const clientSecret = response.token.client_secret
-
-        const { error } = await stripe.confirmPayment({
-          elements,
-          clientSecret,
-          confirmParams: {
-            // https://docs.stripe.com/js/payment_intents/confirm_payment#confirm_payment_intent-options-confirmParams-return_url
-            return_url: paymentsUrl(),
-          },
-        })
-
-        if (error) {
-          handleWalletError({ error })
-        } else {
-          // Customer is redirected to the callback URL
-        }
-      } catch (error) {
+      if (error) {
         handleWalletError({ error })
+      } else {
+        // Customer is redirected to the callback URL
       }
     })
+  }
+
+  // Creates Stripe PaymentIntent and returns client_secret
+  async function fetchClientSecret() {
+    const res = await fetch(intentsUrl(), {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+    })
+
+    const { client_secret: clientSecret } = await res.json()
+
+    return clientSecret
   }
 
   async function initializeStripe() {
@@ -419,26 +413,11 @@ function initStripe({ form }) {
     }
 
     window.testStripeWalletCallback = async () => {
-      try {
-        const response = await fetchWithResponseHandler(form.dataset.callbackUrl, {
-          method: 'post',
-          headers: { 'content-type': 'application/json' },
-        })
+      const clientSecret = await fetchClientSecret()
 
-        if (response.message) {
-          showError(response.message)
-          setPayButton(false)
-          return
-        }
-
-        const clientSecret = response.token.client_secret
-
-        const url = new URL(paymentsUrl())
-        url.searchParams.set('payment_intent', clientSecret)
-        window.location = url
-      } catch (error) {
-        showError('Payment processing failed')
-      }
+      const url = new URL(paymentsUrl())
+      url.searchParams.set('payment_intent', clientSecret)
+      window.location = url
     }
   }
 }

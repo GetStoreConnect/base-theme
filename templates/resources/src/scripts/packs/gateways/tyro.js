@@ -77,6 +77,10 @@ async function initializeTyro(paymentForm) {
         },
         googlePay: {
           enabled: paymentForm.showWallets(),
+          merchantInfo: {
+            merchantName: paymentForm.googleMerchantName(),
+            merchantId: paymentForm.googleMerchantId(),
+          },
         },
         creditCardForm: {
           enabled: true,

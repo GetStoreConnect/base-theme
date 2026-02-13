@@ -2,14 +2,12 @@ import { onDomChange } from '../theme/utils/init'
 
 onDomChange(init)
 
-let currentThumbnail, mainImage, mainVideo, mainVideoIframe, thumbnails
+let currentThumbnail, mainImage, mainVideo, thumbnails
 
 function init(node) {
   if (node.querySelector('[data-product-image-container]')) {
     mainImage = document.querySelector('[data-product-image]')
     mainVideo = document.querySelector('[data-product-video]')
-    mainVideoIframe = document.querySelector('[data-product-video-iframe]')
-    mainVideoIframeContainer = document.querySelector('[data-product-video-iframe-container]')
     thumbnails = document.querySelectorAll('[data-product-thumbnail]')
 
     const container = document.querySelector('[data-product-image-container]')
@@ -43,20 +41,10 @@ function set(thumbnail) {
 
   if (thumbnail.tagName.toLowerCase() == 'video') {
     mainImage.classList.add('sc-hide')
-    mainVideoIframeContainer.classList.add('sc-hide')
     transferVideoAttributes(thumbnail, mainVideo)
     mainVideo.classList.remove('sc-hide')
-  } else if (
-    thumbnail.tagName.toLowerCase() == 'img' &&
-    thumbnail.getAttribute('data-target-type') == 'video-iframe'
-  ) {
-    mainImage.classList.add('sc-hide')
-    mainVideo.classList.add('sc-hide')
-    transferYoutubeAttributes(thumbnail, mainVideoIframe)
-    mainVideoIframeContainer.classList.remove('sc-hide')
   } else {
     mainVideo.classList.add('sc-hide')
-    mainVideoIframeContainer.classList.add('sc-hide')
     transferImageAttributes(thumbnail, mainImage)
     mainImage.classList.remove('sc-hide')
   }
@@ -78,9 +66,5 @@ function transferImageAttributes(source, target) {
 }
 
 function transferVideoAttributes(source, target) {
-  target.src = source.getAttribute('data-src')
-}
-
-function transferYoutubeAttributes(source, target) {
   target.src = source.getAttribute('data-src')
 }

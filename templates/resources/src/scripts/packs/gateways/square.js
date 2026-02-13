@@ -1,6 +1,6 @@
 import { PaymentForm } from './payment-form'
-import { onDomChange } from '../../theme/utils/init'
 import { Wallet } from './wallet'
+import { onDomChange } from '../../theme/utils/init'
 
 const SQUARE_FORM_SELECTOR = 'form[data-provider="Square"]:not(.SC-GooglePay)'
 

@@ -5,7 +5,7 @@ export default function init(node) {
   ;[...node.querySelectorAll('[data-bundle-filter-option]')].map((option) => {
     option.addEventListener('click', (event) => {
       updateSelectedState(event.target)
-      filterProductList()
+      filterProductList(event.target.closest('[data-modal'))
     })
   })
 }
@@ -31,8 +31,8 @@ function updateSelectedState(option) {
   }
 }
 
-function filterProductList() {
-  const container = document.querySelector('[data-bundle-filterable]')
+function filterProductList(modal) {
+  const container = modal.querySelector('[data-bundle-filterable]')
 
   ;[...container.querySelectorAll('[data-product-option-sfid]')].map((product) => {
     const brandId = product.getAttribute('data-product-brand-sfid')

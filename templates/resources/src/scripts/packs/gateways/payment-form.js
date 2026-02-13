@@ -1,12 +1,10 @@
 import fetchWithResponseHandler from '../../theme/utils/fetch'
 import storePathUrl from '../../theme/store-path-url'
+import { loadScript as loadExternalScript } from '../../theme/load-script'
 
 const Rails = window.Rails
 
 export class PaymentForm {
-  // Static registry for tracking loaded scripts
-  static loadedScripts = new Set()
-
   constructor(form, options = {}) {
     this.form = form
     this.providerName = form.dataset.provider
@@ -86,30 +84,9 @@ export class PaymentForm {
   }
 
   async loadScript({ url, onload, id }) {
-    if (this.scriptsElement()) {
-      // Check if script already loaded to prevent duplicates
-      if (PaymentForm.loadedScripts.has(url)) {
-        if (onload) onload()
-        return
-      }
-
-      // Mark as loaded
-      PaymentForm.loadedScripts.add(url)
-
-      const script = document.createElement('script')
-      script.src = url
-      if (onload) {
-        script.onload = onload
-      }
-      if (id) {
-        script.id = id
-      }
-      this.scriptsElement().appendChild(script)
-    } else {
-      this.showError(
-        `Missing #${this.providerName}ScriptBlock${this.elementProviderId()} div container`
-      )
-    }
+    // Use scriptsElement() container if available, otherwise fall back to document.body
+    const container = this.scriptsElement()
+    await loadExternalScript({ url, onload, id, container })
   }
 
   setPayButton(enabled) {
