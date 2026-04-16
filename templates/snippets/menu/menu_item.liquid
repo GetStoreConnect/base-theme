@@ -1,7 +1,7 @@
 {%- assign lvl = level | plus: 1 %}
 
 {%- if menu_item.menu_items.size > 0 or menu_item.child_categories.size > 0 and menu_item.child_category_levels > 0 %}
-  <li class="SC-Menu_item tier{{ level }}{% if level != 3 %} parent{% endif %}{% if menu_item.style_classes %} {{ menu_item.style_classes }}{% endif %}" id="SC-MenuItem-{{ parent_id }}-{{ menu_item.identifier }}">
+  <li class="SC-Menu_item tier{{ level }}{% if level != 3 %} parent{% endif %}{% if menu_item.style_classes %} {{ menu_item.style_classes }}{% endif %}"{% if level == 1 %} data-menu-group{% endif %} id="SC-MenuItem-{{ parent_id }}-{{ menu_item.identifier }}">
     {%- if menu_item.image %}
       <a class="SC-Menu_image" href="{{ menu_item.link_target }}">
         <img loading="lazy" src="{{ menu_item.image.small_url }}" alt="{{ menu_item.image.alt_text }}"/>

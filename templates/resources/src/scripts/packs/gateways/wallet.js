@@ -7,7 +7,10 @@ export class Wallet {
   }
 
   walletsContainer() {
-    return this.paymentForm.refElement('wallets-container', { legacyId: this.walletsContainerId() })
+    return this.paymentForm.refElement('wallets-container', {
+      legacyId: this.walletsContainerId(),
+      required: false,
+    })
   }
 
   /**

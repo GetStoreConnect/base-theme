@@ -27,6 +27,27 @@ export class PaymentForm {
         const value = button.tagName === 'INPUT' ? button.value : button.innerHTML
         button.setAttribute('data-enable-with', value)
       })
+
+    this._watchCustomAmount()
+  }
+
+  _watchCustomAmount() {
+    const customAmountInput = document.getElementById('custom-payment-amount')
+    if (!customAmountInput) return
+
+    this._originalTotalPayable = this.form.dataset.totalPayable
+
+    const maxAmount = parseFloat(this._originalTotalPayable)
+
+    customAmountInput.addEventListener('input', () => {
+      const value = parseFloat(customAmountInput.value)
+      if (!isNaN(value) && value > 0) {
+        const clamped = Math.min(value, maxAmount)
+        this.form.dataset.totalPayable = clamped.toString()
+      } else {
+        this.form.dataset.totalPayable = this._originalTotalPayable
+      }
+    })
   }
 
   _attachSubmitHandler() {
@@ -56,7 +77,17 @@ export class PaymentForm {
    * Prefers data-ref="payment-error" but falls back to legacy ID-based lookup.
    */
   errorElement() {
-    return this.refElement('payment-error', 'PaymentError')
+    if (this._errorElement) return this._errorElement
+
+    let element = this.refElement('payment-error', 'PaymentError', { required: false })
+    if (!element) {
+      element = document.createElement('div')
+      element.setAttribute('data-ref', 'payment-error')
+      element.classList.add('SC-Field', 'SC-Alert', 'sc-hide')
+      this.form.prepend(element)
+    }
+    this._errorElement = element
+    return element
   }
 
   /**
@@ -65,9 +96,12 @@ export class PaymentForm {
    */
   submitElement() {
     if (this.legacySubmitElementId) {
-      return this.refElement('submit-button', { legacyId: this.legacySubmitElementId })
+      return this.refElement('submit-button', {
+        legacyId: this.legacySubmitElementId,
+        required: false,
+      })
     } else {
-      return this.refElement('submit-button', 'PaymentButton')
+      return this.refElement('submit-button', 'PaymentButton', { required: false })
     }
   }
 
@@ -104,7 +138,9 @@ export class PaymentForm {
     let element = container?.querySelector(refSelector)
 
     // Fall back to legacy ID if provided and element not found
-    let legacyId = `${this.providerName}${legacyName}${this.elementProviderId()}`
+    let legacyId = legacyName
+      ? `${this.providerName}${legacyName}${this.elementProviderId()}`
+      : null
     if (opts.legacyId) {
       legacyId = opts.legacyId
       legacyName = opts.legacyId
@@ -159,6 +195,7 @@ export class PaymentForm {
     // Support both boolean parameter and named argument { enabled: boolean }
     const isEnabled = typeof enabled === 'object' ? enabled.enabled : enabled
     const payButton = this.submitElement()
+    if (!payButton) return
     if (this.setPayButtonCallback) {
       this.setPayButtonCallback(payButton, isEnabled)
       return
@@ -178,16 +215,6 @@ export class PaymentForm {
     }, 100)
   }
 
-  /**
-   * Displays an error message to the user.
-   *
-   * @param {string} error - The error message to display.
-   * @param {object} options - Optional parameters.
-   * @param {boolean} [options.replace=true] - Whether to replace the existing content of the error container.
-   * @param {string|Element} [options.errorContainer] - The container element for the error message.
-   *   If a string, it's treated as an ID to get the element. Otherwise, the element itself is used.
-   *   Defaults to the element returned by `errorElement()`.
-   */
   /**
    * Reports an error to console and Bugsnag without showing it to the user.
    * Use this for internal/technical errors that shouldn't be displayed.
@@ -227,8 +254,9 @@ export class PaymentForm {
       errorContainer: errorContainerOption,
       report = true,
       metadata = {},
+      resetButton = true,
     } = options
-    if (!this.onlyExpressCheckout()) {
+    if (resetButton && !this.onlyExpressCheckout()) {
       this.setPayButton(true)
     }
 
@@ -332,16 +360,32 @@ export class PaymentForm {
         }
       },
       error: (_response, _textStatus, jqXHR) => {
-        if (jqXHR.status === 0) {
-          return
-        }
-
-        const error = document.querySelector('[data-general-error-message]')
-        if (error) {
-          this.showError(error.getAttribute('data-general-error-message'))
-        }
+        this.handleAjaxError(jqXHR)
       },
     })
+  }
+
+  handleAjaxError(jqXHR) {
+    const isTimeoutOrServerError =
+      jqXHR.status === 0 ||
+      jqXHR.status === 408 ||
+      jqXHR.status === 502 ||
+      jqXHR.status === 503 ||
+      jqXHR.status === 504
+
+    if (isTimeoutOrServerError) {
+      const el = document.querySelector('[data-timeout-error-message]')
+      const message = el
+        ? el.getAttribute('data-timeout-error-message')
+        : "We couldn't confirm your payment status. Please check your email or Orders page before trying again."
+      this.showError(message, { resetButton: false })
+      return
+    }
+
+    const el = document.querySelector('[data-general-error-message]')
+    if (el) {
+      this.showError(el.getAttribute('data-general-error-message'))
+    }
   }
 
   // Potentially extends payload if additional form fields are present:
@@ -356,6 +400,14 @@ export class PaymentForm {
   // }
   extractAdditionalFormPayload(payload) {
     payload = payload || {}
+
+    const customAmountInput = document.getElementById('custom-payment-amount')
+    if (customAmountInput && customAmountInput.value) {
+      const customAmount = parseFloat(customAmountInput.value)
+      if (!isNaN(customAmount) && customAmount > 0) {
+        payload.custom_amount = customAmount
+      }
+    }
 
     const customerNotes = document.getElementById(`customer_notes__payment__${this.providerId}`)
     if (customerNotes && customerNotes.value.trim() !== '') {
@@ -397,7 +449,16 @@ export class PaymentForm {
 
   // Form data utility functions
   paymentSessionUrl() {
-    return this.form.dataset.paymentSessionUrl
+    let url = this.form.dataset.paymentSessionUrl
+    const customAmountInput = document.getElementById('custom-payment-amount')
+    if (customAmountInput && customAmountInput.value) {
+      const customAmount = parseFloat(customAmountInput.value)
+      if (!isNaN(customAmount) && customAmount > 0) {
+        const separator = url.includes('?') ? '&' : '?'
+        url += `${separator}custom_amount=${customAmount}`
+      }
+    }
+    return url
   }
 
   apiKey() {

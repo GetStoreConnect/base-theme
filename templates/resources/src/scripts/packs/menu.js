@@ -28,7 +28,7 @@ function menuTriggers(scope) {
   // Desktop events
   if (largeAndUp()) {
     triggers.map((trigger) => {
-      hoverintent(trigger.closest('.SC-Menu_wrapper'), show, hide)
+      hoverintent(menuGroup(trigger), show, hide)
     })
   }
 
@@ -44,8 +44,12 @@ function menuTriggers(scope) {
  * Desktop event handlers
  */
 
+function menuGroup(el) {
+  return el.closest('[data-menu-group]') || el.closest('li')
+}
+
 function show(event) {
-  const group = event.target.closest('li')
+  const group = menuGroup(event.target)
   const menu = group.querySelector('[data-menu]')
 
   if (menu) {
@@ -55,7 +59,7 @@ function show(event) {
 }
 
 function hide(event) {
-  const group = event.target.closest('li')
+  const group = menuGroup(event.target)
   const menu = group.querySelector('[data-menu]')
 
   if (menu) {

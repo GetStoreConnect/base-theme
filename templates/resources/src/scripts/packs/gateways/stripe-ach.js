@@ -87,14 +87,7 @@ function initStripeAch({ form, providerId }) {
         }
       },
       error: function (_response, _textStatus, jqXHR) {
-        if (jqXHR.status == 0) {
-          return
-        }
-
-        const error = document
-          .querySelector('[data-general-error-message]')
-          .getAttribute('data-general-error-message')
-        paymentForm.showError(error)
+        paymentForm.handleAjaxError(jqXHR)
       },
     })
   }

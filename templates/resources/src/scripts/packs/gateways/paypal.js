@@ -29,7 +29,12 @@ function initPaypal({ form }) {
 
   let buttonContainer = paymentForm.refElement('paypal-button-container', {
     legacyId: `paypal-button-container${paymentForm.providerId}`,
+    required: false,
   })
+  if (!buttonContainer) {
+    paymentForm.reportError('paypal-button-container element not found in template')
+    return
+  }
 
   loadScript({ clientId: paymentForm.apiKey(), currency: paymentForm.currency() })
     .then((paypal) => {

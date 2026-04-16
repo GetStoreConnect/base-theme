@@ -1,7 +1,7 @@
 {%- assign lvl = level | plus: 1 %}
 
 {%- if child_item.navigation_children.size > 0 and child_category_levels > 1 %}
-  <li class="SC-Menu_item tier{{ level }} parent" id="SC-MenuItem-{{ parent_id }}-{{ child_item.id }}">
+  <li class="SC-Menu_item tier{{ level }} parent" data-menu-group id="SC-MenuItem-{{ parent_id }}-{{ child_item.id }}">
     <a class="SC-Menu_link" href="{{ child_item.path }}" data-menu-init="{{ child_item.identifier }}">
       {{ child_item.name }}
     </a>

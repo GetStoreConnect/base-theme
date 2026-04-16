@@ -55,6 +55,13 @@ export function getJSON(url) {
   })
 }
 
+export function deleteJSON(url) {
+  return fetchWithResponseHandler(url, {
+    method: 'DELETE',
+    headers: { Accept: 'application/json' },
+  })
+}
+
 export function postForm(url, data) {
   return fetchWithResponseHandler(url, {
     method: 'POST',
