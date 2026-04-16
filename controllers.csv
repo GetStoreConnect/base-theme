@@ -19,6 +19,7 @@ additional_payments,confirm
 additional_payments,create
 additional_payments,postback
 additional_payments,show
+additional_payments,update
 helpers/availabilities,index
 async/components,load
 helpers/custom_form_answers,show
@@ -29,6 +30,7 @@ async/inbound_webhooks/easypost,create
 async/inbound_webhooks/ship24,create
 async/inbound_webhooks/ship_engine,create
 async/inbound_webhooks/shippit,create
+async/inbound_webhooks/tyro,create
 auth/as_customer_sessions,create
 auth/as_customer_sessions,metadata
 auth/as_customer_sessions,new
@@ -130,6 +132,9 @@ merchant_feeds,google
 merchant_feeds,show
 orders,show
 payment_sessions,create
+payment_sessions,show
+payment_sessions,update
+payment_sessions,destroy
 payment_provider_verifications,applepay
 preview,article
 preview,page
