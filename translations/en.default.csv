@@ -118,6 +118,8 @@ accounts.orders.index.status,Status
 accounts.orders.index.total,Total
 accounts.orders.index.view,View
 accounts.orders.navigation.back_to_show,Back to Order
+accounts.orders.payments.captures.heading,Captures
+accounts.orders.payments.captures.remaining,Remaining to capture
 accounts.orders.payments.shared.currency_and_points_connector,and
 accounts.orders.payments.shared.status.enum.failed,Failed
 accounts.orders.payments.shared.status.enum.pending,Pending
@@ -125,6 +127,7 @@ accounts.orders.payments.shared.status.enum.success,Success
 accounts.orders.payments.shared.status.enum.preauthorized,Preauthorized
 accounts.orders.payments.shared.status.enum.confirm_preauthorization,Confirming Preauthorization
 accounts.orders.payments.shared.status.enum.cancel_preauthorization,Cancelling Preauthorization
+accounts.orders.payments.shared.status.enum.partial_capture,Partially Captured
 accounts.orders.payments.shared.status.enum.released,Released
 accounts.orders.shared.status.enum.activated,Complete
 accounts.orders.shared.status.enum.draft,Draft
@@ -313,6 +316,7 @@ accounts.subscriptions.status.enum.delinquent,Delinquent
 accounts.subscriptions.status.enum.expired,Expired
 accounts.subscriptions.status.enum.suspended,Suspended
 additional_payments.not_required,No further payments required.
+additional_payments.custom_amount.label,Enter custom amount:
 articles.category.no_articles,There are no articles in this category
 articles.index.heading,Latest Articles
 articles.index.no_articles,There are no articles
@@ -501,7 +505,7 @@ checkout.gateways.form.postal_code,Postal code
 checkout.gateways.afterpay.description_html,<p><strong>Interest free</strong> when you <strong>pay</strong> it in 4.</p>
 checkout.gateways.afterpay.terms_html,"<p style=""margin-top: 1rem;"">Afterpay late fees, eligibility criteria and terms & conditions apply. Visit <a class=""SC-Link"" target=""_blank"" href=""https://www.afterpay.com/en-AU/terms-of-service"">afterpay.com</a> for full terms.</p>"
 checkout.gateways.free_form.no_payment_required,No payment required
-checkout.gateways.latitude.description_html,"<img width=""1030"" height=""200"" style=""max-width: 18rem; height: auto;"" src=""https://resources.latitudefinancial.com/img/interest-free/logos/lfs-lock-up.svg""><p><strong>Enjoy Now. Pay Later.</strong></p><p>Flexible Latitude interest Free plans to suit your needs.<p><p>We're here to help you get what you need. With plans from 6-24 months, Latitude has a range of Interest Free offers that work for you.</p><p>You will be redirected to Latitude checkout to complete your order.</p>"
+checkout.gateways.latitude.description_html,"<svg style=""max-width: 14rem; height: auto;"" xmlns=""http: //www.w3.org/2000/svg"" xml:space=""preserve"" viewBox=""0 0 303.3 50""><path d=""M235.5 25.9c0 3.9-1.6 7.1-6.1 7.1s-6.1-3.1-6.1-7.1v-12h-3.1v12.4c0 4.2 1.7 9.7 9.2 9.7s9.2-5.5 9.2-9.7V13.9h-3.1zm35.2-1.1c0-5-3.8-7.8-8.5-7.8h-5.6v15.6h5.6c4.7.1 8.5-2.7 8.5-7.8m3.2 0c0 7-5.1 10.9-11.4 10.9h-8.9V13.9h8.9c6.2 0 11.4 3.9 11.4 10.9m-150.6 1.6-4.1-9.4-4.1 9.4zm-2.5-12.5 9.9 21.9h-3.3l-2.7-6.2h-10.9l-2.7 6.3h-3.2l9.8-21.9h3.1zm18.4 3.1h7.4v18.8h3.1V17h7.4v-3.1h-18V17zm49.1 0h7.4v18.8h3.1V17h7.4v-3.1h-18V17zm-17.1 18.8h3.1V13.9h-3.1zM303.3 17v-3.1h-15.8v21.9h15.8v-3.1h-12.7v-6.3h10.9v-3.1h-10.9V17zM84 13.9h-3.1v21.9h15.8v-3.1H84zM8.7 0H0v50h50v-8.7H8.7zm23.2 8.7c5.8 0 5.8-8.7 0-8.7-5.9 0-5.9 8.7 0 8.7m13.7 18.8c-5.8 0-5.8 8.7 0 8.7 5.9 0 5.9-8.7 0-8.7M18.1 8.7C24 8.7 24 0 18.1 0s-5.8 8.7 0 8.7m27.5 5.1c-2.5-.1-4.5 1.9-4.5 4.4s2 4.4 4.5 4.4c5.7-.2 5.7-8.7 0-8.8M50 4.4c0 5.8-8.7 5.8-8.7 0 0-5.9 8.7-5.9 8.7 0m0 0"" style=""fill-rule:evenodd;clip-rule:evenodd;fill:#0046aa""/></svg><p><strong>Enjoy Now. Pay Later.</strong></p><p>Flexible Latitude interest Free plans to suit your needs.<p><p>We're here to help you get what you need. With plans from 6-24 months, Latitude has a range of Interest Free offers that work for you.</p><p>You will be redirected to Latitude checkout to complete your order.</p>"
 checkout.gateways.latitude.terms_html,"<p style=""margin-top: 1rem;"">Before continuing, you agree to our <a class=""SC-Link"" target=""_blank"" href=""https://www.latitudefinancial.com.au/terms-and-conditions/"">Terms & Conditions</a>.</p>"
 checkout.gateways.pay_by_account_form.account_on_credit_hold,"Account is on credit hold, please contact us for information."
 checkout.gateways.pay_by_account_form.enter_purchase_order_number,Enter Purchase Order Number
@@ -538,6 +542,7 @@ checkout.gateways.wallets.free,FREE
 checkout.gateways.apple_pay.setup_failed,Apple Pay setup failed. Please try another payment method.
 checkout.gateways.apple_pay.email_required,Email address is required but was not provided by Apple Pay
 checkout.payment.error,"Sorry, an error occurred while trying to process the payment. Please try again later."
+checkout.payment.timeout_error,We couldn't confirm your payment status. Please check your email or Orders page before trying again.
 checkout.payment.header,Payment
 checkout.payment.processing,Processing...
 checkout.points.insufficient_balance,You do not have enough points to complete this order
@@ -640,6 +645,7 @@ order_summary.account_credit,Account Credit
 order_summary.delivery_options.delivery_preference,Delivery: %{preference}
 order_summary.cart.total_payable,Payment due now
 order_summary.currency_and_points_connector,and
+order_summary.discount,Discount
 order_summary.includes_fixed_subscriptions,Total includes %{amount} of fixed-term subscriptions
 order_summary.includes_tax,Includes %{tax_label}
 order_summary.order.pay_balance,Pay Balance of %{amount}
@@ -660,6 +666,7 @@ pricing.currency_and_points,%{currency} and %{points}
 pricing.currency_or_points,%{currency} or %{points}
 pricing.currency_or_points_connector,or
 pricing.deposit,Deposit
+pricing.remaining_deposit,Remaining deposit: %{amount}
 pricing.earn_points,earn up to %{points}
 pricing.free,FREE
 pricing.hide_price_text,POA
@@ -744,7 +751,7 @@ products.variant_options.reset_choices,Reset
 products.variant_options.select,Select %{variant_type}
 salesforce_payments.errors.already_paid,The order has a payment listed that has not been finalised yet
 salesforce_payments.errors.continue_anyway,Continue anyway
-salesforce_payments.errors.fix_data_in_sf,"Please select another payment provider, or fix the data in Salesforce."
+salesforce_payments.errors.select_another_provider,Please select another payment provider.
 salesforce_payments.errors.last_sync,"The Order was last updated %{timestamp} ago. If your recently updated the order, it might not have synced yet."
 salesforce_payments.errors.unable_to_proceed,Unable to Proceed with Payment
 sc.account_credit.apply.errors.expired,That Account Credit has expired
@@ -956,6 +963,7 @@ sc.checkout.payment.create.errors.no_saved_card,Payment failed. No saved card fo
 sc.checkout.payment.create.errors.points.insufficient_balance,You do not have enough points to complete this order.
 sc.checkout.payment.create.errors.points.not_permitted,You are not allowed to use the account points for this account
 sc.checkout.payment.create.errors.unauthorized,"Unable to authenticate, please check the payment provider's credentials."
+sc.checkout.payment.create.errors.wallet_declined,Payment failed. The digital wallet payment was declined.
 sc.checkout.payment.shared.errors.api_auth_error,Error authorizing with API
 sc.checkout.payment.shared.errors.custom_data_missing,%{model} custom data field %{field} is missing
 sc.checkout.payment.shared.errors.during_checkout,"Something went wrong, please try again later!"
@@ -963,12 +971,16 @@ sc.checkout.payment.shared.errors.invalid_country,Country %{country} is not supp
 sc.checkout.payment.shared.errors.invalid_provider,Unsupported Payment Method
 sc.checkout.payment.shared.errors.phone_too_long,Phone number %{phone} is too long for this payment provider (maximum %{max_length} characters)
 sc.checkout.payment.shared.errors.provider_api_option_missing_key,Payment Provider missing API option %{key}
+sc.checkout.payment.shared.errors.amount_above_maximum,Order amount %{amount} exceeds the maximum of %{currency} %{maximum}.
+sc.checkout.payment.shared.errors.amount_below_minimum,Order amount %{amount} is below the minimum of %{currency} %{minimum}.
 sc.checkout.payment.shared.errors.unsupported_currency,This payment provider only supports %{required_currency}. Your store currency is %{currency}.
 sc.checkout.payment.shared.errors.updating_subscription,We were unable to update your payment details!
 sc.checkout.payment.shared.errors.verifying_payment,We were unable to verify your payment!
 sc.checkout.payment.shared.errors.contact_missing,A contact is required to complete this payment.
 sc.checkout.payment.shared.errors.contact_name_missing,Contact name is required to complete this payment.
 sc.checkout.payment.shared.errors.customer_cancelled,Payment was cancelled by customer
+sc.checkout.payment.shared.errors.refund_details_error,Unable to retrieve original transaction details for refund
+sc.checkout.payment.shared.errors.refund_not_settled,Partial refunds are not available until the transaction has settled
 sc.checkout.shipping.click_and_collect.out_of_stock,Out of Stock at %{location}
 sc.checkout.shipping.click_and_collect.available_now,Collect from %{location} (available now)
 sc.checkout.shipping.click_and_collect.available_from,Collect from %{location} (available from %{from})
