@@ -1,7 +1,8 @@
-<div class='sc-container sc-container-skinny sc-container-spacious' data-general-error-message="{{ "checkout.payment.error" | t }}">
+<div class='sc-container sc-container-skinny sc-container-spacious' data-general-error-message="{{ "checkout.payment.error" | t }}" data-timeout-error-message="{{ "checkout.payment.timeout_error" | t }}">
   <a href="{{ current_order.path }}" class="SC-Link sc-mb-large">
     {{ "accounts.orders.navigation.back_to_show" | t }}
   </a>
+
   <div class="SC-Panel_header">
     <div class="SC-Panel_header_heading">
       {{ "checkout.payment.header" | t }}
@@ -13,6 +14,23 @@
         {%- if current_order.total_payable <= 0 %}
           {{ "additional_payments.not_required" | t }}
         {%- else %}
+          {%- if enable_custom_amount %}
+            <div class="SC-Field sc-mb-base" id="custom-amount-container">
+              <label for="custom-payment-amount" class="SC-Field_label">
+                {{ "additional_payments.custom_amount.label" | t }}
+              </label>
+              <input
+                type="number"
+                id="custom-payment-amount"
+                class="SC-Field_input"
+                style="width: 200px;"
+                step="0.01"
+                min="0.01"
+                max="{{ current_order.total_payable }}"
+                placeholder="{{ current_order.total_payable | money }}"
+              />
+            </div>
+          {%- endif %}
           {% render "checkout/payment_information/select_and_payment" %}
         {%- endif %}
      </div>
@@ -20,4 +38,5 @@
       {% render "orders/order_summary", source: current_order %}
      </div>
    </div>
- </div>
+
+</div>
