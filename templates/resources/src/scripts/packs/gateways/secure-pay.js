@@ -45,7 +45,11 @@ function initSecurePay({ form }) {
     ? JSON.parse(form.dataset.inputStyles)
     : defaultInputStyles()
 
-  const cardContainer = paymentForm.refElement('card-container', 'Container')
+  const cardContainer = paymentForm.refElement('card-container', 'Container', { required: false })
+  if (!cardContainer) {
+    paymentForm.reportError('card-container element not found in template')
+    return
+  }
 
   const scriptId = `SecurePayScript${paymentForm.providerId}`
 

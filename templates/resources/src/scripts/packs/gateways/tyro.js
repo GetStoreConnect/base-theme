@@ -1,6 +1,6 @@
 import { PaymentForm } from './payment-form'
 import { onDomChange } from '../../theme/utils/init'
-import { postJSON } from '../../theme/utils/fetch'
+import { postJSON, getJSON, deleteJSON, patchForm } from '../../theme/utils/fetch'
 
 onDomChange((node) => {
   const forms = node.querySelectorAll('form[data-provider="Tyro"]')
@@ -14,6 +14,7 @@ onDomChange((node) => {
 
 let payRequestId
 let paySecret
+let walletLockPromise = null
 
 let tyro
 let tyroForm
@@ -94,15 +95,30 @@ async function initializeTyro(paymentForm) {
     })
 
     payForm.setWalletPaymentBeginListener((_) => {
+      walletLockPromise = lockPaymentSession(paymentForm).catch((e) => {
+        console.error('Lock failed:', e)
+        return { failed: true }
+      })
       disableForm(paymentForm)
     })
 
     payForm.setWalletPaymentCancelledListener((_) => {
+      walletLockPromise = null
+      unlockPaymentSession(paymentForm).catch(() => {})
       enableForm(paymentForm)
     })
 
-    payForm.setWalletPaymentCompleteListener((paymentType, error) => {
-      tyroWalletPaymentComplete(paymentType, error, paymentForm)
+    payForm.setWalletPaymentCompleteListener(async (paymentType, error) => {
+      if (error) {
+        handleFailedPayment({ message: error.errorMessage, paymentForm })
+        return
+      }
+      const lockResult = await walletLockPromise
+      if (lockResult?.failed) {
+        handleFailedPayment({ message: 'Failed to start payment session', paymentForm })
+        return
+      }
+      await waitForServerCompletion(paymentForm)
     })
 
     // Inject the Tyro form
@@ -120,26 +136,27 @@ async function tyroSubmitPayment(paymentForm) {
   paymentForm.hideError()
 
   try {
+    // Lock cart and start server-side polling job
+    await lockPaymentSession(paymentForm)
+
     await tyro.submitPay()
-    // Primarily submitPay() raises an error if payment
-    // fails and is handled by the error handler below.
-    // But perhaps the error outcome only discovered
-    // by fetchPayRequest().
-    processPaymentOutcome(paymentForm)
+
+    // Server-side polling job handles payment processing — wait for it
+    await waitForServerCompletion(paymentForm)
   } catch (error) {
-    handleFailedPayment({ message: error.errorMessage, paymentForm })
+    handleFailedPayment({ message: error.errorMessage || error.message, paymentForm })
   }
 }
 
-async function tyroWalletPaymentComplete(paymentType, error, paymentForm) {
-  if (error) {
-    handleFailedPayment({ message: error.errorMessage, paymentForm })
-    return
-  }
+async function waitForServerCompletion(paymentForm) {
   try {
-    processPaymentOutcome(paymentForm)
-  } catch (error) {
-    handleFailedPayment({ message: error.errorMessage, paymentForm })
+    const completed = await pollForCompletion(paymentForm)
+    if (!completed) {
+      // Fallback: polling job didn't complete in time, try direct flow
+      await processPaymentOutcome(paymentForm)
+    }
+  } catch (err) {
+    handleFailedPayment({ message: err.message, paymentForm })
   }
 }
 
@@ -150,9 +167,6 @@ async function processPaymentOutcome(paymentForm) {
     return
   }
 
-  // Send the original pay request ID to the server
-  // so it can confirm the payment was real and successful
-  // and complete the payment
   const payload = {
     payment_source: {
       tok_id: payRequestId,
@@ -161,17 +175,59 @@ async function processPaymentOutcome(paymentForm) {
   paymentForm.submitData({ payload })
 }
 
+function lockPaymentSession(paymentForm) {
+  return patchForm(paymentForm.paymentSessionUrl(), {
+    transaction_id: payRequestId,
+    'payment[method]': paymentForm.providerName,
+    'payment[provider_id]': paymentForm.providerId,
+  })
+}
+
+function unlockPaymentSession(paymentForm) {
+  const url = appendParam(paymentForm.paymentSessionUrl(), `transaction_id=${payRequestId}`)
+  return deleteJSON(url)
+}
+
+function appendParam(url, param) {
+  return `${url}${url.includes('?') ? '&' : '?'}${param}`
+}
+
+async function pollForCompletion(
+  paymentForm,
+  {
+    maxAttempts = Number(paymentForm.form.dataset.pollMaxAttempts),
+    interval = Number(paymentForm.form.dataset.pollInterval),
+  } = {}
+) {
+  const url = appendParam(paymentForm.paymentSessionUrl(), `transaction_id=${payRequestId}`)
+  for (let i = 0; i < maxAttempts; i++) {
+    const json = await getJSON(url)
+    if (json.status === 'completed') {
+      if (json.redirect_url) {
+        window.location.href = json.redirect_url
+      }
+      return true
+    }
+    if (json.status === 'failed') {
+      throw new Error(json.message)
+    }
+    // Don't sleep after the last attempt — fall through to fallback immediately
+    if (i < maxAttempts - 1) {
+      await new Promise((resolve) => setTimeout(resolve, interval))
+    }
+  }
+  return false
+}
+
 // https://docs.connect.tyro.com/app/apis/pay/error-types/
 // https://docs.connect.tyro.com/app/apis/pay/errors/
 async function handleFailedPayment({ message, paymentForm }) {
-  let errorMessage = message
-  if (!errorMessage) {
-    const payRequest = await tyro.fetchPayRequest()
-    errorMessage = payRequest.errorMessage
-  }
+  // Unlock cart after failed payment
+  unlockPaymentSession(paymentForm).catch(() => {})
 
-  paymentForm.showError(errorMessage)
+  if (message) console.warn('[Tyro]', message)
 
+  paymentForm.showError(paymentForm.i18n('errors.payment_failed'))
   enableForm(paymentForm)
 }
 

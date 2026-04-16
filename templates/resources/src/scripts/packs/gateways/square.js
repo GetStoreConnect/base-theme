@@ -107,7 +107,13 @@ async function initSquare({ form }) {
       }
 
       // Used for errors; but assert that it exists immediately else error.
-      const statusContainer = paymentForm.refElement('payment-status', 'PaymentStatus')
+      const statusContainer = paymentForm.refElement('payment-status', 'PaymentStatus', {
+        required: false,
+      })
+      if (!statusContainer) {
+        paymentForm.reportError('payment-status element not found in template')
+        return
+      }
 
       const applicationId = paymentForm.apiKey()
       const locationId = form.dataset.locationId
@@ -136,9 +142,16 @@ async function initSquare({ form }) {
         console.error('Square: Initializing Card failed', e)
         return
       }
+      if (!card) return
 
       async function initializeCard(payments) {
-        const cardFields = paymentForm.refElement('card-fields', 'PaymentFields')
+        const cardFields = paymentForm.refElement('card-fields', 'PaymentFields', {
+          required: false,
+        })
+        if (!cardFields) {
+          paymentForm.reportError('card-fields element not found in template')
+          return
+        }
         const card = await payments.card()
         await card.attach(cardFields)
         return card

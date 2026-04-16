@@ -22,7 +22,11 @@ function initAdyenAch({ form, providerId }) {
   const clientKey = form.dataset.apiClient
   const clientOpts = form.dataset.clientOpts ? JSON.parse(form.dataset.clientOpts) : {}
 
-  const mountElement = paymentForm.refElement('card-fields', 'Fieldset')
+  const mountElement = paymentForm.refElement('card-fields', 'Fieldset', { required: false })
+  if (!mountElement) {
+    paymentForm.reportError('card-fields element not found in template')
+    return
+  }
 
   let data
   let card

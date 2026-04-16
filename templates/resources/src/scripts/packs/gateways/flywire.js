@@ -14,6 +14,9 @@ async function initFlywire({ form }) {
     onSubmit: () => handlePayment(paymentForm),
   })
 
+  // Check for conflicts - only blocks non-production forms
+  if (paymentForm.hasConflict()) return
+
   let sdk
   let elements
   let paymentElement
@@ -112,7 +115,10 @@ async function initFlywire({ form }) {
         paymentForm.showError(message)
       })
 
-      const container = paymentForm.refElement('container-block')
+      const container = paymentForm.refElement('container-block', { required: false })
+      if (!container) {
+        throw new Error('container-block element not found in template')
+      }
       paymentElement.mount(container.id)
     } catch (error) {
       console.error('Failed to initialize Flywire:', error)

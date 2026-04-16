@@ -45,7 +45,11 @@ function initAdyen({ form }) {
   }
 
   async function initializeAdyenForm() {
-    const mountElement = paymentForm.refElement('card-fields', 'Fieldset')
+    const mountElement = paymentForm.refElement('card-fields', 'Fieldset', { required: false })
+    if (!mountElement) {
+      paymentForm.reportError('card-fields element not found in template')
+      return
+    }
 
     const checkout = await AdyenCheckout(configuration)
     try {
