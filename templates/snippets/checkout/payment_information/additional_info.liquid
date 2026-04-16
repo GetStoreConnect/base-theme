@@ -1,7 +1,12 @@
 {% if current_subscription == blank %}
   {% render "checkout/customer_notes", form: form %}
 
-  {% if current_store.staff.size > 0 %}
+  {% if current_order != blank and current_order.assisted_by_name != blank %}
+    <div class="sc-mt sc-mb SC-Field">
+      <label class="SC-Field_label">{{ "checkout.assisted_by.were_you_assisted_with_this_order" | t }}</label>
+      <p class="sc-mt-small">{{ current_order.assisted_by_name }}</p>
+    </div>
+  {% elsif current_store.staff.size > 0 %}
     {% render "checkout/assisted_by_user", form: form %}
   {% endif %}
 

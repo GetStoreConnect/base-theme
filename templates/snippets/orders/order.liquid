@@ -102,6 +102,32 @@
               {%- endif %}
             {%- endif %}
             {{- payment.instructions_content }}
+
+            {%- comment %} Capture History for pre-auth payments {% endcomment %}
+            {%- if payment.payment_installments.size > 0 %}
+              <div class="sc-ml-medium sc-mt-small" data-payment-captures>
+                <div class="sc-text-muted sc-text-small">
+                  {{ "accounts.orders.payments.captures.heading" | t }}:
+                </div>
+                {%- for installment in payment.payment_installments %}
+                  <div class="sc-ml-small">
+                    {{ installment.amount | money }}
+                    {%- if installment.transaction_number != blank %}
+                      <span class="sc-text-muted">({{ installment.transaction_number }})</span>
+                    {%- endif %}
+                    <span class="sc-text-muted sc-text-small">
+                      {{ installment.captured_at | date: "%b %-d, %Y" }}
+                    </span>
+                  </div>
+                {%- endfor %}
+
+                {%- if payment.status == "partial_capture" and payment.remaining_to_capture > 0 %}
+                  <div class="sc-ml-small sc-text-muted">
+                    {{ "accounts.orders.payments.captures.remaining" | t }}: {{ payment.remaining_to_capture | money }}
+                  </div>
+                {%- endif %}
+              </div>
+            {%- endif %}
           </div>
         {%- endfor %}
       </div>

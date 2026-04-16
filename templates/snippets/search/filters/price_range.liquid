@@ -21,8 +21,8 @@
         class="irs-hidden-input"
         tabindex="-1"
         readonly>
-      <input id="_price_min" name="[filters][price][min]" value="{{ range.min.value }}" data-js-range-min autocomplete="off" type="hidden">
-      <input id="_price_max" name="[filters][price][max]" value="{{ range.max.value }}" data-js-range-max autocomplete="off" type="hidden">
+      <input id="_price_min" name="filters[price][min]" value="{{ range.min.value }}" data-js-range-min autocomplete="off" type="hidden">
+      <input id="_price_max" name="filters[price][max]" value="{{ range.max.value }}" data-js-range-max autocomplete="off" type="hidden">
     </div>
   {%- endif %}
 {%- endunless %}

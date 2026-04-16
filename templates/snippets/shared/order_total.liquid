@@ -17,6 +17,18 @@
       </div>
     {%- endfor %}
 
+    {%- comment %} POS Discount (item-level + cart-level combined) {% endcomment %}
+    {%- if source.has_pos_discount? %}
+      <div class="SC-OrderTotal_line SC-DiscountItem" data-pos-discount>
+        <div class="SC-OrderTotal_line_label">
+          {{ "order_summary.discount" | t }}
+        </div>
+        <div class="SC-OrderTotal_line_total">
+          {{ source.total_discount | times: -1 | money }}
+        </div>
+      </div>
+    {%- endif %}
+
     {%- unless source.quotable? %}
       {%- comment %} Surcharge cart items {% endcomment %}
       {%- if source_type == "order" %}

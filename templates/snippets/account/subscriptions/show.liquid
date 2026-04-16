@@ -104,7 +104,7 @@
     </section>
   {% endif %}
 
-  <div class="SC-Grid" data-general-error-message="{{ "checkout.payment.error" | t }}"></div>
+  <div class="SC-Grid" data-general-error-message="{{ "checkout.payment.error" | t }}" data-timeout-error-message="{{ "checkout.payment.timeout_error" | t }}"></div>
 
   {%- comment %} Payment details {% endcomment %}
   <section class="SC-Panel" id="payment-details">

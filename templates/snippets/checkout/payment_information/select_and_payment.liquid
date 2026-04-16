@@ -99,7 +99,7 @@
           {%- for error in payment_provider.validation_errors %}
             <p>{{ error }}</p>
           {%- endfor %}
-          <p>{{ "salesforce_payments.errors.fix_data_in_sf" | t }}</p>
+          <p>{{ "salesforce_payments.errors.select_another_provider" | t }}</p>
         </div>
       {%- endif %}
     </div>

@@ -171,6 +171,18 @@
       {%- comment %} Total {% endcomment %}
       <div class="sc-expand sc-text-right" data-line-item-pricing="{{ cart_item.id }}" data-product-id="{{ cart_item.product.id }}">
         {%- render "shared/cart_items/pricing", pricing: cart_item.pricing, compact: compact %}
+
+        {%- comment %} Remaining Deposit (order items only) {% endcomment %}
+        {%- assign amount_paid = cart_item.amount_paid | default: 0 %}
+        {%- if amount_paid > 0 and cart_item.deposit_required? %}
+          {%- assign remaining_deposit = cart_item.deposit_amount | minus: amount_paid %}
+          {%- if remaining_deposit > 0 %}
+            {%- assign remaining_deposit_formatted = remaining_deposit | money %}
+            <div class="sc-shade-neutral sc-font-tiny sc-mt-tiny" data-line-item-remaining-deposit>
+              {{ "pricing.remaining_deposit" | t: amount: remaining_deposit_formatted }}
+            </div>
+          {%- endif %}
+        {%- endif %}
       </div>
     </div>
     </div>
