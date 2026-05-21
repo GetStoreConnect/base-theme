@@ -2,10 +2,10 @@
   "dependencies": {
     "@adyen/adyen-web": "<6.0.0",
     "@bugsnag/js": "^8.9.0",
-    "@paypal/paypal-js": "^9.6.0",
+    "@paypal/paypal-js": "^9.7.0",
     "@rails/ujs": "^7.1.600",
     "@stripe/stripe-js": "^3.5.0",
-    "braintree-web": "^3.140.0",
+    "braintree-web": "^3.141.0",
     "hammerjs": "^2.0.8",
     "hoverintent": "^2.2.1",
     "js-cookie": "^3.0.5",
@@ -16,13 +16,13 @@
     "vanilla-rangeslider": "^1.0.0"
   },
   "devDependencies": {
-    "baseline-browser-mapping": "^2.10.18",
+    "baseline-browser-mapping": "^2.10.29",
     "colors": "^1.4.0",
-    "cssnano": "^7.1.4",
+    "cssnano": "^8.0.1",
     "esbuild": "^0.28.0",
     "esbuild-plugin-manifest": "^1.0.5",
     "esbuild-sass-plugin": "^3.7.0",
-    "postcss": "^8.5.9",
+    "postcss": "^8.5.14",
     "postcss-nested": "^7.0.2",
     "postcss-scss": "^4.0.9",
     "postcss-url": "^10.1.3"

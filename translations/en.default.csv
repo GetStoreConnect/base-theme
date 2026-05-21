@@ -317,6 +317,9 @@ accounts.subscriptions.status.enum.expired,Expired
 accounts.subscriptions.status.enum.suspended,Suspended
 additional_payments.not_required,No further payments required.
 additional_payments.custom_amount.label,Enter custom amount:
+additional_payments.billing_address.heading,Billing Address
+additional_payments.billing_address.description,Please enter your billing address to proceed with payment.
+additional_payments.billing_address.submit,Continue to Payment
 articles.category.no_articles,There are no articles in this category
 articles.index.heading,Latest Articles
 articles.index.no_articles,There are no articles
@@ -541,6 +544,9 @@ checkout.gateways.wallets.no_shipping_required,No shipping required
 checkout.gateways.wallets.free,FREE
 checkout.gateways.apple_pay.setup_failed,Apple Pay setup failed. Please try another payment method.
 checkout.gateways.apple_pay.email_required,Email address is required but was not provided by Apple Pay
+checkout.gateways.three_d_secure.library_failed,3D Secure library failed to load. Please try again.
+checkout.gateways.three_d_secure.unexpected_response,3D Secure returned an unexpected response; please try again.
+checkout.gateways.three_d_secure.confirmation_failed,Payment confirmation failed after 3D Secure authentication.
 checkout.payment.error,"Sorry, an error occurred while trying to process the payment. Please try again later."
 checkout.payment.timeout_error,We couldn't confirm your payment status. Please check your email or Orders page before trying again.
 checkout.payment.header,Payment
@@ -548,7 +554,12 @@ checkout.payment.processing,Processing...
 checkout.points.insufficient_balance,You do not have enough points to complete this order
 checkout.points.requires_login,You must be logged in to pay with points
 checkout.promo_codes.apply,Apply
+checkout.promo_codes.applied,Applied codes
+checkout.promo_codes.auto_applied,Auto-Applied Discounts
+checkout.promo_codes.enter_code,Enter promo code
 checkout.promo_codes.heading,Promo Codes
+checkout.promo_codes.max_reached,Maximum promo codes applied
+checkout.promo_codes.remove,Remove
 checkout.shipping.click_and_collect.available_from,Available %{from}
 checkout.shipping.click_and_collect.lead_time,Please allow %{lead_time} before collection
 checkout.shipping.click_and_collect.lead_time_immediate,Available for collection now
@@ -820,6 +831,7 @@ sc.accounts.subscriptions.payment.notices.success,Payment successful! Your subsc
 sc.accounts.subscriptions.update_payment_details.errors.fail,Updating payment details failed
 sc.accounts.subscriptions.update_payment_details.notices.success,Payment details updated
 sc.additional_payments.errors.renewal_order_not_permitted,You cannot make payments for renewal orders
+sc.additional_payments.errors.amount_exceeds_balance,The payment amount exceeds the remaining balance on this order. Please refresh and try again.
 sc.article.errors.not_found,That article was not found.
 sc.article.errors.requires_membership,You do not have the required membership level to access this article. Requires: %{membership_required}.
 sc.article_category.errors.not_found,That article category was not found.
@@ -1466,12 +1478,23 @@ sc.products.default_text.out_of_stock,Out of stock
 sc.products.default_text.unavailable,Unavailable
 sc.products.errors.not_found,That product was not found.
 sc.products.index.breadcrumb,All products
+sc.promo_codes.apply.errors.already_applied,This promo code is already applied
+sc.promo_codes.apply.errors.better_promotion_exists,A better promotion is already applied
+sc.promo_codes.apply.errors.conditions_not_met,Your cart doesn't qualify for this promotion
+sc.promo_codes.apply.errors.customer_usage_limit_reached,You have already used this promo code the maximum number of times
+sc.promo_codes.apply.errors.expired,This promo code has expired
 sc.promo_codes.apply.errors.insufficient_quantity,Items in your cart do not meet the minimum quantity requirements for this promotion
 sc.promo_codes.apply.errors.invalid,The requested promotion is unavailable
+sc.promo_codes.apply.errors.max_codes_reached,You can only use %{max} promo code(s) per order
 sc.promo_codes.apply.errors.no_eligible_products,The requested promotion is not valid for the items in this cart
 sc.promo_codes.apply.errors.no_longer_valid,Promo code was removed as it is no longer valid
+sc.promo_codes.apply.errors.stacking_conflict,This code cannot be combined with your current promotions
 sc.promo_codes.apply.errors.unexpected,The promotion could not be added to your cart
+sc.promo_codes.apply.errors.usage_limit_reached,This promo code has reached its usage limit
 sc.promo_codes.apply.notices.success,Promo code applied!
+sc.promo_codes.remove.errors.auto_applied,This promotion was automatically applied and cannot be removed
+sc.promo_codes.remove.errors.not_found,Promo code not found
+sc.promo_codes.remove.notices.success,Promo code removed
 sc.quotations.errors.not_enabled,Quotations are not enabled for this Store
 sc.request.verification_failed,Your session has expired or an unexpected error occurred. Please try again.
 sc.salesforce_payments.errors.incomplete_billing_address,The Order is missing a Billing Address.

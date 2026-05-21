@@ -20,6 +20,7 @@ additional_payments,create
 additional_payments,postback
 additional_payments,show
 additional_payments,update
+additional_payments/billing_addresses,update
 helpers/availabilities,index
 async/components,load
 helpers/custom_form_answers,show
@@ -104,6 +105,8 @@ checkout/payments,postback
 checkout/payments,status
 checkout/payments,update
 checkout/promotion,update
+checkout/promotion,create
+checkout/promotion,destroy
 checkout/steps/shipping,create
 checkout/steps/shipping,edit
 checkout/steps/shipping,show
@@ -117,6 +120,7 @@ cpq/bundles,add_preset_to_cart
 cpq/bundles,add_to_cart
 cpq/bundles,create
 cpq/bundles,edit
+cpq/bundles/options,bulk_update
 cpq/bundles/options,create
 cpq/bundles/options,update
 express_checkout/carts,create

@@ -13,6 +13,15 @@
      <div class="SC-Grid_main">
         {%- if current_order.total_payable <= 0 %}
           {{ "additional_payments.not_required" | t }}
+        {%- elsif billing_address_required %}
+          <h3 class="sc-mb-micro">{{ "additional_payments.billing_address.heading" | t }}</h3>
+          <p class="sc-mb-base">{{ "additional_payments.billing_address.description" | t }}</p>
+          {%- form "additional-payment-billing-address" %}
+            {% render "checkout/customer_information/address", form: form, address_type: "billing" %}
+            <button type="submit" class="SC-Button SC-Button-primary sc-mt-base">
+              {{ "additional_payments.billing_address.submit" | t }}
+            </button>
+          {%- endform %}
         {%- else %}
           {%- if enable_custom_amount %}
             <div class="SC-Field sc-mb-base" id="custom-amount-container">
@@ -27,7 +36,9 @@
                 step="0.01"
                 min="0.01"
                 max="{{ current_order.total_payable }}"
-                placeholder="{{ current_order.total_payable | money }}"
+                placeholder="{{ current_order.amount_due_now | money }}"
+                data-order-ref="{{ current_order.reference }}"
+                {%- if custom_amount %} value="{{ custom_amount }}"{%- endif %}
               />
             </div>
           {%- endif %}
