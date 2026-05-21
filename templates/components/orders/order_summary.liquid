@@ -4,7 +4,7 @@
   if source == nil
     case context.source_object
       when "Cart"
-        query "s_c__cart__c" as results, token: context.source_id
+        query "s_c__cart__c" as results, s_c__sc_id__c: context.source_id
       when "Order"
         query "order" as results, s_c__sc_id__c: context.source_id
       else

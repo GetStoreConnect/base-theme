@@ -85,6 +85,19 @@ export class ApplePay {
   merchantCapabilities = ['supports3DS']
 
   /**
+   * Express checkout collects a shipping address + rate when either:
+   * - the customer is a guest (we also need their contact info), or
+   * - the cart contains physical goods (offer_shipping), where shipping cost
+   *   and tax can't be calculated without a chosen ship-to address and rate.
+   *
+   * Virtual-goods + logged-in customers use their account's address for tax
+   * and don't need anything collected at the wallet sheet.
+   */
+  collectsShippingDetails() {
+    return this.paymentForm.requiresContactInfo() || this.paymentForm.offerShipping()
+  }
+
+  /**
    * Create Apple Pay payment request
    */
   createPaymentRequest(amount) {
@@ -101,9 +114,16 @@ export class ApplePay {
     }
 
     if (this.paymentForm.onlyExpressCheckout()) {
-      if (this.paymentForm.requiresContactInfo()) {
-        // Collect contact fields for customer information (billing/contact)
-        paymentRequest.requiredShippingContactFields = ['name', 'phone', 'email', 'postalAddress']
+      // Logged-out guests need contact info; physical-goods carts always need
+      // a shipping address + rate even when the customer is logged in because
+      // the freshly-created express cart has neither yet.
+      if (this.collectsShippingDetails()) {
+        // Phone is only required from guests; logged-in customers have it on file.
+        const fields = ['name', 'email', 'postalAddress']
+        if (this.paymentForm.requiresContactInfo()) {
+          fields.push('phone')
+        }
+        paymentRequest.requiredShippingContactFields = fields
 
         if (this.paymentForm.offerShipping()) {
           // For physical products, setup shipping
@@ -175,6 +195,7 @@ export class ApplePay {
       if (!this.paymentForm.offerShipping()) {
         // Use prepared amount if available, otherwise use current total
         const amount = session._preparedAmount || Math.round(this.paymentForm.totalPayable() * 100)
+        session._selectedShippingMethodId = 'virtual-product-no-shipping'
         session.completeShippingContactSelection({
           status: ApplePaySession.STATUS_SUCCESS,
           newShippingMethods: [
@@ -216,10 +237,13 @@ export class ApplePay {
           return
         }
 
-        // Set default shipping rate
+        // Set default shipping rate. Record the id now so that if Apple auto-accepts
+        // this default (single rate, or shopper never opens the method picker),
+        // the later authorization payload still carries a valid shipping_rate.id.
         const response = await this.wallet.setShippingRate({
           id: shippingOptions.defaultShippingRateId,
         })
+        session._selectedShippingMethodId = shippingOptions.defaultShippingRateId
         const amount = response.amount
 
         const shippingMethods = shippingOptions.shippingRates.map((rate) => ({
@@ -259,7 +283,7 @@ export class ApplePay {
 
         const amount = response.amount
 
-        // Store shipping method for later use in payment authorization
+        // Update the recorded shipping rate id (may have been set to the default earlier).
         session._selectedShippingMethodId = event.shippingMethod.identifier
 
         session.completeShippingMethodSelection({
@@ -287,8 +311,10 @@ export class ApplePay {
       try {
         const paymentData = event.payment
 
-        // Create cart with shipping and billing info for express checkout
-        if (this.paymentForm.onlyExpressCheckout()) {
+        // Create cart with shipping and billing info for express checkout.
+        // Only when we actually asked Apple Pay to collect those fields — for
+        // virtual goods + logged-in customers we use the account's stored info.
+        if (this.paymentForm.onlyExpressCheckout() && this.collectsShippingDetails()) {
           // Validate that we have required email address
           if (!paymentData.shippingContact.emailAddress) {
             throw new Error(this.paymentForm.i18n('apple_pay.email_required'))
@@ -319,8 +345,10 @@ export class ApplePay {
           const payload = {
             billing_details,
             shipping_address,
-            shipping_rate: { id: session._selectedShippingMethodId },
             dedicated_cart_product_id: this.paymentForm.dedicatedCartProductId,
+          }
+          if (session._selectedShippingMethodId) {
+            payload.shipping_rate = { id: session._selectedShippingMethodId }
           }
 
           try {

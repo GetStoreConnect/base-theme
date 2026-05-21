@@ -162,8 +162,14 @@ function initStripe({ form }) {
         options.billingAddressRequired = true
 
         if (paymentForm.requiresContactInfo()) {
-          // Collect phone and shipping address for customer information
+          // Phone is only collected from guests; logged-in customers have it on file.
           options.phoneNumberRequired = true
+        }
+
+        // Logged-out guests need contact info; physical-goods carts always need
+        // a shipping address + rate even when the customer is logged in because
+        // the freshly-created express cart has neither yet.
+        if (paymentForm.requiresContactInfo() || paymentForm.offerShipping()) {
           options.shippingAddressRequired = true
 
           if (paymentForm.offerShipping()) {

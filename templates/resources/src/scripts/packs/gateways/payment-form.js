@@ -37,15 +37,39 @@ export class PaymentForm {
 
     this._originalTotalPayable = this.form.dataset.totalPayable
 
-    const maxAmount = parseFloat(this._originalTotalPayable)
+    // The input's `max` attribute reflects the order's full remaining balance
+    // (`order.total_payable`), which may exceed `data-total-payable` on deposit
+    // orders where the form's default total is the deposit amount. Clamp to
+    // the input's max so customers can pay above the deposit when they want to.
+    const parsedMax = parseFloat(customAmountInput.max)
+    const maxAmount =
+      customAmountInput.max !== '' && !isNaN(parsedMax)
+        ? parsedMax
+        : parseFloat(this._originalTotalPayable)
+
+    // Restore typed-but-not-yet-submitted value across soft reloads. The server
+    // already pre-fills `value=` from session for failed-submit cases, so only
+    // restore if the input is currently empty. Skip stale values above the
+    // current max (e.g. a partial payment shrunk the balance between reloads).
+    const orderRef = customAmountInput.dataset.orderRef
+    const storageKey = orderRef && `additional_payment_custom_amount_${orderRef}`
+    if (storageKey && !customAmountInput.value) {
+      const saved = sessionStorage.getItem(storageKey)
+      if (saved && parseFloat(saved) <= maxAmount) {
+        customAmountInput.value = saved
+        this.form.dataset.totalPayable = saved
+      }
+    }
 
     customAmountInput.addEventListener('input', () => {
       const value = parseFloat(customAmountInput.value)
       if (!isNaN(value) && value > 0) {
         const clamped = Math.min(value, maxAmount)
         this.form.dataset.totalPayable = clamped.toString()
+        if (storageKey) sessionStorage.setItem(storageKey, customAmountInput.value)
       } else {
         this.form.dataset.totalPayable = this._originalTotalPayable
+        if (storageKey) sessionStorage.removeItem(storageKey)
       }
     })
   }

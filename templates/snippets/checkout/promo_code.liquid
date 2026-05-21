@@ -1,19 +1,99 @@
-{%- if current_store.has_promotions? %}
-  <section class="SC-Card SC-Card-floating sc-mb-large sc-wider-card-spacing">
-    <h4 class="sc-mb-small">{{ "checkout.promo_codes.heading" | t }}</h4>
+<section class="SC-Card SC-Card-floating sc-mb-large sc-wider-card-spacing" data-spec-checkout-promo>
+  <h4 class="sc-mb-small">{{ "checkout.promo_codes.heading" | t }}</h4>
+
+  {%- comment -%} Applied Coupon Codes — V1 (0 or 1) + V2 (0..max) {%- endcomment -%}
+  {%- assign has_applied_promos = false -%}
+  {%- if current_cart.promotions.size > 0 or current_cart.applied_coupon_codes.size > 0 -%}
+    {%- assign has_applied_promos = true -%}
+  {%- endif -%}
+
+  {%- if has_applied_promos -%}
+    <div class="sc-promo-applied-codes sc-mb-medium">
+      <p class="sc-text-muted sc-mb-small">{{ "checkout.promo_codes.applied" | t }}:</p>
+
+      {%- comment -%} V1 applied promo (single promo via cart.promotion_id) {%- endcomment -%}
+      {%- for promo in current_cart.promotions -%}
+        <div class="sc-promo-applied-item sc-flex-row sc-align-center sc-mb-small sc-justify-space-between" data-spec-applied-promo-v1>
+          <div class="sc-promo-applied-info">
+            <span class="sc-promo-code sc-font-bold">{{ promo.code }}</span>
+            {%- if promo.name != promo.code -%}
+              <div class="sc-font-tiny sc-ml-small">{{ promo.name }}</div>
+            {%- endif -%}
+          </div>
+          {% form "remove-promo-code", data-spec-remove-promo-v1: true %}
+            <input type="hidden" name="code" value="{{ promo.code }}">
+            <button type="submit" class="SC-Button SC-Button-link sc-text-danger" data-disable-with="...">
+              {{ "checkout.promo_codes.remove" | t }}
+            </button>
+          {% endform %}
+        </div>
+        {%- unless forloop.last and current_cart.applied_coupon_codes.size == 0 -%}<hr>{%- endunless -%}
+      {%- endfor -%}
+
+      {%- comment -%} V2 applied coupon codes {%- endcomment -%}
+      {%- for applied in current_cart.applied_coupon_codes -%}
+        <div class="sc-promo-applied-item sc-flex-row sc-align-center sc-mb-small sc-justify-space-between">
+          <div class="sc-promo-applied-info">
+            <span class="sc-promo-code sc-font-bold">{{ applied.coupon_code_used }}</span>
+            {%- if applied.promotion.name != applied.coupon_code_used -%}
+              <div class="sc-font-tiny sc-ml-small">{{ applied.promotion.name }}</div>
+            {%- endif -%}
+            {%- if applied.discount_amount > 0 -%}
+              <span class="sc-font-tiny sc-ml-small sc-font-bold">
+                -{{ applied.discount_amount | money }}
+              </span>
+            {%- endif -%}
+          </div>
+          {% form "remove-promo-code", data-spec-remove-promo-v2: true %}
+            <input type="hidden" name="code" value="{{ applied.coupon_code_used }}">
+            <button type="submit" class="SC-Button SC-Button-link sc-text-danger" data-disable-with="...">
+              {{ "checkout.promo_codes.remove" | t }}
+            </button>
+          {% endform %}
+        </div>
+        {%- unless forloop.last -%}<hr>{%- endunless -%}
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+
+  {%- comment -%} Auto-Applied Promotions (cannot be removed manually) {%- endcomment -%}
+  {%- if current_cart.auto_applied_promotions.size > 0 -%}
+    <div class="sc-mb-medium" data-spec-auto-applied-promos>
+      <p class="sc-text-muted sc-mb-small">{{ "checkout.promo_codes.auto_applied" | t }}:</p>
+      {%- for auto_promo in current_cart.auto_applied_promotions -%}
+        <div class="sc-flex-row sc-align-center sc-mb-small">
+          <div>
+            <div class="sc-promo-name sc-font-bold">{{ auto_promo.promotion.name }}</div>
+            {%- if auto_promo.discount_amount > 0 -%}
+              <span class="sc-font-tiny sc-ml-small sc-font-bold sc-text-success">
+                -{{ auto_promo.discount_amount | money }}
+              </span>
+            {%- endif -%}
+          </div>
+        </div>
+        <hr>
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+
+  {%- if current_cart.can_add_coupon? -%}
     {% form "apply-promo-code", data-spec-checkout-promo-code: true %}
       {% render "form_errors", errors: form.errors -%}
       <div id="SC-PromoCode" class="sc-flex-row">
-        <div class="SC-Field sc-grow sc-m-none">
+        <div class="sc-grow sc-m-none">
           {%- assign field = form.fields["code"] %}
           <div class="SC-Field sc-grow sc-m-none{% if field.errors != blank %} has-error{% endif %}{% if field.required? %} required{% endif %}">
-            <input type="text" name="{{ field.name }}" id="{{ field.id }}" value="{{ field.value }}" placeholder="{{ "checkout.vouchers.enter_code" | t }}" class="SC-Field_input sc-expand">
+            <input type="text" name="{{ field.name }}" id="{{ field.id }}" value="{{ field.value }}" placeholder="{{ "checkout.promo_codes.enter_code" | t }}" class="SC-Field_input sc-expand">
             <span class="SC-Field_error">{{ field.errors | try: "messages" }}</span>
           </div>
         </div>
         <input type="submit" class="SC-Button SC-Button-subtle sc-ml-small" value="{{ "checkout.promo_codes.apply" | t }}" data-disable-with="{{ "checkout.promo_codes.apply" | t }}">
       </div>
     {% endform %}
-  </section>
-{%- endif %}
 
+  {%- else -%}
+    <p class="sc-text-muted sc-text-small">
+      {{ "checkout.promo_codes.max_reached" | t }}
+    </p>
+  {%- endif -%}
+</section>

@@ -206,7 +206,7 @@ function initNmiAch({ form }) {
   const apiKey = paymentForm.apiKey()
 
   paymentForm.loadScript({
-    url: 'https://secure.nmi.com/token/Collect.js',
+    url: paymentForm.scriptUrl(),
     attributes: {
       'data-tokenization-key': apiKey,
     },

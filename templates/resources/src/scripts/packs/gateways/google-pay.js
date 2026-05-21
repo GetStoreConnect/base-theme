@@ -221,7 +221,10 @@ export class GooglePay {
       // Collect email address for receipt / default for account creation
       paymentDataRequest.emailRequired = true
 
-      if (this.paymentForm.requiresContactInfo()) {
+      // Logged-out guests need contact info; physical-goods carts (offer_shipping)
+      // always need a shipping address + rate even when the customer is logged in
+      // because the freshly-created express cart has neither yet.
+      if (this.collectsShippingDetails()) {
         // Collect shipping address for customer information (billing/contact)
         paymentDataRequest.shippingAddressRequired = true
         paymentDataRequest.shippingAddressParameters = this.shippingAddressParameters()
@@ -240,16 +243,33 @@ export class GooglePay {
   }
 
   /**
+   * Express checkout collects a shipping address + rate when either:
+   * - the customer is a guest (we also need their contact info), or
+   * - the cart contains physical goods (offer_shipping), where shipping cost
+   *   and tax can't be calculated without a chosen ship-to address and rate.
+   *
+   * Virtual-goods + logged-in customers use their account's address for tax
+   * and don't need anything collected at the wallet sheet.
+   */
+  collectsShippingDetails() {
+    return this.paymentForm.requiresContactInfo() || this.paymentForm.offerShipping()
+  }
+
+  /**
    * Provide Google Pay API with shipping address parameters when using dynamic buy flow.
    *
    * @see {@link https://developers.google.com/pay/api/web/reference/request-objects#ShippingAddressParameters}
    * @returns {object} shipping address details, suitable for use as shippingAddressParameters property of PaymentDataRequest
    */
   shippingAddressParameters() {
-    return {
-      phoneNumberRequired: true,
+    const params = {
       allowedCountryCodes: this.paymentForm.allowedShippingCountries(),
     }
+    if (this.paymentForm.requiresContactInfo()) {
+      // Phone is only collected from guests; logged-in customers have it on file.
+      params.phoneNumberRequired = true
+    }
+    return params
   }
 
   /**
@@ -266,7 +286,7 @@ export class GooglePay {
 
       // Only include paymentDataCallbacks when we have callbackIntents
       // to avoid Symbol(includes) crashes when callbackIntents is undefined
-      if (this.paymentForm.onlyExpressCheckout() && this.paymentForm.requiresContactInfo()) {
+      if (this.paymentForm.onlyExpressCheckout() && this.collectsShippingDetails()) {
         clientConfig.paymentDataCallbacks = {
           onPaymentAuthorized: (paymentData) => this.onPaymentAuthorized(paymentData),
           onPaymentDataChanged: (intermediatePaymentData) =>
@@ -324,9 +344,9 @@ export class GooglePay {
       throw new Error('👛 Invalid payment data received from Google Pay')
     }
 
-    // Only require shipping address when collecting contact info
+    // Only require shipping address when we actually collected one
     if (
-      this.paymentForm.requiresContactInfo() &&
+      this.collectsShippingDetails() &&
       (!paymentData.shippingAddress || typeof paymentData.shippingAddress !== 'object')
     ) {
       throw new Error('👛 Missing or invalid shipping address from Google Pay')
