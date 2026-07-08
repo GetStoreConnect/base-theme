@@ -215,6 +215,25 @@ export class PaymentForm {
     await loadExternalScript({ url, onload, id, attributes, container: scriptBlock })
   }
 
+  // Fires callback once probe has non-zero layout. Use to defer gateway
+  // SDK init past `display: none` ancestors that would measure as 0×0.
+  whenLaidOut(probe, callback) {
+    if (!probe || (probe.offsetWidth > 0 && probe.offsetHeight > 0)) {
+      callback()
+      return
+    }
+    // If the form is never revealed, the observer is left connected until
+    // the page unloads — there's no teardown hook on the form.
+    const observer = new ResizeObserver((entries) => {
+      const rect = entries[0].contentRect
+      if (rect.width > 0 && rect.height > 0) {
+        observer.disconnect()
+        callback()
+      }
+    })
+    observer.observe(probe)
+  }
+
   setPayButton(enabled) {
     // Support both boolean parameter and named argument { enabled: boolean }
     const isEnabled = typeof enabled === 'object' ? enabled.enabled : enabled

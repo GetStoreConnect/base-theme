@@ -52,6 +52,10 @@
           {{ 'bundles.nested_bundle.configure_bundle' | t }}
         </button>
       </div>
+
+      {% render "products/product/bundle/component_quantity_picker",
+                 component: component,
+                 context: "card" %}
     </span>
   </div>
 {%- endif -%}

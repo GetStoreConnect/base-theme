@@ -1,0 +1,76 @@
+{%- assign button_label = 'checkout.gateways.vii.pay_now' | t %}
+
+<div data-provider-container="{{ payment_provider.code }}">
+  {%- form "payment", provider: payment_provider, class: "SC-Panel" %}
+    {{ payment_provider.description_content }}
+
+    <div class="SC-Fieldset">
+      <div class="SC-Field SC-Field-expand">
+        <label class="SC-Field_label" for="vii-card-number-{{ payment_provider.id }}">
+          {{ 'checkout.gateways.vii.card_number_label' | t }}
+        </label>
+        <input
+          type="text"
+          inputmode="numeric"
+          autocomplete="off"
+          id="vii-card-number-{{ payment_provider.id }}"
+          name="payment_source[card_number]"
+          class="SC-Field_input"
+          data-vii-field="card-number"
+          required
+        />
+      </div>
+
+      <div class="SC-Field SC-Field-small">
+        <label class="SC-Field_label" for="vii-pin-{{ payment_provider.id }}">
+          {{ 'checkout.gateways.vii.pin_label' | t }}
+        </label>
+        <input
+          type="password"
+          inputmode="numeric"
+          autocomplete="off"
+          id="vii-pin-{{ payment_provider.id }}"
+          name="payment_source[pin]"
+          class="SC-Field_input"
+          data-vii-field="pin"
+          required
+        />
+      </div>
+
+      <div class="SC-Field SC-Field-small">
+        <label class="SC-Field_label" for="vii-available-balance-{{ payment_provider.id }}">
+          {{ 'checkout.gateways.vii.available_balance_label' | t }}
+        </label>
+        <input
+          type="text"
+          id="vii-available-balance-{{ payment_provider.id }}"
+          class="SC-Field_input"
+          data-vii-field="available-balance"
+          readonly
+          tabindex="-1"
+          value=""
+        />
+      </div>
+
+      <div class="SC-Field" data-vii-check-balance-container>
+        <button
+          type="button"
+          class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small"
+          data-vii-check-balance
+        >
+          {{ 'checkout.gateways.vii.check_balance_button' | t }}
+        </button>
+      </div>
+
+      <div class="SC-Field SC-Alert sc-hide" data-vii-balance-info></div>
+    </div>
+
+    {% render "checkout/payment_information/submit_button", button_label: button_label, disabled: true, hidden: true %}
+
+    {% render "checkout/payment_information/additional_info", form: form %}
+
+    {% render "checkout/payment_information/payment_error" %}
+  {%- endform %}
+
+  {%- require 'scripts/gateways/vii.js' %}
+</div>

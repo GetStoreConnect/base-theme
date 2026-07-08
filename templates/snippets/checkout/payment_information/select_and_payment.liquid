@@ -65,6 +65,10 @@
           {% render "checkout/payment_information/payment_providers/nmi_form", payment_provider: payment_provider %}
         {% when "NmiAch" %}
           {% render "checkout/payment_information/payment_providers/nmi_ach_form", payment_provider: payment_provider %}
+        {% when "StoreConnectPay" %}
+          {% render "checkout/payment_information/payment_providers/nmi_form", payment_provider: payment_provider %}
+        {% when "StoreConnectPayAch" %}
+          {% render "checkout/payment_information/payment_providers/nmi_ach_form", payment_provider: payment_provider %}
         {% when "Paypal" %}
           {% render "checkout/payment_information/payment_providers/paypal_form", payment_provider: payment_provider %}
         {% when "PayWay" %}
@@ -89,6 +93,8 @@
           {% render "checkout/payment_information/payment_providers/windcave_form", payment_provider: payment_provider %}
         {% when "ZippayAu" %}
           {% render "checkout/payment_information/payment_providers/zippay_au_form", payment_provider: payment_provider %}
+        {% when "Vii" %}
+          {% render "checkout/payment_information/payment_providers/vii_form", payment_provider: payment_provider %}
         {% else %}
           <p>Missing payment method - set it up now in <code>app/liquid/theme/snippets/checkout/payment_information/select_and_payment.liquid</code></p>
           <p>payment_provider.code = <code>{{ payment_provider.code }}</code></p>

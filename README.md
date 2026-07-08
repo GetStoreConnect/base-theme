@@ -1,6 +1,6 @@
 # Base Theme
 
-**Version: StoreConnect Release v21.0.4**
+**Version: StoreConnect Release v21.0.11**
 
 The StoreConnect Base theme is a clean and simple boilerplate ready for use. This starter theme is the default theme used in every StoreConnect installation.
 

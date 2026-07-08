@@ -80,6 +80,29 @@
   }
 
   /**
+   * Modifier: 3DS Challenge
+   *
+   * The ACS iframe renders its own card (title, chrome, buttons), so we
+   * skip SC-Modal_inner entirely and just center the iframe over a dim
+   * backdrop. The iframe is sized by the ACS — we add horizontal scroll
+   * as a safety net for narrow phones where the frame may exceed viewport.
+   */
+
+  &--threeds {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 5vh spacing('base') spacing('base');
+    overflow: auto;
+
+    &_mount {
+      position: relative;
+      z-index: var(--sc-depth-foreground);
+      max-width: 100%;
+    }
+  }
+
+  /**
    * Modifier: Nested Bundle Modal
    */
 
