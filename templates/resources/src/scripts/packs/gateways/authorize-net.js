@@ -65,6 +65,8 @@ function initAuthorizeNet({ form }) {
       const payload = {
         payment_source: {
           tok_id: response.opaqueData['dataValue'],
+          billing_postal_code:
+            paymentForm.getFieldValue('billing_postal_code') || form.dataset.zipCode,
         },
       }
       paymentForm.submitData({ payload })

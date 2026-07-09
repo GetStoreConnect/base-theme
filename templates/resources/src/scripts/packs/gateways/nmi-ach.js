@@ -1,7 +1,8 @@
 import { PaymentForm } from './payment-form'
 import { onDomChange } from '../../theme/utils/init'
 
-const NMI_ACH_FORM_SELECTOR = 'form[data-provider="NmiAch"]'
+const NMI_ACH_FORM_SELECTOR =
+  'form[data-provider="NmiAch"], form[data-provider="StoreConnectPayAch"]'
 
 onDomChange((node) => {
   const forms = node.querySelectorAll(NMI_ACH_FORM_SELECTOR)
@@ -211,7 +212,12 @@ function initNmiAch({ form }) {
       'data-tokenization-key': apiKey,
     },
     onload: () => {
-      configureCollectJs()
+      // Collect.js measures the iframe at configure time and gets stuck
+      // at height:0 if it runs against a display:none ancestor.
+      paymentForm.whenLaidOut(
+        paymentForm.formFieldElement('ach_account_number'),
+        configureCollectJs
+      )
     },
   })
 }

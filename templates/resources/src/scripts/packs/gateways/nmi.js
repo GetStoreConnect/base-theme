@@ -1,7 +1,7 @@
 import { PaymentForm } from './payment-form'
 import { onDomChange } from '../../theme/utils/init'
 
-const NMI_FORM_SELECTOR = 'form[data-provider="Nmi"]'
+const NMI_FORM_SELECTOR = 'form[data-provider="Nmi"], form[data-provider="StoreConnectPay"]'
 
 onDomChange((node) => {
   const forms = node.querySelectorAll(NMI_FORM_SELECTOR)
@@ -15,9 +15,11 @@ onDomChange((node) => {
 
 function initNmi({ form }) {
   let isCollectJsReady = false
+  let isPaymentInProgress = false
 
   const paymentForm = new PaymentForm(form, {
     onSubmit: () => {
+      isPaymentInProgress = true
       return requestToken(paymentForm)
     },
   })
@@ -86,7 +88,11 @@ function initNmi({ form }) {
 
   function checkAllFieldsAndUpdateButton() {
     const allValid = Object.values(validationState).every((valid) => valid === true)
-    paymentForm.setPayButton(allValid)
+
+    // Don't re-enable button if payment/3DS flow is in progress
+    if (!isPaymentInProgress) {
+      paymentForm.setPayButton(allValid)
+    }
   }
 
   // Disable submit button by default until all fields are valid
@@ -113,10 +119,23 @@ function initNmi({ form }) {
         return
       }
 
+      // Collect.js builds an internal PaymentRequestAbstraction at configure
+      // time for any wallet (Apple Pay / Google Pay) enabled on the merchant
+      // account. It requires price/country/currency to do so, and logs
+      // "Could not create PaymentRequestAbstraction" to the console when they
+      // are missing — harmless for the card flow, but noisy in CI logs.
+      const totalPayable = paymentForm.totalPayable()
+      const price = totalPayable ? parseFloat(totalPayable).toFixed(2) : '0.00'
+      const country = form.dataset.billingCountry || 'US'
+      const currency = paymentForm.currency() || 'USD'
+
       // Use PaymentForm helpers to get element IDs for selectors
       // Pattern from stripe.js: `#${paymentForm.formFieldElement('card_number').id}`
       const config = {
         variant: 'inline',
+        price,
+        country,
+        currency,
         fields: {
           ccnumber: {
             selector: `#${cardNumberEl.id}`,
@@ -216,24 +235,264 @@ function initNmi({ form }) {
         card_bin: response.card?.bin, // First 6 digits
       }
 
-      const payload = {
-        payment_source: {
-          tok_id: response.token,
-          ...cardMetadata, // Spread card metadata into payment_source
-        },
-      }
+      // Check if 3DS is enabled
+      if (form.dataset.threeDSecure === 'true') {
+        prepareThreeDSecurePayload({ tokenResponse: response, cardMetadata, paymentForm })
+      } else {
+        const payload = {
+          payment_source: {
+            tok_id: response.token,
+            ...cardMetadata,
+          },
+        }
 
-      paymentForm.submitData({ payload })
+        paymentForm.submitData({ payload })
+      }
     } else {
+      isPaymentInProgress = false
+
       const errorMessage = response.error || paymentForm.i18n('errors.tokenization_failed')
       paymentForm.reportError('No token in NMI response', { response })
       paymentForm.showError(errorMessage)
     }
   }
 
+  function prepareThreeDSecurePayload({ tokenResponse, cardMetadata, paymentForm }) {
+    try {
+      const firstname = form.dataset.contactFirstname
+      const lastname = form.dataset.contactLastname
+      const email = form.dataset.contactEmail
+      const phone = form.dataset.contactPhone
+      const billingStreet = form.dataset.billingStreet
+      const billingCity = form.dataset.billingCity
+      const billingState = form.dataset.billingState
+      const billingCountry = form.dataset.billingCountry
+      const billingPostalCode = form.dataset.billingPostalCode
+
+      // NMI Gateway.js 3DS expects amount as a string in minor units (e.g. "1000" = $10.00).
+      const amount = Math.round(parseFloat(paymentForm.totalPayable() || '0') * 100).toString()
+
+      if (typeof Gateway === 'undefined') {
+        throw new Error('Gateway.js not loaded')
+      }
+
+      const gatewayKey = paymentForm.apiKey()
+      if (!gatewayKey) {
+        throw new Error('Gateway key not provided')
+      }
+
+      const gateway = Gateway.create(gatewayKey)
+      const threeDSecureService = gateway.get3DSecure()
+
+      // NMI docs: https://docs.nmi.com/docs/payer-authentication-3ds (Running 3DS with Collect.js)
+      // Field names are camelCase; amount is a string in minor units.
+      const threeDSecureOptions = {
+        paymentToken: tokenResponse.token,
+        amount: amount,
+        currency: paymentForm.currency() || 'USD',
+        firstName: firstname,
+        lastName: lastname,
+        email: email,
+        phone: phone,
+        address1: billingStreet,
+        city: billingCity,
+        state: billingState,
+        postalCode: billingPostalCode,
+        country: billingCountry,
+      }
+
+      // Mount the 3DS frame inside a dim-backdrop overlay so the
+      // ACS-rendered challenge UI (which we can't restyle) is visually
+      // isolated from the checkout page. The ACS iframe already renders its
+      // own card with title and chrome, so we deliberately do NOT wrap it in
+      // SC-Modal_inner — that would duplicate the header and add dead space.
+      // The overlay starts hidden; fingerprinting runs at 0x0 invisibly, and
+      // only when the challenge fires do we reveal the backdrop + iframe.
+      // NMI's start() takes a selector string, so the mount needs a stable id.
+      const providerId = form.dataset.providerId || ''
+      const mountId = `sc-nmi-threeds-${providerId}`
+      const modalId = `${mountId}-modal`
+      let threeDSecureModal = document.querySelector(`[data-modal="${modalId}"]`)
+      let threeDSecureContainer = threeDSecureModal?.querySelector(`#${mountId}`) || null
+      if (!threeDSecureModal) {
+        threeDSecureModal = document.createElement('div')
+        threeDSecureModal.className = 'SC-Modal SC-Modal--threeds'
+        threeDSecureModal.setAttribute('data-modal', modalId)
+        threeDSecureModal.setAttribute('data-ref', 'threeds-modal')
+        threeDSecureModal.innerHTML = `<div class="SC-Modal_overlay SC-Modal_overlay--dark-blur"></div>`
+        threeDSecureContainer = document.createElement('div')
+        threeDSecureContainer.id = mountId
+        threeDSecureContainer.className = 'SC-Modal--threeds_mount'
+        threeDSecureContainer.setAttribute('data-ref', 'threeds-container')
+        threeDSecureModal.appendChild(threeDSecureContainer)
+        document.body.appendChild(threeDSecureModal)
+      }
+
+      function cancelThreeDSecure(reason) {
+        failThreeDSecure(paymentForm.i18n('three_d_secure.cancelled'), {
+          reason,
+        })
+      }
+
+      function handleEscapeKey(event) {
+        if (event.key === 'Escape') {
+          cancelThreeDSecure('user_escape_key')
+        }
+      }
+
+      function showThreeDSecureModal() {
+        threeDSecureModal.classList.add('is-active')
+        document.body.style.overflow = 'hidden'
+
+        // Click on the dim backdrop (but not the iframe mount) cancels.
+        threeDSecureModal
+          .querySelector('.SC-Modal_overlay')
+          ?.addEventListener('click', () => cancelThreeDSecure('user_backdrop_click'))
+
+        document.addEventListener('keydown', handleEscapeKey)
+      }
+
+      function removeThreeDSecureModal() {
+        document.removeEventListener('keydown', handleEscapeKey)
+        // Tell NMI to tear down its internal ThreeDSecureUI state. Without
+        // this, removing the DOM node alone leaves NMI thinking the UI is
+        // still mounted, and the next createUI/start trips its "Another
+        // ThreeDSecureUI was started but has since been removed from the
+        // DOM" guard. Wrap in try/catch because NMI may have already
+        // unmounted itself on complete/failure/error.
+        try {
+          threeDSecureInterface?.unmount()
+        } catch (_) {
+          // Ignore — interface was already unmounted by NMI.
+        }
+        if (threeDSecureModal) {
+          threeDSecureModal.remove()
+          threeDSecureModal = null
+          threeDSecureContainer = null
+        }
+        document.body.style.overflow = ''
+      }
+
+      // Per NMI docs: createUI(options) returns an interface, then start(selector) mounts it.
+      // Event listeners must be attached to the interface, not the service.
+      const threeDSecureInterface = threeDSecureService.createUI(threeDSecureOptions)
+
+      // Watchdog: if Gateway.js never fires a terminal event (e.g. cmpiLookUp 400
+      // due to a misconfigured public key or an account not enabled for 3DS
+      // sandbox), the Pay Now button would stay in "Processing…" forever.
+      // Cancel on any terminal/challenge event below.
+      let threeDSecureWatchdog = setTimeout(() => {
+        threeDSecureWatchdog = null
+        failThreeDSecure(paymentForm.i18n('three_d_secure.confirmation_failed'), {
+          reason: 'watchdog_timeout',
+        })
+      }, 15000)
+
+      // Once 'complete' has fired we've already handed the payload to
+      // submitData; any later Gateway.js error is a no-op for the user. Without
+      // this flag, a late gateway-level error would tear down state and
+      // re-enable the Pay button mid-submission, inviting duplicate orders.
+      let threeDSecureSettled = false
+
+      function clearThreeDSecureWatchdog() {
+        if (threeDSecureWatchdog) {
+          clearTimeout(threeDSecureWatchdog)
+          threeDSecureWatchdog = null
+        }
+      }
+
+      function failThreeDSecure(message, context = {}) {
+        if (threeDSecureSettled) {
+          paymentForm.reportError('NMI 3DS late error after settle', context)
+          return
+        }
+        threeDSecureSettled = true
+        clearThreeDSecureWatchdog()
+        isPaymentInProgress = false
+
+        removeThreeDSecureModal()
+
+        paymentForm.showError(message)
+        paymentForm.reportError('NMI 3DS failed', context)
+      }
+
+      threeDSecureInterface.on('challenge', () => {
+        // Challenge UI is displayed — reveal the modal so the iframe is
+        // visible. Fingerprinting (which happens before this) stayed hidden.
+        clearThreeDSecureWatchdog()
+        showThreeDSecureModal()
+      })
+
+      threeDSecureInterface.on('complete', (threeDSecureData) => {
+        threeDSecureSettled = true
+        clearThreeDSecureWatchdog()
+        removeThreeDSecureModal()
+
+        // Build payload with 3DS authentication data.
+        // NMI returns camelCase property names in the complete event payload.
+        const payload = {
+          payment_source: {
+            tok_id: tokenResponse.token,
+            ...cardMetadata,
+            cavv: threeDSecureData.cavv,
+            eci: threeDSecureData.eci,
+            xid: threeDSecureData.xid,
+            directory_server_id: threeDSecureData.directoryServerId,
+            cardholder_auth: threeDSecureData.cardHolderAuth,
+            three_ds_version: threeDSecureData.threeDsVersion,
+          },
+        }
+
+        paymentForm.submitData({ payload })
+      })
+
+      threeDSecureInterface.on('failure', (error) => {
+        failThreeDSecure(error?.message || paymentForm.i18n('errors.verifying_payment'), {
+          reason: 'interface_failure',
+          error: error?.message,
+        })
+      })
+
+      // NMI docs list an interface-level "error" event for unknown/timeout
+      // scenarios (e.g. test card 4000000000002990). Without this handler the
+      // event was silently dropped.
+      threeDSecureInterface.on('error', (error) => {
+        failThreeDSecure(error?.message || paymentForm.i18n('three_d_secure.confirmation_failed'), {
+          reason: 'interface_error',
+          error: error?.message,
+        })
+      })
+
+      threeDSecureInterface.start(`#${mountId}`)
+
+      // Listen for Gateway.js errors (API key errors, configuration issues)
+      gateway.on('error', (error) => {
+        failThreeDSecure(
+          error?.message || paymentForm.i18n('three_d_secure.configuration_failed'),
+          {
+            reason: 'gateway_error',
+            error: error?.message,
+          }
+        )
+      })
+    } catch (error) {
+      isPaymentInProgress = false
+
+      const errorMessage =
+        error.message === 'Gateway.js not loaded'
+          ? paymentForm.i18n('three_d_secure.library_failed')
+          : error.message === 'Gateway key not provided'
+            ? paymentForm.i18n('three_d_secure.configuration_failed')
+            : paymentForm.i18n('three_d_secure.confirmation_failed')
+
+      paymentForm.showError(errorMessage)
+      paymentForm.reportError('NMI 3DS initialization failed', {
+        error: error.message,
+      })
+    }
+  }
+
   function requestToken(paymentForm) {
-    // Collect.js handles tokenization automatically on form submit
-    // when configured with variant: 'inline'
     try {
       if (typeof CollectJS === 'undefined' || !CollectJS.startPaymentRequest) {
         throw new Error('CollectJS not available')
@@ -250,6 +509,8 @@ function initNmi({ form }) {
 
       CollectJS.startPaymentRequest()
     } catch (error) {
+      isPaymentInProgress = false
+
       paymentForm.showError(paymentForm.i18n('errors.form_not_ready'))
       paymentForm.reportError('Failed to start NMI payment request', {
         error: error.message,
@@ -268,7 +529,21 @@ function initNmi({ form }) {
       'data-tokenization-key': apiKey,
     },
     onload: () => {
-      configureCollectJs()
+      // Collect.js measures the iframe at configure time and gets stuck
+      // at height:0 if it runs against a display:none ancestor.
+      paymentForm.whenLaidOut(paymentForm.formFieldElement('card_number'), configureCollectJs)
     },
   })
+
+  // Load Gateway.js for 3DS support (in parallel with Collect.js).
+  // URL comes from the server so sandbox and reseller hosts load from the
+  // matching origin instead of the production NMI host.
+  if (form.dataset.threeDSecure === 'true') {
+    const gatewayJsUrl = form.dataset.gatewayJsUrl
+    if (gatewayJsUrl) {
+      paymentForm.loadScript({ url: gatewayJsUrl })
+    } else {
+      paymentForm.reportError('NMI 3DS enabled but data-gateway-js-url missing')
+    }
+  }
 }

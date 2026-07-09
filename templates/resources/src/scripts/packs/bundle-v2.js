@@ -179,9 +179,15 @@ function init(node) {
     },
 
     updateComponentQuantity(componentId, newQuantity) {
+      const card = node.querySelector(`[data-component-id="${componentId}"]`)
+
+      if (card?.hasAttribute('data-nested-bundle')) {
+        this.updateNestedBundleQuantity(componentId, newQuantity)
+        return
+      }
+
       let component = this.selectedComponents.get(componentId)
 
-      const card = node.querySelector(`[data-component-id="${componentId}"]`)
       const freeQuantity = parseInt(card?.getAttribute('data-free-quantity')) || 0
       const unitPrice = parseFloat(card?.getAttribute('data-unit-price')) || 0
 
@@ -233,6 +239,27 @@ function init(node) {
           this.updateGroupTotalQuantity(component.groupId)
           this.updateGroupDisplay(component.groupId)
         }
+      }
+
+      this.validateComponentGroups()
+    },
+
+    readNestedBundleQuantity(componentId) {
+      const input = node.querySelector(`[data-quantity-picker-component-id="${componentId}"]`)
+      const card = node.querySelector(`[data-component-id="${componentId}"]`)
+      const defaultQuantity = parseInt(card?.getAttribute('data-default-quantity')) || 1
+      const quantity = input ? parseInt(input.value) || defaultQuantity : defaultQuantity
+      return Math.max(1, quantity)
+    },
+
+    updateNestedBundleQuantity(componentId, newQuantity) {
+      const quantity = Math.max(1, newQuantity)
+      const component = this.selectedComponents.get(componentId)
+
+      if (component?.isNestedBundle) {
+        component.quantity = quantity
+        component.price = component.unitPrice * quantity
+        this.updateTotalPrice()
       }
 
       this.validateComponentGroups()
@@ -983,9 +1010,9 @@ function init(node) {
         }
       }
 
-      // Update pricing
+      // != null (not truthiness) so a $0 total still updates the label.
       const pricingElement = node.querySelector(`[data-nested-pricing="${componentId}"]`)
-      if (pricingElement && config.total) {
+      if (pricingElement && config.total != null) {
         pricingElement.textContent = `$${config.total.toFixed(2)}`
       }
 
@@ -1000,13 +1027,15 @@ function init(node) {
       // Store configuration
       this.nestedBundleConfigurations.set(componentId, config)
 
-      // Add nested bundle as a selected component for pricing
-      if (config.isConfigured && config.total) {
+      // Gate on isConfigured only — a $0 sub-bundle must still be submitted.
+      if (config.isConfigured) {
+        const quantity = this.readNestedBundleQuantity(componentId)
+        const total = config.total || 0
         this.selectedComponents.set(componentId, {
           product_id: componentId, // Use component ID as product ID for nested bundles
-          price: config.total,
-          quantity: 1,
-          unitPrice: config.total,
+          price: total * quantity,
+          quantity,
+          unitPrice: total,
           freeQuantity: 0,
           groupId: null,
           isNestedBundle: true,
