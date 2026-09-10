@@ -15,6 +15,7 @@ onDomChange((node) => {
 
 function initNmi({ form }) {
   let isCollectJsReady = false
+  let isConfiguring = false
   let isPaymentInProgress = false
 
   const paymentForm = new PaymentForm(form, {
@@ -104,6 +105,13 @@ function initNmi({ form }) {
   }
 
   function configureCollectJs() {
+    // Skip once fields are injected (fieldsAvailableCallback sets isCollectJsReady).
+    // Until then whenLaidOut re-fires on each reveal so we retry — a configure()
+    // against a 0×0 field injects nothing and reports no error. isConfiguring stops
+    // a rapid re-reveal from configuring again while one attempt is in flight; it
+    // clears on a timeout so a genuinely failed attempt can still retry. card_name
+    // is wired separately, so retries here don't stack duplicate listeners.
+    if (isCollectJsReady || isConfiguring) return
     try {
       // Verify elements exist before configuring
       const cardNumberEl = paymentForm.formFieldElement('card_number')
@@ -170,6 +178,7 @@ function initNmi({ form }) {
         fieldsAvailableCallback: () => {
           // Fields are ready and injected into the DOM
           isCollectJsReady = true
+          isConfiguring = false
 
           // Re-check button state in case all fields were already valid
           checkAllFieldsAndUpdateButton()
@@ -185,44 +194,55 @@ function initNmi({ form }) {
         },
       }
 
+      isConfiguring = true
       CollectJS.configure(config)
-
-      // Setup validation for card_name field (regular input, not tokenized)
-      const cardNameEl = paymentForm.formFieldElement('card_name')
-      if (cardNameEl) {
-        cardNameEl.addEventListener('input', (e) => {
-          const value = e.target.value.trim()
-          const isValid = value.length > 0
-          const errorMessage = isValid ? null : paymentForm.i18n('errors.cardholder_name_required')
-
-          updateValidationState('card_name', isValid, errorMessage)
-          checkAllFieldsAndUpdateButton()
-        })
-
-        cardNameEl.addEventListener('blur', (e) => {
-          // Only show error after user leaves field if it's still empty
-          const value = e.target.value.trim()
-          if (value.length === 0) {
-            updateValidationState(
-              'card_name',
-              false,
-              paymentForm.i18n('errors.cardholder_name_required')
-            )
-          }
-        })
-
-        // Check initial state (in case field has value from browser autofill)
-        const initiallyValid = cardNameEl.value.trim().length > 0
-        if (initiallyValid) {
-          updateValidationState('card_name', true)
-        }
-      } else {
-        paymentForm.reportError('NMI card_name element not found')
-      }
+      // Clear the in-flight flag if fields never become ready, so a later reveal retries.
+      setTimeout(() => {
+        if (!isCollectJsReady) isConfiguring = false
+      }, 3000)
     } catch (error) {
-      paymentForm.reportError('Failed to configure NMI Collect.js', { error: error.message })
+      isConfiguring = false
+      paymentForm.reportError('Failed to configure NMI Collect.js', { error })
     }
   }
+
+  // card_name is a plain input (not a Collect.js iframe). Wired once at init,
+  // outside configureCollectJs, so the retry-on-reveal loop can't stack listeners.
+  function setupCardNameValidation() {
+    const cardNameEl = paymentForm.formFieldElement('card_name')
+    if (!cardNameEl) {
+      paymentForm.reportError('NMI card_name element not found')
+      return
+    }
+
+    cardNameEl.addEventListener('input', (e) => {
+      const value = e.target.value.trim()
+      const isValid = value.length > 0
+      const errorMessage = isValid ? null : paymentForm.i18n('errors.cardholder_name_required')
+
+      updateValidationState('card_name', isValid, errorMessage)
+      checkAllFieldsAndUpdateButton()
+    })
+
+    cardNameEl.addEventListener('blur', (e) => {
+      // Only show error after user leaves field if it's still empty
+      const value = e.target.value.trim()
+      if (value.length === 0) {
+        updateValidationState(
+          'card_name',
+          false,
+          paymentForm.i18n('errors.cardholder_name_required')
+        )
+      }
+    })
+
+    // Check initial state (in case field has value from browser autofill)
+    if (cardNameEl.value.trim().length > 0) {
+      updateValidationState('card_name', true)
+    }
+  }
+
+  setupCardNameValidation()
 
   function handleToken(response, paymentForm) {
     if (response.token) {
@@ -523,17 +543,26 @@ function initNmi({ form }) {
   // Note: Script must have data-tokenization-key attribute
   const apiKey = paymentForm.apiKey()
 
-  paymentForm.loadScript({
-    url: paymentForm.scriptUrl(),
-    attributes: {
-      'data-tokenization-key': apiKey,
-    },
-    onload: () => {
-      // Collect.js measures the iframe at configure time and gets stuck
-      // at height:0 if it runs against a display:none ancestor.
-      paymentForm.whenLaidOut(paymentForm.formFieldElement('card_number'), configureCollectJs)
-    },
-  })
+  paymentForm
+    .loadScript({
+      url: paymentForm.scriptUrl(),
+      attributes: {
+        'data-tokenization-key': apiKey,
+      },
+      onload: () => {
+        // Collect.js measures the iframe at configure time and gets stuck
+        // at height:0 if it runs against a display:none ancestor.
+        paymentForm.whenLaidOut(paymentForm.formFieldElement('card_number'), configureCollectJs)
+      },
+    })
+    .catch((error) => {
+      // Surface a failed load instead of an uncaught promise rejection.
+      paymentForm.showError(paymentForm.i18n('errors.form_not_ready'))
+      paymentForm.reportError('Failed to load NMI Collect.js', {
+        url: paymentForm.scriptUrl(),
+        error,
+      })
+    })
 
   // Load Gateway.js for 3DS support (in parallel with Collect.js).
   // URL comes from the server so sandbox and reseller hosts load from the
@@ -541,7 +570,13 @@ function initNmi({ form }) {
   if (form.dataset.threeDSecure === 'true') {
     const gatewayJsUrl = form.dataset.gatewayJsUrl
     if (gatewayJsUrl) {
-      paymentForm.loadScript({ url: gatewayJsUrl })
+      paymentForm.loadScript({ url: gatewayJsUrl }).catch((error) => {
+        // Keep a failed 3DS load from becoming an uncaught rejection.
+        paymentForm.reportError('Failed to load NMI Gateway.js (3DS)', {
+          url: gatewayJsUrl,
+          error,
+        })
+      })
     } else {
       paymentForm.reportError('NMI 3DS enabled but data-gateway-js-url missing')
     }

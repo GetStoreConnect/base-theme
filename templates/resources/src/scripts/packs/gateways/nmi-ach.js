@@ -16,6 +16,7 @@ onDomChange((node) => {
 
 function initNmiAch({ form }) {
   let isCollectJsReady = false
+  let isConfiguring = false
 
   const paymentForm = new PaymentForm(form, {
     onSubmit: () => {
@@ -93,6 +94,12 @@ function initNmiAch({ form }) {
   }
 
   function configureCollectJs() {
+    // Skip once fields are injected (fieldsAvailableCallback sets isCollectJsReady).
+    // Until then whenLaidOut re-fires on each reveal so we retry — a configure()
+    // against a 0×0 field injects nothing and reports no error. isConfiguring
+    // stops a rapid re-reveal from configuring again while one attempt is in
+    // flight; it clears on a timeout so a genuinely failed attempt can still retry.
+    if (isCollectJsReady || isConfiguring) return
     try {
       // Verify elements exist before configuring
       const accountNumberEl = paymentForm.formFieldElement('ach_account_number')
@@ -139,6 +146,7 @@ function initNmiAch({ form }) {
         },
         fieldsAvailableCallback: () => {
           isCollectJsReady = true
+          isConfiguring = false
           checkAllFieldsAndUpdateButton()
         },
         callback: (response) => {
@@ -150,9 +158,15 @@ function initNmiAch({ form }) {
         },
       }
 
+      isConfiguring = true
       CollectJS.configure(config)
+      // Clear the in-flight flag if fields never become ready, so a later reveal retries.
+      setTimeout(() => {
+        if (!isCollectJsReady) isConfiguring = false
+      }, 3000)
     } catch (error) {
-      paymentForm.reportError('Failed to configure NMI ACH Collect.js', { error: error.message })
+      isConfiguring = false
+      paymentForm.reportError('Failed to configure NMI ACH Collect.js', { error })
     }
   }
 
@@ -206,18 +220,27 @@ function initNmiAch({ form }) {
   // Load Collect.js SDK with tokenization key
   const apiKey = paymentForm.apiKey()
 
-  paymentForm.loadScript({
-    url: paymentForm.scriptUrl(),
-    attributes: {
-      'data-tokenization-key': apiKey,
-    },
-    onload: () => {
-      // Collect.js measures the iframe at configure time and gets stuck
-      // at height:0 if it runs against a display:none ancestor.
-      paymentForm.whenLaidOut(
-        paymentForm.formFieldElement('ach_account_number'),
-        configureCollectJs
-      )
-    },
-  })
+  paymentForm
+    .loadScript({
+      url: paymentForm.scriptUrl(),
+      attributes: {
+        'data-tokenization-key': apiKey,
+      },
+      onload: () => {
+        // Collect.js measures the iframe at configure time and gets stuck
+        // at height:0 if it runs against a display:none ancestor.
+        paymentForm.whenLaidOut(
+          paymentForm.formFieldElement('ach_account_number'),
+          configureCollectJs
+        )
+      },
+    })
+    .catch((error) => {
+      // Surface a failed load instead of an uncaught promise rejection.
+      paymentForm.showError(paymentForm.i18n('errors.form_not_ready'))
+      paymentForm.reportError('Failed to load NMI ACH Collect.js', {
+        url: paymentForm.scriptUrl(),
+        error,
+      })
+    })
 }

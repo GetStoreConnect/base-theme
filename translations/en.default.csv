@@ -871,8 +871,8 @@ sc.auth.invitations.notices.success,Welcome! Your account is all set up.
 sc.auth.invitations.send_instructions,An invitation email has been sent to %{email}.
 sc.auth.invitations.updated,Your password was set successfully. You are now signed in.
 sc.auth.invitations.updated_not_active,Your password was set successfully.
+sc.auth.passwords.expired_token,This password reset link is no longer valid - it may have expired or been replaced by a newer email. Enter your email address below and we'll send you a fresh link.
 sc.auth.passwords.fail,"There was a problem processing your registration, please contact support."
-sc.auth.passwords.invalid_token,The password reset URL you used is invalid - it might have expired. Please restart the Reset Password process.
 sc.auth.passwords.no_token,"You can't access this page without coming from a password reset email. If you do come from a password reset email, please make sure you used the full URL provided."
 sc.auth.passwords.send_instructions,You will receive an email with instructions on how to reset your password in a few minutes.
 sc.auth.passwords.send_paranoid_instructions,"If your email address exists in our database, you will receive a password recovery link at your email address in a few minutes."
@@ -944,6 +944,7 @@ sc.bundles.edit.errors.product_must_be_a_bundle,Product must be a bundle
 sc.bundles.edit.errors.bundle_lead_item_not_found,Bundle lead item not found
 sc.bundles.edit.notices.success,Bundle updated successfully!
 sc.bundles.edit.notices.failure,Error updating product bundle
+sc.cart.add.errors.not_enough_stock,There is not enough stock of %{name} to add that quantity to your cart
 sc.cart.add.errors.out_of_stock,%{name} is out of stock
 sc.cart.add.errors.product_is_restricted,Prior approval is required before you can purchase %{name}
 sc.cart.add.errors.not_within_price_range,Price must %{message}
