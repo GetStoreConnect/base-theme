@@ -215,23 +215,37 @@ export class PaymentForm {
     await loadExternalScript({ url, onload, id, attributes, container: scriptBlock })
   }
 
-  // Fires callback once probe has non-zero layout. Use to defer gateway
-  // SDK init past `display: none` ancestors that would measure as 0×0.
+  // Calls `callback` each time `probe` becomes laid out (immediately if already,
+  // then on every hidden→shown transition). Gateways use this to defer SDK init
+  // that misbehaves when run against a display:none ancestor (e.g. an iframe
+  // measured as 0×0).
+  //
+  // Watches class/style/hidden on the ancestor chain as it exists now — assumes
+  // the reveal is such a toggle, not reparenting or a stylesheet-only rule change.
+  // Stays armed rather than firing once: a one-shot observer fires on the brief
+  // layout blip during load, burns the caller's single attempt, and disconnects
+  // before the real reveal. Re-firing lets the caller retry until it takes. If the
+  // form is never revealed the observer lives until page unload.
   whenLaidOut(probe, callback) {
-    if (!probe || (probe.offsetWidth > 0 && probe.offsetHeight > 0)) {
+    if (!probe) {
       callback()
       return
     }
-    // If the form is never revealed, the observer is left connected until
-    // the page unloads — there's no teardown hook on the form.
-    const observer = new ResizeObserver((entries) => {
-      const rect = entries[0].contentRect
-      if (rect.width > 0 && rect.height > 0) {
-        observer.disconnect()
-        callback()
-      }
+
+    const isLaidOut = () => probe.offsetWidth > 0 && probe.offsetHeight > 0
+
+    let wasLaidOut = isLaidOut()
+    if (wasLaidOut) callback()
+
+    const observer = new MutationObserver(() => {
+      const nowLaidOut = isLaidOut()
+      if (nowLaidOut && !wasLaidOut) callback()
+      wasLaidOut = nowLaidOut
     })
-    observer.observe(probe)
+
+    for (let node = probe; node && node !== document.documentElement; node = node.parentElement) {
+      observer.observe(node, { attributes: true, attributeFilter: ['class', 'style', 'hidden'] })
+    }
   }
 
   setPayButton(enabled) {
