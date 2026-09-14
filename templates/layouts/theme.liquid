@@ -19,8 +19,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {{ csrf_meta_tags }}
     {{ csp_meta_tag }}
-    {%- render "content_security_policy_header" %}
+    {%- render "content_security_policy_header", controller: controller %}
     {%- render "meta_data", title: title, meta_keywords: meta_keywords, meta_description: meta_description %}
+    {%- if current_store.favicon != blank and current_store.favicon.url != blank %}
+    <link rel="icon" href="{{ current_store.favicon.pico_url }}" sizes="16x16" type="image/png">
+    <link rel="icon" href="{{ current_store.favicon.icon_url }}" sizes="32x32" type="image/png">
+    {%- endif %}
 
     {%- comment -%} Styles {%- endcomment -%}
     {%- require "styles/theme.css" %}
@@ -43,7 +47,7 @@
 
   <body id="{{ id }}" data-sc-controller="{{ controller }}" data-sc-action="{{ action }}" {{ data }}>
     {{ theme_bar }}
-    {%- if controller == "salesforce_payments" %}
+    {%- if controller == "salesforce_payments" or controller == "card_captures" %}
       {%- render "salesforce_payments", content: body_content %}
     {%- else %}
       {%- render "header" %}
