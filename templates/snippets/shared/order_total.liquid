@@ -113,7 +113,7 @@
         {%- comment %} Vouchers {% endcomment %}
         {%- for voucher in source.applied_vouchers %}
           <div class="SC-OrderTotal_line">
-            <div class="SC-OrderTotal_line_label">{{ "order_summary.voucher" | t }}: {{ voucher.code }}</div>
+            <div class="SC-OrderTotal_line_label">{{ voucher.label }}: {{ voucher.identifier }}</div>
             <div class="SC-OrderTotal_line_total" data-order-voucher-id="{{ voucher.id }}">
               {{ voucher.amount | times: -1 | money }}
             </div>
@@ -123,7 +123,7 @@
 
       {%- comment %} Possible Surcharges {% endcomment %}
       {%- for surcharge in source.payment_surcharge_values %}
-        <div class="SC-OrderTotal_line sc-hide" data-surcharge-id="{{ surcharge.identifier }}" data-surcharge-cart-total-payable="{{ surcharge.price | plus: source.total_payable | money }}" data-surcharge-cart-total-tax="{{ surcharge.tax | plus: source.total_tax | money }}">
+        <div class="SC-OrderTotal_line sc-hide" data-surcharge-id="{{ surcharge.identifier }}" data-surcharge-cart-total-payable="{{ surcharge.price | plus: source.amount_due_now | money }}" data-surcharge-cart-total-tax="{{ surcharge.tax | plus: source.total_tax | money }}">
           <div class="SC-OrderTotal_line_label">
             {{ surcharge.name }}
           </div>
@@ -139,14 +139,14 @@
           <div class="SC-OrderTotal_line_label">
             {{ "order_summary.cart.total_payable" | t }}
           </div>
-          <div class="SC-OrderTotal_line_total" data-order-cart-total-payable="{{ source.total_payable | money }}">
+          <div class="SC-OrderTotal_line_total" data-order-cart-total-payable="{{ source.amount_due_now | money }}">
             {%- comment %} Currency Total {% endcomment %}
-            {%- if source.total_payable > 0 %}
-              <span data-currency>{{ source.total_payable | money }}</span>
+            {%- if source.amount_due_now > 0 %}
+              <span data-currency>{{ source.amount_due_now | money }}</span>
             {%- endif %}
 
             {%- comment %} And {% endcomment %}
-            {%- if source.total_payable > 0 and source.total_payable_points > 0 %}
+            {%- if source.amount_due_now > 0 and source.total_payable_points > 0 %}
               {{ "order_summary.currency_and_points_connector" | t }}
             {%- endif %}
 
@@ -156,7 +156,7 @@
             {%- endif %}
 
             {%- comment %} Nothing to pay {% endcomment %}
-            {%- unless source.total_payable > 0 or source.total_payable_points > 0 %}
+            {%- unless source.amount_due_now > 0 or source.total_payable_points > 0 %}
               {{ 0 | money }}
             {%- endunless %}
           </div>

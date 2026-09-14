@@ -1,0 +1,61 @@
+{%- comment -%}
+  Renders saved payment method options at checkout.
+  Expects: default_pm (PaymentMethodDrop), all_methods (collection of PaymentMethodDrop)
+{%- endcomment -%}
+
+{%- default default_pm: nil -%}
+{%- default all_methods: nil -%}
+
+{% if default_pm %}
+  <div data-saved-card-section
+    data-payment-url="{{ current_store.checkout_path }}/payment"
+    data-use-saved-label="{{ 'checkout.payment.saved_card.use_saved' | t }}"
+    data-general-error-message="{{ 'checkout.payment.error' | t }}">
+    <p class="sc-mb" data-saved-card-description><span data-saved-card-prefix>{{ "checkout.payment.saved_card.use_saved_default" | t }}</span> <strong data-saved-card-brand>{{ default_pm.card_brand }}</strong> {{ "checkout.payment.saved_card.ending_in" | t }} <span data-saved-card-last-four>{{ default_pm.last_four }}</span></p>
+
+    <div data-saved-card-form>
+      <input type="hidden" name="payment[payment_method_id]" value="{{ default_pm.sc_id }}" />
+      <input type="hidden" name="payment[method]" value="{{ default_pm.payment_provider.code }}" />
+      <input type="hidden" name="payment[provider_id]" value="{{ default_pm.payment_provider.id }}" />
+      <div class="sc-flex sc-align-center sc-gap">
+        <button type="button"
+          data-saved-card-submit
+          class="SC-Button SC-Button-primary"
+          data-disable-with="{{ 'checkout.payment.processing' | t }}">
+          {{ 'checkout.gateways.form.pay_now' | t }}
+        </button>
+        <a href="#" data-toggle-other-methods>{{ "checkout.payment.saved_card.use_different" | t }}</a>
+      </div>
+      <div data-ref="saved-card-error" class="SC-Alert sc-mt-small sc-hide"></div>
+    </div>
+  </div>
+
+  <div data-other-methods class="sc-hide sc-mt">
+    {% if all_methods.size > 1 %}
+      <h4 class="sc-mb-small">{{ "checkout.payment.saved_card.other_saved" | t }}</h4>
+      {% for method in all_methods %}
+        {% unless method.id == default_pm.id %}
+          <div class="SC-Panel sc-p sc-mb-small sc-flex sc-justify-between sc-align-center">
+            <div>
+              <strong>{{ method.card_brand }}</strong> {{ "checkout.payment.saved_card.ending_in" | t }} {{ method.last_four }}
+              {% if method.expires_at %}
+                <span class="sc-shade-medium sc-ml-small">{{ "checkout.payment.saved_card.expires" | t }} {{ method.expires_at | date: "%m/%Y" }}</span>
+              {% endif %}
+            </div>
+            <button type="button" class="SC-Button SC-Button--small"
+              data-use-saved-card
+              data-payment-method-id="{{ method.sc_id }}"
+              data-provider-code="{{ method.payment_provider.code }}"
+              data-provider-id="{{ method.payment_provider.id }}"
+              data-card-brand="{{ method.card_brand }}"
+              data-last-four="{{ method.last_four }}">
+              {{ "checkout.payment.saved_card.use_this" | t }}
+            </button>
+          </div>
+        {% endunless %}
+      {% endfor %}
+      <hr class="sc-mb sc-mt" />
+    {% endif %}
+
+    <h4 class="sc-mb-small">{{ "checkout.payment.saved_card.other_methods" | t }}</h4>
+{% endif %}

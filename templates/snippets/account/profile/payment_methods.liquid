@@ -1,0 +1,48 @@
+{%- render "shared/page_header", heading: "t.accounts.profile.sections.payment_methods.heading" %}
+<div class="sc-mb-spacious">
+  <a href="{{ current_store.account_path }}/payment_methods/new" class="SC-Button SC-Button--small">{{ "accounts.profile.sections.payment_methods.add" | t | default: "Add Payment Method" }}</a>
+</div>
+{%- if current_customer.payment_methods.size > 0 %}
+  <table class="sc-mb-spacious">
+    <tr>
+      <th>{{ "accounts.profile.sections.payment_methods.type" | t }}</th>
+      <th>{{ "accounts.profile.sections.payment_methods.number" | t }}</th>
+      <th>{{ "accounts.profile.sections.payment_methods.expiry" | t }}</th>
+      <th>&nbsp;</th>
+    </tr>
+    {% for method in current_customer.payment_methods %}
+      <tr>
+        <td data-th="{{ 'accounts.profile.sections.payment_methods.type' | t }}">
+          {% case method.type %}
+            {% when 'card' %}
+              {{ method.card_brand }}
+            {% when 'bank_account' %}
+              {{ method.bank_name }} {{ method.account_type | capitalize }}
+            {% when 'digital_wallet' %}
+              {{ method.wallet_type | replace: '_', ' ' | capitalize }}
+          {% endcase %}
+          {% if method.is_default? %}<span class="SC-Badge SC-Badge--success">{{ "accounts.profile.sections.payment_methods.default_badge" | t }}</span>{% endif %}
+        </td>
+        <td data-th="{{ 'accounts.profile.sections.payment_methods.number' | t }}">
+          &bull;&bull;&bull;&bull; {{ method.last_four }}
+          {% if method.nickname %}<span class="sc-shade-medium">({{ method.nickname }})</span>{% endif %}
+        </td>
+        <td data-th="{{ 'accounts.profile.sections.payment_methods.expiry' | t }}">
+          {% if method.expires_at %}{{ method.expires_at | date: "%m/%Y" }}{% else %}&mdash;{% endif %}
+        </td>
+        <td>
+          {% unless method.is_default? %}
+            {%- form "update-payment-method", method_id: method.id %}
+              <button type="submit">{{ "accounts.profile.sections.payment_methods.set_default" | t }}</button>
+            {%- endform %}
+          {% endunless %}
+          {%- form "remove-payment-method", method_id: method.id, delete: true %}
+            <button type="submit" data-confirm="{{ 'accounts.profile.sections.payment_methods.remove_confirm' | t }}">{{ "accounts.profile.sections.payment_methods.remove" | t }}</button>
+          {%- endform %}
+        </td>
+      </tr>
+    {% endfor %}
+  </table>
+{%- else %}
+  <div class="sc-shade-neutral">{{ "accounts.profile.sections.payment_methods.empty" | t }}</div>
+{%- endif %}

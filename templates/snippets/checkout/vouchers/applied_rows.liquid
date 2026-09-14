@@ -1,0 +1,32 @@
+{%- comment %}
+  show: "balance" (default) renders the voucher's remaining balance on the
+  row (SC behaviour); "amount" renders the amount applied to this cart
+  (gift cards, where a custom amount may use only part of the card).
+{% endcomment %}
+{% default show: "balance" %}
+{%- assign provider_vouchers = current_cart.all_vouchers | where: "provider", provider_name %}
+{%- for voucher in provider_vouchers %}
+  {% assign border_style = "none" %}
+  {% if voucher.state == "requires_pin" %}
+    {% assign border_style = "1px dashed #d3d3d3" %}
+  {% endif %}
+  <div class="SC-Voucher-itemWrapper" data-all-vouchers>
+    <div
+      class="SC-Voucher-row"
+      style="--voucher-border: {{ border_style }};"
+    >
+      <div>{{ voucher.identifier }}</div>
+
+      <div class="SC-Voucher-status">
+        {{ "checkout.vouchers.status.enum." | append: voucher.state | t }}
+      </div>
+
+      <div>
+        {%- if show == "amount" %}{{ voucher.amount | money }}{% else %}{{ voucher.balance | money }}{% endif %}
+      </div>
+    </div>
+    {% form "remove-voucher", voucher: voucher, data-success: "sc.voucher-removed", data-type: "json", remote: true, data-reset-flash: true %}
+      <button class="SC-Voucher-removeButton" id="remove-voucher-btn">{% render "/shared/icons/close" %}</button>
+    {% endform %}
+  </div>
+{%- endfor %}

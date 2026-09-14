@@ -96,7 +96,7 @@
           {% if subscription.product.images.first %}
             <div class="sc-mb-small">
               <img
-                src="{{ subscription.product.images.first | img_url: '100x100' }}"
+                src="{{ subscription.product.images.first | image_url: width: 100, height: 100 }}"
                 alt="{{ subscription.product.name }}"
                 class="sc-border sc-border-radius SC-ProductThumbnail">
             </div>

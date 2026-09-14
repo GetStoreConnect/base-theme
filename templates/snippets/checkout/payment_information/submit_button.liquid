@@ -2,13 +2,23 @@
 {%- default hidden: false %}
 {%- default button_label: blank %}
 {% if button_label == blank %}
-  {% assign button_label = 'checkout.gateways.form.pay_now' | t %}
+  {% if current_payment_capture_only? %}
+    {% assign button_label = 'checkout.gateways.form.save_card' | t %}
+  {% else %}
+    {% assign button_label = 'checkout.gateways.form.pay_now' | t %}
+  {% endif %}
+{% endif %}
+
+{% if current_payment_capture_only? %}
+  {% assign processing_label = 'checkout.payment.saving' | t %}
+{% else %}
+  {% assign processing_label = 'checkout.payment.processing' | t %}
 {% endif %}
 
 <input type="submit"
   value="{{ button_label }}"
   data-ref="submit-button"
   class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small{% if hidden %} sc-hide{% endif %}"
-  data-disable-with="{{ 'checkout.payment.processing' | t }}"
+  data-disable-with="{{ processing_label }}"
   data-payment-info-submit
   {% if disabled %}disabled{% endif %} />

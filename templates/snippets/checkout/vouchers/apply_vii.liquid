@@ -1,0 +1,46 @@
+<section
+  class="SC-Card SC-Card-floating sc-mb-large sc-wider-card-spacing"
+  data-checkout-vouchers="vii"
+  data-vii-voucher
+  data-vii-voucher-outstanding="{{ current_cart.total_payable }}"
+  data-i18n-missing-fields="{{ "checkout.vouchers.vii.missing_fields" | t }}"
+  data-i18n-invalid-card="{{ "checkout.vouchers.vii.invalid_card" | t }}"
+  data-i18n-no-balance="{{ "checkout.vouchers.vii.no_balance" | t }}"
+  data-i18n-balance="{{ "checkout.vouchers.vii.balance" | t }}"
+>
+  <h4 class="sc-mb-small">{{ "checkout.vouchers.vii.heading" | t }}</h4>
+
+  {% render "checkout/vouchers/applied_rows", provider_name: "vii", show: "amount" %}
+
+  {%- form "apply-provider-voucher", provider: provider, data-success: "sc.voucher-applied", data-type: "json", remote: true, data-reset-flash: true %}
+    {% render "form_errors", errors: form.errors -%}
+    {%- assign card_field = form.fields["card_number"] %}
+    <div class="SC-Field sc-mb-small{% if card_field.errors != blank %} has-error{% endif %} required">
+      <input type="text" inputmode="numeric" autocomplete="off" name="{{ card_field.name }}" id="{{ card_field.id }}" value="" placeholder="{{ "checkout.vouchers.vii.enter_card_number" | t }}" class="SC-Field_input sc-expand" data-vii-voucher-field="card-number">
+      <span class="SC-Field_error">{{ card_field.errors | try: "messages" }}</span>
+    </div>
+    <div class="sc-flex-row">
+      {%- assign pin_field = form.fields["pin"] %}
+      <div class="SC-Field sc-grow sc-m-none{% if pin_field.errors != blank %} has-error{% endif %} required">
+        <input type="password" inputmode="numeric" autocomplete="off" name="{{ pin_field.name }}" id="{{ pin_field.id }}" value="" placeholder="{{ "checkout.vouchers.vii.enter_pin" | t }}" class="SC-Field_input sc-expand" data-vii-voucher-field="pin">
+        <span class="SC-Field_error">{{ pin_field.errors | try: "messages" }}</span>
+      </div>
+      <button type="button" class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small SC-Voucher-submitButton" data-vii-voucher-check-balance>
+        {{ "checkout.vouchers.vii.check_balance" | t }}
+      </button>
+    </div>
+
+    <div class="sc-hide sc-mt-small" data-vii-voucher-balance-info></div>
+
+    <div class="sc-flex-row sc-hide sc-mt-small" data-vii-voucher-apply-step>
+      {%- assign amount_field = form.fields["amount"] %}
+      <div class="SC-Field sc-grow sc-m-none{% if amount_field.errors != blank %} has-error{% endif %}">
+        <input type="number" step="0.01" min="0.01" name="{{ amount_field.name }}" id="{{ amount_field.id }}" value="" placeholder="{{ "checkout.vouchers.vii.amount_label" | t }}" aria-label="{{ "checkout.vouchers.vii.amount_label" | t }}" class="SC-Field_input sc-expand" data-vii-voucher-field="amount">
+        <span class="SC-Field_error">{{ amount_field.errors | try: "messages" }}</span>
+      </div>
+      <input type="submit" name="commit" value="{{ "checkout.vouchers.vii.apply" | t }}" class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small SC-Voucher-submitButton" data-disable-with="{{ "checkout.vouchers.vii.apply" | t }}">
+    </div>
+  {%- endform %}
+</section>
+
+{%- require 'scripts/vii-voucher.js' %}

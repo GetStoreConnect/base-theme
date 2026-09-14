@@ -1,0 +1,7 @@
+{%- render "shared/page_header", heading: "t.accounts.addresses.new.heading" %}
+
+<div class="SC-Grid">
+  <div class="SC-Grid_main">
+    {% render "account/addresses/form", action_path: current_store.addresses_path, method: "post", submit_label: "t.accounts.addresses.new.create" %}
+  </div>
+</div>

@@ -1,0 +1,36 @@
+<section class="SC-Card SC-Card-floating sc-mb-large sc-wider-card-spacing" data-checkout-vouchers="sc">
+  <h4 class="sc-mb-small">{{ "checkout.vouchers.heading" | t }}</h4>
+
+  {% render "checkout/vouchers/applied_rows", provider_name: "sc" %}
+
+  {% assign sc_vouchers = current_cart.all_vouchers | where: "provider", "sc" %}
+  {% assign last_applied_voucher = sc_vouchers | last %}
+
+  {% if last_applied_voucher == blank or last_applied_voucher.state == 'applied' %}
+    {%- form "apply-voucher", data-success: "sc.voucher-applied", data-type: "json", remote: true, data-reset-flash: true %}
+      {% render "form_errors", errors: form.errors -%}
+      <div class="sc-flex-row">
+        {%- assign field = form.fields["code"] %}
+        <div class="SC-Field sc-grow sc-m-none{% if field.errors != blank %} has-error{% endif %}{% if field.required? %} required{% endif %}">
+          <input type="text" name="{{ field.name }}" id="{{ field.id }}" value="{{ field.value }}" placeholder="{{ "checkout.vouchers.enter_code" | t }}" class="SC-Field_input sc-expand">
+          <span class="SC-Field_error">{{ field.errors | try: "messages" }}</span>
+        </div>
+        <input type="submit" name="commit" value="{{ "checkout.vouchers.apply" | t }}" class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small SC-Voucher-submitButton" data-disable-with="{{ "checkout.vouchers.apply" | t }}">
+      </div>
+    {%- endform %}
+  {% elsif last_applied_voucher.state == 'requires_pin' %}
+    {%- form "apply-voucher", data-success: "sc.voucher-applied", data-type: "json", remote: true, data-reset-flash: true %}
+      {% render "form_errors", errors: form.errors -%}
+      <div class="sc-flex-row">
+        {%- assign pin_field = form.fields["pin"] %}
+        {%- assign code_field = form.fields["code"] %}
+        <div class="SC-Field sc-grow sc-m-none{% if pin_field.errors != blank %} has-error{% endif %}{% if pin_field.required? %} required{% endif %}">
+          <input type="hidden" name="{{ code_field.name }}" id="{{ code_field.id }}" value="{{ last_applied_voucher.code }}">
+          <input type="password" name="{{ pin_field.name }}" id="{{ pin_field.id }}" value="{{ pin_field.value }}" placeholder="{{ "checkout.vouchers.enter_pin" | t }}" class="SC-Field_input sc-expand">
+          <span class="SC-Field_error">{{ pin_field.errors | try: "messages" }}</span>
+        </div>
+        <input type="submit" name="commit" value="{{ "checkout.vouchers.confirm" | t }}" class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small SC-Voucher-submitButton" data-disable-with="{{ "checkout.vouchers.apply" | t }}">
+      </div>
+    {%- endform %}
+  {% endif %}
+</section>

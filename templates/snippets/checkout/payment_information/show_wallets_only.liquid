@@ -1,3 +1,5 @@
+{%- default skip_paypal_fastlane: false %}
+
 {% assign valid_providers = current_store.payment_providers | where: "valid_payment_method?" %}
 {% assign first_provider = valid_providers | first %}
 {% assign multiple_providers = valid_providers.size > 1 %}
@@ -19,6 +21,16 @@
           {% render "checkout/payment_information/payment_providers/stripe_form", payment_provider: payment_provider, only_express_checkout: true %}
         {% when "WestpacOnlinePay" %}
           {% render "checkout/payment_information/payment_providers/westpac_online_pay_form", payment_provider: payment_provider, only_express_checkout: true %}
+        {% when "Paypal" %}
+          {%- comment -%}
+            PayPal's cart express checkout is the Fastlane mini-flow, so
+            without Fastlane there is no cart placement and we render nothing
+            rather than the missing-method developer message. The mini-cart
+            dropdown opts out: the multi-step flow does not fit a dropdown.
+          {%- endcomment -%}
+          {% if payment_provider.enabled_features contains "fastlane" and skip_paypal_fastlane == false %}
+            {% render "checkout/payment_information/payment_providers/paypal_form", payment_provider: payment_provider, only_express_checkout: true %}
+          {% endif %}
         {% else %}
           <p>Missing payment method - set it up now in <code>app/liquid/theme/snippets/checkout/payment_information/show_wallets_only.liquid</code></p>
           <p>payment_provider.code = <code>{{ payment_provider.code }}</code></p>

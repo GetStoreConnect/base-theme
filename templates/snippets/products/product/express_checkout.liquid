@@ -47,6 +47,12 @@
                 dedicated_cart_product_id: product.id,
                 wallet_disabled: wallet_disabled
           %}
+        {% when "Paypal" %}
+          {%- comment -%}
+            PayPal's express checkout is the cart-page Fastlane mini-flow;
+            there is no product-page placement yet, so render nothing rather
+            than the missing-method developer message.
+          {%- endcomment -%}
         {% else %}
           <p>Missing payment method - set it up now in <code>app/liquid/theme/snippets/products/product/express_checkout.liquid</code></p>
           <p>payment_provider.code = <code>{{ payment_provider.code }}</code></p>

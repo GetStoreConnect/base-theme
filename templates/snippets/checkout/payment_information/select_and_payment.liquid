@@ -1,6 +1,7 @@
 {% assign valid_providers = current_store.payment_providers | where: "valid_payment_method?" %}
 
 {% default only_recurring_payments: false %}
+{% default button_label: blank %}
 {% default subscription: current_subscription %}
 {% if only_recurring_payments %}
   {% assign valid_providers = valid_providers | where: "supports_recurring_payments?" %}
@@ -15,7 +16,23 @@
 
 {%- require "scripts/payments.js" %}
 
-<section id="select-and-payment" data-tabs="payment" class="sc-mb" style="max-width: 600px" data-currency-payment{% if subscription and subscription.payment_provider %} data-default-payment-provider="{{ subscription.payment_provider.id }}"{% endif %}>
+{%- comment -%} Check for saved payment methods (only during checkout, not on subscription or add-payment-method pages) {%- endcomment -%}
+{% assign has_saved_cards = false %}
+{% assign default_pm = nil %}
+{% if current_customer and current_checkout_step != blank and current_request.params.section != 'payment_methods_new' %}
+  {% assign default_pm = current_customer.default_payment_method %}
+  {% if default_pm %}
+    {% assign has_saved_cards = true %}
+  {% endif %}
+{% endif %}
+
+{% if has_saved_cards %}
+  {% render "checkout/payment_information/saved_payment_methods",
+    default_pm: default_pm,
+    all_methods: current_customer.payment_methods %}
+{% endif %}
+
+<section id="select-and-payment" data-tabs="payment" class="sc-mb" style="max-width: 600px" data-currency-payment{% if subscription and subscription.payment_provider %} data-default-payment-provider="{{ subscription.payment_provider.id }}"{% endif %}{% if has_saved_cards %} data-has-saved-cards{% endif %}>
   {%# if valid_providers has 2+ items then show a menu %}
   {% if multiple_providers %}
     <menu class="sc-flex-wrap sc-mb">
@@ -32,69 +49,67 @@
       {%- if payment_provider.validation_errors == blank %}
         {% case payment_provider.code %}
         {% when "Aci" %}
-          {% render "checkout/payment_information/payment_providers/aci_form", payment_provider: payment_provider %}
+          {% render "checkout/payment_information/payment_providers/aci_form", payment_provider: payment_provider, button_label: button_label %}
         {% when "Adyen" %}
-          {% render "checkout/payment_information/payment_providers/adyen_form", payment_provider: payment_provider %}
+          {% render "checkout/payment_information/payment_providers/adyen_form", payment_provider: payment_provider, button_label: button_label %}
         {% when "AdyenAch" %}
-          {% render "checkout/payment_information/payment_providers/adyen_ach_form", payment_provider: payment_provider %}
+          {% render "checkout/payment_information/payment_providers/adyen_ach_form", payment_provider: payment_provider, button_label: button_label %}
         {% when "Afterpay" %}
-          {% render "checkout/payment_information/payment_providers/afterpay_form", payment_provider: payment_provider, hide_wallet: true %}
+          {% render "checkout/payment_information/payment_providers/afterpay_form", payment_provider: payment_provider, hide_wallet: true, button_label: button_label %}
         {% when "AuthorizeNet" %}
-          {% render "checkout/payment_information/payment_providers/authorize_net_form", payment_provider: payment_provider %}
+          {% render "checkout/payment_information/payment_providers/authorize_net_form", payment_provider: payment_provider, button_label: button_label %}
         {% when "AuthorizeNetAch" %}
-          {% render "checkout/payment_information/payment_providers/authorize_net_ach_form", payment_provider: payment_provider %}
+          {% render "checkout/payment_information/payment_providers/authorize_net_ach_form", payment_provider: payment_provider, button_label: button_label %}
         {% when "Bambora" %}
-          {% render "checkout/payment_information/payment_providers/bambora_form", payment_provider: payment_provider %}
+          {% render "checkout/payment_information/payment_providers/bambora_form", payment_provider: payment_provider, button_label: button_label %}
         {% when "Braintree" %}
-          {% render "checkout/payment_information/payment_providers/braintree_form", payment_provider: payment_provider %}
+          {% render "checkout/payment_information/payment_providers/braintree_form", payment_provider: payment_provider, button_label: button_label %}
         {% when "Cboss" %}
-          {% render "checkout/payment_information/payment_providers/cboss_form", payment_provider: payment_provider %}
+          {% render "checkout/payment_information/payment_providers/cboss_form", payment_provider: payment_provider, button_label: button_label %}
         {% when "CyberSource" %}
-          {% render "checkout/payment_information/payment_providers/cyber_source_form", payment_provider: payment_provider %}
+          {% render "checkout/payment_information/payment_providers/cyber_source_form", payment_provider: payment_provider, button_label: button_label %}
         {% when "Eway" %}
-          {% render "checkout/payment_information/payment_providers/eway_form", payment_provider: payment_provider %}
+          {% render "checkout/payment_information/payment_providers/eway_form", payment_provider: payment_provider, button_label: button_label %}
         {% when "EwayV2" %}
-          {% render "checkout/payment_information/payment_providers/eway_v2_form", payment_provider: payment_provider %}
+          {% render "checkout/payment_information/payment_providers/eway_v2_form", payment_provider: payment_provider, button_label: button_label %}
         {% when "Flywire" %}
-          {% render "checkout/payment_information/payment_providers/flywire_form", payment_provider: payment_provider %}
+          {% render "checkout/payment_information/payment_providers/flywire_form", payment_provider: payment_provider, button_label: button_label %}
         {% when "PayLater" %}
-          {% render "checkout/payment_information/payment_providers/pay_later_form", payment_provider: payment_provider %}
+          {% render "checkout/payment_information/payment_providers/pay_later_form", payment_provider: payment_provider, button_label: button_label %}
         {% when "Latitude" %}
-          {% render "checkout/payment_information/payment_providers/latitude_form", payment_provider: payment_provider %}
+          {% render "checkout/payment_information/payment_providers/latitude_form", payment_provider: payment_provider, button_label: button_label %}
         {% when "Nmi" %}
-          {% render "checkout/payment_information/payment_providers/nmi_form", payment_provider: payment_provider %}
+          {% render "checkout/payment_information/payment_providers/nmi_form", payment_provider: payment_provider, button_label: button_label %}
         {% when "NmiAch" %}
-          {% render "checkout/payment_information/payment_providers/nmi_ach_form", payment_provider: payment_provider %}
+          {% render "checkout/payment_information/payment_providers/nmi_ach_form", payment_provider: payment_provider, button_label: button_label %}
         {% when "StoreConnectPay" %}
-          {% render "checkout/payment_information/payment_providers/nmi_form", payment_provider: payment_provider %}
+          {% render "checkout/payment_information/payment_providers/nmi_form", payment_provider: payment_provider, button_label: button_label %}
         {% when "StoreConnectPayAch" %}
-          {% render "checkout/payment_information/payment_providers/nmi_ach_form", payment_provider: payment_provider %}
+          {% render "checkout/payment_information/payment_providers/nmi_ach_form", payment_provider: payment_provider, button_label: button_label %}
         {% when "Paypal" %}
-          {% render "checkout/payment_information/payment_providers/paypal_form", payment_provider: payment_provider %}
+          {% render "checkout/payment_information/payment_providers/paypal_form", payment_provider: payment_provider, button_label: button_label %}
         {% when "PayWay" %}
-          {% render "checkout/payment_information/payment_providers/pay_way_form", payment_provider: payment_provider %}
+          {% render "checkout/payment_information/payment_providers/pay_way_form", payment_provider: payment_provider, button_label: button_label %}
         {% when "PayByAccount" %}
-          {% render "checkout/payment_information/payment_providers/pay_by_account_form", payment_provider: payment_provider %}
+          {% render "checkout/payment_information/payment_providers/pay_by_account_form", payment_provider: payment_provider, button_label: button_label %}
         {% when "SecurePay" %}
-          {% render "checkout/payment_information/payment_providers/secure_pay_form", payment_provider: payment_provider %}
+          {% render "checkout/payment_information/payment_providers/secure_pay_form", payment_provider: payment_provider, button_label: button_label %}
         {% when "Square" %}
-          {% render "checkout/payment_information/payment_providers/square_form", payment_provider: payment_provider %}
+          {% render "checkout/payment_information/payment_providers/square_form", payment_provider: payment_provider, button_label: button_label %}
         {% when "Stripe" %}
-          {% render "checkout/payment_information/payment_providers/stripe_form", payment_provider: payment_provider %}
+          {% render "checkout/payment_information/payment_providers/stripe_form", payment_provider: payment_provider, button_label: button_label %}
         {% when "StripeAch" %}
-          {% render "checkout/payment_information/payment_providers/stripe_ach_form", payment_provider: payment_provider %}
+          {% render "checkout/payment_information/payment_providers/stripe_ach_form", payment_provider: payment_provider, button_label: button_label %}
         {% when "Tyro" %}
-          {% render "checkout/payment_information/payment_providers/tyro_form", payment_provider: payment_provider %}
+          {% render "checkout/payment_information/payment_providers/tyro_form", payment_provider: payment_provider, button_label: button_label %}
         {% when "TouchNet" %}
-          {% render "checkout/payment_information/payment_providers/touch_net_form", payment_provider: payment_provider %}
+          {% render "checkout/payment_information/payment_providers/touch_net_form", payment_provider: payment_provider, button_label: button_label %}
         {% when "WestpacOnlinePay" %}
-          {% render "checkout/payment_information/payment_providers/westpac_online_pay_form", payment_provider: payment_provider %}
+          {% render "checkout/payment_information/payment_providers/westpac_online_pay_form", payment_provider: payment_provider, button_label: button_label %}
         {% when "Windcave" %}
-          {% render "checkout/payment_information/payment_providers/windcave_form", payment_provider: payment_provider %}
+          {% render "checkout/payment_information/payment_providers/windcave_form", payment_provider: payment_provider, button_label: button_label %}
         {% when "ZippayAu" %}
-          {% render "checkout/payment_information/payment_providers/zippay_au_form", payment_provider: payment_provider %}
-        {% when "Vii" %}
-          {% render "checkout/payment_information/payment_providers/vii_form", payment_provider: payment_provider %}
+          {% render "checkout/payment_information/payment_providers/zippay_au_form", payment_provider: payment_provider, button_label: button_label %}
         {% else %}
           <p>Missing payment method - set it up now in <code>app/liquid/theme/snippets/checkout/payment_information/select_and_payment.liquid</code></p>
           <p>payment_provider.code = <code>{{ payment_provider.code }}</code></p>
@@ -110,4 +125,18 @@
       {%- endif %}
     </div>
   {%- endfor %}
+
+  {% comment %} Hide the "save this card" checkbox on add-payment-method / subscription pages (only_recurring_payments) and capture-only pages (e.g. the POS web card capture page), where saving is implicit. {% endcomment %}
+  {% unless current_cart.auto_save_payment_method? or only_recurring_payments or current_payment_capture_only? %}
+    <div class="SC-Field sc-mt">
+      <label class="SC-Field_label sc-flex sc-align-center sc-gap-small">
+        <input type="checkbox" name="save_payment_method" data-save-payment-method />
+        {{ "checkout.payment.save_payment_method" | t }}
+      </label>
+    </div>
+  {% endunless %}
 </section>
+
+{% if has_saved_cards %}
+  </div>{%- comment -%} Close data-other-methods opened by saved_payment_methods snippet {%- endcomment -%}
+{% endif %}

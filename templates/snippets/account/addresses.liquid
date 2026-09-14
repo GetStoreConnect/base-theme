@@ -1,0 +1,11 @@
+{%- default identifier: nil %}
+
+{%- assign action = current_request.params.action %}
+
+{%- if action == "new" %}
+  {% render "account/addresses/new" %}
+{%- elsif action == "edit" and identifier != blank %}
+  {% render "account/addresses/edit", address: current_customer.addresses[identifier] %}
+{%- else %}
+  {% render "account/addresses/index" %}
+{%- endif %}

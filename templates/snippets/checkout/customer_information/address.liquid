@@ -34,6 +34,15 @@ endif
 
 {%- require "scripts/customer-address.js" -%}
 
+{%- comment %}
+  Opts into the checkbox below, off by default because only the checkout customer
+  information endpoint consumes it — this snippet also serves
+  pages/additional_payment.liquid, whose controller only stashes the address in
+  the session, so the checkbox there would promise nothing. The selector is
+  deliberately ungated: pre-filling needs no server support.
+{%- endcomment %}
+{%- default save_to_address_book: false %}
+
 <div
   data-checkout-address-container
   data-country-id="{{ country.id }}"
@@ -41,6 +50,46 @@ endif
   data-address-type="{{ address_type }}"
   data-billing-same-id="billing_same_as_shipping__customer_information"
 >
+  {%- if current_customer and address_type != "recipient" %}
+    {%- assign saved_addresses = current_customer.addresses %}
+    {%- if saved_addresses.size > 0 %}
+      {%- comment %}
+        Match the option against the already-populated fields — a re-render from
+        a validation error, or back-navigation. Street is part of the match or two
+        entries in one building are indistinguishable, and the selector would
+        claim an address the customer never picked. Joined and stripped so the
+        form's blank padding doesn't defeat it.
+      {%- endcomment %}
+      {%- liquid
+        assign typed_street = address_lines.value | join: " " | strip
+        assign matching_saved_id = ""
+        for saved in saved_addresses
+          assign saved_street = saved.address.street_lines | join: " " | strip
+          if saved_street == typed_street and saved.address.city == city.value and saved.address.postal_code == postal_code.value and saved.address.country == country.value
+            assign matching_saved_id = saved.id
+            break
+          endif
+        endfor
+      -%}
+      <div class="SC-Field sc-one-whole">
+        <label for="{{ address_type }}_saved_address" class="SC-Field_label">{{ "checkout.customer_information.address.saved_address" | t }}</label>
+        <select id="{{ address_type }}_saved_address" name="{{ address_type }}_saved_address" data-saved-address-select class="SC-Field_select">
+          <option value=""{% if matching_saved_id == blank %} selected{% endif %}>{{ "checkout.customer_information.address.enter_new" | t }}</option>
+          {%- comment %}
+            Read by customer-address.js. Plain attributes rather than a JSON
+            payload, since Liquid HTML-escapes and an apostrophe in "O'Brien St"
+            then needs no handling. Street is one attribute per line, blanks
+            included, because an attribute cannot carry an array.
+          {%- endcomment %}
+          {%- for saved in saved_addresses %}
+            <option value="{{ saved.id }}"{% if saved.id == matching_saved_id %} selected{% endif %} data-city="{{ saved.address.city }}" data-postal-code="{{ saved.address.postal_code }}" data-state="{{ saved.address.state }}" data-country="{{ saved.address.country }}"{% for line in saved.address.street_lines %} data-address-line-{{ forloop.index }}="{{ line }}"{% endfor %}>
+              {{ saved.label | default: saved.address.single_line }}
+            </option>
+          {%- endfor %}
+        </select>
+      </div>
+    {%- endif %}
+  {%- endif %}
   {% assign field_name = address_type | append: '_address_lines[]' %}
   {% for line in address_lines.value %}
     <div class="SC-Field sc-one-whole{% if forloop.first %}{% if address_lines.errors != blank %} has-error{% endif %} required{% endif %}">
@@ -97,4 +146,13 @@ endif
       <span class="SC-Field_error">{{ state.errors | try: "messages" }}</span>
     </div>
   </div>
+
+  {%- if save_to_address_book and current_customer and address_type != "recipient" %}
+    {%- assign save_field_name = address_type | append: "_save_to_address_book" %}
+    <div class="SC-Field SC-Field-checkbox" data-save-to-address-book-field>
+      <input type="hidden" name="{{ save_field_name }}" value="0">
+      <input type="checkbox" name="{{ save_field_name }}" id="{{ save_field_name }}" value="1">
+      <label for="{{ save_field_name }}" class="SC-Field_label">{{ "checkout.customer_information.address.save_to_book" | t }}</label>
+    </div>
+  {%- endif %}
 </div>
