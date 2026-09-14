@@ -24,22 +24,33 @@
           {%- endform %}
         {%- else %}
           {%- if enable_custom_amount %}
+            {%- assign minimum = current_order.checkout_minimum_deposit_amount %}
+            {%- assign minimum_money = minimum | money %}
             <div class="SC-Field sc-mb-base" id="custom-amount-container">
               <label for="custom-payment-amount" class="SC-Field_label">
                 {{ "additional_payments.custom_amount.label" | t }}
               </label>
               <input
-                type="number"
+                type="text"
+                inputmode="decimal"
+                autocomplete="off"
                 id="custom-payment-amount"
                 class="SC-Field_input"
                 style="width: 200px;"
-                step="0.01"
-                min="0.01"
-                max="{{ current_order.total_payable }}"
                 placeholder="{{ current_order.amount_due_now | money }}"
                 data-order-ref="{{ current_order.reference }}"
+                data-max="{{ current_order.total_payable }}"
+                data-min="{{ minimum }}"
+                data-decimals="2"
+                data-below-min-message="{{ "checkout.deposit.below_minimum" | t: minimum: minimum_money }}"
                 {%- if custom_amount %} value="{{ custom_amount }}"{%- endif %}
               />
+              {%- if minimum > 0 %}
+                <p class="SC-Field_hint" data-custom-amount-hint>
+                  {{ "checkout.deposit.minimum_hint" | t: minimum: minimum_money }}
+                </p>
+              {%- endif %}
+              <p class="SC-CheckoutDeposit_message sc-color-error sc-mt-tiny" data-custom-amount-message></p>
             </div>
           {%- endif %}
           {% render "checkout/payment_information/select_and_payment" %}

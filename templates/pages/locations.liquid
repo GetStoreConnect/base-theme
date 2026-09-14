@@ -10,8 +10,7 @@
 {%- render "locations/forms/near",
     location_group: location_group,
     filter_product: filter_product,
-    found_locations: found_locations,
-    google_maps_api_key: google_maps_api_key %}
+    found_locations: found_locations %}
 
 {%- unless google_maps_api_key == blank %}
   <article

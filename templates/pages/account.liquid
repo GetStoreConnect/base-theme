@@ -26,6 +26,8 @@
   {%- endif %}
 {%- when "product_approvals" %}
   {% render "account/product_approvals", identifier: identifier %}
+{%- when "addresses" %}
+  {% render "account/addresses", identifier: identifier %}
 {%- when "credentials" %}
   {% render "account/credentials" %}
 {%- when "contact" %}
@@ -34,6 +36,10 @@
   {% render "account/shipping" %}
 {%- when "billing" %}
   {% render "account/billing" %}
+{%- when "payment_methods" %}
+  {% render "account/profile/payment_methods" %}
+{%- when "payment_methods_new" %}
+  {% render "account/profile/payment_methods_new" %}
 {%- else %}
   {% render "account/profile" %}
 {%- endcase %}
