@@ -1,14 +1,15 @@
 {
   "dependencies": {
     "@adyen/adyen-web": "<6.0.0",
-    "@bugsnag/js": "^8.9.0",
-    "@paypal/paypal-js": "^9.7.0",
+    "@bugsnag/browser-performance": "^3.4.1",
+    "@bugsnag/js": "^8.10.0",
+    "@paypal/paypal-js": "^11.0.0",
     "@rails/ujs": "^7.1.600",
     "@stripe/stripe-js": "^3.5.0",
-    "braintree-web": "^3.141.0",
+    "braintree-web": "^3.145.0",
     "hammerjs": "^2.0.8",
     "hoverintent": "^2.2.1",
-    "js-cookie": "^3.0.7",
+    "js-cookie": "^3.0.8",
     "litepicker": "^2.0.11",
     "normalize.css": "^8.0.1",
     "pikaday": "^1.8.2",
@@ -16,21 +17,21 @@
     "vanilla-rangeslider": "^1.0.0"
   },
   "devDependencies": {
-    "baseline-browser-mapping": "^2.10.29",
+    "baseline-browser-mapping": "^2.11.20",
     "colors": "^1.4.0",
-    "cssnano": "^8.0.1",
-    "esbuild": "^0.28.0",
+    "cssnano": "^9.0.2",
+    "esbuild": "^0.28.2",
     "esbuild-plugin-manifest": "^1.0.5",
     "esbuild-sass-plugin": "^3.7.0",
-    "postcss": "^8.5.14",
-    "postcss-nested": "^7.0.2",
+    "postcss": "^8.5.26",
+    "postcss-nested": "^8.0.1",
     "postcss-scss": "^4.0.9",
-    "postcss-url": "^10.1.3"
+    "postcss-url": "^10.1.4"
   },
   "scripts": {
-    "watch": "./build/index.js --watch",
-    "build": "./build/index.js",
-    "clean": "rm -rf ./dist && ./build/index.js",
-    "heroku-postbuild": "NODE_ENV=development npm install && ./build/index.js --minify && rm -rf node_modules"
+    "watch": "./build/index.mjs --watch",
+    "build": "./build/index.mjs",
+    "clean": "rm -rf ./dist && ./build/index.mjs",
+    "heroku-postbuild": "NODE_ENV=development npm install && ./build/index.mjs --minify && rm -rf node_modules"
   }
 }
