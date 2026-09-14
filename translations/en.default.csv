@@ -39,6 +39,33 @@ accounts.account_points.transactions.no_expiry,Does not expire
 accounts.account_points.transactions.pending,pending
 accounts.account_points.transactions.type.enum.credit,credit
 accounts.account_points.transactions.type.enum.debit,debit
+accounts.addresses.errors.not_found,Address not found
+accounts.addresses.index.heading,Address book
+accounts.addresses.index.add_address,Add address
+accounts.addresses.index.label,Label
+accounts.addresses.index.address,Address
+accounts.addresses.index.defaults,Defaults
+accounts.addresses.index.actions,Actions
+accounts.addresses.index.default_shipping,Default shipping
+accounts.addresses.index.default_billing,Default billing
+accounts.addresses.index.make_default_shipping,Make default shipping
+accounts.addresses.index.make_default_billing,Make default billing
+accounts.addresses.index.make_default_shipping_aria,Make default shipping: %{address}
+accounts.addresses.index.make_default_billing_aria,Make default billing: %{address}
+accounts.addresses.index.edit,Edit
+accounts.addresses.index.edit_aria,Edit %{address}
+accounts.addresses.index.delete,Delete
+accounts.addresses.index.delete_aria,Delete %{address}
+accounts.addresses.index.no_addresses,You haven't saved any addresses yet.
+accounts.addresses.new.heading,Add address
+accounts.addresses.new.create,Add address
+accounts.addresses.edit.heading,Edit address
+accounts.addresses.edit.update,Save changes
+accounts.addresses.form.label,Label (optional)
+accounts.addresses.form.label_placeholder,"e.g. Home, Office, Warehouse"
+accounts.addresses.form.is_default_shipping,Use as my default shipping address
+accounts.addresses.form.is_default_billing,Use as my default billing address
+accounts.addresses.form.cancel,Cancel
 accounts.billing.heading,Billing Address
 accounts.billing.path,billing
 accounts.billing.update,Update your billing address
@@ -64,6 +91,7 @@ accounts.credentials.update,Update your login details
 accounts.credentials.username,Username
 accounts.menu.account_credits,Account credits
 accounts.menu.account_points,Account points
+accounts.menu.addresses,Address book
 accounts.menu.billing,Billing Address
 accounts.menu.contact,Contact details
 accounts.menu.credentials,Login details
@@ -74,6 +102,7 @@ accounts.menu.profile,Account
 accounts.menu.shipping,Shipping Address
 accounts.menu.fulfillments,Deliveries
 accounts.menu.subscriptions,Subscriptions
+accounts.menu.payment_methods,Payment Methods
 accounts.not_authorized.heading,Not Authorized
 accounts.not_authorized.message,You are not authorized to access this page.
 accounts.orders.bookings.attendees.add_attendee,Add attendee
@@ -238,6 +267,21 @@ accounts.profile.sections.subscriptions.heading,Subscriptions
 accounts.profile.sections.subscriptions.next_due,Next Due
 accounts.profile.sections.subscriptions.no_subscriptions,No Subscriptions
 accounts.profile.sections.subscriptions.view_all,View all
+accounts.profile.sections.payment_methods.heading,Payment Methods
+accounts.profile.sections.payment_methods.add,Add Payment Method
+accounts.profile.sections.payment_methods.add_heading,Add Payment Method
+accounts.profile.sections.payment_methods.make_default,Make this my default payment method
+accounts.profile.sections.payment_methods.back,Back to Payment Methods
+accounts.profile.sections.payment_methods.create_failed,Failed to save payment method. Please try again.
+accounts.profile.sections.payment_methods.create_provider_not_found,Payment provider not found.
+accounts.profile.sections.payment_methods.type,Type
+accounts.profile.sections.payment_methods.number,Number
+accounts.profile.sections.payment_methods.expiry,Expiry
+accounts.profile.sections.payment_methods.empty,No saved payment methods.
+accounts.profile.sections.payment_methods.default_badge,Default
+accounts.profile.sections.payment_methods.set_default,Set Default
+accounts.profile.sections.payment_methods.remove,Remove
+accounts.profile.sections.payment_methods.remove_confirm,Remove this payment method?
 accounts.register.form.headings.address,Address
 accounts.register.form.headings.company_name,Company details
 accounts.register.form.headings.contact,Contact details
@@ -264,6 +308,7 @@ accounts.shared.address_form.zip_code,Zip code
 accounts.fulfillments.index.heading,Deliveries
 accounts.fulfillments.index.reference,Reference
 accounts.fulfillments.index.order,Order
+accounts.fulfillments.index.delivery_method,Delivery Method
 accounts.fulfillments.index.tracking_code,Tracking Code
 accounts.fulfillments.index.tracking_status,Tracking Status
 accounts.fulfillments.index.items,Items
@@ -347,6 +392,7 @@ auth.login.sso.enum.entra_id,via Entra
 auth.login.sso.enum.experience_cloud,via our Portal
 auth.login.sso.enum.google,via Google
 auth.login.sso.enum.keycloak_openid,via Keycloak OpenID
+auth.login.sso.enum.login_gov,via Login.gov
 auth.login.sso.enum.openid,via OpenID
 auth.login.sso.enum.saml,via our Portal
 auth.login.sso.enum.singlekey_id,via SingleKey ID
@@ -437,7 +483,13 @@ checkout.account_credits.enter_amount,Enter total amount to apply
 checkout.account_credits.heading,Account Credits
 checkout.account_credits.remove,Remove
 checkout.account_credits.select_prompt,Select an account credit...
+checkout.deposit.label,Amount to pay now
+checkout.deposit.minimum_hint,Minimum deposit %{minimum}
+checkout.deposit.below_minimum,Adjusted to the minimum deposit of %{minimum}
 checkout.assisted_by.were_you_assisted_with_this_order,Were you assisted with this order?
+checkout.customer_information.address.saved_address,Saved addresses
+checkout.customer_information.address.enter_new,Enter a new address
+checkout.customer_information.address.save_to_book,Save this address to my address book
 checkout.customer_information.billing_address.billing_address_same_as_shipping_address,Same as Shipping Address
 checkout.customer_information.billing_address.edit,Edit
 checkout.customer_information.billing_address.heading,Billing Address
@@ -487,6 +539,7 @@ checkout.gateways.form.expiry_placeholder_short,MM/YY
 checkout.gateways.form.expiry_year,Expiry year
 checkout.gateways.form.expiry_year_placeholder,YYYY
 checkout.gateways.form.pay_now,Pay Now
+checkout.gateways.form.save_card,Save card
 checkout.gateways.form.verification,CVC
 checkout.gateways.form.verification_placeholder,123
 checkout.gateways.form.account_type,Account type
@@ -505,6 +558,20 @@ checkout.gateways.form.ach_routing_number_placeholder,9-digit routing number
 checkout.gateways.form.ach_account_number_placeholder,Bank Account Number
 checkout.gateways.form.bank_name,Bank name
 checkout.gateways.form.postal_code,Postal code
+checkout.gateways.fastlane.email_label,Email
+checkout.gateways.fastlane.continue,Continue with Fastlane
+checkout.gateways.fastlane.shipping_to,Ship to
+checkout.gateways.fastlane.change,Change
+checkout.gateways.fastlane.shipping_method,Shipping method
+checkout.gateways.fastlane.pay,Pay Now
+checkout.gateways.fastlane.total,Total
+checkout.gateways.fastlane.errors.lookup_failed,We couldn't look up that email. Please try again.
+checkout.gateways.fastlane.errors.auth_failed,We couldn't verify you. Please try again or use another payment method.
+checkout.gateways.fastlane.errors.auth_canceled,Verification canceled.
+checkout.gateways.fastlane.errors.token_failed,We couldn't complete your payment. Please try again.
+checkout.gateways.fastlane.errors.address_update_failed,We couldn't update your shipping address. Please try again.
+checkout.gateways.fastlane.errors.shipping_incomplete,We couldn't update your shipping details. Please choose a different address or shipping option.
+checkout.gateways.fastlane.errors.confirm_failed,We couldn't confirm your details. Please try again.
 checkout.gateways.afterpay.description_html,<p><strong>Interest free</strong> when you <strong>pay</strong> it in 4.</p>
 checkout.gateways.afterpay.terms_html,"<p style=""margin-top: 1rem;"">Afterpay late fees, eligibility criteria and terms & conditions apply. Visit <a class=""SC-Link"" target=""_blank"" href=""https://www.afterpay.com/en-AU/terms-of-service"">afterpay.com</a> for full terms.</p>"
 checkout.gateways.afterpay.line_items.payment_surcharge,Payment surcharge
@@ -518,14 +585,6 @@ checkout.gateways.latitude.terms_html,"<p style=""margin-top: 1rem;"">Before con
 checkout.gateways.pay_by_account_form.account_on_credit_hold,"Account is on credit hold, please contact us for information."
 checkout.gateways.pay_by_account_form.enter_purchase_order_number,Enter Purchase Order Number
 checkout.gateways.pay_by_account_form.pay_now,Pay Now
-checkout.gateways.vii.card_number_label,Gift card number
-checkout.gateways.vii.pin_label,PIN
-checkout.gateways.vii.check_balance_button,Check balance
-checkout.gateways.vii.available_balance_label,Available balance
-checkout.gateways.vii.insufficient_balance,Card balance %{balance} is less than the order total %{total}.
-checkout.gateways.vii.invalid_card,We couldn't validate that card. Please check the number and PIN.
-checkout.gateways.vii.missing_fields,"Enter your gift card number and PIN, then check the balance."
-checkout.gateways.vii.pay_now,Pay with gift card
 checkout.gateways.pay_later_form.pay_now,Complete Purchase
 checkout.gateways.points_form.pay_now,Purchase
 checkout.gateways.store_credit_form.paying_with_account_credit,Paying with account credit
@@ -567,6 +626,18 @@ checkout.payment.error,"Sorry, an error occurred while trying to process the pay
 checkout.payment.timeout_error,We couldn't confirm your payment status. Please check your email or Orders page before trying again.
 checkout.payment.header,Payment
 checkout.payment.processing,Processing...
+checkout.payment.saving,Saving...
+checkout.payment.save_payment_method,Save this payment method for future transactions
+checkout.payment.card_captured.title,Card captured
+checkout.payment.card_captured.message,The subscription will be billed automatically. You can close this page.
+checkout.payment.saved_card.use_saved_default,Use your saved default
+checkout.payment.saved_card.use_saved,Use your saved
+checkout.payment.saved_card.ending_in,ending in
+checkout.payment.saved_card.expires,Exp.
+checkout.payment.saved_card.use_different,Use a different payment method
+checkout.payment.saved_card.other_saved,Saved Payment Methods
+checkout.payment.saved_card.use_this,Use this card
+checkout.payment.saved_card.other_methods,Other payment methods
 checkout.points.insufficient_balance,You do not have enough points to complete this order
 checkout.points.requires_login,You must be logged in to pay with points
 checkout.promo_codes.apply,Apply
@@ -582,6 +653,8 @@ checkout.shipping.click_and_collect.lead_time_immediate,Available for collection
 checkout.shipping.click_and_collect.out_of_stock,Out of Stock
 checkout.shipping.collection_time.header,When do you expect to collect your order?
 checkout.shipping.collection_time.placeholder,Est. collection date
+checkout.shipping.delivery_groups.group_heading,Delivery %{index} of %{count}
+checkout.shipping.delivery_groups.intro,"Your items have different delivery options, so this order will arrive as %{count} deliveries. Choose an option for each delivery."
 checkout.shipping.form.click_and_collect,Click & Collect
 checkout.shipping.form.continuing,Continuing...
 checkout.shipping.form.next,Next
@@ -603,6 +676,16 @@ checkout.vouchers.enter_pin,Enter PIN
 checkout.vouchers.heading,Vouchers
 checkout.vouchers.status.enum.applied,Applied
 checkout.vouchers.status.enum.requires_pin,Requires PIN
+checkout.vouchers.vii.amount_label,Amount to apply
+checkout.vouchers.vii.apply,Apply
+checkout.vouchers.vii.balance,Available balance: %{balance}
+checkout.vouchers.vii.check_balance,Check
+checkout.vouchers.vii.enter_card_number,Enter gift card number
+checkout.vouchers.vii.enter_pin,Enter PIN
+checkout.vouchers.vii.heading,Apply a gift card
+checkout.vouchers.vii.invalid_card,We couldn't validate that card. Please check the number and PIN.
+checkout.vouchers.vii.missing_fields,"Enter your gift card number and PIN, then check the balance."
+checkout.vouchers.vii.no_balance,This card has no remaining balance.
 custom_forms.click_to_enter_your_answer,Click here to enter your answer
 custom_forms.no_option_selected,No option selected
 custom_forms.select_option,Select option...
@@ -681,7 +764,6 @@ order_summary.order.total_subscriptions_remaining,Total remaining subscriptions
 order_summary.paid,Paid
 order_summary.tax_label,Tax
 order_summary.total,Total amount
-order_summary.voucher,Voucher
 pagination.first,First
 pagination.last,Last
 pagination.next,Next
@@ -721,7 +803,6 @@ privacy.modal.save_reject_all,Disable All & Save
 privacy.reject_all,Reject All
 products.bundle_only.notice,This product is only available as part of a bundle.
 products.bundle_only.available_in,Available in these bundles
-products.add_to_cart.quantity_label,Qty
 products.approvals.restricted,This item is restricted and requires pre-approval
 products.approvals.status.approved.count.infinity,You can purchase an unlimited amount of this item
 products.approvals.status.approved.count.one,You are approved to purchase only 1 of this item
@@ -794,6 +875,12 @@ sc.account_credit.descriptor,Account Credit
 sc.account_credit.remove.errors.fail,The account credit could not be removed from your cart. Please contact support for assistance.
 sc.account_credit.remove.notices.success,Account Credit removed
 sc.account_points.descriptor,Account Points
+sc.accounts.addresses.create.errors.invalid,There was an error adding the address
+sc.accounts.addresses.create.notices.success,Address was added
+sc.accounts.addresses.update.errors.invalid,There was an error updating the address
+sc.accounts.addresses.update.notices.success,Address was updated
+sc.accounts.addresses.destroy.errors.fail,Could not remove the address
+sc.accounts.addresses.destroy.notices.success,Address was removed
 sc.accounts.confirmations.notices.already_signed_in,You are already signed in
 sc.accounts.confirmations.notices.check_email_for_instructions,"If the email is registered, you should get a confirmation email, unless it's already confirmed."
 sc.accounts.invitations.notices.already_signed_in,You are already signed in
@@ -812,6 +899,21 @@ sc.accounts.register.errors.fail,"There was a problem processing your registrati
 sc.accounts.register.errors.invalid,There was a problem creating your account
 sc.accounts.register.notices.already_signed_in,You are already signed in
 sc.accounts.register.notices.login_exists,You already have an account. Please sign in or reset password.
+sc.accounts.payment_methods.destroy.success,Payment method removed
+sc.accounts.payment_methods.display_names.saved_payment_method,Saved payment method
+sc.accounts.payment_methods.display_names.saved_bank_account,Saved bank account
+sc.accounts.payment_methods.display_names.saved_digital_wallet,Saved digital wallet
+sc.accounts.payment_methods.display_names.card_ending_in,Card ending in %{last_four}
+sc.accounts.payment_methods.display_names.card_brand_ending_in,%{card_brand} ending in %{last_four}
+sc.accounts.payment_methods.display_names.bank_account_last_four,Bank account ****%{last_four}
+sc.accounts.payment_methods.display_names.bank_account_type_last_four,%{bank_name} %{type_label} ****%{last_four}
+sc.accounts.payment_methods.display_names.wallet_with_card,%{label} - %{card_brand} ending in %{last_four}
+sc.accounts.payment_methods.display_names.account_type_default,Account
+sc.accounts.payment_methods.display_names.payment_ending_in,%{label} ending in %{last_four}
+sc.accounts.payment_methods.update.success,Payment method updated
+sc.accounts.payment_methods.wallet_labels.apple_pay,Apple Pay
+sc.accounts.payment_methods.wallet_labels.google_pay,Google Pay
+sc.accounts.payment_methods.wallet_labels.paypal,PayPal
 sc.accounts.subscriptions.cancel.errors.not_allowed,That subscription cannot be cancelled
 sc.accounts.subscriptions.cancel.notices.success,Subscription has been cancelled
 sc.accounts.subscriptions.payment.title,Pay Subscription
@@ -846,7 +948,7 @@ sc.accounts.subscriptions.payment.errors.unexpected,An unexpected error occurred
 sc.accounts.subscriptions.payment.notices.success,Payment successful! Your subscription has been updated
 sc.accounts.subscriptions.update_payment_details.errors.fail,Updating payment details failed
 sc.accounts.subscriptions.update_payment_details.notices.success,Payment details updated
-sc.additional_payments.errors.renewal_order_not_permitted,You cannot make payments for renewal orders
+sc.additional_payments.errors.renewal_order_not_permitted,You must be logged in to pay a renewal order
 sc.additional_payments.errors.amount_exceeds_balance,The payment amount exceeds the remaining balance on this order. Please refresh and try again.
 sc.article.errors.not_found,That article was not found.
 sc.article.errors.requires_membership,You do not have the required membership level to access this article. Requires: %{membership_required}.
@@ -920,6 +1022,9 @@ sc.auth.sso.incorrect_provider,"Could not authenticate, account is already linke
 sc.auth.sso.keycloak_openid.fail,Could not authenticate you from Keycloak OpenID because: %{reason}
 sc.auth.sso.keycloak_openid.success,Successfully authenticated from your Keycloak OpenID account.
 sc.auth.sso.keycloak_openid.support,"There was a problem processing your registration, please contact support."
+sc.auth.sso.login_gov.fail,Could not authenticate you from Login.gov because: %{reason}
+sc.auth.sso.login_gov.success,Successfully authenticated from your Login.gov account.
+sc.auth.sso.login_gov.support,"There was a problem processing your registration, please contact support."
 sc.auth.sso.openid.fail,Could not authenticate you from OpenID because: %{reason}
 sc.auth.sso.openid.success,Successfully authenticated from your OpenID account.
 sc.auth.sso.openid.support,"There was a problem processing your registration, please contact support."
@@ -937,6 +1042,16 @@ sc.bundles.add.errors.bundle_product_not_found,Bundle product not found
 sc.bundles.add.errors.failed_to_add_bundle,Failed to add bundle to cart
 sc.bundles.add.errors.bundle_product_unavailable,%{name} is currently unavailable
 sc.bundles.add.errors.component_unavailable,%{name} is currently unavailable and cannot be added to the bundle
+sc.bundles.add.errors.nesting_too_deep,This bundle cannot be added to the cart: bundles can only be nested one level deep
+sc.bundles.add.errors.component_required,%{name} is required for this bundle
+sc.bundles.add.errors.group_too_few_components,%{group} requires at least %{min} component(s)
+sc.bundles.add.errors.group_too_many_components,%{group} allows at most %{max} component(s)
+sc.bundles.add.errors.unknown_component,One or more selected components do not belong to this bundle
+sc.bundles.add.errors.duplicate_component,A component was selected more than once
+sc.bundles.add.errors.component_quantity_too_low,%{name} requires at least %{min}
+sc.bundles.add.errors.component_quantity_too_high,%{name} allows at most %{max}
+sc.bundles.add.errors.group_quantity_too_low,%{group} requires at least %{min} total item(s)
+sc.bundles.add.errors.group_quantity_too_high,%{group} allows at most %{max} total item(s)
 sc.bundles.add.notices.success,Bundle added to your cart!
 sc.bundles.add.notices.failure,Error adding product bundle to cart
 sc.bundles.edit.errors.bundle_not_found_in_cart,Bundle not found in cart
@@ -991,8 +1106,11 @@ sc.checkout.payment.create.errors.no_cart_found,"We could not find your cart, pe
 sc.checkout.payment.create.errors.no_saved_card,Payment failed. No saved card found for this account.
 sc.checkout.payment.create.errors.points.insufficient_balance,You do not have enough points to complete this order.
 sc.checkout.payment.create.errors.points.not_permitted,You are not allowed to use the account points for this account
+sc.checkout.payment.create.errors.risk_declined,We could not process your order. Please contact Customer Care.
 sc.checkout.payment.create.errors.unauthorized,"Unable to authenticate, please check the payment provider's credentials."
 sc.checkout.payment.create.errors.wallet_declined,Payment failed. The digital wallet payment was declined.
+sc.checkout.payment.deposit.errors.not_available,Deposit not available
+sc.checkout.payment.deposit.errors.pay_in_full,Some items in your order must be paid in full. The minimum payment is %{minimum}.
 sc.checkout.payment.shared.errors.api_auth_error,Error authorizing with API
 sc.checkout.payment.shared.errors.custom_data_missing,%{model} custom data field %{field} is missing
 sc.checkout.payment.shared.errors.during_checkout,"Something went wrong, please try again later!"
@@ -1011,20 +1129,29 @@ sc.checkout.payment.shared.errors.contact_name_missing,Contact name is required 
 sc.checkout.payment.shared.errors.customer_cancelled,Payment was cancelled by customer
 sc.checkout.payment.shared.errors.refund_details_error,Unable to retrieve original transaction details for refund
 sc.checkout.payment.shared.errors.refund_not_settled,Partial refunds are not available until the transaction has settled
+sc.checkout.payment.save_errors.failed,Failed to save payment method. Please try again.
+sc.checkout.payment.save_errors.payment_intent_missing,Payment intent not provided.
+sc.checkout.payment.save_errors.bank_account_unavailable,Bank account details not available.
+sc.checkout.payment.save_errors.retrieve_failed,Failed to retrieve card details.
 sc.checkout.shipping.click_and_collect.out_of_stock,Out of Stock at %{location}
 sc.checkout.shipping.click_and_collect.available_now,Collect from %{location} (available now)
 sc.checkout.shipping.click_and_collect.available_from,Collect from %{location} (available from %{from})
 sc.checkout.shipping.errors.could_not_be_calculated,Shipping could not be calculated at this time.
 sc.checkout.shipping.errors.delivery_option_not_specified,Delivery options for some items have not been specified. Please select a delivery option for all items.
 sc.checkout.shipping.errors.no_longer_available,"The selected shipping service is no longer available for the selected shipping provider, please select another"
+sc.checkout.shipping.errors.options_changed,The available shipping options have changed. Please review your delivery selections.
 sc.checkout.shipping.errors.shipping_method_not_selected,Please select a shipping method.
 sc.checkout.shipping.errors.some_items_not_shippable,Some of the items can not be shipped via the selected shipping method.
 sc.checkout.shipping.errors.tax_provider_offline,Tax provider offline. Please try again in a few minutes.
 sc.checkout.shipping.cart_item_name.custom,Shipping: %{label}
 sc.checkout.shipping.cart_item_name.provider,Shipping: %{provider}: %{label}
+sc.checkout.shipping.cart_item_name.multi,Shipping
 sc.checkout.tax.default_name,Sales Tax
 sc.checkout.terms_and_conditions.errors.must_accept,Please accept the terms to continue
 sc.checkout.express.shipping.click_and_collect,%{location}. Collection point is %{point}.
+sc.checkout.express.shipping.multi_shipping.count.one,Shipping (1 delivery)
+sc.checkout.express.shipping.multi_shipping.count.other,Shipping (%{count} deliveries)
+sc.checkout.express.shipping.errors.use_full_checkout,Some items in your cart have different delivery options. Please use the standard checkout to complete your order.
 sc.errors.buy_button.add.fail,We were unable to add some or all of those items to your cart
 sc.errors.not_authenticated,You must be signed in to access this page.
 sc.errors.not_authorized,You are not authorized to access this page.
@@ -1482,6 +1609,7 @@ sc.location_group.errors.not_found,That page was not found.
 sc.orders.reorder.errors.not_found,Could not find order to reorder. Please wait a moment and try again.
 sc.orders.reorder.notices.could_not_add_some,Could not add some order items from order %{reference} to your cart: %{items}.
 sc.orders.reorder.notices.success,Order items from order %{reference} have been added to your cart.
+sc.orders.risk_review_notice,Your order is being reviewed. We'll update you once it is processed.
 sc.page.errors.not_found,That page was not found.
 sc.page.errors.requires_membership,You do not have the required membership level to access this page. Requires: %{membership_required}.
 sc.product_category.errors.not_found,That page was not found.
@@ -1554,8 +1682,15 @@ sc.vouchers.activation.errors.log.passed_activation_period,Voucher activation wi
 sc.vouchers.activation.errors.log.voucher_expired,Voucher has expired.
 sc.vouchers.activation.errors.log.invalid_code,Activation code did not match.
 sc.vouchers.activation.success,Successfully activated voucher
+sc.vouchers.vii.apply.notices.success,Gift card has been applied.
+sc.vouchers.vii.descriptor,Gift card
+sc.vouchers.vii.errors.insufficient_balance,Amount exceeds the available card balance.
+sc.vouchers.vii.errors.invalid_amount,Enter a valid amount to apply.
+sc.vouchers.vii.errors.invalid_card,We couldn't validate that card. Please check the number and PIN.
+sc.vouchers.vii.errors.no_balance,This card has no remaining balance.
 sc.shipments.errors.provider_not_enabled,%{provider} shipping provider is not configured or not active
 sc.shipments.errors.not_ready_to_ship,Shipment is not ready to ship
+sc.shipments.errors.missing_stock_location,Shipment has no stock location to ship from
 sc.shipments.errors.provider_shipment_id_is_shipping_rate,Provider Shipment ID references a custom Shipping Rate
 sc.shipments.errors.invalid_shipment,Shipment data is currently invalid and no changes are allowed
 search.articles.index.no_results,There are no content article results
