@@ -1,10 +1,10 @@
-const { sassPlugin } = require('esbuild-sass-plugin')
-const postcss = require('postcss')
-const postcssUrl = require('postcss-url')
-const postcssNested = require('postcss-nested')
-const postcssScss = require('postcss-scss')
-const cssnano = require('cssnano')
-const { notify, manifestPlugin } = require('./helpers')
+import { sassPlugin } from 'esbuild-sass-plugin'
+import postcss from 'postcss'
+import postcssUrl from 'postcss-url'
+import postcssNested from 'postcss-nested'
+import postcssScss from 'postcss-scss'
+import cssnano from 'cssnano'
+import { notify, manifestPlugin } from './helpers.mjs'
 
 const postcssConfig = {
   plugins: [
@@ -17,7 +17,7 @@ const postcssConfig = {
   ],
 }
 
-module.exports = {
+export default {
   entryPoints: ['src/styles/packs/**/*.scss'],
   entryNames: 'styles/[dir]/[name].[hash]',
   outdir: 'dist',
