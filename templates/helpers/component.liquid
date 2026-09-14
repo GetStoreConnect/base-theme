@@ -1,7 +1,14 @@
-<div class="sc-component-container"
+<div class="sc-component-container{% if defer %} is-loading{% endif %}"
   {% if reload_events.size > 0 %}data-reload-events="{{ reload_events | join: ' ' }}"{% endif %}
+  {% if defer %}data-component-defer{% endif %}
   data-nonce="{{ nonce }}"
   data-token="{{ token }}"
 >
-  {{ content }}
+  {%- if defer %}
+    <div style="position: relative; min-height: 80px;">
+      {% render "shared/loader", active: true %}
+    </div>
+  {%- else %}
+    {{ content }}
+  {%- endif %}
 </div>
