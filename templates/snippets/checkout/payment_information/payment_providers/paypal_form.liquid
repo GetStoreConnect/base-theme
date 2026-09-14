@@ -1,18 +1,106 @@
+{%- default only_express_checkout: false %}
+
 <div data-provider-container="{{ payment_provider.code }}">
   <div data-ref="script-block"></div>
 
-  {%- form "payment", provider: payment_provider, class: "SC-Panel" %}
+  {%- form "payment", provider: payment_provider, only-express-checkout: only_express_checkout, class: "SC-Panel" %}
 
-    {{ payment_provider.description_content }}
+    {%- unless only_express_checkout %}
+      {{ payment_provider.description_content }}
+    {%- endunless %}
 
-    <div data-ref="paypal-button-container"></div>
+    {%- if payment_provider.enabled_features contains "fastlane" %}
+      {%- comment -%}
+        Checkout mode (only_express_checkout false) renders hidden:
+        fastlane-checkout.js reveals the section only once the email lookup
+        recognizes a Fastlane member, so an SDK failure or an unrecognized
+        shopper never sees a dead Fastlane block. The email input is hidden
+        rather than removed because its prefilled value is what drives that
+        lookup; shoppers change their email at the customer information step.
+
+        Express mode (cart page) renders visible with an editable email input
+        — there's no prefilled checkout email to key the lookup off yet. An
+        unrecognized email is a quiet no-op until guest card-entry fields land.
+      {%- endcomment -%}
+      {%- assign fastlane_prefill_email = current_cart.contact | try: "email" -%}
+      <div data-ref="fastlane-section" class="sc-mb{% unless only_express_checkout %} sc-hide{% endunless %}"
+        data-current-shipping-rate-label="{{ current_cart.shipping_provider_service_name }}">
+        <div class="SC-Field">
+          <label class="SC-Field_label{% unless only_express_checkout %} sc-hide{% endunless %}">
+            <span>{{ "checkout.gateways.fastlane.email_label" | t }}</span>
+            <input type="email" data-ref="fastlane-email" value="{{ fastlane_prefill_email }}" autocomplete="email">
+          </label>
+          {%- unless only_express_checkout %}
+            <div data-ref="fastlane-email-display">
+              <strong>{{ "checkout.gateways.fastlane.email_label" | t }}</strong>
+              <span>{{ fastlane_prefill_email }}</span>
+            </div>
+          {%- endunless %}
+          <div data-ref="fastlane-watermark"></div>
+        </div>
+        <button type="button" data-ref="fastlane-continue" class="SC-Button sc-hide">
+          {{ "checkout.gateways.fastlane.continue" | t }}
+        </button>
+        <div data-ref="fastlane-profile" class="sc-hide">
+          <div class="SC-Field" data-ref="fastlane-shipping-display">
+            <strong>{{ "checkout.gateways.fastlane.shipping_to" | t }}</strong>
+            <span data-ref="fastlane-address"></span>
+            <button type="button" data-ref="fastlane-change-address" class="SC-Link">
+              {{ "checkout.gateways.fastlane.change" | t }}
+            </button>
+          </div>
+          <div class="SC-Field sc-hide" data-ref="fastlane-shipping-methods">
+            <strong>{{ "checkout.gateways.fastlane.shipping_method" | t }}</strong>
+            <div data-ref="fastlane-rate-options"></div>
+            <template data-ref="fastlane-rate-template">
+              <div class="SC-OptionCard">
+                <label class="SC-OptionCard_label">
+                  <div class="SC-OptionCard_radio">
+                    <div class="SC-RadioInput">
+                      <input type="radio" class="SC-Radio_input">
+                      <svg viewBox="0 0 100 100">
+                        <ellipse cx="50" cy="50" rx="45" ry="45"></ellipse>
+                        <ellipse cx="50" cy="50" rx="28" ry="28"></ellipse>
+                      </svg>
+                    </div>
+                  </div>
+                  <div class="SC-OptionCard_detail">
+                    <div class="SC-OptionCard_detail_primary">
+                      <div><strong data-ref="fastlane-rate-label"></strong></div>
+                      <div class="sc-shade-neutral sc-mt-tiny sc-hide" data-ref="fastlane-rate-description"></div>
+                    </div>
+                    <div class="SC-OptionCard_detail_secondary" data-ref="fastlane-rate-amount"></div>
+                  </div>
+                </label>
+              </div>
+            </template>
+          </div>
+          <div data-ref="fastlane-payment-container"></div>
+          {%- if only_express_checkout %}
+            <div class="SC-Field">
+              <strong>{{ "checkout.gateways.fastlane.total" | t }}</strong>
+              <span data-ref="fastlane-total"></span>
+            </div>
+          {%- endif %}
+          <button type="button" data-ref="fastlane-pay" class="SC-Button">
+            {{ "checkout.gateways.fastlane.pay" | t }}
+          </button>
+        </div>
+      </div>
+    {%- endif %}
+
+    {%- unless only_express_checkout %}
+      <div data-ref="paypal-button-container"></div>
+    {%- endunless %}
 
     {%# submit_button hidden so payment-form.js can still find it even though it does nothing %}
     {% render "checkout/payment_information/submit_button", hidden: true %}
 
     {% render "checkout/payment_information/payment_error" %}
 
-    {% render "checkout/payment_information/additional_info", form: form %}
+    {%- unless only_express_checkout %}
+      {% render "checkout/payment_information/additional_info", form: form %}
+    {%- endunless %}
   {%- endform %}
 </div>
 

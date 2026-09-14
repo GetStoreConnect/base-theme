@@ -1,6 +1,6 @@
 <div data-provider-container="{{ payment_provider.code }}">
   {%- form "payment", provider: payment_provider %}
-    {% render "checkout/payment_information/submit_button" %}
+    {% render "checkout/payment_information/submit_button", button_label: button_label %}
   {% endform -%}
 </div>
 

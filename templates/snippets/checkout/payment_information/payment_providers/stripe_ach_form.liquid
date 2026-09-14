@@ -7,7 +7,12 @@
         form: form,
         payment_provider: payment_provider %}
 
-    {% render "checkout/payment_information/submit_button", button_label: 'checkout.gateways.stripe_ach_form.pay_now' | t %}
+    {%- default button_label: blank %}
+    {%- if button_label == blank %}
+      {%- assign button_label = 'checkout.gateways.stripe_ach_form.pay_now' | t %}
+    {%- endif %}
+
+    {% render "checkout/payment_information/submit_button", button_label: button_label %}
 
     {% render "checkout/payment_information/additional_info", form: form %}
   {%- endform %}
