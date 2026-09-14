@@ -6,20 +6,28 @@ const ComponentReloader = (() => {
   const timers = new WeakMap()
   const inflight = new WeakSet()
 
+  const CONTAINER_SELECTOR = '[data-reload-events], [data-component-defer]'
+
   function registerFrom(node) {
     // scan for any components under this node
     const candidates = []
-    if (node.nodeType === Node.ELEMENT_NODE && node.matches('[data-reload-events]')) {
+    if (node.nodeType === Node.ELEMENT_NODE && node.matches(CONTAINER_SELECTOR)) {
       candidates.push(node)
     }
     if (node.querySelectorAll) {
-      node.querySelectorAll('[data-reload-events]').forEach((el) => candidates.push(el))
+      node.querySelectorAll(CONTAINER_SELECTOR).forEach((el) => candidates.push(el))
     }
 
-    // bind document-level listeners for all events we see
     candidates.forEach((el) => {
+      // bind document-level listeners for all events we see
       const events = (el.getAttribute('data-reload-events') || '').split(/\s+/).filter(Boolean)
       events.forEach(ensureListener)
+
+      // deferred components load themselves as soon as they are registered;
+      // the fetched replacement doesn't carry the attribute, so this fires once
+      if (el.hasAttribute('data-component-defer')) {
+        scheduleReload(el)
+      }
     })
 
     // after any mutation, also check for orphaned listeners

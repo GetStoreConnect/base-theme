@@ -249,7 +249,8 @@ export class ApplePay {
         const shippingMethods = shippingOptions.shippingRates.map((rate) => ({
           label: rate.displayName,
           amount: (rate.amount / 100).toFixed(2),
-          detail: rate.deliveryEstimate,
+          // ApplePayShippingMethod.detail must be a DOMString; undefined throws.
+          detail: rate.deliveryEstimate ?? '',
           identifier: rate.id,
         }))
 

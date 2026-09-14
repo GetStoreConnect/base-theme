@@ -25,6 +25,7 @@ function initEway({ form }) {
   function onSubmit(paymentForm) {
     const cardNumberEl = paymentForm.form.querySelector("[data-encrypt-name='EWAY_CARDNUMBER']")
     const cvnEl = paymentForm.form.querySelector("[data-encrypt-name='EWAY_CARDCVN']")
+    const rawDigits = cardNumberEl.value.replace(/\D/g, '')
     const payload = {
       payment_source: {
         number: eCrypt.encryptValue(cardNumberEl.value, publicKey),
@@ -32,6 +33,8 @@ function initEway({ form }) {
         expiry_month: paymentForm.getFieldValue('card_month'),
         expiry_year: paymentForm.getFieldValue('card_year'),
         cvn: eCrypt.encryptValue(cvnEl.value, publicKey),
+        bin: rawDigits.slice(0, 6),
+        last4: rawDigits.slice(-4),
       },
     }
 
