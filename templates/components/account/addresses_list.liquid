@@ -1,0 +1,57 @@
+{%- assign addresses = current_customer.addresses %}
+{%- if addresses.size > 0 %}
+  <table data-ref="addresses" class="sc-mb-spacious">
+    <caption class="sc-visually-hidden">{{ "accounts.addresses.index.heading" | t }}</caption>
+    <thead>
+      <tr>
+        <th scope="col">{{ "accounts.addresses.index.label" | t }}</th>
+        <th scope="col">{{ "accounts.addresses.index.address" | t }}</th>
+        <th scope="col">{{ "accounts.addresses.index.defaults" | t }}</th>
+        <th scope="col">{{ "accounts.addresses.index.actions" | t }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {%- for entry in addresses %}
+        {%- assign entry_name = entry.label | default: entry.address.single_line %}
+        <tr>
+          <td data-th="{{ "accounts.addresses.index.label" | t }}">{{ entry.label | default: "—" }}</td>
+          <td data-th="{{ "accounts.addresses.index.address" | t }}">
+            {%- render "shared/address_multi_line",
+                lines: entry.address.street_lines,
+                city: entry.address.city,
+                state: entry.address.state,
+                country: entry.address.country,
+                postal_code: entry.address.postal_code %}
+          </td>
+          <td data-th="{{ "accounts.addresses.index.defaults" | t }}">
+            {%- if entry.is_default_shipping? %}
+              <span class="SC-Tag">{{ "accounts.addresses.index.default_shipping" | t }}</span>
+            {%- endif %}
+            {%- if entry.is_default_billing? %}
+              <span class="SC-Tag">{{ "accounts.addresses.index.default_billing" | t }}</span>
+            {%- endif %}
+            {%- unless entry.is_default_shipping? %}
+              {%- form "set-default-address", address: entry, type: "shipping", data-success: "sc.address-book.changed", data-type: "json", remote: true, class: "sc-inline" %}
+                <button type="submit" class="SC-Link" aria-label="{{ "accounts.addresses.index.make_default_shipping_aria" | t, address: entry_name }}">{{ "accounts.addresses.index.make_default_shipping" | t }}</button>
+              {%- endform %}
+            {%- endunless %}
+            {%- unless entry.is_default_billing? %}
+              {%- form "set-default-address", address: entry, type: "billing", data-success: "sc.address-book.changed", data-type: "json", remote: true, class: "sc-inline" %}
+                <button type="submit" class="SC-Link" aria-label="{{ "accounts.addresses.index.make_default_billing_aria" | t, address: entry_name }}">{{ "accounts.addresses.index.make_default_billing" | t }}</button>
+              {%- endform %}
+            {%- endunless %}
+          </td>
+          <td data-th="{{ "accounts.addresses.index.actions" | t }}">
+            <a href="{{ entry.edit_path }}" aria-label="{{ "accounts.addresses.index.edit_aria" | t, address: entry_name }}">{{ "accounts.addresses.index.edit" | t }}</a>
+            <span class="sc-ml-small" aria-hidden="true">|</span>
+            {%- form "delete-address", address: entry, data-success: "sc.address-book.changed", data-type: "json", remote: true, class: "sc-inline" %}
+              <button type="submit" class="SC-Link sc-color-error" aria-label="{{ "accounts.addresses.index.delete_aria" | t, address: entry_name }}">{{ "accounts.addresses.index.delete" | t }}</button>
+            {%- endform %}
+          </td>
+        </tr>
+      {%- endfor %}
+    </tbody>
+  </table>
+{%- else %}
+  <div class="sc-shade-neutral">{{ "accounts.addresses.index.no_addresses" | t }}</div>
+{%- endif %}

@@ -51,7 +51,7 @@
         {%- if context.show_wallets == true %}
           {%- if current_cart.currency_payment_required? %}
             <aside class="sc-mt">
-              {% render "checkout/payment_information/show_wallets_only" %}
+              {% render "checkout/payment_information/show_wallets_only", skip_paypal_fastlane: true %}
             </aside>
           {%- endif %}
         {%- endif %}
