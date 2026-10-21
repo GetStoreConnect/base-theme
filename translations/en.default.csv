@@ -482,6 +482,9 @@ checkout.account_credits.enter_amount,Enter total amount to apply
 checkout.account_credits.heading,Account Credits
 checkout.account_credits.remove,Remove
 checkout.account_credits.select_prompt,Select an account credit...
+checkout.deposit.label,Amount to pay now
+checkout.deposit.minimum_hint,Minimum deposit %{minimum}
+checkout.deposit.below_minimum,Adjusted to the minimum deposit of %{minimum}
 checkout.assisted_by.were_you_assisted_with_this_order,Were you assisted with this order?
 checkout.customer_information.address.saved_address,Saved addresses
 checkout.customer_information.address.enter_new,Enter a new address
@@ -1083,6 +1086,8 @@ sc.checkout.payment.create.errors.points.insufficient_balance,You do not have en
 sc.checkout.payment.create.errors.points.not_permitted,You are not allowed to use the account points for this account
 sc.checkout.payment.create.errors.unauthorized,"Unable to authenticate, please check the payment provider's credentials."
 sc.checkout.payment.create.errors.wallet_declined,Payment failed. The digital wallet payment was declined.
+sc.checkout.payment.deposit.errors.not_available,Deposit not available
+sc.checkout.payment.deposit.errors.pay_in_full,Some items in your order must be paid in full. The minimum payment is %{minimum}.
 sc.checkout.payment.shared.errors.api_auth_error,Error authorizing with API
 sc.checkout.payment.shared.errors.custom_data_missing,%{model} custom data field %{field} is missing
 sc.checkout.payment.shared.errors.during_checkout,"Something went wrong, please try again later!"

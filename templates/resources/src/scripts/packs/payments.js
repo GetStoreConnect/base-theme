@@ -152,6 +152,20 @@ function enablePaymentTabs() {
   })
 }
 
+// Internal provider forms (e.g. Pay Later) and Complete payment submit natively
+// rather than through PaymentForm, so they carry the payment page's custom
+// amount in a hidden field.
+onDomChange((node) => {
+  const customAmountInput = document.getElementById('custom-payment-amount')
+  if (!customAmountInput) return
+
+  node.querySelectorAll('form input[name="custom_amount"]').forEach((field) => {
+    field.form.addEventListener('submit', () => {
+      field.value = customAmountInput.value
+    })
+  })
+})
+
 document.addEventListener('store-connect.payment-processing-start', disablePaymentTabs)
 document.addEventListener('store-connect.payment-processing-end', enablePaymentTabs)
 

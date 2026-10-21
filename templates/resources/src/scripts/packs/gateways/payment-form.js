@@ -1,6 +1,7 @@
-import { postJSON } from '../../theme/utils/fetch'
-import storePathUrl from '../../theme/store-path-url'
 import { loadScript as loadExternalScript } from '../../theme/load-script'
+import storePathUrl from '../../theme/store-path-url'
+import { postJSON } from '../../theme/utils/fetch'
+import { attachCurrencySanitizer } from '../../theme/utils/currency'
 
 const Rails = window.Rails
 
@@ -35,17 +36,33 @@ export class PaymentForm {
     const customAmountInput = document.getElementById('custom-payment-amount')
     if (!customAmountInput) return
 
-    this._originalTotalPayable = this.form.dataset.totalPayable
+    // `data-total-payable` may reflect a saved custom amount pre-filled into the
+    // input; emptying the input means paying the default instead.
+    this._originalTotalPayable =
+      this.form.dataset.defaultTotalPayable || this.form.dataset.totalPayable
 
-    // The input's `max` attribute reflects the order's full remaining balance
+    // Keep the field numeric, positive and to the currency's decimal places as
+    // the customer types or pastes.
+    attachCurrencySanitizer(customAmountInput)
+
+    // `data-max` reflects the order's full remaining balance
     // (`order.total_payable`), which may exceed `data-total-payable` on deposit
     // orders where the form's default total is the deposit amount. Clamp to
-    // the input's max so customers can pay above the deposit when they want to.
-    const parsedMax = parseFloat(customAmountInput.max)
-    const maxAmount =
-      customAmountInput.max !== '' && !isNaN(parsedMax)
-        ? parsedMax
-        : parseFloat(this._originalTotalPayable)
+    // this max so customers can pay above the deposit when they want to.
+    const parsedMax = parseFloat(customAmountInput.dataset.max)
+    const maxAmount = !isNaN(parsedMax) ? parsedMax : parseFloat(this._originalTotalPayable)
+
+    // When minimum deposits are configured, the amount is raised to the minimum.
+    const minAmount = parseFloat(customAmountInput.dataset.min) || 0
+    const decimals = parseInt(customAmountInput.dataset.decimals, 10) || 2
+    const messageEl = document.querySelector('[data-custom-amount-message]')
+
+    // The custom amount is gross, but the server charges it less every applied
+    // voucher, so the gateways need the net figure.
+    const vouchersTotal = parseFloat(customAmountInput.dataset.vouchersTotal) || 0
+    const scale = 10 ** decimals
+    const netOfVouchers = (amount) =>
+      (Math.round(Math.max(0, amount - vouchersTotal) * scale) / scale).toString()
 
     // Restore typed-but-not-yet-submitted value across soft reloads. The server
     // already pre-fills `value=` from session for failed-submit cases, so only
@@ -57,7 +74,7 @@ export class PaymentForm {
       const saved = sessionStorage.getItem(storageKey)
       if (saved && parseFloat(saved) <= maxAmount) {
         customAmountInput.value = saved
-        this.form.dataset.totalPayable = saved
+        this.form.dataset.totalPayable = netOfVouchers(parseFloat(saved))
       }
     }
 
@@ -65,12 +82,40 @@ export class PaymentForm {
       const value = parseFloat(customAmountInput.value)
       if (!isNaN(value) && value > 0) {
         const clamped = Math.min(value, maxAmount)
-        this.form.dataset.totalPayable = clamped.toString()
+        this.form.dataset.totalPayable = netOfVouchers(clamped)
         if (storageKey) sessionStorage.setItem(storageKey, customAmountInput.value)
       } else {
         this.form.dataset.totalPayable = this._originalTotalPayable
         if (storageKey) sessionStorage.removeItem(storageKey)
       }
+    })
+
+    // On commit, clamp into [min, max]. Raising to the minimum explains why.
+    customAmountInput.addEventListener('change', () => {
+      let value = parseFloat(customAmountInput.value)
+      if (messageEl) messageEl.textContent = ''
+
+      if (isNaN(value) || value <= 0) {
+        customAmountInput.value = ''
+        this.form.dataset.totalPayable = this._originalTotalPayable
+        if (storageKey) sessionStorage.removeItem(storageKey)
+        return
+      }
+
+      // Never raise above the remaining balance: on a mostly-paid order the
+      // balance can be below the configured minimum.
+      const effectiveMin = Math.min(minAmount, maxAmount)
+      if (value > maxAmount) value = maxAmount
+      if (effectiveMin > 0 && value < effectiveMin) {
+        value = effectiveMin
+        if (messageEl && effectiveMin === minAmount) {
+          messageEl.textContent = customAmountInput.dataset.belowMinMessage || ''
+        }
+      }
+
+      customAmountInput.value = value.toFixed(decimals)
+      this.form.dataset.totalPayable = netOfVouchers(value)
+      if (storageKey) sessionStorage.setItem(storageKey, customAmountInput.value)
     })
   }
 

@@ -94,6 +94,7 @@ carts,add
 cache_form_params,create
 cart_items,destroy
 carts/selections,update
+carts/deposits,update
 checkout/steps/terms,create
 checkout/steps/terms,edit
 checkout/steps/terms,show

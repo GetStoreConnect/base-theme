@@ -46,6 +46,8 @@
     </div>
   </div>
 
+  {% component "checkout/deposit", reload: "sc.voucher-applied sc.voucher-removed" %}
+
   <div>
     {%- if current_cart.points_payment_required? or current_cart.currency_payment_required? %}
       {%- if current_cart.points_payment_required? and current_account == blank %}
