@@ -581,6 +581,7 @@ checkout.gateways.afterpay.line_items.rounding_adjustment,Rounding adjustment
 checkout.gateways.afterpay.line_items.discount,Discount
 checkout.gateways.afterpay.line_items.item,Item
 checkout.gateways.afterpay.line_items.balance_payment,Balance Payment
+checkout.gateways.paypal.line_items.collapsed_quantity,%{name} (×%{quantity})
 checkout.gateways.free_form.no_payment_required,No payment required
 checkout.gateways.latitude.description_html,"<svg style=""max-width: 14rem; height: auto;"" xmlns=""http: //www.w3.org/2000/svg"" xml:space=""preserve"" viewBox=""0 0 303.3 50""><path d=""M235.5 25.9c0 3.9-1.6 7.1-6.1 7.1s-6.1-3.1-6.1-7.1v-12h-3.1v12.4c0 4.2 1.7 9.7 9.2 9.7s9.2-5.5 9.2-9.7V13.9h-3.1zm35.2-1.1c0-5-3.8-7.8-8.5-7.8h-5.6v15.6h5.6c4.7.1 8.5-2.7 8.5-7.8m3.2 0c0 7-5.1 10.9-11.4 10.9h-8.9V13.9h8.9c6.2 0 11.4 3.9 11.4 10.9m-150.6 1.6-4.1-9.4-4.1 9.4zm-2.5-12.5 9.9 21.9h-3.3l-2.7-6.2h-10.9l-2.7 6.3h-3.2l9.8-21.9h3.1zm18.4 3.1h7.4v18.8h3.1V17h7.4v-3.1h-18V17zm49.1 0h7.4v18.8h3.1V17h7.4v-3.1h-18V17zm-17.1 18.8h3.1V13.9h-3.1zM303.3 17v-3.1h-15.8v21.9h15.8v-3.1h-12.7v-6.3h10.9v-3.1h-10.9V17zM84 13.9h-3.1v21.9h15.8v-3.1H84zM8.7 0H0v50h50v-8.7H8.7zm23.2 8.7c5.8 0 5.8-8.7 0-8.7-5.9 0-5.9 8.7 0 8.7m13.7 18.8c-5.8 0-5.8 8.7 0 8.7 5.9 0 5.9-8.7 0-8.7M18.1 8.7C24 8.7 24 0 18.1 0s-5.8 8.7 0 8.7m27.5 5.1c-2.5-.1-4.5 1.9-4.5 4.4s2 4.4 4.5 4.4c5.7-.2 5.7-8.7 0-8.8M50 4.4c0 5.8-8.7 5.8-8.7 0 0-5.9 8.7-5.9 8.7 0m0 0"" style=""fill-rule:evenodd;clip-rule:evenodd;fill:#0046aa""/></svg><p><strong>Enjoy Now. Pay Later.</strong></p><p>Flexible Latitude interest Free plans to suit your needs.<p><p>We're here to help you get what you need. With plans from 6-24 months, Latitude has a range of Interest Free offers that work for you.</p><p>You will be redirected to Latitude checkout to complete your order.</p>"
 checkout.gateways.latitude.terms_html,"<p style=""margin-top: 1rem;"">Before continuing, you agree to our <a class=""SC-Link"" target=""_blank"" href=""https://www.latitudefinancial.com.au/terms-and-conditions/"">Terms & Conditions</a>.</p>"
@@ -809,7 +810,6 @@ privacy.modal.save_reject_all,Disable All & Save
 privacy.reject_all,Reject All
 products.bundle_only.notice,This product is only available as part of a bundle.
 products.bundle_only.available_in,Available in these bundles
-products.add_to_cart.quantity_label,Qty
 products.approvals.restricted,This item is restricted and requires pre-approval
 products.approvals.status.approved.count.infinity,You can purchase an unlimited amount of this item
 products.approvals.status.approved.count.one,You are approved to purchase only 1 of this item
@@ -955,7 +955,8 @@ sc.accounts.subscriptions.payment.errors.unexpected,An unexpected error occurred
 sc.accounts.subscriptions.payment.notices.success,Payment successful! Your subscription has been updated
 sc.accounts.subscriptions.update_payment_details.errors.fail,Updating payment details failed
 sc.accounts.subscriptions.update_payment_details.notices.success,Payment details updated
-sc.additional_payments.errors.renewal_order_not_permitted,You cannot make payments for renewal orders
+sc.additional_payments.errors.renewal_order_not_permitted,You must be logged in to pay a renewal order
+sc.additional_payments.errors.order_cancelled,This order has been cancelled and can no longer be paid
 sc.additional_payments.errors.amount_exceeds_balance,The payment amount exceeds the remaining balance on this order. Please refresh and try again.
 sc.additional_payments.vouchers.cleared_due_to_amount_change,Your vouchers were removed because the payment amount changed. Please apply them again if you still want to use them.
 sc.additional_payments.vouchers.choose_payment_for_rest,Your vouchers don't cover the new amount. Please choose how to pay the rest.
@@ -1056,6 +1057,16 @@ sc.bundles.add.errors.bundle_product_not_found,Bundle product not found
 sc.bundles.add.errors.failed_to_add_bundle,Failed to add bundle to cart
 sc.bundles.add.errors.bundle_product_unavailable,%{name} is currently unavailable
 sc.bundles.add.errors.component_unavailable,%{name} is currently unavailable and cannot be added to the bundle
+sc.bundles.add.errors.nesting_too_deep,This bundle cannot be added to the cart: bundles can only be nested one level deep
+sc.bundles.add.errors.component_required,%{name} is required for this bundle
+sc.bundles.add.errors.group_too_few_components,%{group} requires at least %{min} component(s)
+sc.bundles.add.errors.group_too_many_components,%{group} allows at most %{max} component(s)
+sc.bundles.add.errors.unknown_component,One or more selected components do not belong to this bundle
+sc.bundles.add.errors.duplicate_component,A component was selected more than once
+sc.bundles.add.errors.component_quantity_too_low,%{name} requires at least %{min}
+sc.bundles.add.errors.component_quantity_too_high,%{name} allows at most %{max}
+sc.bundles.add.errors.group_quantity_too_low,%{group} requires at least %{min} total item(s)
+sc.bundles.add.errors.group_quantity_too_high,%{group} allows at most %{max} total item(s)
 sc.bundles.add.notices.success,Bundle added to your cart!
 sc.bundles.add.notices.failure,Error adding product bundle to cart
 sc.bundles.edit.errors.bundle_not_found_in_cart,Bundle not found in cart
@@ -1084,6 +1095,7 @@ sc.cart.update.notices.success,Cart Updated
 sc.cart.select.notices.success,Cart selected
 sc.checkout.accounts.create.errors.fail,There was a problem saving your password. Please contact support.
 sc.checkout.accounts.create.errors.invalid,There was a problem saving your password
+sc.checkout.accounts.create.errors.session_mismatch,"We could not confirm this order was placed in this browser, so the password was not saved. Please contact us for help accessing your order."
 sc.checkout.accounts.create.notices.check_email_for_confirmation,Please check your email for a confirmation link and follow the instructions to sign into your account.
 sc.checkout.accounts.create.notices.login_exists,You already have an account. Please sign in or reset password.
 sc.checkout.accounts.create.notices.you_are_now_signed_in,"Thank you, you are now signed in"
@@ -1695,8 +1707,11 @@ sc.vouchers.vii.errors.invalid_card,We couldn't validate that card. Please check
 sc.vouchers.vii.errors.no_balance,This card has no remaining balance.
 sc.shipments.errors.provider_not_enabled,%{provider} shipping provider is not configured or not active
 sc.shipments.errors.not_ready_to_ship,Shipment is not ready to ship
+sc.shipments.errors.missing_stock_location,Shipment has no stock location to ship from
+sc.shipments.errors.order_cancelled,Shipment's order has been cancelled
 sc.shipments.errors.provider_shipment_id_is_shipping_rate,Provider Shipment ID references a custom Shipping Rate
 sc.shipments.errors.invalid_shipment,Shipment data is currently invalid and no changes are allowed
+sc.shipments.errors.missing_store,Shipment has no order with a store. Link it to an order with a store to process it.
 search.articles.index.no_results,There are no content article results
 search.filters.apply_filters,Apply filters
 search.filters.category_placeholder,Search %{name}

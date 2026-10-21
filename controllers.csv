@@ -35,6 +35,7 @@ additional_payments/applied_vouchers,create
 additional_payments/applied_vouchers,destroy
 additional_payments/billing_addresses,update
 helpers/availabilities,index
+async/bootstraps,create
 async/components,load
 helpers/custom_form_answers,show
 helpers/custom_form_answers,update
@@ -144,7 +145,9 @@ cpq/bundles/options,create
 cpq/bundles/options,update
 express_checkout/carts,create
 express_checkout/carts,update
+express_checkout/payments,create
 express_checkout/shipping_methods,update
+feeds,show
 form_submission,create
 geolocations,create
 geolocations,destroy
