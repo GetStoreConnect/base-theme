@@ -79,7 +79,8 @@
           {{ "locations.search.results.menu.directions" | t }}
         </a>
       {%- endif %}
-      <a data-details class="sc-hover-bg-primary-subtle sc-border-radius sc-one-half sc-p-small sc-font-tiny sc-font-bold sc-color-primary" href="{{ match.path }}?s={{ current_request.query_string | url_encode }}">
+      {%- comment %} unescape first: the lookup escapes & to &amp;, which url_encode would bake into the nested query string {% endcomment %}
+      <a data-details class="sc-hover-bg-primary-subtle sc-border-radius sc-one-half sc-p-small sc-font-tiny sc-font-bold sc-color-primary" href="{{ match.path }}?s={{ current_request.query_string | unescape | url_encode }}">
         {{ "locations.search.results.menu.view" | t }}
       </a>
     </menu>
