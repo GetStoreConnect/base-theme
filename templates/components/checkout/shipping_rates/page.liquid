@@ -1,0 +1,100 @@
+{% if current_cart.require_delivery_method? %}
+  {%- assign delivery_groups = current_cart.delivery_groups %}
+  {%- assign group_count = delivery_groups.size %}
+
+  <p class="sc-shade-neutral sc-mb-small">
+    {{ "checkout.shipping.delivery_groups.intro" | t: count: group_count }}
+  </p>
+
+  {% for delivery_group in delivery_groups %}
+    <section class="SC-DeliveryGroup sc-mb-large" data-group-key="{{ delivery_group.key }}">
+      <h3 class="sc-mb-tiny">
+        {{ "checkout.shipping.delivery_groups.group_heading" | t: index: forloop.index, count: group_count }}
+      </h3>
+      <div class="sc-shade-neutral sc-mb-small">
+        {% for item in delivery_group.items %}{{ item.name }} &times; {{ item.quantity }}{% unless forloop.last %}, {% endunless %}{% endfor %}
+      </div>
+
+      {% for rate in delivery_group.rates %}
+        <div class="SC-OptionCard">
+          <label class="SC-OptionCard_label">
+            <div class="SC-OptionCard_radio">
+              <div class="SC-RadioInput">
+                <input type="radio"
+                       name="method[{{ delivery_group.key }}]"
+                       value="{{ rate.form_value }}"
+                       class="SC-Radio_input"
+                       {% if delivery_group.cheapest_rate and rate.form_value == delivery_group.cheapest_rate.form_value %}checked{% endif %}>
+                <svg viewBox="0 0 100 100">
+                  <ellipse cx="50" cy="50" rx="45" ry="45"></ellipse>
+                  <ellipse cx="50" cy="50" rx="28" ry="28"></ellipse>
+                </svg>
+              </div>
+            </div>
+            <div class="SC-OptionCard_detail">
+              <div class="SC-OptionCard_detail_primary">
+                <div>
+                  <strong>{{ rate.name }}</strong>
+                </div>
+                {%- if rate.instructions_content != blank %}
+                  <div class="sc-shade-neutral sc-mt-tiny">
+                    {{ rate.instructions_content }}
+                  </div>
+                {%- endif %}
+              </div>
+              <div class="SC-OptionCard_detail_secondary">
+                {{ rate.price | money }}
+              </div>
+            </div>
+          </label>
+        </div>
+      {% endfor %}
+
+      {% for option in delivery_group.pickup_options %}
+          {%- unless option.disabled? %}
+            {%- assign collection_point = option.collection_points | first %}
+            {%- if collection_point %}
+              <div class="SC-OptionCard">
+                <label class="SC-OptionCard_label">
+                  <div class="SC-OptionCard_radio">
+                    <div class="SC-RadioInput">
+                      <input type="radio"
+                             name="method[{{ delivery_group.key }}]"
+                             value="{{ option.form_value }}_{{ collection_point.id }}"
+                             class="SC-Radio_input"
+                             {% if delivery_group.rates.size == 0 and forloop.first %}checked{% endif %}>
+                      <svg viewBox="0 0 100 100">
+                        <ellipse cx="50" cy="50" rx="45" ry="45"></ellipse>
+                        <ellipse cx="50" cy="50" rx="28" ry="28"></ellipse>
+                      </svg>
+                    </div>
+                  </div>
+                  <div class="SC-OptionCard_detail">
+                    <div class="SC-OptionCard_detail_primary">
+                      <div>
+                        <strong>{{ option.stock_location.name }}</strong>
+                      </div>
+                      <div class="sc-shade-neutral sc-mt-tiny">
+                        {%- if option.stock_location.address1 %}
+                          {{ option.stock_location.address1 }},
+                        {%- endif %}
+                        {{ option.stock_location.city }}
+                      </div>
+                      {%- if collection_point.name %}
+                        <div class="sc-mt-tiny">
+                          {{ collection_point.name }}
+                        </div>
+                      {%- endif %}
+                    </div>
+                    <div class="SC-OptionCard_detail_secondary">
+                      {{ 0 | money }}
+                    </div>
+                  </div>
+                </label>
+              </div>
+            {%- endif %}
+          {%- endunless %}
+      {% endfor %}
+    </section>
+  {% endfor %}
+{% endif %}

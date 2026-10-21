@@ -657,6 +657,8 @@ checkout.shipping.click_and_collect.lead_time_immediate,Available for collection
 checkout.shipping.click_and_collect.out_of_stock,Out of Stock
 checkout.shipping.collection_time.header,When do you expect to collect your order?
 checkout.shipping.collection_time.placeholder,Est. collection date
+checkout.shipping.delivery_groups.group_heading,Delivery %{index} of %{count}
+checkout.shipping.delivery_groups.intro,"Your items have different delivery options, so this order will arrive as %{count} deliveries. Choose an option for each delivery."
 checkout.shipping.form.click_and_collect,Click & Collect
 checkout.shipping.form.continuing,Continuing...
 checkout.shipping.form.next,Next
@@ -1136,14 +1138,19 @@ sc.checkout.shipping.click_and_collect.available_from,Collect from %{location} (
 sc.checkout.shipping.errors.could_not_be_calculated,Shipping could not be calculated at this time.
 sc.checkout.shipping.errors.delivery_option_not_specified,Delivery options for some items have not been specified. Please select a delivery option for all items.
 sc.checkout.shipping.errors.no_longer_available,"The selected shipping service is no longer available for the selected shipping provider, please select another"
+sc.checkout.shipping.errors.options_changed,The available shipping options have changed. Please review your delivery selections.
 sc.checkout.shipping.errors.shipping_method_not_selected,Please select a shipping method.
 sc.checkout.shipping.errors.some_items_not_shippable,Some of the items can not be shipped via the selected shipping method.
 sc.checkout.shipping.errors.tax_provider_offline,Tax provider offline. Please try again in a few minutes.
 sc.checkout.shipping.cart_item_name.custom,Shipping: %{label}
 sc.checkout.shipping.cart_item_name.provider,Shipping: %{provider}: %{label}
+sc.checkout.shipping.cart_item_name.multi,Shipping
 sc.checkout.tax.default_name,Sales Tax
 sc.checkout.terms_and_conditions.errors.must_accept,Please accept the terms to continue
 sc.checkout.express.shipping.click_and_collect,%{location}. Collection point is %{point}.
+sc.checkout.express.shipping.multi_shipping.count.one,Shipping (1 delivery)
+sc.checkout.express.shipping.multi_shipping.count.other,Shipping (%{count} deliveries)
+sc.checkout.express.shipping.errors.use_full_checkout,Some items in your cart have different delivery options. Please use the standard checkout to complete your order.
 sc.errors.buy_button.add.fail,We were unable to add some or all of those items to your cart
 sc.errors.not_authenticated,You must be signed in to access this page.
 sc.errors.not_authorized,You are not authorized to access this page.
