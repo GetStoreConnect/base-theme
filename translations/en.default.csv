@@ -557,6 +557,21 @@ checkout.gateways.form.ach_routing_number_placeholder,9-digit routing number
 checkout.gateways.form.ach_account_number_placeholder,Bank Account Number
 checkout.gateways.form.bank_name,Bank name
 checkout.gateways.form.postal_code,Postal code
+checkout.gateways.fastlane.email_label,Email
+checkout.gateways.fastlane.continue,Continue with Fastlane
+checkout.gateways.fastlane.shipping_to,Ship to
+checkout.gateways.fastlane.change,Change
+checkout.gateways.fastlane.shipping_method,Shipping method
+checkout.gateways.fastlane.pay,Pay Now
+checkout.gateways.fastlane.total,Total
+checkout.gateways.fastlane.errors.lookup_failed,We couldn't look up that email. Please try again.
+checkout.gateways.fastlane.errors.auth_failed,We couldn't verify you. Please try again or use another payment method.
+checkout.gateways.fastlane.errors.auth_canceled,Verification canceled.
+checkout.gateways.fastlane.errors.auth_unavailable,PayPal Fastlane isn't available for this email. Please use another payment method.
+checkout.gateways.fastlane.errors.token_failed,We couldn't complete your payment. Please try again.
+checkout.gateways.fastlane.errors.address_update_failed,We couldn't update your shipping address. Please try again.
+checkout.gateways.fastlane.errors.shipping_incomplete,We couldn't update your shipping details. Please choose a different address or shipping option.
+checkout.gateways.fastlane.errors.confirm_failed,We couldn't confirm your details. Please try again.
 checkout.gateways.afterpay.description_html,<p><strong>Interest free</strong> when you <strong>pay</strong> it in 4.</p>
 checkout.gateways.afterpay.terms_html,"<p style=""margin-top: 1rem;"">Afterpay late fees, eligibility criteria and terms & conditions apply. Visit <a class=""SC-Link"" target=""_blank"" href=""https://www.afterpay.com/en-AU/terms-of-service"">afterpay.com</a> for full terms.</p>"
 checkout.gateways.afterpay.line_items.payment_surcharge,Payment surcharge

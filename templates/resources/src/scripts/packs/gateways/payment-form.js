@@ -628,6 +628,12 @@ export class PaymentForm {
     return this.form.dataset.totalPayable
   }
 
+  // totalPayable as the `money` filter rendered it, for callers that display
+  // the amount rather than compute with it.
+  totalPayableFormatted() {
+    return this.form.dataset.totalPayableFormatted
+  }
+
   // Itemised breakdown (subtotal / discount / shipping) for the Apple Pay sheet,
   // as [{ key, label, amount, type }] with amount in the currency's major unit.
   // Absent for dedicated-cart ("buy now") products, whose breakdown is fetched
@@ -688,8 +694,20 @@ export class PaymentForm {
     return this.form.dataset.onlyExpressCheckout === 'true'
   }
 
+  enabledFeatures() {
+    return (this.form.dataset.enabledFeatures || '').split(' ').filter(Boolean)
+  }
+
   enabledExpressCheckout() {
-    return this.form.dataset.expressCheckoutEnabled === 'true'
+    return this.enabledFeatures().includes('express_checkout')
+  }
+
+  fastlaneEnabled() {
+    return this.enabledFeatures().includes('fastlane')
+  }
+
+  sdkClientToken() {
+    return this.form.dataset.sdkClientToken
   }
 
   storeName() {

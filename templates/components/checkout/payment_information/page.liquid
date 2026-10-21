@@ -12,7 +12,7 @@
     <div class="SC-Panel_header_heading">
       {{ "checkout.customer_information.header" | t }}
     </div>
-    <div class="SC-Panel_header_summary">
+    <div class="SC-Panel_header_summary" data-checkout-summary-target="shipping-address">
       {% render "checkout/cart_shipping_address" %}
     </div>
   </div>
@@ -22,7 +22,7 @@
       <div class="SC-Panel_header_heading">
         {{ "checkout.delivery.header" | t }}
       </div>
-      <div class="SC-Panel_header_summary">
+      <div class="SC-Panel_header_summary" data-checkout-summary-target="delivery-method">
         {% render "checkout/cart_delivery_method" %}
       </div>
     </div>
