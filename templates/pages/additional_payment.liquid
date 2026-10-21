@@ -23,30 +23,68 @@
             </button>
           {%- endform %}
         {%- else %}
-          {%- if enable_custom_amount %}
+          {%- assign vouchers_total = current_order.applied_vouchers | sum: "amount" %}
+          {%- assign due_after_vouchers = current_order.amount_due_now | minus: vouchers_total | at_least: 0 %}
+          {%- comment %} A gift card can cover only what the saved custom amount leaves after the other vouchers {% endcomment %}
+          {%- assign gift_card_outstanding = due_after_vouchers %}
+          {%- comment %} A saved amount the vouchers cover stays editable, so the shopper can raise it {% endcomment %}
+          {%- assign custom_amount_editable = payment_required %}
+          {%- if custom_amount %}
+            {%- assign gift_card_outstanding = custom_amount | minus: vouchers_total | at_least: 0 %}
+            {%- assign custom_amount_editable = true %}
+          {%- endif %}
+          {%- if enable_custom_amount and due_after_vouchers > 0 and custom_amount_editable %}
+            {%- assign minimum = current_order.checkout_minimum_deposit_amount %}
+            {%- assign minimum_money = minimum | money %}
             <div class="SC-Field sc-mb-base" id="custom-amount-container">
               <label for="custom-payment-amount" class="SC-Field_label">
                 {{ "additional_payments.custom_amount.label" | t }}
               </label>
               <input
-                type="number"
+                type="text"
+                inputmode="decimal"
+                autocomplete="off"
                 id="custom-payment-amount"
                 class="SC-Field_input"
                 style="width: 200px;"
-                step="0.01"
-                min="0.01"
-                max="{{ current_order.total_payable }}"
                 placeholder="{{ current_order.amount_due_now | money }}"
                 data-order-ref="{{ current_order.reference }}"
+                data-max="{{ current_order.total_payable }}"
+                data-vouchers-total="{{ vouchers_total }}"
+                data-min="{{ minimum }}"
+                data-decimals="2"
+                data-below-min-message="{{ "checkout.deposit.below_minimum" | t: minimum: minimum_money }}"
                 {%- if custom_amount %} value="{{ custom_amount }}"{%- endif %}
               />
+              {%- if minimum > 0 %}
+                <p class="SC-Field_hint" data-custom-amount-hint>
+                  {{ "checkout.deposit.minimum_hint" | t: minimum: minimum_money }}
+                </p>
+              {%- endif %}
+              <p class="SC-CheckoutDeposit_message sc-color-error sc-mt-tiny" data-custom-amount-message></p>
             </div>
           {%- endif %}
-          {% render "checkout/payment_information/select_and_payment" %}
+          {%- if vouchers_enabled %}
+            {% render "additional_payment/vouchers", outstanding: gift_card_outstanding %}
+          {%- endif %}
+
+          {%- if payment_required %}
+            {% render "checkout/payment_information/select_and_payment" %}
+          {%- else %}
+            {%- form "payment-not-required", type: "store-credit" %}
+              {%- if custom_amount %}
+                <input type="hidden" name="custom_amount" value="{{ custom_amount }}">
+                {%- require "scripts/payments.js" %}
+              {%- endif %}
+              <button type="submit" class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small" data-disable>
+                {{ "additional_payments.vouchers.complete_payment" | t }}
+              </button>
+            {%- endform %}
+          {%- endif %}
         {%- endif %}
      </div>
      <div class="SC-Grid_summary sc-mb-base">
-      {% render "orders/order_summary", source: current_order %}
+      {% render "orders/order_summary", source: current_order, include_applied_vouchers: true %}
      </div>
    </div>
 

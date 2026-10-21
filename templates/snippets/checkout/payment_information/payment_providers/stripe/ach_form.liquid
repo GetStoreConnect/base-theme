@@ -53,6 +53,15 @@
       {{ "checkout.gateways.stripe_ach_form.accept" | t }}
     </label>
   </div>
+
+  {% unless current_cart.auto_save_payment_method? %}
+    <div class="SC-Field sc-mt">
+      <label class="SC-Field_label sc-flex sc-align-center sc-gap-small">
+        <input type="checkbox" name="save_payment_method" data-save-payment-method />
+        {{ "checkout.payment.save_payment_method" | t }}
+      </label>
+    </div>
+  {% endunless %}
 </fieldset>
 
 {% render "checkout/payment_information/payment_error" %}

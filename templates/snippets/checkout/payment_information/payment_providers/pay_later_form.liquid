@@ -1,7 +1,10 @@
 {%- assign provider_id = payment_provider.id %}
 {%- assign provider = payment_provider.code %}
 {%- assign button_id = provider | append: "PaymentButton" %}
-{% assign button_label = 'checkout.gateways.pay_later_form.pay_now' | t %}
+{%- default button_label: blank %}
+{%- if button_label == blank %}
+  {% assign button_label = 'checkout.gateways.pay_later_form.pay_now' | t %}
+{%- endif %}
 
 {%- form "payment", provider: payment_provider, class: "SC-Panel" %}
   <div id="{{ provider }}ScriptBlock"></div>

@@ -4,7 +4,7 @@
   assign attributes = ''
   for option in options
     assign key = option[0]
-    assign value = option[1] | escape
+    assign value = option[1] | escape_once
     assign attributes = attributes | append: ' ' | append: key | append: '="' | append: value | append: '"'
   endfor
 -%}

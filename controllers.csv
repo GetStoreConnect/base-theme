@@ -3,6 +3,12 @@ accounts,create
 accounts,missing_details
 accounts,register
 accounts,show
+accounts/addresses,index
+accounts/addresses,new
+accounts/addresses,create
+accounts/addresses,edit
+accounts/addresses,update
+accounts/addresses,destroy
 accounts/attendees,create
 accounts/attendees,update
 accounts/orders,reorder
@@ -12,6 +18,11 @@ accounts/subscriptions,index
 accounts/subscriptions,show
 accounts/subscriptions,threeds_callback
 accounts/subscriptions,update
+accounts/payment_methods,index
+accounts/payment_methods,new
+accounts/payment_methods,create
+accounts/payment_methods,destroy
+accounts/payment_methods,update
 accounts/subscription_payments,create
 accounts/subscription_payments,new
 additional_payments,ach
@@ -20,8 +31,11 @@ additional_payments,create
 additional_payments,postback
 additional_payments,show
 additional_payments,update
+additional_payments/applied_vouchers,create
+additional_payments/applied_vouchers,destroy
 additional_payments/billing_addresses,update
 helpers/availabilities,index
+async/bootstraps,create
 async/components,load
 helpers/custom_form_answers,show
 helpers/custom_form_answers,update
@@ -29,6 +43,7 @@ helpers/delivery_options,index
 async/inbound_webhooks/bringg,create
 async/inbound_webhooks/easypost,create
 async/inbound_webhooks/easyship,create
+async/inbound_webhooks/forter,create
 async/inbound_webhooks/ship24,create
 async/inbound_webhooks/ship_engine,create
 async/inbound_webhooks/shippit,create
@@ -53,6 +68,7 @@ omniauth,azure
 omniauth,entra_id
 omniauth,google
 omniauth,keycloak_openid
+omniauth,login_gov
 omniauth,openid
 omniauth,passthru
 omniauth,singlekey_id
@@ -81,6 +97,7 @@ carts,add
 cache_form_params,create
 cart_items,destroy
 carts/selections,update
+carts/deposits,update
 checkout/steps/terms,create
 checkout/steps/terms,edit
 checkout/steps/terms,show
@@ -128,7 +145,9 @@ cpq/bundles/options,create
 cpq/bundles/options,update
 express_checkout/carts,create
 express_checkout/carts,update
+express_checkout/payments,create
 express_checkout/shipping_methods,update
+feeds,show
 form_submission,create
 geolocations,create
 geolocations,destroy

@@ -6,6 +6,15 @@ if (!window._rails_loaded) Rails.start()
 import Bugsnag from '@bugsnag/js'
 import BugsnagPerformance from '@bugsnag/browser-performance'
 
+// An uncaught value that isn't an Error has no message or stack to act on,
+// whichever script threw it. Handled reports are deliberate, so always keep them.
+function isLegitimateError(event) {
+  if (!event.unhandled) return true
+
+  const value = event.originalError
+  return value instanceof Error || Object.prototype.toString.call(value) === '[object Error]'
+}
+
 window.StoreConnect = window.StoreConnect || {}
 window.StoreConnect.configure = function (ENV) {
   if (ENV.BUGSNAG_RELEASE_STAGE === 'test') {
@@ -23,6 +32,7 @@ window.StoreConnect.configure = function (ENV) {
     releaseStage: ENV.BUGSNAG_RELEASE_STAGE,
     appType: 'client',
     plugins: [],
+    onError: isLegitimateError,
   })
 
   if (ENV.BUGSNAG_PERFORMANCE_FRONTEND === 'true') {

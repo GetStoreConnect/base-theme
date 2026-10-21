@@ -1,0 +1,19 @@
+{%- render "shared/page_header", heading: "t.accounts.profile.sections.payment_methods.add_heading" %}
+
+<div class="sc-mb-spacious">
+  <a href="{{ current_store.account_path }}/payment_methods">&larr; {{ "accounts.profile.sections.payment_methods.back" | t }}</a>
+</div>
+
+{%- form "add-payment-method" %}
+  {%- assign add_payment_method_label = "accounts.profile.sections.payment_methods.add" | t | default: "Add Payment Method" %}
+  {%- render "checkout/payment_information/select_and_payment", only_recurring_payments: true, button_label: add_payment_method_label %}
+
+  {% if current_customer.payment_methods.size > 0 %}
+    <div class="SC-Field sc-mt">
+      <label class="SC-Field_label sc-flex sc-align-center sc-gap-small">
+        <input type="checkbox" name="is_default" value="true" />
+        {{ "accounts.profile.sections.payment_methods.make_default" | t }}
+      </label>
+    </div>
+  {% endif %}
+{%- endform %}

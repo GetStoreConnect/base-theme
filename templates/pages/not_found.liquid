@@ -1,4 +1,5 @@
 <div class="sc-container sc-me">
   <h1>{{ 'sc.errors.not_found' | t }}</h1>
-  {{ error }}
+  {%- comment %} `error` is supplied from Ruby as a render param, so it never passes through the lookup auto-escape {% endcomment %}
+  {{ error | escape_once }}
 </div>

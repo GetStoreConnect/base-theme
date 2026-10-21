@@ -9,6 +9,7 @@
         {%- if hide_order != true %}
           <th>{{ "accounts.fulfillments.index.order" | t }}</th>
         {%- endif %}
+        <th>{{ "accounts.fulfillments.index.delivery_method" | t }}</th>
         <th>{{ "accounts.fulfillments.index.tracking_code" | t }}</th>
         <th>{{ "accounts.fulfillments.index.tracking_status" | t }}</th>
         <th>{{ "accounts.fulfillments.index.items" | t }}</th>
@@ -24,6 +25,17 @@
               <a href="{{ fulfillment.order.path }}">{{ fulfillment.order.reference }}</a>
             </td>
           {%- endif %}
+          <td data-th="{{ "accounts.fulfillments.index.delivery_method" | t }}">
+            {% if fulfillment.shipping_provider_service != blank %}
+              {%- if fulfillment.shipping_provider_name != blank %}
+                {{ fulfillment.shipping_provider_name }}: {{ fulfillment.shipping_provider_service }}
+              {%- else %}
+                {{ fulfillment.shipping_provider_service }}
+              {%- endif %}
+            {% else %}
+              &mdash;
+            {% endif %}
+          </td>
           <td data-th="{{ "accounts.fulfillments.index.tracking_code" | t }}">
             {% if fulfillment.tracking? %}
               <a href="{{ fulfillment.tracking_public_url }}" target="_blank">{{ fulfillment.tracking_code }}</a>

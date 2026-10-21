@@ -1,0 +1,36 @@
+{%- default action_path: nil %}
+{%- default method: "post" %}
+{%- default submit_label: "t.accounts.addresses.new.create" %}
+{%- default address: nil %}
+
+{%- form "account-address", path: action_path, method: method, address: address %}
+  {% render "form_errors", errors: form.errors %}
+
+  {%- assign field = form.fields["label"] %}
+  <div class="SC-Field{% if field.errors != blank %} has-error{% endif %}">
+    <label for="{{ field.id }}" class="SC-Field_label">{{ "accounts.addresses.form.label" | t }}</label>
+    <input type="text" name="{{ field.name }}" id="{{ field.id }}" value="{{ field.value }}" placeholder="{{ "accounts.addresses.form.label_placeholder" | t }}" class="SC-Field_input"{% if field.errors != blank %} aria-invalid="true" aria-describedby="{{ field.id }}_error"{% endif %}>
+    <span class="SC-Field_error" id="{{ field.id }}_error">{{ field.errors | try: "messages" }}</span>
+  </div>
+
+  {% render "shared/account/address_form", form: form, required_attribute: true %}
+
+  {%- assign field = form.fields["is_default_shipping"] %}
+  <div class="SC-Field SC-Field-checkbox">
+    <input type="hidden" name="{{ field.name }}" value="0">
+    <input type="checkbox" name="{{ field.name }}" id="{{ field.id }}" value="1"{% if field.value %} checked{% endif %}>
+    <label for="{{ field.id }}" class="SC-Field_label">{{ "accounts.addresses.form.is_default_shipping" | t }}</label>
+  </div>
+
+  {%- assign field = form.fields["is_default_billing"] %}
+  <div class="SC-Field SC-Field-checkbox">
+    <input type="hidden" name="{{ field.name }}" value="0">
+    <input type="checkbox" name="{{ field.name }}" id="{{ field.id }}" value="1"{% if field.value %} checked{% endif %}>
+    <label for="{{ field.id }}" class="SC-Field_label">{{ "accounts.addresses.form.is_default_billing" | t }}</label>
+  </div>
+
+  <div class="sc-mt-spacious">
+    <input type="submit" name="commit" value="{{ submit_label }}" class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small">
+    <a href="{{ current_store.addresses_path }}" class="SC-Button SC-Button-secondary sc-ml-small">{{ "accounts.addresses.form.cancel" | t }}</a>
+  </div>
+{%- endform %}

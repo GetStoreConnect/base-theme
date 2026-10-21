@@ -1,6 +1,6 @@
 # Base Theme
 
-**Version: StoreConnect Release v21.0.11**
+**Version: StoreConnect Release v22.0.0**
 
 The StoreConnect Base theme is a clean and simple boilerplate ready for use. This starter theme is the default theme used in every StoreConnect installation.
 
@@ -39,6 +39,28 @@ Snippets are reusable templates that you can load from any other template. For e
 You now have access to all JavaScript resources provided by the base theme. These can be customized by working within the resources directory. For guidance on how to effectively use these theme resources, refer to our Wiki and [documentation](https://github.com/GetStoreConnect/base-theme/wiki/Theme-resources).
 
 ⚠️ **Important:** Only modify theme resources if you're confident in what you're doing. Our team does not provide support for custom modifications beyond the official documentation available in our repositories and support site.
+
+#### Building theme resources
+
+Theme resources are now built with [pnpm](https://pnpm.io). npm and yarn are not longer supported, so don't use `npm install`: it creates a `package-lock.json` that can install different package versions from `pnpm-lock.yaml`.
+
+You need:
+
+- Node.js 24.15.0 or later
+- pnpm 12.8.1
+
+The exact versions are pinned in `templates/resources/.tool-versions`. If you use [asdf](https://asdf-vm.com), run `asdf install` in that directory to get them.
+
+From `templates/resources`:
+
+```sh
+pnpm install --frozen-lockfile   # install the exact versions in pnpm-lock.yaml
+pnpm build                       # build scripts and styles into dist/
+pnpm watch                       # rebuild when files change
+pnpm clean                       # remove dist/ and build again
+```
+
+To add or update a package, use `pnpm add <package>` or `pnpm update <package>`, and commit both `package.json` and `pnpm-lock.yaml`.
 
 ### Locales
 

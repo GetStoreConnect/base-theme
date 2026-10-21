@@ -1,4 +1,4 @@
-{% if current_subscription == blank %}
+{% unless current_subscription or current_request.params.section == 'payment_methods_new' or current_payment_capture_only? %}
   {% render "checkout/customer_notes", form: form %}
 
   {% if current_order != blank and current_order.assisted_by_name != blank %}
@@ -14,4 +14,4 @@
   {%- if current_cart != blank and current_cart.custom_forms.size > 0 %}
     {% render "custom_forms/forms", custom_forms: current_cart.custom_forms, form: form, display_mode: "in_checkout" %}
   {%- endif %}
-{%- endif %}
+{%- endunless %}

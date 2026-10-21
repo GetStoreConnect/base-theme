@@ -16,6 +16,9 @@
       <a href="{{ current_store.account_path }}/{{ "accounts.billing.path" | t }}" class="SC-PageNav_link{% if current_request.params.section == "billing" %} is-current{% endif %} sc-ml-small">
         {{ "accounts.menu.billing" | t }}
       </a>
+      <a href="{{ current_store.addresses_path }}" class="SC-PageNav_link{% if current_request.params.section == "addresses" %} is-current{% endif %} sc-ml-small">
+        {{ "accounts.menu.addresses" | t }}
+      </a>
       <a href="{{ current_store.orders_path }}" class="SC-PageNav_link{% if current_request.params.section == "orders" %} is-current{% endif %}">
         {{ "accounts.menu.orders" | t }}
       </a>
@@ -24,6 +27,9 @@
       </a>
       <a href="{{ current_store.subscriptions_path }}" class="SC-PageNav_link{% if current_request.params.section == "subscriptions" %} is-current{% endif %}">
         {{ "accounts.menu.subscriptions" | t }}
+      </a>
+      <a href="{{ current_store.account_path }}/payment_methods" class="SC-PageNav_link{% if current_request.params.section == "payment_methods" %} is-current{% endif %}">
+        {{ "accounts.menu.payment_methods" | t }}
       </a>
       {%- if current_account.account_credits.size > 0 and current_customer.can_use_account_credit? %}
         <a href="{{ current_store.account_credits_path }}" class="SC-PageNav_link{% if current_request.params.section == "account_credits" %} is-current{% endif %}">

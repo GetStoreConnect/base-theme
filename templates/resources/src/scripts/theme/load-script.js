@@ -58,9 +58,11 @@ export async function loadScript({ url, onload, id, container, attributes }) {
       loadingScripts.delete(url)
       resolve()
     }
-    script.onerror = (error) => {
+    // The onerror argument is a DOM Event, not an Error, and Bugsnag only
+    // reports uncaught Errors.
+    script.onerror = () => {
       loadingScripts.delete(url)
-      reject(error)
+      reject(new Error(`Failed to load script: ${url}`))
     }
     if (id) {
       script.id = id

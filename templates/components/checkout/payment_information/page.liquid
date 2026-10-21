@@ -12,7 +12,7 @@
     <div class="SC-Panel_header_heading">
       {{ "checkout.customer_information.header" | t }}
     </div>
-    <div class="SC-Panel_header_summary">
+    <div class="SC-Panel_header_summary" data-checkout-summary-target="shipping-address">
       {% render "checkout/cart_shipping_address" %}
     </div>
   </div>
@@ -22,7 +22,7 @@
       <div class="SC-Panel_header_heading">
         {{ "checkout.delivery.header" | t }}
       </div>
-      <div class="SC-Panel_header_summary">
+      <div class="SC-Panel_header_summary" data-checkout-summary-target="delivery-method">
         {% render "checkout/cart_delivery_method" %}
       </div>
     </div>
@@ -46,6 +46,8 @@
     </div>
   </div>
 
+  {% component "checkout/deposit", reload: "sc.voucher-applied sc.voucher-removed" %}
+
   <div>
     {%- if current_cart.points_payment_required? or current_cart.currency_payment_required? %}
       {%- if current_cart.points_payment_required? and current_account == blank %}
@@ -66,6 +68,10 @@
           </section>
         {%- endif %}
       {%- endif %}
+    {%- elsif current_cart.auto_save_payment_method? %}
+      <div class="sc-mb">
+        {% render "checkout/payment_information/select_and_payment" %}
+      </div>
     {%- else %}
       <div class="sc-mb">
         {% render "checkout/payment_information/payment_providers/store_credit_or_free_form" %}

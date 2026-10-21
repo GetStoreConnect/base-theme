@@ -1,0 +1,40 @@
+/**
+ * Address Book — account dashboard list
+ *
+ * The list table uses the generic responsive table pattern from
+ * components/table.scss, which on mobile collapses each row to display: block
+ * cells with a text-indent: -8em + :before label trick and word-break:
+ * break-all on the content. Both properties are inherited, which mangles the
+ * inline button/link/form content inside the action cells — text-indent: -8em
+ * pushes the first line of each button off-screen and word-break: break-all
+ * then wraps the remaining characters one per line.
+ *
+ * Override both properties for the action elements so they render as normal
+ * inline content alongside the badges in the same cell.
+ */
+[data-ref='addresses'] {
+  form {
+    display: inline-block;
+  }
+
+  // Space between adjacent action items in a cell (badges, forms, links)
+  // so they don't render butted up against each other on mobile or desktop.
+  td > * + * {
+    margin-left: 0.5em;
+  }
+
+  @include up-to-small {
+    // Reset the inherited mobile-table styles inside the cell contents so
+    // the inline action elements (badges, forms, buttons, links) render
+    // normally. The label/address text rows still get the data-th label
+    // rendering from the generic table rule because they are plain text
+    // children, not wrapped in any of these elements.
+    span,
+    form,
+    button,
+    a {
+      text-indent: 0;
+      word-break: normal;
+    }
+  }
+}

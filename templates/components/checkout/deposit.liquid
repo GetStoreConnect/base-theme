@@ -1,0 +1,38 @@
+{%- if current_cart.can_offer_checkout_deposit? %}
+  {%- require "scripts/checkout-deposit.js" %}
+  {%- assign minimum = current_cart.checkout_minimum_deposit_amount %}
+  {%- assign minimum_money = minimum | money %}
+  <div class="SC-CheckoutDeposit SC-Panel_header is-filled" data-checkout-deposit>
+    {%- form "update-checkout-deposit",
+        remote: true,
+        data-success: "sc.deposit-updated",
+        data-type: "json",
+        data-reset-flash: true %}
+
+      <label for="{{ form.fields.first.id }}" class="SC-Field_label">
+        {{ "checkout.deposit.label" | t }}
+      </label>
+      <input
+        type="text"
+        inputmode="decimal"
+        autocomplete="off"
+        name="{{ form.fields.first.name }}"
+        id="{{ form.fields.first.id }}"
+        value="{{ current_cart.checkout_deposit_amount }}"
+        placeholder="{{ current_cart.checkout_full_total | money }}"
+        class="SC-Field_input"
+        data-checkout-deposit-input
+        data-min="{{ minimum }}"
+        data-max="{{ current_cart.checkout_full_total }}"
+        data-decimals="2"
+        data-below-min-message="{{ "checkout.deposit.below_minimum" | t: minimum: minimum_money }}"
+      />
+      {%- if minimum > 0 %}
+        <p class="SC-Field_hint" data-checkout-deposit-hint>
+          {{ "checkout.deposit.minimum_hint" | t: minimum: minimum_money }}
+        </p>
+      {%- endif %}
+      <p class="SC-CheckoutDeposit_message sc-color-error sc-mt-tiny" data-checkout-deposit-message></p>
+    {%- endform %}
+  </div>
+{%- endif %}

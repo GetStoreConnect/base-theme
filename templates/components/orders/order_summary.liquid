@@ -1,5 +1,6 @@
 {% liquid
   default source: nil
+  default include_applied_vouchers: false
 
   if source == nil
     case context.source_object
@@ -16,11 +17,15 @@
     if results and results.size > 0
       assign source = results.first | cast: context.source_object
     endif
+
+    if context.include_applied_vouchers
+      assign include_applied_vouchers = true
+    endif
   else
     capture source_object
       echo source
     endcapture
-    context source_object: source_object, source_id: source.id
+    context source_object: source_object, source_id: source.id, include_applied_vouchers: include_applied_vouchers
   endif
 -%}
 
@@ -37,6 +42,6 @@
         {%- render "shared/cart/items", source: source, width: "60px" %}
       {%- endif %}
     </div>
-    {%- render "shared/order_total", source: source %}
+    {%- render "shared/order_total", source: source, include_applied_vouchers: include_applied_vouchers %}
   </aside>
 {%- endunless %}
