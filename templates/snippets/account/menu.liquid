@@ -28,6 +28,9 @@
       <a href="{{ current_store.subscriptions_path }}" class="SC-PageNav_link{% if current_request.params.section == "subscriptions" %} is-current{% endif %}">
         {{ "accounts.menu.subscriptions" | t }}
       </a>
+      <a href="{{ current_store.account_path }}/payment_methods" class="SC-PageNav_link{% if current_request.params.section == "payment_methods" %} is-current{% endif %}">
+        {{ "accounts.menu.payment_methods" | t }}
+      </a>
       {%- if current_account.account_credits.size > 0 and current_customer.can_use_account_credit? %}
         <a href="{{ current_store.account_credits_path }}" class="SC-PageNav_link{% if current_request.params.section == "account_credits" %} is-current{% endif %}">
           {{ "accounts.menu.account_credits" | t }}

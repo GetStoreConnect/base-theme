@@ -1,4 +1,7 @@
-{%- assign button_label = 'checkout.gateways.form.choose_plan' | t %}
+{%- default button_label: blank %}
+{%- if button_label == blank %}
+  {%- assign button_label = 'checkout.gateways.form.choose_plan' | t %}
+{%- endif %}
 
 <div data-provider-container="{{ payment_provider.code }}">
   {%- form "payment", provider: payment_provider, class: "SC-Panel" %}

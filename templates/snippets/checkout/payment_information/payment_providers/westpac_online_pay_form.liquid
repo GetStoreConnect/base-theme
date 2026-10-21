@@ -23,7 +23,7 @@
 
       {% render "checkout/payment_information/additional_info", form: form %}
 
-      {% render "checkout/payment_information/submit_button", disabled: true %}
+      {% render "checkout/payment_information/submit_button", button_label: button_label, disabled: true %}
     {% endunless %}
 
     {% render "checkout/payment_information/payment_error" %}
