@@ -1,6 +1,6 @@
 # Base Theme
 
-**Version: StoreConnect Release v21.0.11**
+**Version: StoreConnect Release v22.0.0**
 
 The StoreConnect Base theme is a clean and simple boilerplate ready for use. This starter theme is the default theme used in every StoreConnect installation.
 
@@ -42,7 +42,7 @@ You now have access to all JavaScript resources provided by the base theme. Thes
 
 #### Building theme resources
 
-Theme resources are built with [pnpm](https://pnpm.io). npm and yarn are not supported, so don't use `npm install`: it creates a `package-lock.json` that can install different package versions from `pnpm-lock.yaml`.
+Theme resources are now built with [pnpm](https://pnpm.io). npm and yarn are not longer supported, so don't use `npm install`: it creates a `package-lock.json` that can install different package versions from `pnpm-lock.yaml`.
 
 You need:
 
