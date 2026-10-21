@@ -66,6 +66,7 @@ omniauth,azure
 omniauth,entra_id
 omniauth,google
 omniauth,keycloak_openid
+omniauth,login_gov
 omniauth,openid
 omniauth,passthru
 omniauth,singlekey_id

@@ -392,6 +392,7 @@ auth.login.sso.enum.entra_id,via Entra
 auth.login.sso.enum.experience_cloud,via our Portal
 auth.login.sso.enum.google,via Google
 auth.login.sso.enum.keycloak_openid,via Keycloak OpenID
+auth.login.sso.enum.login_gov,via Login.gov
 auth.login.sso.enum.openid,via OpenID
 auth.login.sso.enum.saml,via our Portal
 auth.login.sso.enum.singlekey_id,via SingleKey ID
@@ -1034,6 +1035,9 @@ sc.auth.sso.incorrect_provider,"Could not authenticate, account is already linke
 sc.auth.sso.keycloak_openid.fail,Could not authenticate you from Keycloak OpenID because: %{reason}
 sc.auth.sso.keycloak_openid.success,Successfully authenticated from your Keycloak OpenID account.
 sc.auth.sso.keycloak_openid.support,"There was a problem processing your registration, please contact support."
+sc.auth.sso.login_gov.fail,Could not authenticate you from Login.gov because: %{reason}
+sc.auth.sso.login_gov.success,Successfully authenticated from your Login.gov account.
+sc.auth.sso.login_gov.support,"There was a problem processing your registration, please contact support."
 sc.auth.sso.openid.fail,Could not authenticate you from OpenID because: %{reason}
 sc.auth.sso.openid.success,Successfully authenticated from your OpenID account.
 sc.auth.sso.openid.support,"There was a problem processing your registration, please contact support."
