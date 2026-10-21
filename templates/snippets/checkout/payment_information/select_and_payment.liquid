@@ -110,8 +110,6 @@
           {% render "checkout/payment_information/payment_providers/windcave_form", payment_provider: payment_provider, button_label: button_label %}
         {% when "ZippayAu" %}
           {% render "checkout/payment_information/payment_providers/zippay_au_form", payment_provider: payment_provider, button_label: button_label %}
-        {% when "Vii" %}
-          {% render "checkout/payment_information/payment_providers/vii_form", payment_provider: payment_provider %}
         {% else %}
           <p>Missing payment method - set it up now in <code>app/liquid/theme/snippets/checkout/payment_information/select_and_payment.liquid</code></p>
           <p>payment_provider.code = <code>{{ payment_provider.code }}</code></p>

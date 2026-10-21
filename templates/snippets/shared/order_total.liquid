@@ -1,9 +1,20 @@
 {%- default source: nil -%}
 {%- default compact: false -%}
+{%- default include_applied_vouchers: false -%}
 
 {%- comment %} Source is either a Cart or an Order {% endcomment %}
 {%- if source != blank %}
   {% capture source_type %}{{ source | downcase }}{% endcapture %}
+  {%- comment %} A cart's vouchers are part of its totals; an order's are only pending until its payment page redeems them {% endcomment %}
+  {%- assign due_now = source.amount_due_now %}
+  {%- assign show_vouchers = false %}
+  {%- if source_type == "cart" %}
+    {%- assign show_vouchers = true %}
+  {%- elsif include_applied_vouchers %}
+    {%- assign show_vouchers = true %}
+    {%- assign vouchers_total = source.applied_vouchers | sum: "amount" %}
+    {%- assign due_now = due_now | minus: vouchers_total | at_least: 0 %}
+  {%- endif %}
   <div class="SC-OrderTotal SC-OrderTotal-{{ source }}">
     {%- comment %} Adjustment cart items {% endcomment %}
     {%- for cart_item in source.adjustment_items %}
@@ -109,11 +120,13 @@
             </div>
           </div>
         {%- endfor %}
+      {%- endif %}
 
-        {%- comment %} Vouchers {% endcomment %}
+      {%- comment %} Vouchers {% endcomment %}
+      {%- if show_vouchers %}
         {%- for voucher in source.applied_vouchers %}
           <div class="SC-OrderTotal_line">
-            <div class="SC-OrderTotal_line_label">{{ "order_summary.voucher" | t }}: {{ voucher.code }}</div>
+            <div class="SC-OrderTotal_line_label">{{ voucher.label }}: {{ voucher.identifier }}</div>
             <div class="SC-OrderTotal_line_total" data-order-voucher-id="{{ voucher.id }}">
               {{ voucher.amount | times: -1 | money }}
             </div>
@@ -123,7 +136,7 @@
 
       {%- comment %} Possible Surcharges {% endcomment %}
       {%- for surcharge in source.payment_surcharge_values %}
-        <div class="SC-OrderTotal_line sc-hide" data-surcharge-id="{{ surcharge.identifier }}" data-surcharge-cart-total-payable="{{ surcharge.price | plus: source.total_payable | money }}" data-surcharge-cart-total-tax="{{ surcharge.tax | plus: source.total_tax | money }}">
+        <div class="SC-OrderTotal_line sc-hide" data-surcharge-id="{{ surcharge.identifier }}" data-surcharge-cart-total-payable="{{ surcharge.price | plus: due_now | money }}" data-surcharge-cart-total-tax="{{ surcharge.tax | plus: source.total_tax | money }}">
           <div class="SC-OrderTotal_line_label">
             {{ surcharge.name }}
           </div>
@@ -139,14 +152,14 @@
           <div class="SC-OrderTotal_line_label">
             {{ "order_summary.cart.total_payable" | t }}
           </div>
-          <div class="SC-OrderTotal_line_total" data-order-cart-total-payable="{{ source.total_payable | money }}">
+          <div class="SC-OrderTotal_line_total" data-order-cart-total-payable="{{ source.amount_due_now | money }}">
             {%- comment %} Currency Total {% endcomment %}
-            {%- if source.total_payable > 0 %}
-              <span data-currency>{{ source.total_payable | money }}</span>
+            {%- if source.amount_due_now > 0 %}
+              <span data-currency>{{ source.amount_due_now | money }}</span>
             {%- endif %}
 
             {%- comment %} And {% endcomment %}
-            {%- if source.total_payable > 0 and source.total_payable_points > 0 %}
+            {%- if source.amount_due_now > 0 and source.total_payable_points > 0 %}
               {{ "order_summary.currency_and_points_connector" | t }}
             {%- endif %}
 
@@ -156,7 +169,7 @@
             {%- endif %}
 
             {%- comment %} Nothing to pay {% endcomment %}
-            {%- unless source.total_payable > 0 or source.total_payable_points > 0 %}
+            {%- unless source.amount_due_now > 0 or source.total_payable_points > 0 %}
               {{ 0 | money }}
             {%- endunless %}
           </div>
@@ -173,10 +186,10 @@
               {{ "order_summary.order.total_payable" | t }}
             {%- endif %}
           </div>
-          <div class="SC-OrderTotal_line_total" data-order-cart-total-payable="{{ source.amount_due_now | money }}">
+          <div class="SC-OrderTotal_line_total" data-order-cart-total-payable="{{ due_now | money }}">
             {%- comment %} Currency Total {% endcomment %}
             {%- if source.total > 0 %}
-              <span data-currency>{{ source.amount_due_now | money }}</span>
+              <span data-currency>{{ due_now | money }}</span>
             {%- endif %}
 
             {%- comment %} And {% endcomment %}
