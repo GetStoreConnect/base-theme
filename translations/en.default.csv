@@ -308,6 +308,7 @@ accounts.shared.address_form.zip_code,Zip code
 accounts.fulfillments.index.heading,Deliveries
 accounts.fulfillments.index.reference,Reference
 accounts.fulfillments.index.order,Order
+accounts.fulfillments.index.delivery_method,Delivery Method
 accounts.fulfillments.index.tracking_code,Tracking Code
 accounts.fulfillments.index.tracking_status,Tracking Status
 accounts.fulfillments.index.items,Items
@@ -1110,6 +1111,7 @@ sc.checkout.payment.create.errors.no_cart_found,"We could not find your cart, pe
 sc.checkout.payment.create.errors.no_saved_card,Payment failed. No saved card found for this account.
 sc.checkout.payment.create.errors.points.insufficient_balance,You do not have enough points to complete this order.
 sc.checkout.payment.create.errors.points.not_permitted,You are not allowed to use the account points for this account
+sc.checkout.payment.create.errors.risk_declined,We could not process your order. Please contact Customer Care.
 sc.checkout.payment.create.errors.unauthorized,"Unable to authenticate, please check the payment provider's credentials."
 sc.checkout.payment.create.errors.wallet_declined,Payment failed. The digital wallet payment was declined.
 sc.checkout.payment.deposit.errors.not_available,Deposit not available
@@ -1612,6 +1614,7 @@ sc.location_group.errors.not_found,That page was not found.
 sc.orders.reorder.errors.not_found,Could not find order to reorder. Please wait a moment and try again.
 sc.orders.reorder.notices.could_not_add_some,Could not add some order items from order %{reference} to your cart: %{items}.
 sc.orders.reorder.notices.success,Order items from order %{reference} have been added to your cart.
+sc.orders.risk_review_notice,Your order is being reviewed. We'll update you once it is processed.
 sc.page.errors.not_found,That page was not found.
 sc.page.errors.requires_membership,You do not have the required membership level to access this page. Requires: %{membership_required}.
 sc.product_category.errors.not_found,That page was not found.

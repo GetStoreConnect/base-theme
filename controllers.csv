@@ -42,6 +42,7 @@ helpers/delivery_options,index
 async/inbound_webhooks/bringg,create
 async/inbound_webhooks/easypost,create
 async/inbound_webhooks/easyship,create
+async/inbound_webhooks/forter,create
 async/inbound_webhooks/ship24,create
 async/inbound_webhooks/ship_engine,create
 async/inbound_webhooks/shippit,create
