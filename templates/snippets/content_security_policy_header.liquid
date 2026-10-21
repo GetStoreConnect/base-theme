@@ -1,4 +1,5 @@
 {%- liquid
+  default controller: nil
 
   if store_variables["content_security_policy_type"] == "enforce"
     assign header_type = "Content-Security-Policy"
@@ -16,10 +17,16 @@
     # - Restricts objects ('none')
     # Note: Set content_security_policy_type to "enforce" to enable blocking mode
     # frame-src allows *.cardinalcommerce.com (Verifone/Westpac 3DS Songbird
-    # device-fingerprint + challenge iframes) and pay.google.com (Google Pay
-    # button + payframe). form-action also allows *.cardinalcommerce.com because
-    # the Songbird fingerprint collector POSTs there.
-    assign csp_value = "default-src 'self'; script-src 'self' 'unsafe-inline' *; style-src 'self' 'unsafe-inline' *; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' *; media-src 'self' *; object-src 'none'; base-uri 'self'; form-action 'self' https://*.cardinalcommerce.com; frame-src 'self' https://*.cardinalcommerce.com https://pay.google.com; frame-ancestors 'none'"
+    # device-fingerprint + challenge iframes), *.squarecdn.com (Square's card
+    # element iframe) and pay.google.com (Google Pay button + payframe).
+    # form-action also allows *.cardinalcommerce.com because the Songbird
+    # fingerprint collector POSTs there.
+    # frame-ancestors overrides X-Frame-Options, so the POS iframe needs 'self' here.
+    assign frame_ancestors = "'none'"
+    if controller == "card_captures"
+      assign frame_ancestors = "'self'"
+    endif
+    assign csp_value = "default-src 'self'; script-src 'self' 'unsafe-inline' *; style-src 'self' 'unsafe-inline' *; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' *; media-src 'self' *; object-src 'none'; base-uri 'self'; form-action 'self' https://*.cardinalcommerce.com; frame-src 'self' https://*.cardinalcommerce.com https://*.squarecdn.com https://pay.google.com; frame-ancestors " | append: frame_ancestors
   else
     # Have to unescape to avoid HTML encoding the quotes in the value
     assign csp_value = csp_value | unescape
