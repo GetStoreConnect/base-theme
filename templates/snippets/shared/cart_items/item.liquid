@@ -5,8 +5,6 @@
 {%- default width: nil -%}
 {%- default extended: false -%}
 {%- default toggle_answers: false -%}
-{%- comment %} Off only where no summary shows the promotion beneath the line {% endcomment %}
-{%- default before_promotions: true -%}
 
 {%- comment %} Fallback to deprecated `line_item` for backwards compatibility {% endcomment %}
 {%- if cart_item == blank -%}
@@ -172,7 +170,7 @@
 
       {%- comment %} Total {% endcomment %}
       <div class="sc-expand sc-text-right" data-line-item-pricing="{{ cart_item.id }}" data-product-id="{{ cart_item.product.id }}">
-        {%- render "shared/cart_items/pricing", pricing: cart_item.pricing, compact: compact, before_promotions: before_promotions %}
+        {%- render "shared/cart_items/pricing", pricing: cart_item.pricing, compact: compact %}
 
         {%- comment %} Remaining Deposit (order items only) {% endcomment %}
         {%- assign amount_paid = cart_item.amount_paid | default: 0 %}

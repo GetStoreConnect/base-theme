@@ -1,8 +1,5 @@
 {%- default type: "store-credit" %}
-{%- default button_label: blank %}
-{%- if button_label == blank %}
-  {% assign button_label = 'checkout.gateways.store_credit_form.purchase' | t %}
-{%- endif %}
+{% assign button_label = 'checkout.gateways.store_credit_form.purchase' | t %}
 
 {%- if current_cart.applied_credits.size > 0 %}
   <p>{{ "checkout.gateways.store_credit_form.paying_with_account_credit" | t }}</p>

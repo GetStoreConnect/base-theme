@@ -1,9 +1,0 @@
-{%- default outstanding: nil -%}
-{%- for voucher_provider in current_store.voucher_providers %}
-  {% case voucher_provider.name %}
-  {% when "sc" %}
-    {% render "checkout/vouchers/apply_sc", source: current_order, local: true %}
-  {% when "vii" %}
-    {% render "checkout/vouchers/apply_vii", provider: voucher_provider, source: current_order, outstanding: outstanding, local: true %}
-  {% endcase %}
-{%- endfor %}

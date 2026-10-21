@@ -18,8 +18,7 @@
           {%- continue %}
         {%- endif %}
         {%- comment %} Pass in `line_item` for backwards compatibility {% endcomment %}
-        {%- comment %} No summary here, so the line states what it charges {% endcomment %}
-        {%- render "shared/cart_items/item", cart_item: item, line_item: item, compact: compact, extended: extended, hide_image: hide_image, before_promotions: false %}
+        {%- render "shared/cart_items/item", cart_item: item, line_item: item, compact: compact, extended: extended, hide_image: hide_image %}
       {%- endfor %}
     </div>
   </div>

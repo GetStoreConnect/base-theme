@@ -1,6 +1,6 @@
-import { notify, manifestPlugin, cssHandler } from './helpers.mjs'
+const { notify, manifestPlugin, cssHandler } = require('./helpers')
 
-export default {
+module.exports = {
   entryPoints: ['src/scripts/packs/**/*.js'],
   entryNames: 'scripts/[dir]/[name].[hash]',
   outdir: 'dist',

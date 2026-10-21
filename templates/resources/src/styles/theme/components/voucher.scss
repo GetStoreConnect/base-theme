@@ -16,11 +16,7 @@
     background: #f6f6f6;
     border-radius: 10px;
     font-size: 14px;
-    border: var(--voucher-border, none);
-
-    &--requires-pin {
-      --voucher-border: 1px dashed #d3d3d3;
-    }
+    border: var(--voucher-border, 1px solid transparent);
   }
 
   &-status {

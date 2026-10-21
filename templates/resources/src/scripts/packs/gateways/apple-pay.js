@@ -100,17 +100,17 @@ export class ApplePay {
   /**
    * Create Apple Pay payment request
    */
-  createPaymentRequest(amount, { provisional = false, lineItems = [] } = {}) {
-    const displayLineItems = this.buildDisplayLineItems(lineItems)
+  createPaymentRequest(amount) {
     const paymentRequest = {
       countryCode: this.paymentForm.merchantCountryCode() || 'US',
       currencyCode: this.paymentForm.currency(),
       supportedNetworks: this.supportedNetworks,
       merchantCapabilities: this.merchantCapabilities,
-      total: this.buildTotalLineItem(amount, provisional ? 'pending' : 'final'),
-    }
-    if (displayLineItems.length > 0) {
-      paymentRequest.lineItems = displayLineItems
+      total: {
+        label: this.merchantName,
+        amount: (amount / 100).toFixed(2),
+        type: 'final',
+      },
     }
 
     if (this.paymentForm.onlyExpressCheckout()) {
@@ -142,117 +142,31 @@ export class ApplePay {
   }
 
   /**
-   * Build the Apple Pay grand-total line item. +amountCents+ is in the minor
-   * currency unit; +type+ is 'final' or 'pending' (provisional).
-   */
-  buildTotalLineItem(amountCents, type = 'final') {
-    return {
-      label: this.merchantName,
-      amount: (amountCents / 100).toFixed(2),
-      type,
-    }
-  }
-
-  /**
-   * True when Apple Pay renders the selected shipping method as its own summary
-   * row on the sheet — i.e. express checkout that collects shipping. In that
-   * case we must NOT also emit a shipping display line, or shipping shows twice.
-   */
-  applePayShowsShippingRow() {
-    return this.paymentForm.onlyExpressCheckout() && this.paymentForm.offerShipping()
-  }
-
-  /**
-   * Map server-provided breakdown lines to Apple Pay display line items. Server
-   * amounts are already in the currency's major unit (discounts are negative).
-   * The shipping line is dropped when Apple Pay already shows the chosen shipping
-   * method as its own row (see applePayShowsShippingRow).
-   */
-  buildDisplayLineItems(lineItems) {
-    const hideShipping = this.applePayShowsShippingRow()
-    return (lineItems || [])
-      .filter((item) => !(hideShipping && item.key === 'shipping'))
-      .map((item) => ({
-        label: item.label,
-        amount: Number(item.amount).toFixed(2),
-        type: 'final',
-      }))
-  }
-
-  /**
-   * Resolve the authoritative total (cents) + itemised breakdown for a session.
-   * For dedicated-cart ("buy now") products this awaits the real add-to-cart
-   * round trip, so the promo/tax-aware total is always used and never the stale
-   * product price — awaiting also removes the race where a wallet callback could
-   * run before the cart was prepared. Non-dedicated flows already carry the
-   * correct total (and breakdown) on the form.
-   */
-  async resolvePreparedTotal(session) {
-    if (session._preparedCartPromise) {
-      const { amount, lineItems, didError } = await session._preparedCartPromise
-      if (!didError && amount != null) {
-        return { amount, lineItems }
-      }
-    }
-    return {
-      amount: Math.round(this.paymentForm.totalPayable() * 100),
-      lineItems: this.paymentForm.lineItems(),
-    }
-  }
-
-  /**
-   * Abort the session and mark it so any in-flight callback awaiting a promise
-   * (e.g. the cart preparation) skips completing an already-aborted session,
-   * which would otherwise throw.
-   */
-  abortSession(session) {
-    session._aborted = true
-    session.abort()
-  }
-
-  /**
-   * Cache the freshest authoritative total on the session. Shipping callbacks
-   * produce a shipping-inclusive total; recording it here lets a later
-   * onpaymentmethodselected (fired whenever the shopper changes card) echo that
-   * total instead of reverting to the pre-shipping prepared amount.
-   */
-  rememberTotal(session, amount, lineItems) {
-    session._resolvedAmount = amount
-    session._resolvedLineItems = lineItems
-    return { amount, lineItems }
-  }
-
-  /**
    * Handle Apple Pay button click
    */
   async onApplePayButtonClicked() {
-    // IMPORTANT: Create ApplePaySession synchronously to maintain user gesture
-    // context. For dedicated-cart ("buy now") products the real total isn't known
-    // until the cart is prepared below, so seed a provisional 'pending' total;
-    // every wallet callback resolves the authoritative total (see
-    // resolvePreparedTotal) before the shopper can authorize.
-    const isDedicatedCart = Boolean(this.paymentForm.dedicatedCartProductId)
+    // IMPORTANT: Create ApplePaySession synchronously to maintain user gesture context
+    // Use current total; will be updated if cart preparation changes the amount
     const initialAmount = Math.round(this.paymentForm.totalPayable() * 100)
-    const paymentRequest = this.createPaymentRequest(initialAmount, {
-      provisional: isDedicatedCart,
-      lineItems: isDedicatedCart ? [] : this.paymentForm.lineItems(),
-    })
+    const paymentRequest = this.createPaymentRequest(initialAmount)
     const session = new ApplePaySession(this.applePayVersion, paymentRequest)
 
-    // Prepare the dedicated cart in the background. The promise is stored on the
-    // session so the wallet callbacks can await the real total rather than
-    // reading a stale value.
-    if (isDedicatedCart) {
-      session._preparedCartPromise = this.wallet.prepareProductCartWithAddToCartData()
-      session._preparedCartPromise
-        .then(({ didError }) => {
+    // Prepare dedicated cart asynchronously after session creation
+    if (this.paymentForm.dedicatedCartProductId) {
+      // Don't await here - let it run in background and handle errors in callbacks
+      this.wallet
+        .prepareProductCartWithAddToCartData()
+        .then(({ amount, didError }) => {
           if (didError) {
-            this.abortSession(session)
+            session.abort()
+            return
           }
+          // Store the prepared amount for later use
+          session._preparedAmount = amount
         })
         .catch((error) => {
           console.error('Failed to prepare cart:', error)
-          this.abortSession(session)
+          session.abort()
           this.wallet.showWalletsError(this.paymentForm.i18n('errors.cart_failed'))
         })
     }
@@ -269,67 +183,18 @@ export class ApplePay {
         session.completeMerchantValidation(merchantSession)
       } catch (error) {
         console.error('Apple Pay merchant validation error:', error)
-        this.abortSession(session)
+        session.abort()
         this.wallet.showWalletsError(
           error.message || this.paymentForm.i18n('apple_pay.setup_failed')
         )
       }
     }
 
-    // Fires when the sheet opens with the default card (and on card change).
-    // This is the only callback guaranteed to run for every flow — including
-    // virtual goods with no shipping step — so it is where the provisional
-    // 'pending' total is resolved to the real, final amount and breakdown.
-    session.onpaymentmethodselected = async () => {
-      try {
-        // Echo the freshest total already resolved by a prior callback (e.g. a
-        // shipping step's shipping-inclusive total); only compute it from the
-        // prepared cart on the first fire, before anything else has run. The
-        // post-await re-check guards the case where a shipping step resolves
-        // while we were still awaiting the cart preparation.
-        let total
-        if (session._resolvedAmount != null) {
-          total = { amount: session._resolvedAmount, lineItems: session._resolvedLineItems }
-        } else {
-          const prepared = await this.resolvePreparedTotal(session)
-          total =
-            session._resolvedAmount != null
-              ? { amount: session._resolvedAmount, lineItems: session._resolvedLineItems }
-              : this.rememberTotal(session, prepared.amount, prepared.lineItems)
-        }
-        // The cart-prepare failure path may have aborted while we awaited.
-        if (session._aborted) return
-        session.completePaymentMethodSelection({
-          newTotal: this.buildTotalLineItem(total.amount, 'final'),
-          newLineItems: this.buildDisplayLineItems(total.lineItems),
-        })
-      } catch (error) {
-        console.error('Apple Pay payment method error:', error)
-        // Don't re-complete an already-aborted session (it would throw again),
-        // and prefer the resolved total over the raw form value — for a
-        // dedicated cart the latter is the stale pre-discount price.
-        if (session._aborted) return
-        const fallbackAmount =
-          session._resolvedAmount != null
-            ? session._resolvedAmount
-            : Math.round(this.paymentForm.totalPayable() * 100)
-        session.completePaymentMethodSelection({
-          newTotal: this.buildTotalLineItem(fallbackAmount, 'final'),
-        })
-      }
-    }
-
     session.onshippingcontactselected = async (event) => {
       // For virtual products, provide a $0 dummy rate to collect address for contact info
       if (!this.paymentForm.offerShipping()) {
-        // Await the real prepared total so we never charge the stale product price.
-        const prepared = await this.resolvePreparedTotal(session)
-        if (session._aborted) return
-        const { amount, lineItems } = this.rememberTotal(
-          session,
-          prepared.amount,
-          prepared.lineItems
-        )
+        // Use prepared amount if available, otherwise use current total
+        const amount = session._preparedAmount || Math.round(this.paymentForm.totalPayable() * 100)
         session._selectedShippingMethodId = 'virtual-product-no-shipping'
         session.completeShippingContactSelection({
           status: ApplePaySession.STATUS_SUCCESS,
@@ -341,8 +206,11 @@ export class ApplePay {
               identifier: 'virtual-product-no-shipping',
             },
           ],
-          newTotal: this.buildTotalLineItem(amount, 'final'),
-          newLineItems: this.buildDisplayLineItems(lineItems),
+          newTotal: {
+            label: this.merchantName,
+            amount: (amount / 100).toFixed(2),
+            type: 'final',
+          },
         })
         return
       }
@@ -377,21 +245,21 @@ export class ApplePay {
         })
         session._selectedShippingMethodId = shippingOptions.defaultShippingRateId
         const amount = response.amount
-        this.rememberTotal(session, amount, response.lineItems)
 
         const shippingMethods = shippingOptions.shippingRates.map((rate) => ({
           label: rate.displayName,
           amount: (rate.amount / 100).toFixed(2),
-          // ApplePayShippingMethod.detail must be a DOMString; undefined throws.
-          detail: rate.deliveryEstimate ?? '',
+          detail: rate.deliveryEstimate,
           identifier: rate.id,
         }))
 
         session.completeShippingContactSelection({
           status: ApplePaySession.STATUS_SUCCESS,
           newShippingMethods: shippingMethods,
-          newTotal: this.buildTotalLineItem(amount, 'final'),
-          newLineItems: this.buildDisplayLineItems(response.lineItems),
+          newTotal: {
+            label: this.merchantName,
+            amount: (amount / 100).toFixed(2),
+          },
         })
       } catch (error) {
         console.error('Apple Pay shipping contact error:', error)
@@ -414,15 +282,17 @@ export class ApplePay {
         }
 
         const amount = response.amount
-        this.rememberTotal(session, amount, response.lineItems)
 
         // Update the recorded shipping rate id (may have been set to the default earlier).
         session._selectedShippingMethodId = event.shippingMethod.identifier
 
         session.completeShippingMethodSelection({
           status: ApplePaySession.STATUS_SUCCESS,
-          newTotal: this.buildTotalLineItem(amount, 'final'),
-          newLineItems: this.buildDisplayLineItems(response.lineItems),
+          newTotal: {
+            label: this.merchantName,
+            amount: (amount / 100).toFixed(2),
+            type: 'final',
+          },
         })
       } catch (error) {
         console.error('Apple Pay shipping method error:', error)
