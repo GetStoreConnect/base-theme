@@ -16,6 +16,9 @@
       <a href="{{ current_store.account_path }}/{{ "accounts.billing.path" | t }}" class="SC-PageNav_link{% if current_request.params.section == "billing" %} is-current{% endif %} sc-ml-small">
         {{ "accounts.menu.billing" | t }}
       </a>
+      <a href="{{ current_store.addresses_path }}" class="SC-PageNav_link{% if current_request.params.section == "addresses" %} is-current{% endif %} sc-ml-small">
+        {{ "accounts.menu.addresses" | t }}
+      </a>
       <a href="{{ current_store.orders_path }}" class="SC-PageNav_link{% if current_request.params.section == "orders" %} is-current{% endif %}">
         {{ "accounts.menu.orders" | t }}
       </a>

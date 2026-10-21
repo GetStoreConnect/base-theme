@@ -1,0 +1,13 @@
+{%- render "shared/page_header", heading: "t.accounts.addresses.index.heading" %}
+
+<div class="SC-Grid">
+  <div class="SC-Grid_main">
+    <div class="sc-mb-spacious">
+      <a href="{{ current_store.new_address_path }}" class="SC-Button SC-Button-primary">
+        {{ "accounts.addresses.index.add_address" | t }}
+      </a>
+    </div>
+
+    {% component "account/addresses_list", reload: "sc.address-book.changed" %}
+  </div>
+</div>

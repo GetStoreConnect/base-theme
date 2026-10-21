@@ -1,0 +1,17 @@
+{%- default address: nil %}
+
+{%- if address == blank %}
+  {%- render "shared/page_header", heading: "t.accounts.addresses.index.heading" %}
+  <div class="SC-Grid">
+    <div class="SC-Grid_main">
+      <div class="sc-shade-neutral">{{ "accounts.addresses.errors.not_found" | t }}</div>
+    </div>
+  </div>
+{%- else %}
+  {%- render "shared/page_header", heading: "t.accounts.addresses.edit.heading" %}
+  <div class="SC-Grid">
+    <div class="SC-Grid_main">
+      {% render "account/addresses/form", address: address, action_path: address.path, method: "patch", submit_label: "t.accounts.addresses.edit.update" %}
+    </div>
+  </div>
+{%- endif %}

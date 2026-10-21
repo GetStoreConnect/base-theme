@@ -34,7 +34,7 @@
 
   {%# Edit billing address %}
   <div data-billing-form class="{% if billing_same_as_shipping_field.value %}is-hidden{% endif %}">
-    {% render "checkout/customer_information/address", form: form, address_type: "billing" %}
+    {% render "checkout/customer_information/address", form: form, address_type: "billing", save_to_address_book: true %}
   </div>
 </div>
 

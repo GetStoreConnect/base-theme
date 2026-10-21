@@ -1,11 +1,33 @@
 {%- default form: nil %}
+{%- default type: "" %}
+{%- default required_attribute: false %}
 
 {%- require "scripts/customer-address.js" -%}
 
+{%- comment %}
+  `type` is the address's role: "shipping", "billing", or blank when the form's
+  fields are unprefixed (the Address Book). It prefixes both the field names
+  and the autocomplete section token, so blank gives plain `country` /
+  `autocomplete="country"`.
+
+  `required_attribute` opts into emitting the HTML `required` attribute
+  alongside the `required` class. It is off by default because registration
+  round-trips its validation errors from the server, and a browser that blocks
+  submission never lets those render — see
+  spec/features/account/direct_registration_spec.rb.
+{%- endcomment %}
 {%- liquid
-  assign field_name = type | append: "_country"
+  if type == blank
+    assign field_prefix = ""
+    assign section = ""
+  else
+    assign field_prefix = type | append: "_"
+    assign section = type | append: " "
+  endif
+
+  assign field_name = field_prefix | append: "country"
   assign country_id = form.fields[field_name].id
-  assign field_name = type | append: "_state"
+  assign field_name = field_prefix | append: "state"
   assign state_id = form.fields[field_name].id
 -%}
 
@@ -14,55 +36,69 @@
   data-country-id="{{ country_id }}"
   data-state-id="{{ state_id }}"
 >
-  {%- assign field_name = type | append: "_address_lines" %}
+  {%- assign field_name = field_prefix | append: "address_lines" %}
   {%- assign field = form.fields[field_name] %}
   {%- for line in field.value %}
     {%- assign label = "accounts.shared.address_form.address_lines.count" | t, count: forloop.index %}
-    <div class="SC-Field SC-Field-expand{% if field.errors != blank and forloop.index == 1 %} has-error{% endif %}{% if field.required? %} required{% endif %}">
+    <div class="SC-Field SC-Field-expand{% if field.errors != blank and forloop.index == 1 %} has-error{% endif %}{% if field.required? and forloop.first %} required{% endif %}">
       <label for="{{ field.id }}_{{ forloop.index }}" class="SC-Field_label">{{ label }}</label>
-      <input type="text" name="{{ field.name }}[]" id="{{ field.id }}_{{ forloop.index }}" value="{{ line }}" placeholder="{{ label }}" autocomplete="{{ type }} address-line{{ forloop.index }}" class="SC-Field_input">
-      <span class="SC-Field_error">{{ field.errors | try: "messages" }}</span>
+      <input type="text" name="{{ field.name }}[]" id="{{ field.id }}_{{ forloop.index }}" value="{{ line }}" placeholder="{{ label }}" autocomplete="{{ section }}address-line{{ forloop.index }}" class="SC-Field_input"{% if required_attribute and field.required? and forloop.first %} required{% endif %}{% if field.errors != blank and forloop.first %} aria-invalid="true" aria-describedby="{{ field.id }}_error"{% endif %}>
+      {%- if forloop.first %}
+        <span class="SC-Field_error" id="{{ field.id }}_error">{{ field.errors | try: "messages" }}</span>
+      {%- endif %}
     </div>
   {%- endfor %}
 
-  {%- assign field_name = type | append: "_city" %}
+  {%- assign field_name = field_prefix | append: "city" %}
   {%- assign field = form.fields[field_name] %}
   <div class="SC-Field{% if field.errors != blank %} has-error{% endif %}{% if field.required? %} required{% endif %}">
     <label for="{{ field.id }}" class="SC-Field_label">{{ "accounts.shared.address_form.city" | t }}</label>
-    <input type="text" name="{{ field.name }}" id="{{ field.id }}" value="{{ field.value }}" placeholder="{{ "accounts.shared.address_form.city" | t }}" autocomplete="{{ type }} address-level2" class="SC-Field_input">
-    <span class="SC-Field_error">{{ field.errors | try: "messages" }}</span>
+    <input type="text" name="{{ field.name }}" id="{{ field.id }}" value="{{ field.value }}" placeholder="{{ "accounts.shared.address_form.city" | t }}" autocomplete="{{ section }}address-level2" class="SC-Field_input"{% if required_attribute and field.required? %} required{% endif %}{% if field.errors != blank %} aria-invalid="true" aria-describedby="{{ field.id }}_error"{% endif %}>
+    <span class="SC-Field_error" id="{{ field.id }}_error">{{ field.errors | try: "messages" }}</span>
   </div>
 
-  {%- assign field_name = type | append: "_country" %}
+  {%- assign field_name = field_prefix | append: "country" %}
   {%- assign field = form.fields[field_name] %}
-  {%- assign country_id = field.id %}
+  {%- assign country_value = field.value %}
   <div class="SC-Field{% if field.errors != blank %} has-error{% endif %}{% if field.required? %} required{% endif %}">
     <label for="{{ field.id }}" class="SC-Field_label">{{ "accounts.shared.address_form.country" | t }}</label>
-    <select name="{{ field.name }}" id="{{ field.id }}" autocomplete="{{ type }} country" class="SC-Field_select">
+    <select name="{{ field.name }}" id="{{ field.id }}" autocomplete="{{ section }}country" class="SC-Field_select"{% if required_attribute and field.required? %} required{% endif %}{% if field.errors != blank %} aria-invalid="true" aria-describedby="{{ field.id }}_error"{% endif %}>
       <option value="">{{ "accounts.shared.address_form.country" | t }}</option>
       {%- for country in all_countries %}
         <option value="{{ country.alpha2 }}"{% if field.value == country.alpha2 %} selected{% endif %}>{{ country.name }}</option>
       {%- endfor %}
     </select>
-    <span class="SC-Field_error">{{ field.errors | try: "messages" }}</span>
+    <span class="SC-Field_error" id="{{ field.id }}_error">{{ field.errors | try: "messages" }}</span>
   </div>
 
-  {%- assign field_name = type | append: "_state" %}
+  {%- assign field_name = field_prefix | append: "state" %}
   {%- assign field = form.fields[field_name] %}
-  {%- assign state_id = field.id %}
+  {%- assign state_placeholder = "accounts.shared.address_form.state" | t %}
   <div class="SC-Field{% if field.errors != blank %} has-error{% endif %}{% if field.required? %} required{% endif %}">
-    <label for="{{ field.id }}" class="SC-Field_label">{{ "accounts.shared.address_form.state" | t }}</label>
-    <select name="{{ field.name }}" id="{{ field.id }}" autocomplete="{{ type }} address-level1" class="SC-Field_select" placeholder="{{ "accounts.shared.address_form.state" | t }}" data-selected="{{ field.value }}">
-      <option value="">{{ "accounts.shared.address_form.state" | t }}</option>
+    <label for="{{ field.id }}" class="SC-Field_label">{{ state_placeholder }}</label>
+    {%- comment %}
+      Options are rendered server-side for the chosen country so a required
+      state select is never empty on load. customer-address.js replaces them
+      when the country changes; without this it also has to populate the
+      initial list, and until that fetch resolves the browser blocks submit.
+    {%- endcomment %}
+    <select name="{{ field.name }}" id="{{ field.id }}" autocomplete="{{ section }}address-level1" class="SC-Field_select" placeholder="{{ state_placeholder }}" data-selected="{{ field.value }}"{% if required_attribute and field.required? %} required{% endif %}{% if field.errors != blank %} aria-invalid="true" aria-describedby="{{ field.id }}_error"{% endif %}>
+      <option value="">{{ state_placeholder }}</option>
+      {%- assign selected_country = all_countries[country_value] %}
+      {%- if selected_country != blank %}
+        {%- for state_option in selected_country.states %}
+          <option value="{{ state_option.code }}"{% if field.value == state_option.code %} selected{% endif %}>{{ state_option.name }}</option>
+        {%- endfor %}
+      {%- endif %}
     </select>
-    <span class="SC-Field_error">{{ field.errors | try: "messages" }}</span>
+    <span class="SC-Field_error" id="{{ field.id }}_error">{{ field.errors | try: "messages" }}</span>
   </div>
 
-  {%- assign field_name = type | append: "_postal_code" %}
+  {%- assign field_name = field_prefix | append: "postal_code" %}
   {%- assign field = form.fields[field_name] %}
   <div class="SC-Field{% if field.errors != blank %} has-error{% endif %}{% if field.required? %} required{% endif %}">
     <label for="{{ field.id }}" class="SC-Field_label">{{ "accounts.shared.address_form.zip_code" | t }}</label>
-    <input type="text" name="{{ field.name }}" id="{{ field.id }}" value="{{ field.value }}" placeholder="{{ "accounts.shared.address_form.zip_code" | t }}" autocomplete="{{ type }} postal-code" class="SC-Field_input">
-    <span class="SC-Field_error">{{ field.errors | try: "messages" }}</span>
+    <input type="text" name="{{ field.name }}" id="{{ field.id }}" value="{{ field.value }}" placeholder="{{ "accounts.shared.address_form.zip_code" | t }}" autocomplete="{{ section }}postal-code" class="SC-Field_input"{% if required_attribute and field.required? %} required{% endif %}{% if field.errors != blank %} aria-invalid="true" aria-describedby="{{ field.id }}_error"{% endif %}>
+    <span class="SC-Field_error" id="{{ field.id }}_error">{{ field.errors | try: "messages" }}</span>
   </div>
 </div>
