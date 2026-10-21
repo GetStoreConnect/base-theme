@@ -1,19 +1,25 @@
+{%# Multi-group carts render the deferred per-group component instead of the
+  # single-method tabs, so the rate/pickup lookups (which would block the
+  # page render) are skipped for them. %}
 {% liquid
+  assign multiple_delivery_groups = current_cart.multiple_delivery_groups?
   assign delivery_available = false
   assign shipping_active = false
   assign click_and_collect_active = false
 
-  if current_cart.shipping_rates.size > 0
-    assign delivery_available = true
-    assign shipping_active = true
-  endif
-
-  for cc in current_cart.pickup_options
-    if cc.in_stock?
+  unless multiple_delivery_groups
+    if current_cart.shipping_rates.size > 0
       assign delivery_available = true
-      assign click_and_collect_active = true
+      assign shipping_active = true
     endif
-  endfor
+
+    for cc in current_cart.pickup_options
+      if cc.in_stock?
+        assign delivery_available = true
+        assign click_and_collect_active = true
+      endif
+    endfor
+  endunless
 %}
 <section id="SC-CheckoutDeliveryOptions" class="SC-Panel SC-Panel-numbered">
   <div class="SC-Panel_header is-filled">
@@ -34,7 +40,11 @@
   <div class="SC-Panel_section">
     <div class="sc-mb-large" style="max-width: 600px">
       {%# Are there any shipping_rates? or any click_and_collect options that are in-stock? %}
-      {% if delivery_available %}
+      {% if multiple_delivery_groups %}
+        {%# Per-group delivery selection, loaded after the page renders so
+          # slow rate lookups never block the checkout. %}
+        {% component "checkout/shipping_rates/page", defer: true %}
+      {% elsif delivery_available %}
         <section data-tabs="fulfilment">
           <menu class="sc-flex-wrap sc-mb-small">
             <button type="button"
@@ -71,10 +81,12 @@
       {% render "custom_forms/forms", custom_forms: current_cart.custom_forms, form: form, display_mode: "in_checkout" %}
     {%- endif %}
 
+    {%# The per-group component preselects the cheapest rate per delivery, so
+      # the submit isn't gated on a click the way single-method selection is. %}
     <input type="submit"
       value="{{ "checkout.shipping.form.next" | t }}"
       class="SC-Button SC-Button-primary SC-Button-expanded-up-to-small"
-      data-fulfilment-button disabled
+      {% unless multiple_delivery_groups %}data-fulfilment-button disabled{% endunless %}
       data-disable-with="{{ 'checkout.shipping.form.continuing' | t }}">
   </div>
 
