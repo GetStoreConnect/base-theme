@@ -31,6 +31,8 @@ additional_payments,create
 additional_payments,postback
 additional_payments,show
 additional_payments,update
+additional_payments/applied_vouchers,create
+additional_payments/applied_vouchers,destroy
 additional_payments/billing_addresses,update
 helpers/availabilities,index
 async/components,load

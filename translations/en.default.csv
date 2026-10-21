@@ -364,6 +364,7 @@ additional_payments.custom_amount.label,Enter custom amount:
 additional_payments.billing_address.heading,Billing Address
 additional_payments.billing_address.description,Please enter your billing address to proceed with payment.
 additional_payments.billing_address.submit,Continue to Payment
+additional_payments.vouchers.complete_payment,Complete payment
 articles.category.no_articles,There are no articles in this category
 articles.index.heading,Latest Articles
 articles.index.no_articles,There are no articles
@@ -566,14 +567,6 @@ checkout.gateways.latitude.terms_html,"<p style=""margin-top: 1rem;"">Before con
 checkout.gateways.pay_by_account_form.account_on_credit_hold,"Account is on credit hold, please contact us for information."
 checkout.gateways.pay_by_account_form.enter_purchase_order_number,Enter Purchase Order Number
 checkout.gateways.pay_by_account_form.pay_now,Pay Now
-checkout.gateways.vii.card_number_label,Gift card number
-checkout.gateways.vii.pin_label,PIN
-checkout.gateways.vii.check_balance_button,Check balance
-checkout.gateways.vii.available_balance_label,Available balance
-checkout.gateways.vii.insufficient_balance,Card balance %{balance} is less than the order total %{total}.
-checkout.gateways.vii.invalid_card,We couldn't validate that card. Please check the number and PIN.
-checkout.gateways.vii.missing_fields,"Enter your gift card number and PIN, then check the balance."
-checkout.gateways.vii.pay_now,Pay with gift card
 checkout.gateways.pay_later_form.pay_now,Complete Purchase
 checkout.gateways.points_form.pay_now,Purchase
 checkout.gateways.store_credit_form.paying_with_account_credit,Paying with account credit
@@ -663,6 +656,16 @@ checkout.vouchers.enter_pin,Enter PIN
 checkout.vouchers.heading,Vouchers
 checkout.vouchers.status.enum.applied,Applied
 checkout.vouchers.status.enum.requires_pin,Requires PIN
+checkout.vouchers.vii.amount_label,Amount to apply
+checkout.vouchers.vii.apply,Apply
+checkout.vouchers.vii.balance,Available balance: %{balance}
+checkout.vouchers.vii.check_balance,Check
+checkout.vouchers.vii.enter_card_number,Enter gift card number
+checkout.vouchers.vii.enter_pin,Enter PIN
+checkout.vouchers.vii.heading,Apply a gift card
+checkout.vouchers.vii.invalid_card,We couldn't validate that card. Please check the number and PIN.
+checkout.vouchers.vii.missing_fields,"Enter your gift card number and PIN, then check the balance."
+checkout.vouchers.vii.no_balance,This card has no remaining balance.
 custom_forms.click_to_enter_your_answer,Click here to enter your answer
 custom_forms.no_option_selected,No option selected
 custom_forms.select_option,Select option...
@@ -741,7 +744,6 @@ order_summary.order.total_subscriptions_remaining,Total remaining subscriptions
 order_summary.paid,Paid
 order_summary.tax_label,Tax
 order_summary.total,Total amount
-order_summary.voucher,Voucher
 pagination.first,First
 pagination.last,Last
 pagination.next,Next
@@ -929,6 +931,13 @@ sc.accounts.subscriptions.update_payment_details.errors.fail,Updating payment de
 sc.accounts.subscriptions.update_payment_details.notices.success,Payment details updated
 sc.additional_payments.errors.renewal_order_not_permitted,You cannot make payments for renewal orders
 sc.additional_payments.errors.amount_exceeds_balance,The payment amount exceeds the remaining balance on this order. Please refresh and try again.
+sc.additional_payments.vouchers.cleared_due_to_amount_change,Your vouchers were removed because the payment amount changed. Please apply them again if you still want to use them.
+sc.additional_payments.vouchers.choose_payment_for_rest,Your vouchers don't cover the new amount. Please choose how to pay the rest.
+sc.additional_payments.vouchers.errors.redemption_failed,One or more vouchers could not be redeemed. Please check your vouchers and try again.
+sc.additional_payments.vouchers.errors.not_covered,Your vouchers no longer cover this payment. Please review your vouchers and try again.
+sc.additional_payments.vouchers.errors.external_not_redeemed,"A gift card could not be redeemed, so %{amount} is still due on this order."
+sc.additional_payments.vouchers.errors.voucher_not_redeemed,"A voucher could not be redeemed in full, so %{amount} is still due on this order."
+sc.additional_payments.vouchers.errors.renewal_order,You can't use vouchers to pay for subscription renewals.
 sc.article.errors.not_found,That article was not found.
 sc.article.errors.requires_membership,You do not have the required membership level to access this article. Requires: %{membership_required}.
 sc.article_category.errors.not_found,That article category was not found.
@@ -1639,6 +1648,12 @@ sc.vouchers.activation.errors.log.passed_activation_period,Voucher activation wi
 sc.vouchers.activation.errors.log.voucher_expired,Voucher has expired.
 sc.vouchers.activation.errors.log.invalid_code,Activation code did not match.
 sc.vouchers.activation.success,Successfully activated voucher
+sc.vouchers.vii.apply.notices.success,Gift card has been applied.
+sc.vouchers.vii.descriptor,Gift card
+sc.vouchers.vii.errors.insufficient_balance,Amount exceeds the available card balance.
+sc.vouchers.vii.errors.invalid_amount,Enter a valid amount to apply.
+sc.vouchers.vii.errors.invalid_card,We couldn't validate that card. Please check the number and PIN.
+sc.vouchers.vii.errors.no_balance,This card has no remaining balance.
 sc.shipments.errors.provider_not_enabled,%{provider} shipping provider is not configured or not active
 sc.shipments.errors.not_ready_to_ship,Shipment is not ready to ship
 sc.shipments.errors.provider_shipment_id_is_shipping_rate,Provider Shipment ID references a custom Shipping Rate
