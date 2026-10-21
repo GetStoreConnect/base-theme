@@ -628,6 +628,18 @@ export class PaymentForm {
     return this.form.dataset.totalPayable
   }
 
+  // Itemised breakdown (subtotal / discount / shipping) for the Apple Pay sheet,
+  // as [{ key, label, amount, type }] with amount in the currency's major unit.
+  // Absent for dedicated-cart ("buy now") products, whose breakdown is fetched
+  // from the express-checkout endpoints once the wallet sheet opens.
+  lineItems() {
+    try {
+      return JSON.parse(this.form.dataset.lineItems || '[]')
+    } catch {
+      return []
+    }
+  }
+
   currency() {
     return this.form.dataset.currencyCode
   }

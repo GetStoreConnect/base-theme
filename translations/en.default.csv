@@ -600,6 +600,10 @@ checkout.gateways.errors.balance_check_not_available,Gift card payment is not av
 checkout.gateways.wallets.loading,Loading...
 checkout.gateways.wallets.no_shipping_required,No shipping required
 checkout.gateways.wallets.free,FREE
+checkout.gateways.wallets.line_items.subtotal,Subtotal
+checkout.gateways.wallets.line_items.discount,Discount
+checkout.gateways.wallets.line_items.shipping,Shipping
+checkout.gateways.wallets.line_items.tax,Tax
 checkout.gateways.apple_pay.setup_failed,Apple Pay setup failed. Please try another payment method.
 checkout.gateways.apple_pay.email_required,Email address is required but was not provided by Apple Pay
 checkout.gateways.three_d_secure.cancelled,3D Secure authentication was cancelled. Please try again to complete your payment.
