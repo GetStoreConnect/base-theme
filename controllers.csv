@@ -3,6 +3,12 @@ accounts,create
 accounts,missing_details
 accounts,register
 accounts,show
+accounts/addresses,index
+accounts/addresses,new
+accounts/addresses,create
+accounts/addresses,edit
+accounts/addresses,update
+accounts/addresses,destroy
 accounts/attendees,create
 accounts/attendees,update
 accounts/orders,reorder

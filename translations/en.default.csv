@@ -39,6 +39,33 @@ accounts.account_points.transactions.no_expiry,Does not expire
 accounts.account_points.transactions.pending,pending
 accounts.account_points.transactions.type.enum.credit,credit
 accounts.account_points.transactions.type.enum.debit,debit
+accounts.addresses.errors.not_found,Address not found
+accounts.addresses.index.heading,Address book
+accounts.addresses.index.add_address,Add address
+accounts.addresses.index.label,Label
+accounts.addresses.index.address,Address
+accounts.addresses.index.defaults,Defaults
+accounts.addresses.index.actions,Actions
+accounts.addresses.index.default_shipping,Default shipping
+accounts.addresses.index.default_billing,Default billing
+accounts.addresses.index.make_default_shipping,Make default shipping
+accounts.addresses.index.make_default_billing,Make default billing
+accounts.addresses.index.make_default_shipping_aria,Make default shipping: %{address}
+accounts.addresses.index.make_default_billing_aria,Make default billing: %{address}
+accounts.addresses.index.edit,Edit
+accounts.addresses.index.edit_aria,Edit %{address}
+accounts.addresses.index.delete,Delete
+accounts.addresses.index.delete_aria,Delete %{address}
+accounts.addresses.index.no_addresses,You haven't saved any addresses yet.
+accounts.addresses.new.heading,Add address
+accounts.addresses.new.create,Add address
+accounts.addresses.edit.heading,Edit address
+accounts.addresses.edit.update,Save changes
+accounts.addresses.form.label,Label (optional)
+accounts.addresses.form.label_placeholder,"e.g. Home, Office, Warehouse"
+accounts.addresses.form.is_default_shipping,Use as my default shipping address
+accounts.addresses.form.is_default_billing,Use as my default billing address
+accounts.addresses.form.cancel,Cancel
 accounts.billing.heading,Billing Address
 accounts.billing.path,billing
 accounts.billing.update,Update your billing address
@@ -64,6 +91,7 @@ accounts.credentials.update,Update your login details
 accounts.credentials.username,Username
 accounts.menu.account_credits,Account credits
 accounts.menu.account_points,Account points
+accounts.menu.addresses,Address book
 accounts.menu.billing,Billing Address
 accounts.menu.contact,Contact details
 accounts.menu.credentials,Login details
@@ -438,6 +466,9 @@ checkout.account_credits.heading,Account Credits
 checkout.account_credits.remove,Remove
 checkout.account_credits.select_prompt,Select an account credit...
 checkout.assisted_by.were_you_assisted_with_this_order,Were you assisted with this order?
+checkout.customer_information.address.saved_address,Saved addresses
+checkout.customer_information.address.enter_new,Enter a new address
+checkout.customer_information.address.save_to_book,Save this address to my address book
 checkout.customer_information.billing_address.billing_address_same_as_shipping_address,Same as Shipping Address
 checkout.customer_information.billing_address.edit,Edit
 checkout.customer_information.billing_address.heading,Billing Address
@@ -794,6 +825,12 @@ sc.account_credit.descriptor,Account Credit
 sc.account_credit.remove.errors.fail,The account credit could not be removed from your cart. Please contact support for assistance.
 sc.account_credit.remove.notices.success,Account Credit removed
 sc.account_points.descriptor,Account Points
+sc.accounts.addresses.create.errors.invalid,There was an error adding the address
+sc.accounts.addresses.create.notices.success,Address was added
+sc.accounts.addresses.update.errors.invalid,There was an error updating the address
+sc.accounts.addresses.update.notices.success,Address was updated
+sc.accounts.addresses.destroy.errors.fail,Could not remove the address
+sc.accounts.addresses.destroy.notices.success,Address was removed
 sc.accounts.confirmations.notices.already_signed_in,You are already signed in
 sc.accounts.confirmations.notices.check_email_for_instructions,"If the email is registered, you should get a confirmation email, unless it's already confirmed."
 sc.accounts.invitations.notices.already_signed_in,You are already signed in

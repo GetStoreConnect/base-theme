@@ -26,6 +26,8 @@
   {%- endif %}
 {%- when "product_approvals" %}
   {% render "account/product_approvals", identifier: identifier %}
+{%- when "addresses" %}
+  {% render "account/addresses", identifier: identifier %}
 {%- when "credentials" %}
   {% render "account/credentials" %}
 {%- when "contact" %}
