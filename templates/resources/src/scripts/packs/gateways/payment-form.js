@@ -124,9 +124,14 @@ export class PaymentForm {
       'submit',
       (e) => {
         e.preventDefault()
+        // The button-disable is deferred, so guard synchronously against a
+        // second submit landing before it takes effect.
+        if (this._submitting) return
+        this._submitting = true
         this.prepareSubmit(() => {
+          // Return the promise so prepareSubmit can release the guard on rejection.
           if (this.onSubmit) {
-            this.onSubmit(this.form)
+            return this.onSubmit(this.form)
           }
         })
       },
@@ -296,6 +301,9 @@ export class PaymentForm {
   setPayButton(enabled) {
     // Support both boolean parameter and named argument { enabled: boolean }
     const isEnabled = typeof enabled === 'object' ? enabled.enabled : enabled
+    // Release the guard whenever the form is re-enabled, so a clickable button
+    // is never left blocking resubmit — whatever path re-enabled it.
+    if (isEnabled) this._submitting = false
     const payButton = this.submitElement()
     if (!payButton) return
     if (this.setPayButtonCallback) {
@@ -359,6 +367,8 @@ export class PaymentForm {
       resetButton = true,
     } = options
     if (resetButton && !this.onlyExpressCheckout()) {
+      // Left engaged when resetButton is false (e.g. a timeout with unknown
+      // payment status) so we don't invite a resubmit that might double-charge.
       this.setPayButton(true)
     }
 
@@ -394,7 +404,26 @@ export class PaymentForm {
     this.setPayButton(false)
     document.dispatchEvent(new CustomEvent('store-connect.payment-processing-start'))
 
-    callback()
+    // Recover the form if the callback fails outside a normal error path,
+    // otherwise the guard stays locked and the button disabled.
+    try {
+      const result = callback()
+      if (result && typeof result.then === 'function') {
+        result.catch((error) => this.handleSubmitFailure(error))
+      }
+    } catch (error) {
+      // Recover, then re-throw so the programmer error still reaches the global handler.
+      this.refreshForm()
+      throw error
+    }
+  }
+
+  // A rejected provider promise may have shown the customer nothing, so display
+  // a generic message; report the actual error, not the displayed string.
+  handleSubmitFailure(error) {
+    const el = document.querySelector('[data-general-error-message]')
+    this.refreshForm(el ? el.getAttribute('data-general-error-message') : '', { report: false })
+    this.reportError(error)
   }
 
   /**
@@ -437,6 +466,7 @@ export class PaymentForm {
       type: formMethod || payload.method,
       beforeSend(xhr, options) {
         xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8')
+        xhr.setRequestHeader('Accept', 'application/json')
         options.data = JSON.stringify(payload)
         return true
       },
@@ -489,10 +519,15 @@ export class PaymentForm {
       return
     }
 
+    // Always call showError to re-enable the form, but don't report an empty
+    // message to Bugsnag when the message element is missing.
     const el = document.querySelector('[data-general-error-message]')
     if (el) {
       this.showError(el.getAttribute('data-general-error-message'))
+    } else {
+      this.showError('', { report: false })
     }
+    document.dispatchEvent(new CustomEvent('store-connect.payment-processing-end'))
   }
 
   // Potentially extends payload if additional form fields are present:
@@ -543,9 +578,12 @@ export class PaymentForm {
     return payload
   }
 
-  refreshForm(error) {
+  // Re-enable the form after a submission ends in place. The -end event lets
+  // listeners disabled on -start (e.g. the payment tabs) re-enable too.
+  refreshForm(error, errorOptions = {}) {
     if (error) {
-      this.showError(error)
+      this.showError(error, errorOptions)
+      document.dispatchEvent(new CustomEvent('sc.cart-updated'))
     } else {
       this.hideError()
     }

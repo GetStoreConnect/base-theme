@@ -1072,6 +1072,7 @@ sc.checkout.invalid_cart,Checkout cannot continue because your cart is invalid.
 sc.checkout.not_available,Checkout is not available at this time.
 sc.checkout.orders.show.notices.thank_you,Thank you for your order.
 sc.checkout.payment.create.errors.address_invalid,Payment failed. Please check the postcode and address are correct for that card.
+sc.checkout.payment.create.errors.awaiting_outcome,"We're still checking whether your payment went through, so please don't pay again. Check your email or your orders page for an update, or contact us if you don't hear back."
 sc.checkout.payment.create.errors.card_declined,Payment failed. That card was declined.
 sc.checkout.payment.create.errors.card_expired,"Payment failed. That card has expired, or the expiration date is incorrect."
 sc.checkout.payment.create.errors.card_invalid,"Payment failed. That card is not valid, please check all fields are correct."
