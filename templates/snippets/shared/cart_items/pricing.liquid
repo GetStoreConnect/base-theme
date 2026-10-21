@@ -2,6 +2,31 @@
 {%- default compact: false -%}
 {%- default large: false -%}
 
+{%- comment %}
+  The ladder a line's price came down is list -> sale -> net, where the sale-to-net step is the
+  line-item promotions. before_promotions states the sale rung — the figure the promotion was
+  applied to — rather than what the line charges, so a summary can show the promotion beneath it
+  as its own line. Stating the charged figure there too would subtract the promotion twice.
+
+  Defaults on. A client theme carrying its own copy of a caller will not know to pass it, and
+  stating the rung with no row beneath is one page reading high, where stating the charged
+  figure with a row beneath is every summary reading low.
+{% endcomment %}
+{%- default before_promotions: true -%}
+
+{%- liquid
+  assign line_amount = pricing.price_excl_tax
+  assign line_full_amount = pricing.price
+  assign line_points = pricing.checkout_points
+  if before_promotions
+    assign line_amount = pricing.sale_price_excl_tax
+    assign line_full_amount = pricing.sale_price
+    if pricing.sale_points != blank
+      assign line_points = pricing.sale_points
+    endif
+  endif
+-%}
+
 {%- capture font_class %}
   {% if large %}sc-font-base{% else %}sc-font-tiny{%- endif %}
 {%- endcapture %}
@@ -56,12 +81,12 @@
       <div class="sc-mb-tiny sc-font-{% if large %}large{% else %}small{%- endif -%}" data-line-item-amount>
         {%- comment %} Currency Price {% endcomment %}
         {%- if pricing.use_currency? %}
-          <span data-currency>{{ pricing.price_excl_tax | money }}</span>
+          <span data-currency>{{ line_amount | money }}</span>
         {%- endif %}
 
         {%- comment %} Points Price {% endcomment %}
         {%- if pricing.use_points? %}
-          <span data-points>{{ pricing.checkout_points | points }}</span>
+          <span data-points>{{ line_points | points }}</span>
         {%- endif %}
       </div>
     {%- endif %}
@@ -73,7 +98,7 @@
 
         {%- comment %} Currency Price {% endcomment %}
         {%- if pricing.use_currency? %}
-          <span data-currency>{{ pricing.price | money }}</span>
+          <span data-currency>{{ line_full_amount | money }}</span>
         {%- endif %}
 
         {%- comment %} Points Price {% endcomment %}
