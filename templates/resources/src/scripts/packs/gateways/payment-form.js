@@ -375,6 +375,11 @@ export class PaymentForm {
 
     this.extractAdditionalFormPayload(payload)
 
+    const saveCheckbox = document.querySelector('[data-save-payment-method]')
+    if (saveCheckbox && saveCheckbox.checked) {
+      payload.save_payment_method = true
+    }
+
     const formMethod = this.form._method
       ? this.form._method.value
       : this.form.getAttribute('method')

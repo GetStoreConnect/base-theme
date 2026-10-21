@@ -102,6 +102,7 @@ accounts.menu.profile,Account
 accounts.menu.shipping,Shipping Address
 accounts.menu.fulfillments,Deliveries
 accounts.menu.subscriptions,Subscriptions
+accounts.menu.payment_methods,Payment Methods
 accounts.not_authorized.heading,Not Authorized
 accounts.not_authorized.message,You are not authorized to access this page.
 accounts.orders.bookings.attendees.add_attendee,Add attendee
@@ -266,6 +267,21 @@ accounts.profile.sections.subscriptions.heading,Subscriptions
 accounts.profile.sections.subscriptions.next_due,Next Due
 accounts.profile.sections.subscriptions.no_subscriptions,No Subscriptions
 accounts.profile.sections.subscriptions.view_all,View all
+accounts.profile.sections.payment_methods.heading,Payment Methods
+accounts.profile.sections.payment_methods.add,Add Payment Method
+accounts.profile.sections.payment_methods.add_heading,Add Payment Method
+accounts.profile.sections.payment_methods.make_default,Make this my default payment method
+accounts.profile.sections.payment_methods.back,Back to Payment Methods
+accounts.profile.sections.payment_methods.create_failed,Failed to save payment method. Please try again.
+accounts.profile.sections.payment_methods.create_provider_not_found,Payment provider not found.
+accounts.profile.sections.payment_methods.type,Type
+accounts.profile.sections.payment_methods.number,Number
+accounts.profile.sections.payment_methods.expiry,Expiry
+accounts.profile.sections.payment_methods.empty,No saved payment methods.
+accounts.profile.sections.payment_methods.default_badge,Default
+accounts.profile.sections.payment_methods.set_default,Set Default
+accounts.profile.sections.payment_methods.remove,Remove
+accounts.profile.sections.payment_methods.remove_confirm,Remove this payment method?
 accounts.register.form.headings.address,Address
 accounts.register.form.headings.company_name,Company details
 accounts.register.form.headings.contact,Contact details
@@ -518,6 +534,7 @@ checkout.gateways.form.expiry_placeholder_short,MM/YY
 checkout.gateways.form.expiry_year,Expiry year
 checkout.gateways.form.expiry_year_placeholder,YYYY
 checkout.gateways.form.pay_now,Pay Now
+checkout.gateways.form.save_card,Save card
 checkout.gateways.form.verification,CVC
 checkout.gateways.form.verification_placeholder,123
 checkout.gateways.form.account_type,Account type
@@ -598,6 +615,18 @@ checkout.payment.error,"Sorry, an error occurred while trying to process the pay
 checkout.payment.timeout_error,We couldn't confirm your payment status. Please check your email or Orders page before trying again.
 checkout.payment.header,Payment
 checkout.payment.processing,Processing...
+checkout.payment.saving,Saving...
+checkout.payment.save_payment_method,Save this payment method for future transactions
+checkout.payment.card_captured.title,Card captured
+checkout.payment.card_captured.message,The subscription will be billed automatically. You can close this page.
+checkout.payment.saved_card.use_saved_default,Use your saved default
+checkout.payment.saved_card.use_saved,Use your saved
+checkout.payment.saved_card.ending_in,ending in
+checkout.payment.saved_card.expires,Exp.
+checkout.payment.saved_card.use_different,Use a different payment method
+checkout.payment.saved_card.other_saved,Saved Payment Methods
+checkout.payment.saved_card.use_this,Use this card
+checkout.payment.saved_card.other_methods,Other payment methods
 checkout.points.insufficient_balance,You do not have enough points to complete this order
 checkout.points.requires_login,You must be logged in to pay with points
 checkout.promo_codes.apply,Apply
@@ -849,6 +878,21 @@ sc.accounts.register.errors.fail,"There was a problem processing your registrati
 sc.accounts.register.errors.invalid,There was a problem creating your account
 sc.accounts.register.notices.already_signed_in,You are already signed in
 sc.accounts.register.notices.login_exists,You already have an account. Please sign in or reset password.
+sc.accounts.payment_methods.destroy.success,Payment method removed
+sc.accounts.payment_methods.display_names.saved_payment_method,Saved payment method
+sc.accounts.payment_methods.display_names.saved_bank_account,Saved bank account
+sc.accounts.payment_methods.display_names.saved_digital_wallet,Saved digital wallet
+sc.accounts.payment_methods.display_names.card_ending_in,Card ending in %{last_four}
+sc.accounts.payment_methods.display_names.card_brand_ending_in,%{card_brand} ending in %{last_four}
+sc.accounts.payment_methods.display_names.bank_account_last_four,Bank account ****%{last_four}
+sc.accounts.payment_methods.display_names.bank_account_type_last_four,%{bank_name} %{type_label} ****%{last_four}
+sc.accounts.payment_methods.display_names.wallet_with_card,%{label} - %{card_brand} ending in %{last_four}
+sc.accounts.payment_methods.display_names.account_type_default,Account
+sc.accounts.payment_methods.display_names.payment_ending_in,%{label} ending in %{last_four}
+sc.accounts.payment_methods.update.success,Payment method updated
+sc.accounts.payment_methods.wallet_labels.apple_pay,Apple Pay
+sc.accounts.payment_methods.wallet_labels.google_pay,Google Pay
+sc.accounts.payment_methods.wallet_labels.paypal,PayPal
 sc.accounts.subscriptions.cancel.errors.not_allowed,That subscription cannot be cancelled
 sc.accounts.subscriptions.cancel.notices.success,Subscription has been cancelled
 sc.accounts.subscriptions.payment.title,Pay Subscription
@@ -1048,6 +1092,10 @@ sc.checkout.payment.shared.errors.contact_name_missing,Contact name is required 
 sc.checkout.payment.shared.errors.customer_cancelled,Payment was cancelled by customer
 sc.checkout.payment.shared.errors.refund_details_error,Unable to retrieve original transaction details for refund
 sc.checkout.payment.shared.errors.refund_not_settled,Partial refunds are not available until the transaction has settled
+sc.checkout.payment.save_errors.failed,Failed to save payment method. Please try again.
+sc.checkout.payment.save_errors.payment_intent_missing,Payment intent not provided.
+sc.checkout.payment.save_errors.bank_account_unavailable,Bank account details not available.
+sc.checkout.payment.save_errors.retrieve_failed,Failed to retrieve card details.
 sc.checkout.shipping.click_and_collect.out_of_stock,Out of Stock at %{location}
 sc.checkout.shipping.click_and_collect.available_now,Collect from %{location} (available now)
 sc.checkout.shipping.click_and_collect.available_from,Collect from %{location} (available from %{from})

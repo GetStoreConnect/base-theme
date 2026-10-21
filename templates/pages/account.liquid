@@ -36,6 +36,10 @@
   {% render "account/shipping" %}
 {%- when "billing" %}
   {% render "account/billing" %}
+{%- when "payment_methods" %}
+  {% render "account/profile/payment_methods" %}
+{%- when "payment_methods_new" %}
+  {% render "account/profile/payment_methods_new" %}
 {%- else %}
   {% render "account/profile" %}
 {%- endcase %}

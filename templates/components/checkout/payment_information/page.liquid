@@ -66,6 +66,10 @@
           </section>
         {%- endif %}
       {%- endif %}
+    {%- elsif current_cart.auto_save_payment_method? %}
+      <div class="sc-mb">
+        {% render "checkout/payment_information/select_and_payment" %}
+      </div>
     {%- else %}
       <div class="sc-mb">
         {% render "checkout/payment_information/payment_providers/store_credit_or_free_form" %}

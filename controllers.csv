@@ -18,6 +18,11 @@ accounts/subscriptions,index
 accounts/subscriptions,show
 accounts/subscriptions,threeds_callback
 accounts/subscriptions,update
+accounts/payment_methods,index
+accounts/payment_methods,new
+accounts/payment_methods,create
+accounts/payment_methods,destroy
+accounts/payment_methods,update
 accounts/subscription_payments,create
 accounts/subscription_payments,new
 additional_payments,ach
