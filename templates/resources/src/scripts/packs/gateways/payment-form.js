@@ -1,7 +1,6 @@
-import { loadScript as loadExternalScript } from '../../theme/load-script'
-import storePathUrl from '../../theme/store-path-url'
 import { postJSON } from '../../theme/utils/fetch'
-import { attachCurrencySanitizer } from '../../theme/utils/currency'
+import storePathUrl from '../../theme/store-path-url'
+import { loadScript as loadExternalScript } from '../../theme/load-script'
 
 const Rails = window.Rails
 
@@ -36,33 +35,17 @@ export class PaymentForm {
     const customAmountInput = document.getElementById('custom-payment-amount')
     if (!customAmountInput) return
 
-    // `data-total-payable` may reflect a saved custom amount pre-filled into the
-    // input; emptying the input means paying the default instead.
-    this._originalTotalPayable =
-      this.form.dataset.defaultTotalPayable || this.form.dataset.totalPayable
+    this._originalTotalPayable = this.form.dataset.totalPayable
 
-    // Keep the field numeric, positive and to the currency's decimal places as
-    // the customer types or pastes.
-    attachCurrencySanitizer(customAmountInput)
-
-    // `data-max` reflects the order's full remaining balance
+    // The input's `max` attribute reflects the order's full remaining balance
     // (`order.total_payable`), which may exceed `data-total-payable` on deposit
     // orders where the form's default total is the deposit amount. Clamp to
-    // this max so customers can pay above the deposit when they want to.
-    const parsedMax = parseFloat(customAmountInput.dataset.max)
-    const maxAmount = !isNaN(parsedMax) ? parsedMax : parseFloat(this._originalTotalPayable)
-
-    // When minimum deposits are configured, the amount is raised to the minimum.
-    const minAmount = parseFloat(customAmountInput.dataset.min) || 0
-    const decimals = parseInt(customAmountInput.dataset.decimals, 10) || 2
-    const messageEl = document.querySelector('[data-custom-amount-message]')
-
-    // The custom amount is gross, but the server charges it less every applied
-    // voucher, so the gateways need the net figure.
-    const vouchersTotal = parseFloat(customAmountInput.dataset.vouchersTotal) || 0
-    const scale = 10 ** decimals
-    const netOfVouchers = (amount) =>
-      (Math.round(Math.max(0, amount - vouchersTotal) * scale) / scale).toString()
+    // the input's max so customers can pay above the deposit when they want to.
+    const parsedMax = parseFloat(customAmountInput.max)
+    const maxAmount =
+      customAmountInput.max !== '' && !isNaN(parsedMax)
+        ? parsedMax
+        : parseFloat(this._originalTotalPayable)
 
     // Restore typed-but-not-yet-submitted value across soft reloads. The server
     // already pre-fills `value=` from session for failed-submit cases, so only
@@ -74,7 +57,7 @@ export class PaymentForm {
       const saved = sessionStorage.getItem(storageKey)
       if (saved && parseFloat(saved) <= maxAmount) {
         customAmountInput.value = saved
-        this.form.dataset.totalPayable = netOfVouchers(parseFloat(saved))
+        this.form.dataset.totalPayable = saved
       }
     }
 
@@ -82,40 +65,12 @@ export class PaymentForm {
       const value = parseFloat(customAmountInput.value)
       if (!isNaN(value) && value > 0) {
         const clamped = Math.min(value, maxAmount)
-        this.form.dataset.totalPayable = netOfVouchers(clamped)
+        this.form.dataset.totalPayable = clamped.toString()
         if (storageKey) sessionStorage.setItem(storageKey, customAmountInput.value)
       } else {
         this.form.dataset.totalPayable = this._originalTotalPayable
         if (storageKey) sessionStorage.removeItem(storageKey)
       }
-    })
-
-    // On commit, clamp into [min, max]. Raising to the minimum explains why.
-    customAmountInput.addEventListener('change', () => {
-      let value = parseFloat(customAmountInput.value)
-      if (messageEl) messageEl.textContent = ''
-
-      if (isNaN(value) || value <= 0) {
-        customAmountInput.value = ''
-        this.form.dataset.totalPayable = this._originalTotalPayable
-        if (storageKey) sessionStorage.removeItem(storageKey)
-        return
-      }
-
-      // Never raise above the remaining balance: on a mostly-paid order the
-      // balance can be below the configured minimum.
-      const effectiveMin = Math.min(minAmount, maxAmount)
-      if (value > maxAmount) value = maxAmount
-      if (effectiveMin > 0 && value < effectiveMin) {
-        value = effectiveMin
-        if (messageEl && effectiveMin === minAmount) {
-          messageEl.textContent = customAmountInput.dataset.belowMinMessage || ''
-        }
-      }
-
-      customAmountInput.value = value.toFixed(decimals)
-      this.form.dataset.totalPayable = netOfVouchers(value)
-      if (storageKey) sessionStorage.setItem(storageKey, customAmountInput.value)
     })
   }
 
@@ -124,14 +79,9 @@ export class PaymentForm {
       'submit',
       (e) => {
         e.preventDefault()
-        // The button-disable is deferred, so guard synchronously against a
-        // second submit landing before it takes effect.
-        if (this._submitting) return
-        this._submitting = true
         this.prepareSubmit(() => {
-          // Return the promise so prepareSubmit can release the guard on rejection.
           if (this.onSubmit) {
-            return this.onSubmit(this.form)
+            this.onSubmit(this.form)
           }
         })
       },
@@ -301,9 +251,6 @@ export class PaymentForm {
   setPayButton(enabled) {
     // Support both boolean parameter and named argument { enabled: boolean }
     const isEnabled = typeof enabled === 'object' ? enabled.enabled : enabled
-    // Release the guard whenever the form is re-enabled, so a clickable button
-    // is never left blocking resubmit — whatever path re-enabled it.
-    if (isEnabled) this._submitting = false
     const payButton = this.submitElement()
     if (!payButton) return
     if (this.setPayButtonCallback) {
@@ -367,8 +314,6 @@ export class PaymentForm {
       resetButton = true,
     } = options
     if (resetButton && !this.onlyExpressCheckout()) {
-      // Left engaged when resetButton is false (e.g. a timeout with unknown
-      // payment status) so we don't invite a resubmit that might double-charge.
       this.setPayButton(true)
     }
 
@@ -404,26 +349,7 @@ export class PaymentForm {
     this.setPayButton(false)
     document.dispatchEvent(new CustomEvent('store-connect.payment-processing-start'))
 
-    // Recover the form if the callback fails outside a normal error path,
-    // otherwise the guard stays locked and the button disabled.
-    try {
-      const result = callback()
-      if (result && typeof result.then === 'function') {
-        result.catch((error) => this.handleSubmitFailure(error))
-      }
-    } catch (error) {
-      // Recover, then re-throw so the programmer error still reaches the global handler.
-      this.refreshForm()
-      throw error
-    }
-  }
-
-  // A rejected provider promise may have shown the customer nothing, so display
-  // a generic message; report the actual error, not the displayed string.
-  handleSubmitFailure(error) {
-    const el = document.querySelector('[data-general-error-message]')
-    this.refreshForm(el ? el.getAttribute('data-general-error-message') : '', { report: false })
-    this.reportError(error)
+    callback()
   }
 
   /**
@@ -449,11 +375,6 @@ export class PaymentForm {
 
     this.extractAdditionalFormPayload(payload)
 
-    const saveCheckbox = document.querySelector('[data-save-payment-method]')
-    if (saveCheckbox && saveCheckbox.checked) {
-      payload.save_payment_method = true
-    }
-
     const formMethod = this.form._method
       ? this.form._method.value
       : this.form.getAttribute('method')
@@ -466,7 +387,6 @@ export class PaymentForm {
       type: formMethod || payload.method,
       beforeSend(xhr, options) {
         xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8')
-        xhr.setRequestHeader('Accept', 'application/json')
         options.data = JSON.stringify(payload)
         return true
       },
@@ -519,15 +439,10 @@ export class PaymentForm {
       return
     }
 
-    // Always call showError to re-enable the form, but don't report an empty
-    // message to Bugsnag when the message element is missing.
     const el = document.querySelector('[data-general-error-message]')
     if (el) {
       this.showError(el.getAttribute('data-general-error-message'))
-    } else {
-      this.showError('', { report: false })
     }
-    document.dispatchEvent(new CustomEvent('store-connect.payment-processing-end'))
   }
 
   // Potentially extends payload if additional form fields are present:
@@ -578,12 +493,9 @@ export class PaymentForm {
     return payload
   }
 
-  // Re-enable the form after a submission ends in place. The -end event lets
-  // listeners disabled on -start (e.g. the payment tabs) re-enable too.
-  refreshForm(error, errorOptions = {}) {
+  refreshForm(error) {
     if (error) {
-      this.showError(error, errorOptions)
-      document.dispatchEvent(new CustomEvent('sc.cart-updated'))
+      this.showError(error)
     } else {
       this.hideError()
     }
@@ -626,24 +538,6 @@ export class PaymentForm {
 
   totalPayable() {
     return this.form.dataset.totalPayable
-  }
-
-  // totalPayable as the `money` filter rendered it, for callers that display
-  // the amount rather than compute with it.
-  totalPayableFormatted() {
-    return this.form.dataset.totalPayableFormatted
-  }
-
-  // Itemised breakdown (subtotal / discount / shipping) for the Apple Pay sheet,
-  // as [{ key, label, amount, type }] with amount in the currency's major unit.
-  // Absent for dedicated-cart ("buy now") products, whose breakdown is fetched
-  // from the express-checkout endpoints once the wallet sheet opens.
-  lineItems() {
-    try {
-      return JSON.parse(this.form.dataset.lineItems || '[]')
-    } catch {
-      return []
-    }
   }
 
   currency() {
@@ -694,20 +588,8 @@ export class PaymentForm {
     return this.form.dataset.onlyExpressCheckout === 'true'
   }
 
-  enabledFeatures() {
-    return (this.form.dataset.enabledFeatures || '').split(' ').filter(Boolean)
-  }
-
   enabledExpressCheckout() {
-    return this.enabledFeatures().includes('express_checkout')
-  }
-
-  fastlaneEnabled() {
-    return this.enabledFeatures().includes('fastlane')
-  }
-
-  sdkClientToken() {
-    return this.form.dataset.sdkClientToken
+    return this.form.dataset.expressCheckoutEnabled === 'true'
   }
 
   storeName() {

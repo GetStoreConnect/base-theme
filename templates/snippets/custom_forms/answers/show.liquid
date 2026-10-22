@@ -4,17 +4,10 @@
 {% if answer.editable? and answer.answer == blank %}
   {{ "custom_forms.click_to_enter_your_answer" | t }}
 {% elsif answer.question.data_type == 'Picklist' %}
-  {% if answer.answer == blank %}
-    {{ "custom_forms.no_option_selected" | t }}
-  {% else %}
-    {%- comment %} unescape: options are matched raw, but the lookup escapes before filters run {% endcomment %}
-    {% assign answer_value = answer.answer | unescape %}
-    {% assign picklist_option = answer.question.picklist_options[answer_value] %}
-    {{ picklist_option.label }}
-  {% endif %}
+  {% assign picklist_option = answer.question.picklist_options[answer.answer] %}
+  {{ picklist_option.label }}
 {% elsif answer.question.data_type == 'Multi-Picklist' %}
-  {%- comment %} unescape first: an escaped entity ends in ";" and would break the split {% endcomment %}
-  {% assign values = answer.answer | unescape | split: ';' %}
+  {% assign values = answer.answer | split: ';' %}
   {% if values.size > 0 %}
     {% for value in values %}
       {{ answer.question.picklist_options[value].label }}

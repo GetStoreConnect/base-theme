@@ -36,10 +36,8 @@ function initStripe({ form }) {
   }
 
   function stripeCreateToken(_form) {
-    // We're bypassing the form here because we're using Stripe Elements.
-    // Return the promise so prepareSubmit can release the submit guard if
-    // tokenization rejects (e.g. a network failure).
-    return stripe
+    // We're bypassing the form here because we're using Stripe Elements
+    stripe
       .createToken(cardNumberElement, { name: paymentForm.getFieldValue('card_name') })
       .then(stripeResponseHandler)
   }

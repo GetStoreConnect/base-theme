@@ -47,8 +47,8 @@
     </div>
   {%- endif %}
 
-  {%- comment %} Headline. Lookups escape before filters run, so truncate alone would cut mid-entity {% endcomment %}
-  <a class="SC-ProductCard_headline" href="{{ product.path }}">{{ product.name | unescape | truncate: 70 | escape_once }}</a>
+  {%- comment %} Headline {% endcomment %}
+  <a class="SC-ProductCard_headline" href="{{ product.path }}">{{ product.name | truncate: 70 }}</a>
 
   {%- comment %} Detail {% endcomment %}
   <div class="SC-ProductCard_subheadline">

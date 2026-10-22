@@ -89,7 +89,6 @@ export class Wallet {
     if (!this.paymentForm.dedicatedCartProductId) {
       return {
         amount: Math.round(this.paymentForm.totalPayable() * 100),
-        lineItems: this.paymentForm.lineItems(),
         didError: false,
       }
     }
@@ -102,7 +101,6 @@ export class Wallet {
 
       return {
         amount: Math.round(response.cart.amount * 100),
-        lineItems: response.cart.line_items,
         didError: false,
       }
     } catch (error) {
@@ -145,7 +143,6 @@ export class Wallet {
       // Map to ApplePay format id, amount, displayName
       return {
         amount: Math.round(response.cart.amount * 100),
-        lineItems: response.cart.line_items,
         defaultShippingRateId: defaultShippingRate.id,
         shippingRates: shippingRates.map((rate) => {
           return {
@@ -172,7 +169,6 @@ export class Wallet {
 
       return {
         amount: Math.round(response.cart.amount * 100),
-        lineItems: response.cart.line_items,
       }
     } catch (error) {
       return {

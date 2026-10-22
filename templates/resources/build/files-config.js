@@ -1,4 +1,4 @@
-import { notify, getFileExtensions, manifestPlugin } from './helpers.mjs'
+const { notify, getFileExtensions, manifestPlugin } = require('./helpers')
 
 const fileTypes = getFileExtensions('src/files')
 const loader = fileTypes.reduce((acc, fileType) => {
@@ -7,7 +7,7 @@ const loader = fileTypes.reduce((acc, fileType) => {
 }, {})
 const fileGlob = fileTypes.map((fileType) => `src/files/**/*${fileType}`)
 
-export default {
+module.exports = {
   entryPoints: fileGlob,
   entryNames: 'files/[dir]/[name].[hash]',
   outdir: 'dist',

@@ -1,9 +1,3 @@
-{% comment %}
-  Gateways rendered here whose express checkout submits its payment via the
-  form action must declare the :express_checkout_form_submit capability in
-  their gateway service. Stripe deliberately does not: it confirms through
-  Stripe's own API and returns to the payments URL, never the form action.
-{% endcomment %}
 {% assign valid_providers = current_store.payment_providers | where: "valid_payment_method?" %}
 {% assign first_provider = valid_providers | first %}
 {% assign multiple_providers = valid_providers.size > 1 %}
@@ -53,12 +47,6 @@
                 dedicated_cart_product_id: product.id,
                 wallet_disabled: wallet_disabled
           %}
-        {% when "Paypal" %}
-          {%- comment -%}
-            PayPal's express checkout is the cart-page Fastlane mini-flow;
-            there is no product-page placement yet, so render nothing rather
-            than the missing-method developer message.
-          {%- endcomment -%}
         {% else %}
           <p>Missing payment method - set it up now in <code>app/liquid/theme/snippets/products/product/express_checkout.liquid</code></p>
           <p>payment_provider.code = <code>{{ payment_provider.code }}</code></p>

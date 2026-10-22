@@ -1,2 +1,1 @@
-{%- default include_applied_vouchers: false -%}
-{% component "orders/order_summary", source: source, include_applied_vouchers: include_applied_vouchers, reload: "sc.cart-updated sc.voucher-applied sc.voucher-removed sc.deposit-updated" %}
+{% component "orders/order_summary", source: source, reload: "sc.voucher-applied sc.voucher-removed" %}

@@ -1,6 +1,0 @@
-allowBuilds:
-  esbuild: true
-  '@parcel/watcher': true
-  core-js-pure: false
-# Rails watches app/liquid, and listen errors on the symlinks of the default isolated layout
-nodeLinker: hoisted

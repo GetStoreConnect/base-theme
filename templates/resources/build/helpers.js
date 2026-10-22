@@ -1,8 +1,7 @@
-import fs from 'fs'
-import path from 'path'
-import url from 'url'
-import colors from 'colors'
-import manifestPlugin from 'esbuild-plugin-manifest'
+const fs = require('fs')
+const path = require('path')
+const colors = require('colors')
+const manifestPlugin = require('esbuild-plugin-manifest')
 
 function notify({ type, color }) {
   return {
@@ -44,7 +43,7 @@ function getFileExtensions(dir, blacklist = [], extensions = new Set()) {
 function cleanUp() {
   console.log(colors.red(`[esbuild cleanup] cleaning...`))
   // Path to the manifest file and dist folder
-  const basePath = path.join(url.fileURLToPath(new URL('.', import.meta.url)), '..')
+  const basePath = path.join(__dirname, '..')
   const distPath = path.join(basePath, 'dist')
   const manifestPath = path.join(distPath, 'manifest.json')
 
@@ -141,4 +140,4 @@ const cssHandler = {
   },
 }
 
-export { notify, getFileExtensions, manifestPlugin, cssHandler, cleanUp }
+module.exports = { notify, getFileExtensions, manifestPlugin, cssHandler, cleanUp }

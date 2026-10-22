@@ -27,7 +27,7 @@
   {%- if content_block.link_label != blank and content_block.link_target != blank %}
     <footer class="SC-ContentBlockContainer_footer">
       <a class="SC-Button SC-Button-primary" href="{{ content_block.link_target }}">
-        {{ content_block.link_label }}
+        {{ content_block.link_label | escape }}
       </a>
     </footer>
   {%- endif %}

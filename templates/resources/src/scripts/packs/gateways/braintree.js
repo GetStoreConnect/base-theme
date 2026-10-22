@@ -2,7 +2,8 @@ import { PaymentForm } from './payment-form'
 import { Wallet } from './wallet'
 import { onDomChange } from '../../theme/utils/init'
 import { postJSON } from '../../theme/utils/fetch'
-import braintree from 'braintree-web'
+
+const braintree = require('braintree-web')
 
 let clientInstance
 let hostedFieldsInstance

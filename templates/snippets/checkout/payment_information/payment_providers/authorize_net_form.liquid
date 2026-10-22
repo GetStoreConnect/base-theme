@@ -1,12 +1,9 @@
 <div data-provider-container="{{ payment_provider.code }}">
   <div data-ref="script-block"></div>
 
-  {%- default button_label: blank %}
-  {%- if button_label == blank %}
-    {%- assign button_label = 'checkout.gateways.form.pay_now' | t %}
-    {%- if current_subscription %}
-      {%- assign button_label = 'accounts.subscriptions.show.submit_update_button_label' | t %}
-    {%- endif %}
+  {%- assign button_label = 'checkout.gateways.form.pay_now' | t %}
+  {%- if current_subscription %}
+    {%- assign button_label = 'accounts.subscriptions.show.submit_update_button_label' | t %}
   {%- endif %}
 
   {%- form "payment", provider: payment_provider, class: "SC-Panel" %}
